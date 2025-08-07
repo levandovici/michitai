@@ -383,59 +383,21 @@ class Auth {
     /**
      * Generate secure API token
      */
-        if ($this->debug) {
-            error_log("Auth::login - Login attempt for email: $email");
-        }
-
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$user) {
-            if ($this->debug) {
-                error_log("Auth::login - User not found: $email");
-            }
-            return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_CREDENTIALS);
-        }
-
-        if (!password_verify($password, $user['password_hash'])) {
-            if ($this->debug) {
-                error_log("Auth::login - Invalid password for: $email");
-            }
-            return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_CREDENTIALS);
-        }
-
-        // Generate new API token
-        $apiToken = $this->generateApiToken();
-        $stmt = $this->db->prepare("UPDATE users SET api_token = ?, updated_at = ? WHERE id = ?");
-        $stmt->execute([$apiToken, time(), $user['id']]);
-
-        if ($this->debug) {
-            error_log("Auth::login - Login successful for: $email");
-        }
-
-        return ErrorCodes::createSuccessResponse([
-            'user_id' => $user['id'],
-            'email' => $user['email'],
-            'api_token' => $apiToken,
-            'email_verified' => (bool)$user['email_verified'],
-            'plan_type' => $user['plan_type']
-        ], 'Login successful');
-
-    } catch (Exception $e) {
-        ErrorCodes::logError(ErrorCodes::SYS_INTERNAL_ERROR, [
-            'email' => $email,
-            'function' => 'login'
-        ], $e);
-
-        return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+    private function generateApiToken() {
+        return 'mapi_' . bin2hex(random_bytes(32));
     }
-}
 
-/**
- * Validate API token
- */
-public function validateToken($token) {
+    /**
+     * Generate verification token
+     */
+    private function generateVerificationToken() {
+        return bin2hex(random_bytes(32));
+    }
+
+    /**
+     * Validate API token
+     */
+    public function validateToken($token) {
     if (!$token) {
         return false;
     }
