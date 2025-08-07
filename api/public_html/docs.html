@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Multiplayer API</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .animated-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        
+        .content-section {
+            scroll-margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen animated-bg">
+    <!-- Header -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-cube text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white">Multiplayer API</h1>
+                        <p class="text-xs text-white/70">Documentation</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <a href="index.html" class="text-white/70 hover:text-white transition-colors font-medium">Home</a>
+                    <a href="login.html" class="text-white/70 hover:text-white transition-colors font-medium">Sign In</a>
+                    <a href="register.html" class="btn-primary text-white px-6 py-2 rounded-xl font-semibold border-0">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="sidebar glass-effect rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-4">Documentation</h3>
+                    <nav class="space-y-2">
+                        <a href="#getting-started" class="block text-white/70 hover:text-white transition-colors py-2">Getting Started</a>
+                        <a href="#api-reference" class="block text-white/70 hover:text-white transition-colors py-2">API Reference</a>
+                        <a href="#constructor" class="block text-white/70 hover:text-white transition-colors py-2">Logic Constructor</a>
+                        <a href="#csharp-sdk" class="block text-white/70 hover:text-white transition-colors py-2">C# SDK</a>
+                        <a href="#examples" class="block text-white/70 hover:text-white transition-colors py-2">Examples</a>
+                        <a href="#troubleshooting" class="block text-white/70 hover:text-white transition-colors py-2">Troubleshooting</a>
+                    </nav>
+                    
+                    <div class="mt-8 pt-6 border-t border-white/20">
+                        <h4 class="text-sm font-semibold text-white mb-3">Downloads</h4>
+                        <div class="space-y-2">
+                            <a href="sdk/csharp-sdk.zip" class="block text-blue-400 hover:text-blue-300 text-sm">
+                                <i class="fas fa-download mr-2"></i>C# SDK
+                            </a>
+                            <a href="sdk/constructor-examples.zip" class="block text-blue-400 hover:text-blue-300 text-sm">
+                                <i class="fas fa-download mr-2"></i>Constructor Examples
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <!-- Getting Started -->
+                <section id="getting-started" class="content-section mb-12">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <h2 class="text-3xl font-bold text-white mb-6">Getting Started</h2>
+                        <p class="text-white/70 mb-6">Welcome to Multiplayer API documentation. This guide will help you get started with building multiplayer games using our platform.</p>
+                        
+                        <h3 class="text-xl font-semibold text-white mb-4">Quick Start</h3>
+                        <ol class="list-decimal list-inside text-white/70 space-y-2 mb-6">
+                            <li>Create an account and choose your plan</li>
+                            <li>Get your API token from the dashboard</li>
+                            <li>Create your first game using the constructor</li>
+                            <li>Start making API calls to manage players and data</li>
+                        </ol>
+                        
+                        <div class="bg-gray-900 rounded-xl p-4">
+                            <pre class="text-green-400 text-sm"><code>// Your first API call
+curl -X POST https://api.michitai.com/api/game/create \
+  -H "Content-Type: application/json" \
+  -H "X-API-Token: your_token_here" \
+  -d '{"name": "My First Game", "max_players": 100}'</code></pre>
+                        </div>
+                        
+                        <div class="bg-white/5 rounded-lg p-4 mt-4">
+                            <p class="text-white/70"><strong>Server Location:</strong> All API endpoints are hosted on secure servers in Europe (France) for optimal performance and GDPR compliance.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API Reference -->
+                <section id="api-reference" class="content-section mb-12">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <h2 class="text-3xl font-bold text-white mb-6">API Reference</h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-semibold text-white mb-3">Authentication</h3>
+                                <div class="bg-white/5 rounded-lg p-4">
+                                    <p class="text-white/70 mb-3">All API requests require authentication using your API token in the header:</p>
+                                    <code class="text-blue-400">X-API-Token: your_token_here</code>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-xl font-semibold text-white mb-3">Endpoints</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-white/5 rounded-lg p-4">
+                                        <h4 class="font-semibold text-white mb-2">User Management</h4>
+                                        <div class="text-sm space-y-1">
+                                            <div><span class="text-blue-400">POST</span> <code>/api/register</code> - Register new user</div>
+                                            <div><span class="text-blue-400">POST</span> <code>/api/login</code> - User login</div>
+                                            <div><span class="text-blue-400">POST</span> <code>/api/logout</code> - User logout</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white/5 rounded-lg p-4">
+                                        <h4 class="font-semibold text-white mb-2">Game Management</h4>
+                                        <div class="text-sm space-y-1">
+                                            <div><span class="text-green-400">GET</span> <code>/api/game/list</code> - List all games</div>
+                                            <div><span class="text-blue-400">POST</span> <code>/api/game/create</code> - Create new game</div>
+                                            <div><span class="text-yellow-400">PUT</span> <code>/api/game/{id}</code> - Update game</div>
+                                            <div><span class="text-red-400">DELETE</span> <code>/api/game/{id}</code> - Delete game</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Logic Constructor -->
+                <section id="constructor" class="content-section mb-12">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <h2 class="text-3xl font-bold text-white mb-6">Logic Constructor</h2>
+                        <p class="text-white/70 mb-6">The visual logic constructor allows you to build game logic without coding using drag-and-drop blocks.</p>
+                        
+                        <h3 class="text-xl font-semibold text-white mb-4">Supported Blocks</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white/5 rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-2">Control Flow</h4>
+                                <ul class="text-white/70 text-sm space-y-1">
+                                    <li>• If/Else conditions</li>
+                                    <li>• For/While loops</li>
+                                    <li>• Switch statements</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-2">Data Types</h4>
+                                <ul class="text-white/70 text-sm space-y-1">
+                                    <li>• Boolean, Integer, String</li>
+                                    <li>• Arrays and Objects</li>
+                                    <li>• Custom Enums</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- C# SDK -->
+                <section id="csharp-sdk" class="content-section mb-12">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <h2 class="text-3xl font-bold text-white mb-6">C# SDK</h2>
+                        <p class="text-white/70 mb-6">Use our C# SDK to integrate Multiplayer API into your Unity or .NET applications.</p>
+                        
+                        <h3 class="text-xl font-semibold text-white mb-4">Installation</h3>
+                        <div class="bg-gray-900 rounded-xl p-4 mb-6">
+                            <pre class="text-green-400 text-sm"><code>// Install via NuGet Package Manager
+Install-Package MultiplayerAPI.SDK
+
+// Or download from our SDK folder
+// sdk/csharp-sdk.zip</code></pre>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold text-white mb-4">Usage Example</h3>
+                        <div class="bg-gray-900 rounded-xl p-4">
+                            <pre class="text-green-400 text-sm"><code>using MultiplayerAPI;
+
+var client = new MultiplayerAPIClient("your_api_token");
+var game = await client.CreateGameAsync(new GameConfig 
+{
+    Name = "My Game",
+    MaxPlayers = 100
+});</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Examples -->
+                <section id="examples" class="content-section mb-12">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <h2 class="text-3xl font-bold text-white mb-6">Examples</h2>
+                        <p class="text-white/70 mb-6">Common implementation examples and use cases.</p>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-semibold text-white mb-3">Player Authentication</h3>
+                                <div class="bg-gray-900 rounded-xl p-4">
+                                    <pre class="text-green-400 text-sm"><code>// Authenticate a player
+const response = await fetch('/api/player/auth', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-API-Token': 'your_token'
+    },
+    body: JSON.stringify({
+        player_id: 'player_123',
+        password: 'player_password'
+    })
+});</code></pre>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-xl font-semibold text-white mb-3">Real-time Updates</h3>
+                                <div class="bg-gray-900 rounded-xl p-4">
+                                    <pre class="text-green-400 text-sm"><code>// Update player data in real-time
+await client.UpdatePlayerDataAsync(playerId, {
+    level: 15,
+    experience: 2500,
+    items: ['sword', 'shield', 'potion']
+});</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Troubleshooting -->
+                <section id="troubleshooting" class="content-section">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <h2 class="text-3xl font-bold text-white mb-6">Troubleshooting</h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-semibold text-white mb-3">Common Issues</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-white/5 rounded-lg p-4">
+                                        <h4 class="font-semibold text-white mb-2">401 Unauthorized</h4>
+                                        <p class="text-white/70 text-sm">Check that your API token is valid and included in the X-API-Token header.</p>
+                                    </div>
+                                    
+                                    <div class="bg-white/5 rounded-lg p-4">
+                                        <h4 class="font-semibold text-white mb-2">Rate Limiting</h4>
+                                        <p class="text-white/70 text-sm">You've exceeded your plan's API call limit. Upgrade your plan or wait for the daily reset.</p>
+                                    </div>
+                                    
+                                    <div class="bg-white/5 rounded-lg p-4">
+                                        <h4 class="font-semibold text-white mb-2">Storage Limit</h4>
+                                        <p class="text-white/70 text-sm">Your account has reached the storage limit. Delete unused data or upgrade your plan.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-xl font-semibold text-white mb-3">Need Help?</h3>
+                                <p class="text-white/70 mb-4">If you can't find the answer to your question, contact our support team:</p>
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    <a href="mailto:support@michitai.com" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold border-0 text-center">
+                                        <i class="fas fa-envelope mr-2"></i>Email Support
+                                    </a>
+                                    <a href="tel:+37378814810" class="glass-effect border border-white/30 text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition-all text-center">
+                                        <i class="fas fa-phone mr-2"></i>+373 788 14810
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        $(document).ready(function() {
+            $('a[href^="#"]').on('click', function(event) {
+                var target = $(this.getAttribute('href'));
+                if( target.length ) {
+                    event.preventDefault();
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 100
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
