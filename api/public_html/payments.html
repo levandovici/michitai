@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing & Payments - Michitai API Constructor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&vault=true&intent=subscription"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+        
+        .btn-success {
+            background: var(--success-gradient);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6);
+        }
+        
+        .animated-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .floating-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .floating-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .plan-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-card.popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--secondary-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transform: rotate(45deg) translate(25%, -50%);
+            transform-origin: center;
+            width: 120px;
+            text-align: center;
+        }
+        
+        .feature-check {
+            color: #10b981;
+        }
+        
+        .feature-cross {
+            color: #ef4444;
+        }
+        
+        .billing-history-item {
+            transition: all 0.2s ease;
+        }
+        
+        .billing-history-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen animated-bg">
+    <!-- Header -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-cube text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white">Michitai</h1>
+                        <p class="text-xs text-white/70">API Constructor</p>
+                    </div>
+                </a>
+                
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="profile.html" class="text-white/70 hover:text-white transition-colors">Dashboard</a>
+                    <a href="#plans" class="text-white font-medium">Plans</a>
+                    <a href="#billing" class="text-white/70 hover:text-white transition-colors">Billing</a>
+                    <a href="#payment-methods" class="text-white/70 hover:text-white transition-colors">Payment Methods</a>
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                        </div>
+                        <div class="hidden sm:block">
+                            <p class="text-white font-medium text-sm" id="user-email">Loading...</p>
+                            <p class="text-white/70 text-xs"><span id="user-plan">Free Plan</span></p>
+                        </div>
+                    </div>
+                    <a href="profile.html" class="text-white/70 hover:text-white transition-colors">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="py-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            
+            <!-- Current Plan Status -->
+            <div class="mb-8">
+                <div class="glass-effect rounded-2xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white mb-2">
+                                <i class="fas fa-crown mr-2"></i>Current Plan
+                            </h2>
+                            <p class="text-white/70">Manage your subscription and billing</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-white" id="current-plan-name">Free Plan</div>
+                            <div class="text-white/70" id="current-plan-price">$0/month</div>
+                            <div class="text-sm text-white/50" id="next-billing">No billing cycle</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Plans -->
+            <section id="plans" class="mb-12">
+                <div class="text-center mb-8">
+                    <h3 class="text-3xl font-bold text-white mb-4">Choose Your Plan</h3>
+                    <p class="text-white/70 text-lg">Scale your multiplayer games with our flexible pricing</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Free Plan -->
+                    <div class="plan-card glass-effect rounded-2xl p-8 floating-card">
+                        <div class="text-center mb-6">
+                            <h4 class="text-2xl font-bold text-white mb-2">Free</h4>
+                            <div class="text-4xl font-bold text-white mb-1">$0</div>
+                            <div class="text-white/70">per month</div>
+                        </div>
+                        
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                250 MB Storage
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                80 Users
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                1 Game
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                100 Players
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                5 Rooms
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                1K API Calls/day
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                Email Notifications
+                            </li>
+                            <li class="flex items-center text-white/50">
+                                <i class="fas fa-times feature-cross mr-3"></i>
+                                Communities
+                            </li>
+                            <li class="flex items-center text-white/50">
+                                <i class="fas fa-times feature-cross mr-3"></i>
+                                Slack Notifications
+                            </li>
+                        </ul>
+                        
+                        <button class="w-full py-3 px-6 rounded-xl font-semibold border-2 border-white/20 text-white hover:bg-white/10 transition-colors" disabled>
+                            Current Plan
+                        </button>
+                    </div>
+
+                    <!-- Standard Plan -->
+                    <div class="plan-card popular glass-effect rounded-2xl p-8 floating-card">
+                        <div class="text-center mb-6">
+                            <h4 class="text-2xl font-bold text-white mb-2">Standard</h4>
+                            <div class="text-4xl font-bold text-white mb-1">$50</div>
+                            <div class="text-white/70">per month</div>
+                        </div>
+                        
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                1 GB Storage
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                80 Users
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                1 Game
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                1K Players
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                50 Rooms
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                5 Communities
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                1K Messages/day
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                10K API Calls/day
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                Email Notifications
+                            </li>
+                        </ul>
+                        
+                        <button class="w-full btn-primary text-white py-3 px-6 rounded-xl font-semibold border-0" onclick="paymentsPage.subscribeToPlan('standard')">
+                            Upgrade to Standard
+                        </button>
+                    </div>
+
+                    <!-- Pro Plan -->
+                    <div class="plan-card glass-effect rounded-2xl p-8 floating-card">
+                        <div class="text-center mb-6">
+                            <h4 class="text-2xl font-bold text-white mb-2">Pro</h4>
+                            <div class="text-4xl font-bold text-white mb-1">$200</div>
+                            <div class="text-white/70">per month</div>
+                        </div>
+                        
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                2.5 GB Storage
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                40 Users
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                3 Games
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                2.5K Players
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                Unlimited Rooms
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                Unlimited Communities
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                Unlimited Messages
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                1M API Calls/day
+                            </li>
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check feature-check mr-3"></i>
+                                Email + Slack Notifications
+                            </li>
+                        </ul>
+                        
+                        <button class="w-full btn-secondary text-white py-3 px-6 rounded-xl font-semibold border-0" onclick="paymentsPage.subscribeToPlan('pro')">
+                            Upgrade to Pro
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Billing History -->
+            <section id="billing" class="mb-12">
+                <div class="glass-effect rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-white mb-6">
+                        <i class="fas fa-receipt mr-2"></i>Billing History
+                    </h3>
+                    
+                    <div id="billing-history" class="space-y-3">
+                        <!-- Billing history will be loaded here -->
+                        <div class="text-center py-8 text-white/50">
+                            <i class="fas fa-receipt text-2xl mb-2"></i>
+                            <p>No billing history available</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Payment Methods -->
+            <section id="payment-methods" class="mb-12">
+                <div class="glass-effect rounded-2xl p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-white">
+                            <i class="fas fa-credit-card mr-2"></i>Payment Methods
+                        </h3>
+                        <button id="add-payment-method" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold border-0">
+                            <i class="fas fa-plus mr-2"></i>Add Payment Method
+                        </button>
+                    </div>
+                    
+                    <div id="payment-methods-list" class="space-y-4">
+                        <!-- Payment methods will be loaded here -->
+                        <div class="text-center py-8 text-white/50">
+                            <i class="fas fa-credit-card text-2xl mb-2"></i>
+                            <p>No payment methods added</p>
+                            <p class="text-sm">Add a payment method to upgrade your plan</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alternative Payment Options -->
+            <section class="mb-12">
+                <div class="glass-effect rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-white mb-6">
+                        <i class="fas fa-money-bill-wave mr-2"></i>Alternative Payment Options
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Paynet -->
+                        <div class="bg-white/5 rounded-xl p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="fas fa-mobile-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">Paynet (Moldova)</h4>
+                                    <p class="text-white/70 text-sm">Mobile payments in Moldova</p>
+                                </div>
+                            </div>
+                            <p class="text-white/70 text-sm mb-4">
+                                Use Paynet for convenient mobile payments. Contact support for setup instructions.
+                            </p>
+                            <button class="btn-success text-white px-4 py-2 rounded-lg font-semibold border-0 text-sm">
+                                Contact Support
+                            </button>
+                        </div>
+
+                        <!-- Bank Transfer -->
+                        <div class="bg-white/5 rounded-xl p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mr-4">
+                                    <i class="fas fa-university text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white">MAIB Bank Transfer</h4>
+                                    <p class="text-white/70 text-sm">Direct bank transfer (Moldova)</p>
+                                </div>
+                            </div>
+                            <p class="text-white/70 text-sm mb-4">
+                                SWIFT: AGRNMD2X<br>
+                                Manual bank transfers available for enterprise customers.
+                            </p>
+                            <button class="btn-success text-white px-4 py-2 rounded-lg font-semibold border-0 text-sm">
+                                Get Bank Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- PayPal Payment Modal -->
+    <div id="paypal-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="glass-effect rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <h4 class="text-xl font-bold text-white mb-2">Complete Your Subscription</h4>
+                <p class="text-white/70">Secure payment powered by PayPal</p>
+            </div>
+            
+            <div id="paypal-button-container" class="mb-6"></div>
+            
+            <button id="close-paypal-modal" class="w-full py-3 px-6 rounded-xl font-semibold border-2 border-white/20 text-white hover:bg-white/10 transition-colors">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="fixed top-20 right-6 z-50 space-y-2"></div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="glass-effect rounded-2xl p-8 text-center">
+            <div class="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p class="text-white font-medium" id="loading-text">Processing payment...</p>
+        </div>
+    </div>
+
+    <script src="js/payments.js"></script>
+</body>
+</html>
