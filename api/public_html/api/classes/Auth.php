@@ -394,32 +394,6 @@ class Auth {
         return bin2hex(random_bytes(32));
     }
 
-    /**
-     * Validate API token
-     */
-    public function validateToken($token) {
-    if (!$token) {
-        return false;
-    }
-
-    try {
-        $stmt = $this->db->prepare("SELECT id, email FROM users WHERE api_token = ?");
-        $stmt->execute([$token]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($this->debug) {
-            error_log("Auth::validateToken - Token validation for: " . ($user ? $user['email'] : 'invalid token'));
-        }
-
-        return $user ? $user : false;
-    } catch (Exception $e) {
-        if ($this->debug) {
-            error_log("Auth::validateToken - Error: " . $e->getMessage());
-        }
-        return false;
-    }
-}
-
 /**
  * Get user profile by token
  */
@@ -458,62 +432,6 @@ public function getUserProfile($token) {
     }
 }
 
-/**
- * Log API call for rate limiting and analytics
- */
-public function logApiCall($token, $endpoint) {
-    try {
-        $user = $this->validateToken($token);
-        $userId = $user ? $user['id'] : null;
-
-        $stmt = $this->db->prepare("
-            INSERT INTO api_logs (user_id, endpoint, method, ip_address, user_agent, timestamp) 
-            VALUES (?, ?, ?, ?, ?, ?)
-        ");
-        
-        $stmt->execute([
-            $userId,
-            $endpoint,
-            $_SERVER['REQUEST_METHOD'] ?? 'unknown',
-            $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-            $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-            time()
-        ]);
-
-        if ($this->debug) {
-            error_log("Auth::logApiCall - Logged API call: $endpoint for user: " . ($userId ?? 'anonymous'));
-        }
-
-    } catch (Exception $e) {
-        if ($this->debug) {
-            error_log("Auth::logApiCall - Error: " . $e->getMessage());
-        }
-    }
-}
-
-/**
- * Check password strength
- */
-private function isPasswordStrong($password) {
-    return strlen($password) >= 8 && 
-           preg_match('/[A-Z]/', $password) && 
-           preg_match('/[a-z]/', $password) && 
-           preg_match('/[0-9]/', $password);
-}
-
-/**
- * Generate secure API token
- */
-private function generateApiToken() {
-    return 'mapi_' . bin2hex(random_bytes(32));
-}
-
-/**
- * Generate verification token
- */
-private function generateVerificationToken() {
-    return bin2hex(random_bytes(32));
-}
 
 /**
  * Send verification email (simulated for development)
