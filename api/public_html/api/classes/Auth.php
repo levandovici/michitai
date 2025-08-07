@@ -179,7 +179,7 @@ class Auth {
                 error_log("Auth::register - Checking if email exists: $email");
             }
 
-            $stmt = $this->db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt = $this->db->prepare("SELECT user_id FROM users WHERE email = ?");
             $stmt->execute([$email]);
             
             if ($stmt->fetch()) {
@@ -199,8 +199,8 @@ class Auth {
             $verificationToken = $this->generateVerificationToken();
 
             $stmt = $this->db->prepare("
-                INSERT INTO users (email, password_hash, api_token, verification_token, created_at, updated_at) 
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO users (email, password, api_token, created_at, updated_at) 
+                VALUES (?, ?, ?, ?, ?)
             ");
             
             $timestamp = time();
@@ -208,7 +208,6 @@ class Auth {
                 $email, 
                 $passwordHash, 
                 $apiToken, 
-                $verificationToken, 
                 $timestamp, 
                 $timestamp
             ]);
@@ -326,7 +325,7 @@ class Auth {
         }
 
         try {
-            $stmt = $this->db->prepare("SELECT id, email FROM users WHERE api_token = ?");
+            $stmt = $this->db->prepare("SELECT user_id, email FROM users WHERE api_token = ?");
             $stmt->execute([$token]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
@@ -405,7 +404,7 @@ public function getUserProfile($token) {
         }
 
         // Get full user data
-        $stmt = $this->db->prepare("SELECT id, email, email_verified, plan_type, api_calls_used, api_calls_limit, created_at FROM users WHERE api_token = ?");
+        $stmt = $this->db->prepare("SELECT user_id, email, plan_type, api_calls_today, created_at FROM users WHERE api_token = ?");
         $stmt->execute([$token]);
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -414,12 +413,12 @@ public function getUserProfile($token) {
         }
 
         return ErrorCodes::createSuccessResponse([
-            'user_id' => $userData['id'],
+            'user_id' => $userData['user_id'],
             'email' => $userData['email'],
-            'email_verified' => (bool)$userData['email_verified'],
+            'email_verified' => false, // Not available in current schema
             'plan_type' => $userData['plan_type'],
-            'api_calls_used' => (int)$userData['api_calls_used'],
-            'api_calls_limit' => (int)$userData['api_calls_limit'],
+            'api_calls_used' => (int)$userData['api_calls_today'],
+            'api_calls_limit' => 1000, // Default limit since not in schema
             'created_at' => $userData['created_at']
         ], 'User profile retrieved successfully');
 
