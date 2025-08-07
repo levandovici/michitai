@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="与尼基塔·列万多维奇一起学习在线编程和Unity课程。首课免费！在线掌握C#、Unity和游戏开发。">
+    <meta name="keywords" content="在线编程课程, Unity课程, 游戏开发, 首课免费, 编程课程, Unity摩尔多瓦, C#编程, 尼基塔·列万多维奇">
+    <meta name="author" content="尼基塔·列万多维奇">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="Content-Language" content="zh-CN">
+    <meta property="og:title" content="在线编程和Unity课程 | 首课免费">
+    <meta property="og:description" content="与尼基塔·列万多维奇一起在线学习编程、Unity和游戏开发。首课免费！为Google Play和Steam创建游戏。">
+    <meta property="og:image" content="https://limonadoent.com/images/nichita.jpg">
+    <meta property="og:url" content="https://limonadoent.com/cn/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="在线编程和Unity课程 | 首课免费">
+    <meta name="twitter:description" content="与尼基塔·列万多维奇一起在线学习编程、Unity和游戏开发。首课免费！为Google Play和Steam创建游戏。">
+    <meta name="twitter:image" content="https://limonadoent.com/images/nichita.jpg">
+    <link rel="alternate" hreflang="ro-MD" href="https://limonadoent.com/ro/">
+    <link rel="alternate" hreflang="ru-MD" href="https://limonadoent.com/ru/">
+    <link rel="alternate" hreflang="uk" href="https://limonadoent.com/ua/">
+    <link rel="alternate" hreflang="x-default" href="https://limonadoent.com/">
+    <link rel="canonical" href="https://limonadoent.com/cn/">
+    <title>在线编程和Unity课程 | 首课免费</title>
+    <link rel="icon" href="../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #1a202c;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            padding: 16px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #48bb78;
+        }
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .flag {
+            width: 28px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 3px;
+            transition: transform 0.3s ease;
+        }
+        .flag:hover {
+            transform: scale(1.2);
+        }
+        .header-spacer {
+            height: 80px;
+        }
+        #hero {
+            background: url('../images/hero-bg.jpg') no-repeat center/cover;
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 140px 20px;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+        #hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        #hero h2 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            animation: slideInUp 1s ease-out;
+        }
+        #hero p {
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .free-lesson-message {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #48bb78;
+            margin-bottom: 24px;
+        }
+        .btn {
+            background: #4299e1;
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 12px;
+        }
+        .btn:hover {
+            background: #3182ce;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .free-lesson-btn {
+            background: #48bb78;
+            color: #1a202c;
+        }
+        .free-lesson-btn:hover {
+            background: #38a169;
+        }
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid white;
+        }
+        .secondary-btn:hover {
+            background: white;
+            color: #1a202c;
+        }
+        #course {
+            padding: 120px 20px;
+            background: #ffffff;
+        }
+        #course h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a202c;
+        }
+        #course > p {
+            text-align: center;
+            font-size: 1.25rem;
+            margin-bottom: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .module {
+            background: #f7fafc;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .module:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .module h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+        }
+        .module p {
+            font-size: 1.15rem;
+            margin-bottom: 16px;
+            color: #4a5568;
+        }
+        .module ul {
+            list-style: disc;
+            padding-left: 24px;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+        .module .practice {
+            font-style: italic;
+            color: #4a5568;
+        }
+        .module .outcomes {
+            font-size: 1rem;
+            color: #2d3748;
+        }
+        .module .module-btn {
+            background: #48bb78;
+            color: #1a202c;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin-top: 16px;
+        }
+        .module .module-btn:hover {
+            background: #38a169;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        #about {
+            padding: 120px 20px;
+            background: #f5f7fa;
+        }
+        #about h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a202c;
+        }
+        .about-content {
+            display: flex;
+            gap: 48px;
+            align-items: center;
+        }
+        .about-img {
+            width: 350px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .about-img:hover {
+            transform: scale(1.05);
+        }
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+        }
+        .about-text strong {
+            color: #4299e1;
+        }
+        #games {
+            padding: 120px 20px;
+            background: #ffffff;
+        }
+        #games h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a202c;
+        }
+        #games > p {
+            text-align: center;
+            font-size: 1.25rem;
+            margin-bottom: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .game-card {
+            background: #f7fafc;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+        .game-card:nth-child(5) { animation-delay: 0.5s; }
+        .game-card:nth-child(6) { animation-delay: 0.6s; }
+        .game-card:nth-child(7) { animation-delay: 0.7s; }
+        .game-card:nth-child(8) { animation-delay: 0.8s; }
+        .game-card:nth-child(9) { animation-delay: 0.9s; }
+        .game-card:nth-child(10) { animation-delay: 1s; }
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+        .game-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            transition: transform 0.4s ease;
+        }
+        .game-img:hover {
+            transform: scale(1.08);
+        }
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+        .game-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+        .game-info span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .game-info strong {
+            color: #2d3748;
+        }
+        .game-btn {
+            background: #4299e1;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .game-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        #contact {
+            padding: 120px 20px;
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            text-align: center;
+        }
+        #contact h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+        #contact p {
+            font-size: 1.25rem;
+            margin-bottom: 32px;
+        }
+        .contact-info {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+        .contact-info li {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+        .contact-info a {
+            color: #48bb78;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .contact-info a:hover {
+            color: #38a169;
+        }
+        footer {
+            background: #1a202c;
+            color: white;
+            text-align: center;
+            padding: 32px 0;
+        }
+        footer p {
+            font-size: 1rem;
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 1024px) {
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #hero h2 {
+                font-size: 2.5rem;
+            }
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about-img {
+                width: 300px;
+            }
+        }
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 16px;
+            }
+            header h1 {
+                font-size: 1.75rem;
+            }
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+            }
+            nav {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .language-selector {
+                justify-content: center;
+                margin-top: 12px;
+            }
+            #hero {
+                padding: 100px 20px 60px;
+            }
+            #hero h2 {
+                font-size: 2rem;
+            }
+            .free-lesson-message {
+                font-size: 1.2rem;
+            }
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>尼基塔·列万多维奇</h1>
+            <nav>
+                <ul>
+                    <li><a href="#course">课程</a></li>
+                    <li><a href="#about">关于我</a></li>
+                    <li><a href="#games">游戏</a></li>
+                    <li><a href="#contact">联系方式</a></li>
+                </ul>
+                <div class="language-selector">
+                    <a href="https://limonadoent.com/en/" title="英语"><img src="../flags/en.png" alt="英语国旗" class="flag"></a>
+                    <a href="https://limonadoent.com/ro/" title="罗马尼亚语"><img src="../flags/ro.png" alt="罗马尼亚国旗" class="flag"></a>
+                    <a href="https://limonadoent.com/ru/" title="俄语"><img src="../flags/ru.png" alt="俄罗斯国旗" class="flag"></a>
+                    <a href="https://limonadoent.com/ua/" title="乌克兰语"><img src="../flags/ua.png" alt="乌克兰国旗" class="flag"></a>
+                    <a href="https://limonadoent.com/cn/" title="中文"><img src="../flags/cn.png" alt="中国国旗" class="flag"></a>
+                    <a href="https://limonadoent.com/bg/" title="保加利亚"><img src="../flags/bg.png" alt="保加利亚国旗" class="flag"></a>
+                    <a href="https://limonadoent.com/gr/" title="希腊"><img src="../flags/gr.png" alt="希腊国旗" class="flag"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="header-spacer"></div>
+    <section id="hero">
+        <div class="container">
+            <h2>在线编程和Unity课程</h2>
+            <p>加入我关于Unity游戏开发的在线课程，成为专业游戏开发者！首课免费！</p>
+            <p class="free-lesson-message">免费试听！第一堂课免学费！</p>
+            <a href="#contact" class="btn free-lesson-btn">报名免费课程</a>
+            <a href="#course" class="btn secondary-btn">了解更多</a>
+        </div>
+    </section>
+    <section id="course">
+        <div class="container">
+            <h2>Unity游戏开发在线课程</h2>
+            <p>从零基础到专业水平，沉浸于游戏开发的世界！本课程结合理论、实践和交互式任务，使用<strong>Monaco Editor</strong>进行编码，并通过内置测试检查知识。掌握<strong>C#</strong>、<strong>Unity</strong>、网络技术、多线程和<strong>DOTS</strong>。创建2D、3D和多人游戏，完成课程后获得一个可用于作品集的游戏。首课免费！</p>
+            <div class="chart-container">
+                <canvas id="courseProgressChart"></canvas>
+            </div>
+            <div class="module">
+                <h3>模块1：C#编程基础</h3>
+                <p>从C#基础开始，这是Unity的核心语言。学习语法、变量、控制结构和面向对象编程（OOP）。掌握集合和错误处理。</p>
+                <ul>
+                    <li>C#入门：语法、变量、数据类型。</li>
+                    <li>控制结构：if、switch、循环。</li>
+                    <li>函数和方法：参数、返回值。</li>
+                    <li>OOP：类、对象、继承。</li>
+                    <li>集合：数组、列表、字典。</li>
+                    <li>异常处理和输入输出基础。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>创建用于控制角色（移动、健康、数据保存）的脚本。</p>
+                <p class="outcomes"><strong>成果：</strong>理解C#以创建游戏逻辑。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块2：Unity基础</h3>
+                <p>了解Unity——一款强大的游戏开发引擎。学习如何使用界面、GameObjects、物理和脚本。了解如何为不同平台构建游戏。</p>
+                <ul>
+                    <li>Unity界面：场景、GameObjects、组件。</li>
+                    <li>脚本编写：将C#连接到Unity。</li>
+                    <li>物理：Rigidbody、Collider。</li>
+                    <li>输入：键盘、鼠标、触摸控制。</li>
+                    <li>在Windows、Android、WebGL上构建和运行游戏。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>创建具有移动立方体、响应物理和输入的场景。</p>
+                <p class="outcomes"><strong>成果：</strong>能够创建简单的Unity场景。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块3：2D游戏开发</h3>
+                <p>创建你的第一款2D游戏！学习使用精灵、动画、物理和界面。掌握使用Tilemap设计关卡。</p>
+                <ul>
+                    <li>处理精灵和动画（Animator）。</li>
+                    <li>2D物理：Rigidbody2D、Collider2D。</li>
+                    <li>用户界面：Canvas、按钮、TextMeshPro。</li>
+                    <li>音频：音效、背景音乐。</li>
+                    <li>使用Tilemap创建关卡。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>开发一个带有跳跃角色、敌人和菜单的2D平台游戏。</p>
+                <p class="outcomes"><strong>成果：</strong>具有交互元素的完整2D游戏。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块4：3D游戏开发</h3>
+                <p>深入3D游戏开发！掌握模型导入、灯光设置、物理和摄像机控制。创建具有动画的动态场景。</p>
+                <ul>
+                    <li>导入3D模型和材质。</li>
+                    <li>灯光和着色器以实现逼真图形。</li>
+                    <li>3D物理：Rigidbody、Collider。</li>
+                    <li>摄像机控制：Cinemachine。</li>
+                    <li>动画：Animator、混合树。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>构建一个具有玩家、敌人和AI导航的3D冒险游戏。</p>
+                <p class="outcomes"><strong>成果：</strong>创建引人入胜的3D游戏技能。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块5：Unity进阶主题</h3>
+                <p>通过高级技术提升你的游戏。学习创建视觉效果、复杂界面和优化性能。</p>
+                <ul>
+                    <li>粒子系统：火焰、烟雾效果。</li>
+                    <li>高级用户界面：UI Toolkit、界面动画。</li>
+                    <li>优化：Profiler、批处理、LOD。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>优化带有粒子的场景并创建带有迷你地图的HUD。</p>
+                <p class="outcomes"><strong>成果：</strong>创建视觉吸引力和优化的游戏能力。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块6：网络编程基础</h3>
+                <p>了解多人游戏的网络技术。学习TCP/UDP协议和处理延迟的方法。</p>
+                <ul>
+                    <li>协议：TCP（可靠性）、UDP（速度）。</li>
+                    <li>网络架构：客户端-服务器、P2P。</li>
+                    <li>处理延迟：插值、预测。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>创建客户端-服务器聊天应用程序。</p>
+                <p class="outcomes"><strong>成果：</strong>理解网络编程基础。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块7：多线程编程</h3>
+                <p>通过多线程加速你的游戏。掌握线程、Task Parallel Library及其在Unity中的安全应用。</p>
+                <ul>
+                    <li>线程和Task Parallel Library入门。</li>
+                    <li>同步：lock、Monitor。</li>
+                    <li>Unity中的多线程：后台任务。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>在Unity中为AI实现后台路径计算。</p>
+                <p class="outcomes"><strong>成果：</strong>通过线程优化性能的技能。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块8：Unity多人游戏</h3>
+                <p>使用Netcode for GameObjects创建多人游戏。学习同步对象、使用RPC和组织大厅。</p>
+                <ul>
+                    <li>Netcode for GameObjects：NetworkObjects、RPC。</li>
+                    <li>状态同步：NetworkVariables。</li>
+                    <li>通过Unity Services进行匹配和大厅管理。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>开发具有同步游戏玩法的2D多人射击游戏。</p>
+                <p class="outcomes"><strong>成果：</strong>创建多人游戏的能力。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块9：数据导向技术栈（DOTS）</h3>
+                <p>掌握DOTS以开发高性能游戏。学习ECS、Jobs System和Burst Compiler以处理数千个对象。</p>
+                <ul>
+                    <li>ECS：实体、组件、系统。</li>
+                    <li>Jobs System和Burst Compiler优化。</li>
+                    <li>创建可扩展的模拟。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>使用DOTS构建具有数千个移动对象的游戏。</p>
+                <p class="outcomes"><strong>成果：</strong>创建高性能游戏的技能。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块10：高级优化和发布</h3>
+                <p>为发布准备游戏！学习优化内存、为不同平台开发和项目盈利。</p>
+                <ul>
+                    <li>内存管理：Addressables。</li>
+                    <li>跨平台开发：Android、WebGL。</li>
+                    <li>分析和盈利：Unity Ads。</li>
+                    <li>在Google Play、Steam上发布。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>优化并发布带有分析的游戏。</p>
+                <p class="outcomes"><strong>成果：</strong>准备好发布的带有盈利的游戏。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+            <div class="module">
+                <h3>模块11：最终项目</h3>
+                <p>从概念到发布创建你的游戏！使用包括C#、Unity、DOTS或多人游戏的所有技能，打造作品集。</p>
+                <ul>
+                    <li>规划：GDD、原型设计。</li>
+                    <li>开发：2D、3D或多人游戏。</li>
+                    <li>完善和发布：Itch.io、Google Play。</li>
+                </ul>
+                <p class="practice"><strong>实践：</strong>开发并发布一款完整游戏。</p>
+                <p class="outcomes"><strong>成果：</strong>展示你技能的作品集游戏。</p>
+                <a href="#contact" class="btn module-btn">开始学习</a>
+            </div>
+        </div>
+    </section>
+    <section id="about">
+        <div class="container">
+            <h2>关于我</h2>
+            <div class="about-content">
+                <img src="../images/nichita.jpg" alt="尼基塔·列万多维奇，在线编程课程教师" class="about-img">
+                <div class="about-text">
+                    <p>你好！我是尼基塔·列万多维奇，23岁，是一位拥有超过<strong>5年经验</strong>的热情视频游戏开发者。编程和游戏开发是我的激情。我相信，通过想象力和努力工作，可以创造整个世界！</p>
+                    <p>我曾在<strong>Success Games</strong>（Midnight Works控股）为<strong>Steam</strong>和<strong>PlayStation</strong>开发项目。我最大的项目包含<strong>超过40,000行代码</strong>，涉及优化和第三方资源整合。我学习很快，寻找新解决方案，并始终完成任务。</p>
+                    <p>我毕业于<strong>Step IT Academy</strong>，获得游戏开发文凭，并能流利使用<strong>英语</strong>。我的爱好是从零开始发明和创建游戏，将创意变成令人惊叹的虚拟世界。</p>
+                    <p>在<a href="https://github.com/levandovici?tab=repositories" target="_blank">GitHub</a>上查看我的项目，或访问<a href="#games">游戏</a>部分。</p>
+                    <p>想学习游戏开发？我的Telegram机器人<a href="https://t.me/michitai_bot" target="_blank">@MICHITAI_BOT</a>提供<strong>免费学习卡片</strong>，涵盖Unity和游戏开发，帮助你开启游戏创作之旅！</p>
+                    <p>🎮 <a href="https://api.limonadoent.com" target="_blank">api.limonadoent.com</a></p>
+                    <p>为你的游戏提供数据和多人支持——连接并创造吧！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="games">
+        <div class="container">
+            <h2>我的游戏</h2>
+            <p>查看我在Google Play和网页版上的项目。从僵尸射击游戏到模拟器，现在就来体验！</p>
+            <div class="games-grid">
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
+                        <img src="../images/zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force" class="game-img">
+                    </a>
+                    <h3 class="game-title">Zombie Frenzy Force</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>射击</span>
+                        <span><strong>平台：</strong>Android</span>
+                        <span><strong>年份：</strong>2025</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank" class="btn game-btn">在Google Play下载</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank">
+                        <img src="../images/monsters_rushing_logo.png" alt="Monsters Rushing" class="game-img">
+                    </a>
+                    <h3 class="game-title">Monsters Rushing</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>街机</span>
+                        <span><strong>平台：</strong>Android</span>
+                        <span><strong>年份：</strong>2020</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank" class="btn game-btn">在Google Play下载</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank">
+                        <img src="../images/car_driving_multiplayer_logo.png" alt="Car Driving Multiplayer" class="game-img">
+                    </a>
+                    <h3 class="game-title">Car Driving Multiplayer</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>模拟器</span>
+                        <span><strong>平台：</strong>Android</span>
+                        <span><strong>年份：</strong>2023</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank" class="btn game-btn">在Google Play下载</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank">
+                        <img src="../images/scale_it_logo.png" alt="Scale It" class="game-img">
+                    </a>
+                    <h3 class="game-title">Scale It</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>益智</span>
+                        <span><strong>平台：</strong>Android</span>
+                        <span><strong>年份：</strong>2022</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank" class="btn game-btn">在Google Play下载</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank">
+                        <img src="../images/hit_of_cube_logo.png" alt="Hit of Cube" class="game-img">
+                    </a>
+                    <h3 class="game-title">Hit of Cube</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>街机</span>
+                        <span><strong>平台：</strong>Android</span>
+                        <span><strong>年份：</strong>2021</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank" class="btn game-btn">在Google Play下载</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank">
+                        <img src="../images/monsters_vs_bombs_logo.png" alt="Monsters vs Bombs" class="game-img">
+                    </a>
+                    <h3 class="game-title">Monsters vs Bombs</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>策略</span>
+                        <span><strong>平台：</strong>Android</span>
+                        <span><strong>年份：</strong>2019</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank" class="btn game-btn">在Google Play下载</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank">
+                        <img src="../images/space_flash_logo.png" alt="Space Flash" class="game-img">
+                    </a>
+                    <h3 class="game-title">Space Flash</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>射击</span>
+                        <span><strong>平台：</strong>Android</span>
+                        <span><strong>年份：</strong>2021</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank" class="btn game-btn">在Google Play下载</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://games.limonadoent.com/web/blooming-garden" target="_blank">
+                        <img src="../images/blooming_garden_logo.jpg" alt="Blooming Garden" class="game-img">
+                    </a>
+                    <h3 class="game-title">Blooming Garden</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>模拟器</span>
+                        <span><strong>平台：</strong>网页</span>
+                        <span><strong>年份：</strong>2025</span>
+                    </div>
+                    <a href="https://games.limonadoent.com/web/blooming-garden" target="_blank" class="btn game-btn">在线玩</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://games.limonadoent.com/web/tea-time-tycoon" target="_blank">
+                        <img src="../images/tea_time_tycoon_logo.jpg" alt="Tea Time Tycoon" class="game-img">
+                    </a>
+                    <h3 class="game-title">Tea Time Tycoon</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>时间管理</span>
+                        <span><strong>平台：</strong>网页</span>
+                        <span><strong>年份：</strong>2025</span>
+                    </div>
+                    <a href="https://games.limonadoent.com/web/tea-time-tycoon" target="_blank" class="btn game-btn">在线玩</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://games.limonadoent.com/web/latte-lab" target="_blank">
+                        <img src="../images/latte_lab_logo.jpg" alt="Latte Lab" class="game-img">
+                    </a>
+                    <h3 class="game-title">Latte Lab</h3>
+                    <div class="game-info">
+                        <span><strong>类型：</strong>模拟器</span>
+                        <span><strong>平台：</strong>网页</span>
+                        <span><strong>年份：</strong>2025</span>
+                    </div>
+                    <a href="https://games.limonadoent.com/web/latte-lab" target="_blank" class="btn game-btn">在线玩</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <div class="container">
+            <h2>联系我</h2>
+            <p>想报名免费在线首课或讨论课程？请写信或打电话！</p>
+            <ul class="contact-info">
+                <li><strong>电子邮件：</strong> <a href="mailto:michitai@limonadoent.com">michitai@limonadoent.com</a></li>
+                <li><strong>电话：</strong> <a href="tel:+37378814810">+37378814810</a></li>
+                <li><strong>Telegram：</strong> <a href="https://t.me/michitai" target="_blank">@michitai</a></li>
+            </ul>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p>© 2025 尼基塔·列万多维奇。版权所有。</p>
+        </div>
+    </footer>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "在线编程和Unity课程",
+      "description": "与尼基塔·列万多维奇一起在线掌握C#、Unity和游戏开发。首课免费！",
+      "provider": {
+        "@type": "Organization",
+        "name": "Limonadoent",
+        "sameAs": "https://limonadoent.com"
+      },
+      "inLanguage": "zh-CN",
+      "courseMode": "online",
+      "offers": {
+        "@type": "Offer",
+        "name": "首课免费",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2025-01-01"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Limonadoent",
+      "description": "国际在线编程和Unity游戏开发课程",
+      "url": "https://limonadoent.com",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+37378814810",
+        "contactType": "customer service",
+        "email": "michitai@limonadoent.com"
+      },
+      "sameAs": [
+        "https://t.me/michitai",
+        "https://github.com/levandovici"
+      ]
+    }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const anchors = document.querySelectorAll('a[href^="#"]');
+                if (anchors.length === 0) {
+                    console.warn('未找到用于平滑滚动的锚点链接。');
+                    return;
+                }
+                anchors.forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = anchor.getAttribute('href');
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            console.error(`目标元素 ${targetId} 未找到。`);
+                        }
+                    });
+                });
+                const adjustHeaderSpacer = () => {
+                    const header = document.querySelector('header');
+                    const spacer = document.querySelector('.header-spacer');
+                    if (header && spacer) {
+                        spacer.style.height = `${header.offsetHeight}px`;
+                    } else {
+                        console.warn('未找到头部或间距元素。');
+                    }
+                };
+                window.addEventListener('resize', adjustHeaderSpacer);
+                window.addEventListener('load', adjustHeaderSpacer);
+                adjustHeaderSpacer();
+                // 初始化Chart.js
+                const ctx = document.getElementById('courseProgressChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["模块1", "模块2", "模块3", "模块4", "模块5", "模块6", "模块7", "模块8", "模块9", "模块10", "模块11"],
+                        datasets: [{
+                            label: "课程难度",
+                            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                            backgroundColor: ["#4299e1", "#4299e1", "#4299e1", "#4299e1", "#4299e1", "#48bb78", "#48bb78", "#48bb78", "#f6ad55", "#f6ad55", "#f6ad55"],
+                            borderColor: ["#3182ce", "#3182ce", "#3182ce", "#3182ce", "#3182ce", "#38a169", "#38a169", "#38a169", "#ed8936", "#ed8936", "#ed8936"],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: "难度等级",
+                                    color: "#1a202c",
+                                    font: { size: 14 }
+                                },
+                                ticks: { color: "#1a202c" }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "课程模块",
+                                    color: "#1a202c",
+                                    font: { size: 14 }
+                                },
+                                ticks: { color: "#1a202c" }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: "课程难度进展",
+                                color: "#1a202c",
+                                font: { size: 18 }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('脚本错误:', error.message, error.stack);
+            }
+        });
+    </script>
+</body>
+</html>

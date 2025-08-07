@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Онлайн-курси програмування та Unity з Микитою Левандовичем. Перший урок безкоштовно! Опануй C#, Unity та розробку ігор онлайн.">
+    <meta name="keywords" content="онлайн-курси програмування, курси Unity, розробка ігор, перший урок безкоштовно, курси програмування, Unity Молдова, програмування C#, Микита Левандович">
+    <meta name="author" content="Микита Левандович">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="Content-Language" content="uk">
+    <meta property="og:title" content="Онлайн-курси програмування та Unity | Перший урок безкоштовно">
+    <meta property="og:description" content="Вивчай програмування, Unity та розробку ігор онлайн з Микитою Левандовичем. Перший урок безкоштовно! Створюй ігри для Google Play та Steam.">
+    <meta property="og:image" content="https://limonadoent.com/images/nichita.jpg">
+    <meta property="og:url" content="https://limonadoent.com/ua/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Онлайн-курси програмування та Unity | Перший урок безкоштовно">
+    <meta name="twitter:description" content="Вивчай програмування, Unity та розробку ігор онлайн з Микитою Левандовичем. Перший урок безкоштовно! Створюй ігри для Google Play та Steam.">
+    <meta name="twitter:image" content="https://limonadoent.com/images/nichita.jpg">
+    <link rel="alternate" hreflang="ro-MD" href="https://limonadoent.com/ro/">
+    <link rel="alternate" hreflang="ru-MD" href="https://limonadoent.com/ru/">
+    <link rel="alternate" hreflang="uk" href="https://limonadoent.com/ua/">
+    <link rel="alternate" hreflang="x-default" href="https://limonadoent.com/">
+    <link rel="canonical" href="https://limonadoent.com/ua/">
+    <title>Онлайн-курси програмування та Unity | Перший урок безкоштовно</title>
+    <link rel="icon" href="../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #1a202c;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            padding: 16px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #48bb78;
+        }
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .flag {
+            width: 28px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 3px;
+            transition: transform 0.3s ease;
+        }
+        .flag:hover {
+            transform: scale(1.2);
+        }
+        .header-spacer {
+            height: 80px;
+        }
+        #hero {
+            background: url('../images/hero-bg.jpg') no-repeat center/cover;
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 140px 20px;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+        #hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        #hero h2 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            animation: slideInUp 1s ease-out;
+        }
+        #hero p {
+            font-size: 1.25rem;
+            margin-bottom: 24px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .free-lesson-message {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #48bb78;
+            margin-bottom: 24px;
+        }
+        .btn {
+            background: #4299e1;
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 12px;
+        }
+        .btn:hover {
+            background: #3182ce;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .free-lesson-btn {
+            background: #48bb78;
+            color: #1a202c;
+        }
+        .free-lesson-btn:hover {
+            background: #38a169;
+        }
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid white;
+        }
+        .secondary-btn:hover {
+            background: white;
+            color: #1a202c;
+        }
+        #course {
+            padding: 120px 20px;
+            background: #ffffff;
+        }
+        #course h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a202c;
+        }
+        #course > p {
+            text-align: center;
+            font-size: 1.25rem;
+            margin-bottom: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .module {
+            background: #f7fafc;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .module:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .module h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+        }
+        .module p {
+            font-size: 1.15rem;
+            margin-bottom: 16px;
+            color: #4a5568;
+        }
+        .module ul {
+            list-style: disc;
+            padding-left: 24px;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+        .module .practice {
+            font-style: italic;
+            color: #4a5568;
+        }
+        .module .outcomes {
+            font-size: 1rem;
+            color: #2d3748;
+        }
+        .module .module-btn {
+            background: #48bb78;
+            color: #1a202c;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin-top: 16px;
+        }
+        .module .module-btn:hover {
+            background: #38a169;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        #about {
+            padding: 120px 20px;
+            background: #f5f7fa;
+        }
+        #about h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a202c;
+        }
+        .about-content {
+            display: flex;
+            gap: 48px;
+            align-items: center;
+        }
+        .about-img {
+            width: 350px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .about-img:hover {
+            transform: scale(1.05);
+        }
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+        }
+        .about-text strong {
+            color: #4299e1;
+        }
+        #games {
+            padding: 120px 20px;
+            background: #ffffff;
+        }
+        #games h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a202c;
+        }
+        #games > p {
+            text-align: center;
+            font-size: 1.25rem;
+            margin-bottom: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .game-card {
+            background: #f7fafc;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+        .game-card:nth-child(5) { animation-delay: 0.5s; }
+        .game-card:nth-child(6) { animation-delay: 0.6s; }
+        .game-card:nth-child(7) { animation-delay: 0.7s; }
+        .game-card:nth-child(8) { animation-delay: 0.8s; }
+        .game-card:nth-child(9) { animation-delay: 0.9s; }
+        .game-card:nth-child(10) { animation-delay: 1s; }
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+        .game-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            transition: transform 0.4s ease;
+        }
+        .game-img:hover {
+            transform: scale(1.08);
+        }
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+        .game-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+        .game-info span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .game-info strong {
+            color: #2d3748;
+        }
+        .game-btn {
+            background: #4299e1;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .game-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        #contact {
+            padding: 120px 20px;
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            text-align: center;
+        }
+        #contact h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+        #contact p {
+            font-size: 1.25rem;
+            margin-bottom: 32px;
+        }
+        .contact-info {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+        .contact-info li {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+        .contact-info a {
+            color: #48bb78;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .contact-info a:hover {
+            color: #38a169;
+        }
+        footer {
+            background: #1a202c;
+            color: white;
+            text-align: center;
+            padding: 32px 0;
+        }
+        footer p {
+            font-size: 1rem;
+        }
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 1024px) {
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #hero h2 {
+                font-size: 2.5rem;
+            }
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about-img {
+                width: 300px;
+            }
+        }
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 16px;
+            }
+            header h1 {
+                font-size: 1.75rem;
+            }
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+            }
+            nav {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .language-selector {
+                justify-content: center;
+                margin-top: 12px;
+            }
+            #hero {
+                padding: 100px 20px 60px;
+            }
+            #hero h2 {
+                font-size: 2rem;
+            }
+            .free-lesson-message {
+                font-size: 1.2rem;
+            }
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Микита Левандович</h1>
+            <nav>
+                <ul>
+                    <li><a href="#course">Курс</a></li>
+                    <li><a href="#about">Про мене</a></li>
+                    <li><a href="#games">Ігри</a></li>
+                    <li><a href="#contact">Контакти</a></li>
+                </ul>
+                <div class="language-selector">
+                    <a href="https://limonadoent.com/en/" title="Англійська"><img src="../flags/en.png" alt="Прапор англійської мови" class="flag"></a>
+                    <a href="https://limonadoent.com/ro/" title="Румунська"><img src="../flags/ro.png" alt="Прапор румунської мови" class="flag"></a>
+                    <a href="https://limonadoent.com/ru/" title="Російська"><img src="../flags/ru.png" alt="Прапор російської мови" class="flag"></a>
+                    <a href="https://limonadoent.com/ua/" title="Українська"><img src="../flags/ua.png" alt="Прапор української мови" class="flag"></a>
+                    <a href="https://limonadoent.com/cn/" title="Китайська"><img src="../flags/cn.png" alt="Прапор китайської мови" class="flag"></a>
+                    <a href="https://limonadoent.com/bg/" title="Болгарський"><img src="../flags/bg.png" alt="Прапор Болгарії" class="flag"></a>
+                    <a href="https://limonadoent.com/gr/" title="Грецька"><img src="../flags/gr.png" alt="Прапор Греції" class="flag"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="header-spacer"></div>
+    <section id="hero">
+        <div class="container">
+            <h2>Онлайн-курси програмування та Unity</h2>
+            <p>Приєднуйся до моїх онлайн-курсів з розробки ігор на Unity і стан професійним розробником ігор! Перший урок — безкоштовно!</p>
+            <p class="free-lesson-message">Спробуй безкоштовно! Перше заняття — без оплати!</p>
+            <a href="#contact" class="btn free-lesson-btn">Записатися на безкоштовний урок</a>
+            <a href="#course" class="btn secondary-btn">Дізнатися більше</a>
+        </div>
+    </section>
+    <section id="course">
+        <div class="container">
+            <h2>Онлайн-курси з розробки ігор на Unity</h2>
+            <p>Занурся у світ розробки ігор з нуля до професійного рівня! Цей курс поєднує теорію, практику та інтерактивні завдання, використовуючи <strong>Monaco Editor</strong> для кодування та вбудовані тести для перевірки знань. Опануй <strong>C#</strong>, <strong>Unity</strong>, мережеві технології, багатопоточність та <strong>DOTS</strong>. Створи 2D, 3D та мультиплеєрні ігри, завершивши курс грою, готовою для портфоліо. Перший урок безкоштовно!</p>
+            <div class="chart-container">
+                <canvas id="courseProgressChart"></canvas>
+            </div>
+            <div class="module">
+                <h3>Модуль 1: Основи програмування на C#</h3>
+                <p>Почни з основ C#, мови, що лежить в основі Unity. Вивчи синтаксис, змінні, керуючі конструкції та об’єктно-орієнтоване програмування (ООП). Навчися працювати з колекціями та обробляти помилки.</p>
+                <ul>
+                    <li>Вступ до C#: синтаксис, змінні, типи даних.</li>
+                    <li>Керуючі конструкції: if, switch, цикли.</li>
+                    <li>Функції та методи: параметри, повернення значень.</li>
+                    <li>ООП: класи, об’єкти, спадкування.</li>
+                    <li>Колекції: масиви, списки, словники.</li>
+                    <li>Обробка винятків та основи вводу-виводу.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Створи скрипт для керування персонажем (рух, здоров’я, збереження даних).</p>
+                <p class="outcomes"><strong>Результат:</strong> Розуміння C# для створення ігрової логіки.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 2: Основи Unity</h3>
+                <p>Ознайомся з Unity — потужним рушієм для створення ігор. Навчися працювати з інтерфейсом, GameObjects, фізикою та скриптами. Дізнайся, як створювати ігри для різних платформ.</p>
+                <ul>
+                    <li>Інтерфейс Unity: сцени, GameObjects, компоненти.</li>
+                    <li>Скриптинг: підключення C# до Unity.</li>
+                    <li>Фізика: Rigidbody, Collider.</li>
+                    <li>Ввід: клавіатура, миша, сенсорне керування.</li>
+                    <li>Збірка та запуск ігор на Windows, Android, WebGL.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Створи сцену з кубом, що рухається, реагує на фізику та ввід.</p>
+                <p class="outcomes"><strong>Результат:</strong> Здатність створювати прості сцени в Unity.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 3: Розробка 2D-ігор</h3>
+                <p>Створи свою першу 2D-гру! Вивчи роботу зі спрайтами, анімаціями, фізикою та інтерфейсом. Навчися проєктувати рівні за допомогою Tilemap.</p>
+                <ul>
+                    <li>Робота зі спрайтами та анімаціями (Animator).</li>
+                    <li>2D-фізика: Rigidbody2D, Collider2D.</li>
+                    <li>Інтерфейс: Canvas, кнопки, TextMeshPro.</li>
+                    <li>Аудіо: звукові ефекти, фонова музика.</li>
+                    <li>Створення рівнів за допомогою Tilemap.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Розроби 2D-платформер з персонажем, що стрибає, ворогами та меню.</p>
+                <p class="outcomes"><strong>Результат:</strong> Повноцінна 2D-гра з інтерактивними елементами.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 4: Розробка 3D-ігор</h3>
+                <p>Занурся у 3D-геймдев! Опануй імпорт моделей, налаштування освітлення, фізику та керування камерою. Створи динамічні сцени з анімаціями.</p>
+                <ul>
+                    <li>Імпорт 3D-моделей та матеріалів.</li>
+                    <li>Освітлення та шейдери для реалістичної графіки.</li>
+                    <li>3D-фізика: Rigidbody, Collider.</li>
+                    <li>Керування камерою: Cinemachine.</li>
+                    <li>Анімації: Animator, blend trees.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Створи 3D-пригоду з гравцем, ворогами та AI-навігацією.</p>
+                <p class="outcomes"><strong>Результат:</strong> Навички створення захоплюючих 3D-ігор.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 5: Проміжні теми Unity</h3>
+                <p>Покращуй свої ігри за допомогою просунутих технік. Навчися створювати візуальні ефекти, складні інтерфейси та оптимізувати продуктивність.</p>
+                <ul>
+                    <li>Системи частинок: ефекти вогню, диму.</li>
+                    <li>Просунутий інтерфейс: UI Toolkit, анімації інтерфейсу.</li>
+                    <li>Оптимізація: Profiler, batching, LOD.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Оптимізуй сцену з частинками та створи HUD з міні-картою.</p>
+                <p class="outcomes"><strong>Результат:</strong> Вміння створювати візуально привабливі та оптимізовані ігри.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 6: Основи мережевого програмування</h3>
+                <p>Ознайомся з мережевими технологіями для мультиплеєрних ігор. Вивчи протоколи TCP/UDP та методи боротьби із затримками.</p>
+                <ul>
+                    <li>Протоколи: TCP (надійність), UDP (швидкість).</li>
+                    <li>Мережеві архітектури: клієнт-сервер, P2P.</li>
+                    <li>Обробка затримок: інтерполяція, екстраполяція.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Створи клієнт-серверний додаток для чату.</p>
+                <p class="outcomes"><strong>Результат:</strong> Розуміння основ мережевого програмування.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 7: Багатопоточне програмування</h3>
+                <p>Прискор свої ігри за допомогою багатопоточності. Опануй потоки, Task Parallel Library та їх безпечне застосування в Unity.</p>
+                <ul>
+                    <li>Вступ до потоків та Task Parallel Library.</li>
+                    <li>Синхронізація: lock, Monitor.</li>
+                    <li>Багатопоточність у Unity: фонові задачі.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Реалізуй фонове обчислення шляху для AI в Unity.</p>
+                <p class="outcomes"><strong>Результат:</strong> Навички оптимізації продуктивності через потоки.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 8: Мультиплеєр у Unity</h3>
+                <p>Створи мультиплеєрні ігри з Netcode for GameObjects. Навчися синхронізувати об’єкти, використовувати RPC та організовувати лобі.</p>
+                <ul>
+                    <li>Netcode for GameObjects: NetworkObjects, RPC.</li>
+                    <li>Синхронізація стану: NetworkVariables.</li>
+                    <li>Матчмейкінг та лобі через Unity Services.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Розроби 2D-мультиплеєрний шутер із синхронізованим геймплеєм.</p>
+                <p class="outcomes"><strong>Результат:</strong> Здатність створювати мультиплеєрні ігри.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 9: Data-Oriented Technology Stack (DOTS)</h3>
+                <p>Опануй DOTS для високопродуктивних ігор. Вивчи ECS, Jobs System та Burst Compiler для роботи з тисячами об’єктів.</p>
+                <ul>
+                    <li>ECS: сутності, компоненти, системи.</li>
+                    <li>Jobs System та Burst Compiler для оптимізації.</li>
+                    <li>Створення масштабних симуляцій.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Створи гру з тисячами рухомих об’єктів, використовуючи DOTS.</p>
+                <p class="outcomes"><strong>Результат:</strong> Навички створення високопродуктивних ігор.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 10: Просунута оптимізація та реліз</h3>
+                <p>Підготуй гру до релізу! Навчися оптимізувати пам’ять, розробляти для різних платформ та монетизувати проєкти.</p>
+                <ul>
+                    <li>Керування пам’яттю: Addressables.</li>
+                    <li>Кросплатформна розробка: Android, WebGL.</li>
+                    <li>Аналітика та монетизація: Unity Ads.</li>
+                    <li>Публікація в Google Play, Steam.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Оптимізуй та випусти гру з аналітикою.</p>
+                <p class="outcomes"><strong>Результат:</strong> Гра, готова до релізу з монетизацією.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+            <div class="module">
+                <h3>Модуль 11: Фінальний проєкт</h3>
+                <p>Створи свою гру від концепції до публікації! Використай усі навички, включно з C#, Unity, DOTS або мультиплеєром, для портфоліо.</p>
+                <ul>
+                    <li>Планування: GDD, прототипування.</li>
+                    <li>Розробка: 2D, 3D або мультиплеєрна гра.</li>
+                    <li>Полірування та публікація: Itch.io, Google Play.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Розроби та опублікуй повноцінну гру.</p>
+                <p class="outcomes"><strong>Результат:</strong> Гра, готова для портфоліо, що демонструє твої навички.</p>
+                <a href="#contact" class="btn module-btn">Почати навчання</a>
+            </div>
+        </div>
+    </section>
+    <section id="about">
+        <div class="container">
+            <h2>Про мене</h2>
+            <div class="about-content">
+                <img src="../images/nichita.jpg" alt="Микита Левандович, викладач онлайн-курсів програмування" class="about-img">
+                <div class="about-text">
+                    <p>Привіт! Я Микита Левандович, мені 23 роки, і я захоплений розробник відеоігор з більш ніж <strong>5-річним досвідом</strong>. Програмування та створення ігор — це моя пристрасть. Я вірю, що за допомогою уяви та наполегливої праці можна створити цілий світ!</p>
+                    <p>Я працював у <strong>Success Games</strong> (холдинг Midnight Works) над проєктами для <strong>Steam</strong> та <strong>PlayStation</strong>. Мій найбільший проєкт включав <strong>понад 40 000 рядків коду</strong>, оптимізацію та інтеграцію сторонніх активів. Я швидко вчуся, знаходжу нові рішення та завжди доводжу задачі до кінця.</p>
+                    <p>Я закінчив <strong>Step IT Academy</strong> з дипломом із розробки ігор і вільно володію <strong>англійською мовою</strong>. Моє хобі — вигадувати та створювати ігри з нуля, втілюючи ідеї в дивовижні віртуальні світи.</p>
+                    <p>Ознайомся з моїми проєктами на <a href="https://github.com/levandovici?tab=repositories" target="_blank">GitHub</a> або відвідай розділ ігор <a href="#games">Ігри</a>.</p>
+                    <p>Хочеш вчитися розробці ігор? Мій Telegram-бот <a href="https://t.me/michitai_bot" target="_blank">@MICHITAI_BOT</a> пропонує <strong>безкоштовні навчальні картки</strong> з Unity та розробки ігор, щоб ти міг розпочати свій шлях у створенні ігор!</p>
+                    <p>🎮 <a href="https://api.limonadoent.com" target="_blank">api.limonadoent.com</a></p>
+                    <p>Дані та мультиплеєр для твоїх ігор — підключайся та створюй!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="games">
+        <div class="container">
+            <h2>Мої ігри</h2>
+            <p>Ознайомся з моїми проєктами, доступними в Google Play та у веб-версіях. Від зомбі-шутерів до симуляторів — спробуй їх прямо зараз!</p>
+            <div class="games-grid">
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
+                        <img src="../images/zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force" class="game-img">
+                    </a>
+                    <h3 class="game-title">Zombie Frenzy Force</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Шутер</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Рік:</strong> 2025</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank" class="btn game-btn">Завантажити в Google Play</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank">
+                        <img src="../images/monsters_rushing_logo.png" alt="Monsters Rushing" class="game-img">
+                    </a>
+                    <h3 class="game-title">Monsters Rushing</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Аркада</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Рік:</strong> 2020</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank" class="btn game-btn">Завантажити в Google Play</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank">
+                        <img src="../images/car_driving_multiplayer_logo.png" alt="Car Driving Multiplayer" class="game-img">
+                    </a>
+                    <h3 class="game-title">Car Driving Multiplayer</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Симулятор</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Рік:</strong> 2023</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank" class="btn game-btn">Завантажити в Google Play</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank">
+                        <img src="../images/scale_it_logo.png" alt="Scale It" class="game-img">
+                    </a>
+                    <h3 class="game-title">Scale It</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Пазл</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Рік:</strong> 2022</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank" class="btn game-btn">Завантажити в Google Play</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank">
+                        <img src="../images/hit_of_cube_logo.png" alt="Hit of Cube" class="game-img">
+                    </a>
+                    <h3 class="game-title">Hit of Cube</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Аркада</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Рік:</strong> 2021</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank" class="btn game-btn">Завантажити в Google Play</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank">
+                        <img src="../images/monsters_vs_bombs_logo.png" alt="Monsters vs Bombs" class="game-img">
+                    </a>
+                    <h3 class="game-title">Monsters vs Bombs</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Стратегія</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Рік:</strong> 2019</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank" class="btn game-btn">Завантажити в Google Play</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank">
+                        <img src="../images/space_flash_logo.png" alt="Space Flash" class="game-img">
+                    </a>
+                    <h3 class="game-title">Space Flash</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Шутер</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Рік:</strong> 2021</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank" class="btn game-btn">Завантажити в Google Play</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://games.limonadoent.com/web/blooming-garden" target="_blank">
+                        <img src="../images/blooming_garden_logo.jpg" alt="Blooming Garden" class="game-img">
+                    </a>
+                    <h3 class="game-title">Blooming Garden</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Симулятор</span>
+                        <span><strong>Платформа:</strong> Веб</span>
+                        <span><strong>Рік:</strong> 2025</span>
+                    </div>
+                    <a href="https://games.limonadoent.com/web/blooming-garden" target="_blank" class="btn game-btn">Грати онлайн</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://games.limonadoent.com/web/tea-time-tycoon" target="_blank">
+                        <img src="../images/tea_time_tycoon_logo.jpg" alt="Tea Time Tycoon" class="game-img">
+                    </a>
+                    <h3 class="game-title">Tea Time Tycoon</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Тайм-менеджмент</span>
+                        <span><strong>Платформа:</strong> Веб</span>
+                        <span><strong>Рік:</strong> 2025</span>
+                    </div>
+                    <a href="https://games.limonadoent.com/web/tea-time-tycoon" target="_blank" class="btn game-btn">Грати онлайн</a>
+                </div>
+                <div class="game-card">
+                    <a href="https://games.limonadoent.com/web/latte-lab" target="_blank">
+                        <img src="../images/latte_lab_logo.jpg" alt="Latte Lab" class="game-img">
+                    </a>
+                    <h3 class="game-title">Latte Lab</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Симулятор</span>
+                        <span><strong>Платформа:</strong> Веб</span>
+                        <span><strong>Рік:</strong> 2025</span>
+                    </div>
+                    <a href="https://games.limonadoent.com/web/latte-lab" target="_blank" class="btn game-btn">Грати онлайн</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <div class="container">
+            <h2>Зв’язатися зі мною</h2>
+            <p>Хочеш записатися на безкоштовний перший урок онлайн або обговорити курс? Пиши або телефонуй!</p>
+            <ul class="contact-info">
+                <li><strong>Email:</strong> <a href="mailto:michitai@limonadoent.com">michitai@limonadoent.com</a></li>
+                <li><strong>Телефон:</strong> <a href="tel:+37378814810">+37378814810</a></li>
+                <li><strong>Telegram:</strong> <a href="https://t.me/michitai" target="_blank">@michitai</a></li>
+            </ul>
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p>© 2025 Микита Левандович. Усі права захищено.</p>
+        </div>
+    </footer>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "Онлайн-курси програмування та Unity",
+      "description": "Опануй програмування на C#, Unity та розробку ігор онлайн з Микитою Левандовичем. Перший урок безкоштовно!",
+      "provider": {
+        "@type": "Organization",
+        "name": "Limonadoent",
+        "sameAs": "https://limonadoent.com"
+      },
+      "inLanguage": "uk",
+      "courseMode": "online",
+      "offers": {
+        "@type": "Offer",
+        "name": "Перший урок безкоштовно",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "validFrom": "2025-01-01"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Limonadoent",
+      "description": "Міжнародні онлайн-курси програмування та розробки ігор на Unity",
+      "url": "https://limonadoent.com",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+37378814810",
+        "contactType": "customer service",
+        "email": "michitai@limonadoent.com"
+      },
+      "sameAs": [
+        "https://t.me/michitai",
+        "https://github.com/levandovici"
+      ]
+    }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const anchors = document.querySelectorAll('a[href^="#"]');
+                if (anchors.length === 0) {
+                    console.warn('Не знайдено посилань для плавного прокручування.');
+                    return;
+                }
+                anchors.forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = anchor.getAttribute('href');
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            console.error(`Цільовий елемент ${targetId} не знайдено.`);
+                        }
+                    });
+                });
+                const adjustHeaderSpacer = () => {
+                    const header = document.querySelector('header');
+                    const spacer = document.querySelector('.header-spacer');
+                    if (header && spacer) {
+                        spacer.style.height = `${header.offsetHeight}px`;
+                    } else {
+                        console.warn('Елемент header або spacer не знайдено.');
+                    }
+                };
+                window.addEventListener('resize', adjustHeaderSpacer);
+                window.addEventListener('load', adjustHeaderSpacer);
+                adjustHeaderSpacer();
+                // Ініціалізація Chart.js
+                const ctx = document.getElementById('courseProgressChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Модуль 1", "Модуль 2", "Модуль 3", "Модуль 4", "Модуль 5", "Модуль 6", "Модуль 7", "Модуль 8", "Модуль 9", "Модуль 10", "Модуль 11"],
+                        datasets: [{
+                            label: "Складність курсу",
+                            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                            backgroundColor: ["#4299e1", "#4299e1", "#4299e1", "#4299e1", "#4299e1", "#48bb78", "#48bb78", "#48bb78", "#f6ad55", "#f6ad55", "#f6ad55"],
+                            borderColor: ["#3182ce", "#3182ce", "#3182ce", "#3182ce", "#3182ce", "#38a169", "#38a169", "#38a169", "#ed8936", "#ed8936", "#ed8936"],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: "Рівень складності",
+                                    color: "#1a202c",
+                                    font: { size: 14 }
+                                },
+                                ticks: { color: "#1a202c" }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "Модулі курсу",
+                                    color: "#1a202c",
+                                    font: { size: 14 }
+                                },
+                                ticks: { color: "#1a202c" }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: "Прогресія складності курсу",
+                                color: "#1a202c",
+                                font: { size: 18 }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Помилка скрипту:', error.message, error.stack);
+            }
+        });
+    </script>
+</body>
+</html>

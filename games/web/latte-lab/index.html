@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latte Lab – Create new drinks to wow critics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes criticEnter {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes criticLeave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        @keyframes pulseAngry {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounceHappy {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        .critic-enter {
+            animation: criticEnter 0.5s ease-out;
+        }
+        .critic-leave {
+            animation: criticLeave 0.5s ease-in;
+        }
+        .angry {
+            animation: pulseAngry 0.5s infinite;
+        }
+        .happy {
+            animation: bounceHappy 0.5s ease infinite;
+        }
+        .progress-bar {
+            transition: width 0.1s linear;
+        }
+        .ingredient-btn {
+            transition: all 0.2s ease;
+        }
+        .ingredient-btn:active {
+            transform: scale(0.95);
+        }
+        .drink-glass {
+            transition: all 0.3s ease;
+        }
+        .drink-glass:hover {
+            transform: rotate(-2deg) scale(1.03);
+        }
+        .floating-rating {
+            position: absolute;
+            animation: floatUp 1s ease-out forwards;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        .shake {
+            animation: shake 0.5s ease;
+        }
+        #game-container {
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 font-sans">
+    <div id="game-container" class="flex flex-col">
+        <!-- Header -->
+        <header class="bg-amber-800 text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">
+                    <i class="fas fa-flask mr-2"></i>Latte Lab
+                </h1>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-amber-700 px-3 py-1 rounded-full">
+                        <i class="fas fa-star mr-1"></i>
+                        <span class="font-bold" id="rating">0</span> pts
+                    </div>
+                    <div class="bg-amber-700 px-3 py-1 rounded-full">
+                        <i class="fas fa-clock mr-1"></i>
+                        <span id="time">60</span>s
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Game Area -->
+        <main class="flex-1 relative overflow-hidden">
+            <!-- Drink Station -->
+            <div class="absolute bottom-0 left-0 right-0 bg-amber-100 p-4 border-t-4 border-amber-700">
+                <div class="container mx-auto">
+                    <!-- Drink Display -->
+                    <div class="flex justify-center mb-4">
+                        <div class="relative drink-glass">
+                            <div class="w-24 h-32 bg-white rounded-b-full border-4 border-amber-300 flex items-end justify-center overflow-hidden shadow-lg">
+                                <div id="drink-mixture" class="w-full flex flex-col"></div>
+                            </div>
+                            <div class="absolute -top-4 -right-4 bg-amber-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-md">
+                                <span id="drink-percentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ingredients -->
+                    <div class="grid grid-cols-4 gap-2 mb-4">
+                        <button class="ingredient-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow" data-ingredient="espresso">
+                            <i class="fas fa-coffee mr-1"></i> Espresso
+                        </button>
+                        <button class="ingredient-btn bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded-full shadow" data-ingredient="strawberry">
+                            <i class="fas fa-stroopwafel mr-1"></i> Strawberry
+                        </button>
+                        <button class="ingredient-btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full shadow" data-ingredient="matcha">
+                            <i class="fas fa-leaf mr-1"></i> Matcha
+                        </button>
+                        <button class="ingredient-btn bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-full shadow" data-ingredient="lavender">
+                            <i class="fas fa-spa mr-1"></i> Lavender
+                        </button>
+                    </div>
+                    
+                    <!-- Special Ingredients -->
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <button class="ingredient-btn bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold py-2 px-4 rounded-full shadow" data-ingredient="caramel">
+                            <i class="fas fa-fire mr-1"></i> Caramel
+                        </button>
+                        <button class="ingredient-btn bg-white hover:bg-gray-100 text-gray-800 font-bold py-2 px-4 rounded-full shadow border border-gray-300" data-ingredient="coconut">
+                            <i class="fas fa-cloud mr-1"></i> Coconut
+                        </button>
+                        <button class="ingredient-btn bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow" data-ingredient="chili">
+                            <i class="fas fa-pepper-hot mr-1"></i> Chili
+                        </button>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="reset-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-full shadow">
+                            <i class="fas fa-trash-alt mr-1"></i> Empty Glass
+                        </button>
+                        <button id="serve-btn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-full shadow">
+                            <i class="fas fa-paper-plane mr-1"></i> Serve Drink
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Critics Area -->
+            <div id="critics-area" class="container mx-auto h-full pt-8 pb-52 px-4">
+                <!-- Critics will be added here dynamically -->
+            </div>
+        </main>
+
+        <!-- Game Over Modal -->
+        <div id="game-over-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
+                <h2 class="text-3xl font-bold text-amber-800 mb-4">Lab Session Complete!</h2>
+                <p class="text-gray-700 mb-2">You earned <span id="final-rating" class="font-bold">0</span> points!</p>
+                <p class="text-gray-700 mb-6">Your critic rating: <span id="critic-rating" class="font-bold">Novice</span></p>
+                <div class="flex flex-col space-y-3">
+                    <button id="restart-btn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-full">
+                        <i class="fas fa-redo mr-2"></i> Mix Again
+                    </button>
+                    <button id="share-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">
+                        <i class="fas fa-share-alt mr-2"></i> Share Score
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="fixed inset-0 bg-amber-800 bg-opacity-90 flex flex-col items-center justify-center z-50 text-white p-4">
+            <div class="text-center max-w-md">
+                <h1 class="text-4xl font-bold mb-4">
+                    <i class="fas fa-flask mr-2"></i>Latte Lab
+                </h1>
+                <p class="text-xl mb-6">Create new drinks to wow critics with fun flavors!</p>
+                <div class="mb-8 bg-white bg-opacity-20 p-4 rounded-lg">
+                    <h3 class="font-bold mb-2">Lab Instructions:</h3>
+                    <ul class="text-left space-y-2">
+                        <li><i class="fas fa-coffee mr-2"></i>Mix ingredients to match critic requests</li>
+                        <li><i class="fas fa-star mr-2"></i>More creative mixtures earn bonus points</li>
+                        <li><i class="fas fa-hourglass-half mr-2"></i>You have 60 seconds to impress!</li>
+                        <li><i class="fas fa-lightbulb mr-2"></i>Try unexpected combinations for high scores</li>
+                    </ul>
+                </div>
+                <button id="start-btn" class="bg-white text-amber-800 font-bold py-3 px-8 rounded-full text-lg shadow-lg hover:bg-amber-100 transition">
+                    Start Mixing! <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let ratingPoints = 0;
+        let timeLeft = 60;
+        let gameInterval;
+        let criticInterval;
+        let drinkMixture = {
+            espresso: 0,
+            strawberry: 0,
+            matcha: 0,
+            lavender: 0,
+            caramel: 0,
+            coconut: 0,
+            chili: 0
+        };
+        let totalDrink = 0;
+        let gameActive = false;
+        let critics = [];
+        let difficulty = 1;
+
+        // Drink ingredient colors and layers
+        const ingredientColors = {
+            espresso: 'bg-amber-800',
+            strawberry: 'bg-pink-300',
+            matcha: 'bg-green-400',
+            lavender: 'bg-purple-200',
+            caramel: 'bg-yellow-300',
+            coconut: 'bg-white',
+            chili: 'bg-red-500'
+        };
+
+        // Critic ratings based on score
+        const criticRatings = [
+            { threshold: 0, title: "Novice Mixologist" },
+            { threshold: 100, title: "Aspiring Barista" },
+            { threshold: 250, title: "Flavor Artist" },
+            { threshold: 500, title: "Master Brewer" },
+            { threshold: 750, title: "Coffee Scientist" },
+            { threshold: 1000, title: "Latte Legend" }
+        ];
+
+        // Critic types with preferences
+        const criticTypes = [
+            {
+                name: "Coffee Connoisseur",
+                icon: "fa-mug-hot",
+                color: "amber-600",
+                possibleRequests: [
+                    { espresso: 60, strawberry: 10, matcha: 0, lavender: 0, caramel: 30, coconut: 0, chili: 0 },
+                    { espresso: 70, strawberry: 0, matcha: 0, lavender: 0, caramel: 0, coconut: 30, chili: 0 }
+                ],
+                likes: ["espresso", "caramel"],
+                dislikes: ["strawberry", "lavender"]
+            },
+            {
+                name: "Dessert Lover",
+                icon: "fa-ice-cream",
+                color: "pink-400",
+                possibleRequests: [
+                    { espresso: 30, strawberry: 40, matcha: 0, lavender: 0, caramel: 30, coconut: 0, chili: 0 },
+                    { espresso: 20, strawberry: 50, matcha: 0, lavender: 0, caramel: 30, coconut: 0, chili: 0 }
+                ],
+                likes: ["strawberry", "caramel"],
+                dislikes: ["chili", "lavender"]
+            },
+            {
+                name: "Wellness Guru",
+                icon: "fa-spa",
+                color: "green-500",
+                possibleRequests: [
+                    { espresso: 10, strawberry: 0, matcha: 60, lavender: 30, caramel: 0, coconut: 0, chili: 0 },
+                    { espresso: 0, strawberry: 0, matcha: 50, lavender: 50, caramel: 0, coconut: 0, chili: 0 }
+                ],
+                likes: ["matcha", "lavender"],
+                dislikes: ["espresso", "chili"]
+            },
+            {
+                name: "Adventurous Eater",
+                icon: "fa-pepper-hot",
+                color: "red-500",
+                possibleRequests: [
+                    { espresso: 40, strawberry: 0, matcha: 0, lavender: 0, caramel: 0, coconut: 40, chili: 20 },
+                    { espresso: 30, strawberry: 0, matcha: 0, lavender: 0, caramel: 50, coconut: 0, chili: 20 }
+                ],
+                likes: ["chili", "coconut"],
+                dislikes: ["strawberry", "lavender"]
+            }
+        ];
+
+        // Special combinations with bonus points
+        const specialCombinations = [
+            {
+                ingredients: { espresso: 30, strawberry: 30, matcha: 0, lavender: 0, caramel: 40, coconut: 0, chili: 0 },
+                name: "Strawberry Caramel Dream",
+                bonus: 50
+            },
+            {
+                ingredients: { espresso: 20, strawberry: 0, matcha: 40, lavender: 40, caramel: 0, coconut: 0, chili: 0 },
+                name: "Zen Garden Latte",
+                bonus: 40
+            },
+            {
+                ingredients: { espresso: 40, strawberry: 0, matcha: 0, lavender: 0, caramel: 0, coconut: 40, chili: 20 },
+                name: "Tropical Fire",
+                bonus: 60
+            },
+            {
+                ingredients: { espresso: 0, strawberry: 0, matcha: 50, lavender: 0, caramel: 50, coconut: 0, chili: 0 },
+                name: "Sweet Green Elixir",
+                bonus: 30
+            }
+        ];
+
+        // DOM elements
+        const startScreen = document.getElementById('start-screen');
+        const gameOverModal = document.getElementById('game-over-modal');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const shareBtn = document.getElementById('share-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const serveBtn = document.getElementById('serve-btn');
+        const ingredientBtns = document.querySelectorAll('.ingredient-btn');
+        const drinkMixtureElement = document.getElementById('drink-mixture');
+        const drinkPercentageElement = document.getElementById('drink-percentage');
+        const ratingElement = document.getElementById('rating');
+        const timeElement = document.getElementById('time');
+        const finalRatingElement = document.getElementById('final-rating');
+        const criticRatingElement = document.getElementById('critic-rating');
+        const criticsArea = document.getElementById('critics-area');
+
+        // Start game
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+        
+        // Share button
+        shareBtn.addEventListener('click', () => {
+            const rating = criticRatingElement.textContent;
+            alert(`I earned ${ratingPoints} points and achieved the rank of ${rating} in Latte Lab! Can you discover all the special drinks?`);
+        });
+
+        // Reset drink mixture
+        resetBtn.addEventListener('click', resetDrink);
+
+        // Serve drink
+        serveBtn.addEventListener('click', serveDrink);
+
+        // Add ingredients
+        ingredientBtns.forEach(btn => {
+            btn.addEventListener('click', () => addIngredient(btn.dataset.ingredient));
+        });
+
+        function startGame() {
+            // Reset game state
+            ratingPoints = 0;
+            timeLeft = 60;
+            difficulty = 1;
+            critics = [];
+            ratingElement.textContent = ratingPoints;
+            timeElement.textContent = timeLeft;
+            
+            // Reset drink
+            resetDrink();
+            
+            // Clear critics area
+            criticsArea.innerHTML = '';
+            
+            // Hide modals
+            startScreen.classList.add('hidden');
+            gameOverModal.classList.add('hidden');
+            
+            // Start game loops
+            gameActive = true;
+            gameInterval = setInterval(updateGame, 1000);
+            criticInterval = setInterval(spawnCritic, 3000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            clearInterval(criticInterval);
+            
+            // Remove all critics
+            critics.forEach(critic => {
+                if (critic.element && critic.element.parentNode) {
+                    critic.element.classList.add('critic-leave');
+                    setTimeout(() => {
+                        criticsArea.removeChild(critic.element);
+                    }, 500);
+                }
+            });
+            critics = [];
+            
+            // Determine critic rating
+            let rating = "Novice Mixologist";
+            for (let i = criticRatings.length - 1; i >= 0; i--) {
+                if (ratingPoints >= criticRatings[i].threshold) {
+                    rating = criticRatings[i].title;
+                    break;
+                }
+            }
+            
+            // Show game over modal
+            finalRatingElement.textContent = ratingPoints;
+            criticRatingElement.textContent = rating;
+            gameOverModal.classList.remove('hidden');
+        }
+
+        function updateGame() {
+            // Update timer
+            timeLeft--;
+            timeElement.textContent = timeLeft;
+            
+            // Update critics
+            updateCritics();
+            
+            // Increase difficulty
+            if (timeLeft % 10 === 0) {
+                difficulty += 0.2;
+            }
+            
+            // Check if time is up
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        function spawnCritic() {
+            if (!gameActive) return;
+            
+            // Select random critic type
+            const type = criticTypes[Math.floor(Math.random() * criticTypes.length)];
+            const request = type.possibleRequests[Math.floor(Math.random() * type.possibleRequests.length)];
+            
+            // Critic patience (decreases faster as difficulty increases)
+            const maxPatience = 10 + Math.random() * 5;
+            let patience = maxPatience;
+            
+            // Create critic element
+            const critic = document.createElement('div');
+            critic.className = 'critic-enter bg-white rounded-lg shadow-md p-4 mb-4 flex items-center justify-between border-l-4 border-amber-700';
+            
+            // Critic element content
+            critic.innerHTML = `
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-${type.color} flex items-center justify-center text-white text-xl mr-3">
+                        <i class="fas ${type.icon}"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold">${type.name}</div>
+                        <div class="text-xs text-gray-500">Wants something special!</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden mr-3">
+                        <div class="h-full bg-green-500 progress-bar" style="width: 100%"></div>
+                    </div>
+                    <div class="w-24 text-xs">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-amber-800"><i class="fas fa-coffee"></i> ${request.espresso}%</span>
+                            <span class="text-pink-300"><i class="fas fa-stroopwafel"></i> ${request.strawberry}%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-green-400"><i class="fas fa-leaf"></i> ${request.matcha}%</span>
+                            <span class="text-purple-200"><i class="fas fa-spa"></i> ${request.lavender}%</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add to DOM
+            criticsArea.appendChild(critic);
+            
+            // Get reference to patience bar
+            const patienceBar = critic.querySelector('.progress-bar');
+            
+            // Add critic to array
+            const criticObj = {
+                element: critic,
+                patience: patience,
+                maxPatience: maxPatience,
+                patienceBar: patienceBar,
+                served: false,
+                request: request,
+                type: type,
+                likes: type.likes,
+                dislikes: type.dislikes
+            };
+            critics.push(criticObj);
+            
+            // Start patience timer
+            criticObj.patienceInterval = setInterval(() => {
+                if (!gameActive) return;
+                
+                criticObj.patience -= 0.1 * difficulty;
+                const percent = (criticObj.patience / criticObj.maxPatience) * 100;
+                
+                // Update patience bar color and width
+                patienceBar.style.width = `${percent}%`;
+                if (percent < 30) {
+                    patienceBar.classList.remove('bg-green-500', 'bg-yellow-500');
+                    patienceBar.classList.add('bg-red-500');
+                    critic.classList.add('angry');
+                } else if (percent < 60) {
+                    patienceBar.classList.remove('bg-green-500', 'bg-red-500');
+                    patienceBar.classList.add('bg-yellow-500');
+                    critic.classList.remove('angry');
+                } else {
+                    patienceBar.classList.remove('bg-yellow-500', 'bg-red-500');
+                    patienceBar.classList.add('bg-green-500');
+                    critic.classList.remove('angry');
+                }
+                
+                // Critic leaves if patience runs out
+                if (criticObj.patience <= 0 && !criticObj.served) {
+                    criticLeave(criticObj, false);
+                }
+            }, 100);
+        }
+
+        function updateCritics() {
+            // Filter out served critics
+            critics = critics.filter(critic => !critic.served);
+        }
+
+        function addIngredient(ingredient) {
+            if (!gameActive || totalDrink >= 100) return;
+            
+            // Add to mixture
+            drinkMixture[ingredient] += 10;
+            if (drinkMixture[ingredient] > 100) drinkMixture[ingredient] = 100;
+            
+            // Update total
+            totalDrink = Object.values(drinkMixture).reduce((a, b) => a + b, 0);
+            if (totalDrink > 100) {
+                // If over 100%, scale everything down proportionally
+                const scale = 100 / totalDrink;
+                for (const key in drinkMixture) {
+                    drinkMixture[key] = Math.floor(drinkMixture[key] * scale);
+                }
+                totalDrink = 100;
+            }
+            
+            updateDrinkDisplay();
+        }
+
+        function resetDrink() {
+            // Reset mixture
+            for (const key in drinkMixture) {
+                drinkMixture[key] = 0;
+            }
+            totalDrink = 0;
+            
+            updateDrinkDisplay();
+        }
+
+        function updateDrinkDisplay() {
+            // Clear display
+            drinkMixtureElement.innerHTML = '';
+            
+            // Update percentage
+            drinkPercentageElement.textContent = `${totalDrink}%`;
+            
+            // Add layers to drink glass
+            const sortedIngredients = Object.entries(drinkMixture)
+                .filter(([_, value]) => value > 0)
+                .sort((a, b) => b[1] - a[1]);
+            
+            for (const [ingredient, value] of sortedIngredients) {
+                if (value > 0) {
+                    const layer = document.createElement('div');
+                    layer.className = `w-full ${ingredientColors[ingredient]}`;
+                    layer.style.height = `${value}%`;
+                    drinkMixtureElement.appendChild(layer);
+                }
+            }
+        }
+
+        function serveDrink() {
+            if (!gameActive || totalDrink === 0) return;
+            
+            // Find first waiting critic
+            const waitingCritic = critics.find(critic => !critic.served);
+            if (!waitingCritic) return;
+            
+            // Calculate similarity between drink and request
+            let similarity = 0;
+            let perfectMatch = true;
+            
+            for (const ingredient in drinkMixture) {
+                const diff = Math.abs(drinkMixture[ingredient] - waitingCritic.request[ingredient]);
+                similarity += (100 - diff);
+                
+                if (diff > 10) {
+                    perfectMatch = false;
+                }
+            }
+            
+            // Calculate base points
+            const basePoints = 10;
+            const bonusPoints = Math.floor(similarity / 4);
+            let points = basePoints + bonusPoints;
+            
+            // Check for special combinations
+            let specialBonus = 0;
+            let specialName = "";
+            
+            for (const combo of specialCombinations) {
+                let isMatch = true;
+                for (const ingredient in combo.ingredients) {
+                    if (Math.abs(drinkMixture[ingredient] - combo.ingredients[ingredient]) > 10) {
+                        isMatch = false;
+                        break;
+                    }
+                }
+                
+                if (isMatch) {
+                    specialBonus = combo.bonus;
+                    specialName = combo.name;
+                    break;
+                }
+            }
+            
+            // Apply likes/dislikes modifiers
+            let likeDislikeModifier = 1;
+            for (const ingredient in drinkMixture) {
+                if (drinkMixture[ingredient] > 0) {
+                    if (waitingCritic.likes.includes(ingredient)) {
+                        likeDislikeModifier += 0.2;
+                    }
+                    if (waitingCritic.dislikes.includes(ingredient)) {
+                        likeDislikeModifier -= 0.3;
+                    }
+                }
+            }
+            
+            // Calculate final points
+            points = Math.max(1, Math.floor(points * likeDislikeModifier)) + specialBonus;
+            
+            // Add points
+            ratingPoints += points;
+            ratingElement.textContent = ratingPoints;
+            
+            // Show feedback
+            if (specialBonus > 0) {
+                createFloatingRating(waitingCritic.element, `+${points} (${specialName})`, "text-yellow-500");
+            } else if (perfectMatch) {
+                createFloatingRating(waitingCritic.element, `+${points} (Perfect!)`, "text-green-500");
+            } else {
+                createFloatingRating(waitingCritic.element, `+${points}`, "text-amber-500");
+            }
+            
+            // Critic leaves
+            waitingCritic.served = true;
+            criticLeave(waitingCritic, true);
+            
+            // Reset drink
+            resetDrink();
+        }
+
+        function criticLeave(critic, happy) {
+            clearInterval(critic.patienceInterval);
+            critic.served = true;
+            
+            // Add appropriate class
+            critic.element.classList.remove('critic-enter');
+            critic.element.classList.add('critic-leave');
+            
+            // Change appearance based on mood
+            if (happy) {
+                critic.element.classList.add('bg-green-100', 'border-green-500', 'happy');
+            } else {
+                critic.element.classList.add('bg-red-100', 'border-red-500');
+            }
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                if (critic.element.parentNode) {
+                    criticsArea.removeChild(critic.element);
+                }
+            }, 500);
+        }
+
+        function createFloatingRating(element, rating, colorClass) {
+            const rect = element.getBoundingClientRect();
+            const floatingRating = document.createElement('div');
+            floatingRating.className = `floating-rating ${colorClass}`;
+            floatingRating.textContent = rating;
+            floatingRating.style.left = `${rect.left + rect.width / 2}px`;
+            floatingRating.style.top = `${rect.top}px`;
+            
+            document.body.appendChild(floatingRating);
+            
+            // Remove after animation
+            setTimeout(() => {
+                floatingRating.remove();
+            }, 1000);
+        }
+
+        // Start with the start screen visible
+        startScreen.classList.remove('hidden');
+    </script>
+</body>
+</html>

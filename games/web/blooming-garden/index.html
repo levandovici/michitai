@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blooming Garden</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        .flower-growth {
+            transition: all 0.5s ease;
+        }
+        .modal {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .modal-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-100 to-green-100 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-md">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="text-2xl font-bold text-purple-800">
+                <i class="fas fa-seedling mr-2"></i>
+                Blooming Garden
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="bg-white rounded-full px-4 py-2 shadow-md flex items-center">
+                    <i class="fas fa-coins text-yellow-500 mr-2"></i>
+                    <span id="coins" class="font-bold">100</span>
+                </div>
+                <button id="help-btn" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center">
+                    <i class="fas fa-question text-purple-600"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Garden Area -->
+        <div class="bg-white bg-opacity-70 rounded-3xl p-6 shadow-lg mb-6">
+            <div class="grid grid-cols-2 gap-4" id="garden">
+                <!-- Garden slots will be added here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Shop -->
+        <div class="bg-white bg-opacity-70 rounded-3xl p-6 shadow-lg">
+            <h2 class="text-xl font-bold text-purple-800 mb-4 flex items-center">
+                <i class="fas fa-shopping-basket mr-2"></i> Flower Shop
+            </h2>
+            <div class="grid grid-cols-3 gap-4" id="shop">
+                <!-- Shop items will be added here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div id="notification" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded hidden z-50"></div>
+
+        <!-- Help Modal -->
+        <div id="help-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 modal">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-purple-800">How to Play</h3>
+                    <button id="close-help" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="bg-purple-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-seedling text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Planting Flowers</h4>
+                            <p class="text-gray-600">Buy seeds from the shop and plant them in your garden.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-tint text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Watering</h4>
+                            <p class="text-gray-600">Water your plants to help them grow faster.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-coins text-yellow-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Harvesting</h4>
+                            <p class="text-gray-600">Collect flowers when they're fully grown to earn coins.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-chart-line text-green-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Rare Flowers</h4>
+                            <p class="text-gray-600">The longer you wait, the more valuable your flowers become!</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="got-it-btn" class="mt-6 w-full bg-purple-600 text-white py-2 rounded-lg font-bold hover:bg-purple-700 transition">
+                    Got it!
+                </button>
+            </div>
+        </div>
+
+        <!-- Flower Info Modal -->
+        <div id="flower-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 modal">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="flower-name" class="text-xl font-bold text-purple-800">Flower Name</h3>
+                    <button id="close-flower" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col items-center mb-4">
+                    <div id="flower-image" class="text-6xl mb-4">🌼</div>
+                    <div id="flower-status" class="text-sm font-semibold bg-purple-100 px-3 py-1 rounded-full">Growing</div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Growth:</span>
+                        <div class="w-32 bg-gray-200 rounded-full h-2.5">
+                            <div id="growth-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Water:</span>
+                        <div class="w-32 bg-gray-200 rounded-full h-2.5">
+                            <div id="water-bar" class="bg-blue-500 h-2.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Value:</span>
+                        <span id="flower-value" class="font-bold">$0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Time left:</span>
+                        <span id="time-left" class="font-bold">2:00</span>
+                    </div>
+                </div>
+                <div class="mt-6 grid grid-cols-2 gap-3">
+                    <button id="water-btn" class="bg-blue-100 text-blue-700 py-2 rounded-lg font-bold hover:bg-blue-200 transition flex items-center justify-center">
+                        <i class="fas fa-tint mr-2"></i> Water
+                    </button>
+                    <button id="harvest-btn" class="bg-yellow-100 text-yellow-700 py-2 rounded-lg font-bold hover:bg-yellow-200 transition flex items-center justify-center">
+                        <i class="fas fa-coins mr-2"></i> Harvest
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        const gameState = {
+            coins: 100,
+            gardenSlots: 6,
+            selectedSlot: null,
+            flowers: [],
+            shopItems: [
+                { id: 1, name: "Daisy", emoji: "🌼", price: 20, growthTime: 30, value: 50, rarity: 1 },
+                { id: 2, name: "Rose", emoji: "🌹", price: 40, growthTime: 60, value: 100, rarity: 2 },
+                { id: 3, name: "Tulip", emoji: "🌷", price: 60, growthTime: 90, value: 150, rarity: 3 },
+                { id: 4, name: "Sunflower", emoji: "🌻", price: 80, growthTime: 120, value: 200, rarity: 4 },
+                { id: 5, name: "Lavender", emoji: "🪻", price: 100, growthTime: 150, value: 300, rarity: 5 },
+                { id: 6, name: "Orchid", emoji: "🌸", price: 150, growthTime: 180, value: 500, rarity: 6 }
+            ]
+        };
+
+        // DOM elements
+        const gardenEl = document.getElementById('garden');
+        const shopEl = document.getElementById('shop');
+        const coinsEl = document.getElementById('coins');
+        const notificationEl = document.getElementById('notification');
+        const helpModalEl = document.getElementById('help-modal');
+        const helpBtnEl = document.getElementById('help-btn');
+        const closeHelpEl = document.getElementById('close-help');
+        const gotItBtnEl = document.getElementById('got-it-btn');
+        const flowerModalEl = document.getElementById('flower-modal');
+        const closeFlowerEl = document.getElementById('close-flower');
+        const flowerNameEl = document.getElementById('flower-name');
+        const flowerImageEl = document.getElementById('flower-image');
+        const flowerStatusEl = document.getElementById('flower-status');
+        const growthBarEl = document.getElementById('growth-bar');
+        const waterBarEl = document.getElementById('water-bar');
+        const flowerValueEl = document.getElementById('flower-value');
+        const timeLeftEl = document.getElementById('time-left');
+        const waterBtnEl = document.getElementById('water-btn');
+        const harvestBtnEl = document.getElementById('harvest-btn');
+
+        // Initialize the game
+        function initGame() {
+            renderGarden();
+            renderShop();
+            updateCoins();
+            
+            // Load saved game if exists
+            const savedGame = localStorage.getItem('bloomingGarden');
+            if (savedGame) {
+                const parsed = JSON.parse(savedGame);
+                gameState.coins = parsed.coins;
+                gameState.flowers = parsed.flowers;
+                updateCoins();
+                renderGarden();
+            }
+            
+            // Set up game loop
+            setInterval(gameLoop, 1000);
+        }
+
+        // Game loop
+        function gameLoop() {
+            let hasChanges = false;
+            
+            gameState.flowers.forEach(flower => {
+                if (flower.growth < 100) {
+                    // Natural growth
+                    flower.growth = Math.min(100, flower.growth + (100 / flower.growthTime) * 0.2);
+                    
+                    // Water effect
+                    if (flower.water > 0) {
+                        flower.growth = Math.min(100, flower.growth + (100 / flower.growthTime) * 0.3);
+                        flower.water = Math.max(0, flower.water - 5);
+                    } else {
+                        flower.growth = Math.min(100, flower.growth + (100 / flower.growthTime) * 0.1);
+                    }
+                    
+                    // Update value based on growth
+                    flower.currentValue = Math.floor(flower.value * (flower.growth / 100) * (1 + flower.rarity / 10));
+                    hasChanges = true;
+                }
+            });
+            
+            if (hasChanges) {
+                renderGarden();
+                saveGame();
+            }
+        }
+
+        // Render garden slots
+        function renderGarden() {
+            gardenEl.innerHTML = '';
+            
+            for (let i = 0; i < gameState.gardenSlots; i++) {
+                const flower = gameState.flowers[i];
+                const slotEl = document.createElement('div');
+                slotEl.className = 'bg-white rounded-xl p-4 shadow-md flex flex-col items-center justify-center h-32 cursor-pointer hover:shadow-lg transition';
+                slotEl.dataset.slot = i;
+                
+                if (flower) {
+                    const growthPercentage = Math.floor(flower.growth);
+                    const isReady = growthPercentage >= 100;
+                    
+                    // Flower appearance changes based on growth
+                    let flowerSize = 'text-3xl';
+                    if (growthPercentage < 25) {
+                        flowerSize = 'text-xl';
+                    } else if (growthPercentage < 50) {
+                        flowerSize = 'text-2xl';
+                    } else if (growthPercentage < 75) {
+                        flowerSize = 'text-3xl';
+                    } else {
+                        flowerSize = 'text-4xl';
+                    }
+                    
+                    slotEl.innerHTML = `
+                        <div class="flower-growth ${flowerSize} mb-2 ${isReady ? 'pulse' : ''}">${flower.emoji}</div>
+                        <div class="text-xs font-semibold ${isReady ? 'text-green-600' : 'text-purple-600'}">
+                            ${isReady ? 'Ready!' : `${growthPercentage}%`}
+                        </div>
+                    `;
+                    
+                    if (!isReady) {
+                        // Water indicator
+                        const waterPercentage = Math.floor(flower.water);
+                        slotEl.innerHTML += `
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                                <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${waterPercentage}%"></div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    slotEl.innerHTML = `
+                        <div class="text-gray-400 text-3xl mb-2"><i class="fas fa-plus-circle"></i></div>
+                        <div class="text-xs text-gray-500">Empty Slot</div>
+                    `;
+                }
+                
+                slotEl.addEventListener('click', () => handleSlotClick(i));
+                gardenEl.appendChild(slotEl);
+            }
+        }
+
+        // Render shop items
+        function renderShop() {
+            shopEl.innerHTML = '';
+            
+            gameState.shopItems.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'bg-white rounded-xl p-4 shadow-md flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition';
+                itemEl.dataset.id = item.id;
+                
+                itemEl.innerHTML = `
+                    <div class="text-3xl mb-2">${item.emoji}</div>
+                    <div class="font-bold text-purple-800">${item.name}</div>
+                    <div class="text-xs text-gray-600 mb-2">${item.growthTime}s to grow</div>
+                    <div class="flex items-center text-yellow-600 font-bold">
+                        <i class="fas fa-coins mr-1"></i> ${item.price}
+                    </div>
+                `;
+                
+                itemEl.addEventListener('click', () => handleShopItemClick(item));
+                shopEl.appendChild(itemEl);
+            });
+        }
+
+        // Handle slot click
+        function handleSlotClick(slotIndex) {
+            const flower = gameState.flowers[slotIndex];
+            gameState.selectedSlot = slotIndex;
+            
+            if (flower) {
+                // Show flower info modal
+                showFlowerModal(flower);
+            } else {
+                // Show shop (but we already have it below)
+                // Just scroll to shop
+                document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Handle shop item click
+        function handleShopItemClick(item) {
+            if (gameState.coins < item.price) {
+                showNotification("Not enough coins!", "red");
+                return;
+            }
+            
+            // Find first empty slot
+            let emptySlot = -1;
+            for (let i = 0; i < gameState.gardenSlots; i++) {
+                if (!gameState.flowers[i]) {
+                    emptySlot = i;
+                    break;
+                }
+            }
+            
+            if (emptySlot === -1) {
+                showNotification("No empty slots in your garden!", "red");
+                return;
+            }
+            
+            // Deduct coins
+            gameState.coins -= item.price;
+            updateCoins();
+            
+            // Add flower to garden
+            gameState.flowers[emptySlot] = {
+                ...item,
+                growth: 0,
+                water: 100,
+                currentValue: 0,
+                plantedAt: Date.now()
+            };
+            
+            renderGarden();
+            saveGame();
+            showNotification(`Planted a ${item.name} seed!`, "green");
+        }
+
+        // Show flower modal
+        function showFlowerModal(flower) {
+            flowerNameEl.textContent = flower.name;
+            flowerImageEl.textContent = flower.emoji;
+            
+            const growthPercentage = Math.floor(flower.growth);
+            const waterPercentage = Math.floor(flower.water);
+            const isReady = growthPercentage >= 100;
+            
+            growthBarEl.style.width = `${growthPercentage}%`;
+            waterBarEl.style.width = `${waterPercentage}%`;
+            
+            if (isReady) {
+                flowerStatusEl.textContent = "Ready to Harvest";
+                flowerStatusEl.className = "text-sm font-semibold bg-green-100 px-3 py-1 rounded-full";
+                waterBtnEl.classList.add('hidden');
+            } else {
+                flowerStatusEl.textContent = "Growing";
+                flowerStatusEl.className = "text-sm font-semibold bg-purple-100 px-3 py-1 rounded-full";
+                waterBtnEl.classList.remove('hidden');
+            }
+            
+            flowerValueEl.textContent = `$${flower.currentValue}`;
+            
+            // Calculate time left
+            if (!isReady) {
+                const timeLeft = Math.max(0, Math.ceil((flower.growthTime * (100 - growthPercentage)) / 100));
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timeLeftEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                timeLeftEl.textContent = "Ready!";
+            }
+            
+            // Set up button handlers
+            waterBtnEl.onclick = () => {
+                flower.water = 100;
+                growthBarEl.style.width = `${growthPercentage}%`;
+                waterBarEl.style.width = `100%`;
+                showNotification(`Watered ${flower.name}!`, "blue");
+                saveGame();
+            };
+            
+            harvestBtnEl.onclick = () => {
+                if (isReady) {
+                    gameState.coins += flower.currentValue;
+                    gameState.flowers[gameState.selectedSlot] = null;
+                    updateCoins();
+                    renderGarden();
+                    flowerModalEl.classList.add('hidden');
+                    showNotification(`Harvested ${flower.name} for $${flower.currentValue}!`, "green");
+                    saveGame();
+                }
+            };
+            
+            flowerModalEl.classList.remove('hidden');
+        }
+
+        // Show notification
+        function showNotification(message, color) {
+            notificationEl.textContent = message;
+            notificationEl.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded hidden z-50`;
+            
+            switch (color) {
+                case "green":
+                    notificationEl.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
+                    break;
+                case "red":
+                    notificationEl.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                    break;
+                case "blue":
+                    notificationEl.classList.add('bg-blue-100', 'border-blue-400', 'text-blue-700');
+                    break;
+                default:
+                    notificationEl.classList.add('bg-gray-100', 'border-gray-400', 'text-gray-700');
+            }
+            
+            notificationEl.classList.remove('hidden');
+            setTimeout(() => {
+                notificationEl.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Update coins display
+        function updateCoins() {
+            coinsEl.textContent = gameState.coins;
+        }
+
+        // Save game state
+        function saveGame() {
+            localStorage.setItem('bloomingGarden', JSON.stringify({
+                coins: gameState.coins,
+                flowers: gameState.flowers
+            }));
+        }
+
+        // Event listeners
+        helpBtnEl.addEventListener('click', () => {
+            helpModalEl.classList.remove('hidden');
+        });
+        
+        closeHelpEl.addEventListener('click', () => {
+            helpModalEl.classList.add('hidden');
+        });
+        
+        gotItBtnEl.addEventListener('click', () => {
+            helpModalEl.classList.add('hidden');
+        });
+        
+        closeFlowerEl.addEventListener('click', () => {
+            flowerModalEl.classList.add('hidden');
+        });
+
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
