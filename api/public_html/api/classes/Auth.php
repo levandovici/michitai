@@ -563,4 +563,5 @@ private function sendEmail($to, $subject, $message) {
     // TODO: Implement real email sending with SMTP
     // For now, just log the email content and return success
     return true;
+    }
 }
