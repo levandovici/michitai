@@ -220,6 +220,39 @@ class Config {
     }
 }
 
+class Database {
+    private static $connection = null;
+    private static $config = null;
+    
+    // Load environment configuration from private directory
+    public static function loadEnv() {
+        if (self::$config !== null) {
+            return self::$config;
+        }
+        
+        // Updated path for Hostinger private directory structure
+        $envFile = '/home/u833544264/domains/api.michitai.com/private/api_backend/.env';
+        if (!file_exists($envFile)) {
+            throw new Exception('Environment file not found at: ' . $envFile);
+        }
+        
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        self::$config = [];
+        
+        foreach ($lines as $line) {
+            if (strpos($line, '#') === 0) continue;
+            
+            $parts = explode('=', $line, 2);
+            if (count($parts) === 2) {
+                self::$config[trim($parts[0])] = trim($parts[1]);
+            }
+        }
+        
+        return self::$config;
+    }
+}
+
 // Load environment variables
 Config::loadEnv();
+Database::loadEnv();
 ?>

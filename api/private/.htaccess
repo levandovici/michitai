@@ -1,0 +1,30 @@
+# Deny all access to private directory
+# This prevents any web access to sensitive files
+Order deny,allow
+Deny from all
+
+# Additional security measures
+<Files "*">
+    Order deny,allow
+    Deny from all
+</Files>
+
+# Block common file types that should never be web accessible
+<FilesMatch "\.(php|env|log|sql|json|lock|md|txt|sh|bak|backup|old|tmp)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Block hidden files and directories
+<FilesMatch "^\.">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Disable directory browsing
+Options -Indexes
+
+# Disable script execution
+php_flag engine off
+AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi
+Options -ExecCGI

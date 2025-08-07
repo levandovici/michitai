@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michitai API Constructor</title>
+    <meta name="description" content="Multiplayer API Web Constructor with puzzle logic builder">
+    
+    <!-- Security headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&vault=true&intent=subscription"></script>
+    
+    <!-- Sortable.js for drag-and-drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    
+    <style>
+        .drag-item {
+            transition: all 0.3s ease;
+        }
+        .drag-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .drop-zone {
+            min-height: 200px;
+            border: 2px dashed #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.drag-over {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold">Michitai API Constructor</h1>
+                <div id="user-info" class="hidden">
+                    <span id="user-email" class="mr-4"></span>
+                    <span id="user-plan" class="bg-blue-500 px-2 py-1 rounded text-sm mr-4"></span>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded">Logout</button>
+                </div>
+                <div id="auth-buttons" class="space-x-2">
+                    <button id="login-btn" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded">Login</button>
+                    <button id="register-btn" class="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded">Register</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <div id="welcome-section" class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Welcome to Michitai API Constructor</h2>
+            <p class="text-gray-600 mb-6">Build multiplayer games with our drag-and-drop puzzle logic constructor</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="font-bold text-lg mb-2">Free Plan</h3>
+                    <p class="text-2xl font-bold text-green-600 mb-4">$0/month</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>✓ 1GB Storage</li>
+                        <li>✓ 10 Users</li>
+                        <li>✓ 3 Games</li>
+                        <li>✓ 1,000 API calls/day</li>
+                        <li>✓ Email notifications</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow border-2 border-blue-500">
+                    <h3 class="font-bold text-lg mb-2">Standard Plan</h3>
+                    <p class="text-2xl font-bold text-blue-600 mb-4">$9.99/month</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>✓ 10GB Storage</li>
+                        <li>✓ 50 Users</li>
+                        <li>✓ 20 Games</li>
+                        <li>✓ 10,000 API calls/day</li>
+                        <li>✓ Email notifications</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="font-bold text-lg mb-2">Pro Plan</h3>
+                    <p class="text-2xl font-bold text-purple-600 mb-4">$29.99/month</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>✓ 50GB Storage</li>
+                        <li>✓ 200 Users</li>
+                        <li>✓ 100 Games</li>
+                        <li>✓ 50,000 API calls/day</li>
+                        <li>✓ Email + Slack notifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard (hidden by default) -->
+        <div id="dashboard" class="hidden">
+            <!-- User Stats -->
+            <div id="user-stats" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="font-semibold text-gray-700">Storage Used</h3>
+                    <div class="flex items-center mt-2">
+                        <div class="flex-1 bg-gray-200 rounded-full h-2 mr-2">
+                            <div id="storage-bar" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <span id="storage-text" class="text-sm text-gray-600">0 MB</span>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="font-semibold text-gray-700">API Calls Today</h3>
+                    <div class="flex items-center mt-2">
+                        <div class="flex-1 bg-gray-200 rounded-full h-2 mr-2">
+                            <div id="api-bar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <span id="api-text" class="text-sm text-gray-600">0</span>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="font-semibold text-gray-700">Games</h3>
+                    <p id="games-count" class="text-2xl font-bold text-purple-600">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="font-semibold text-gray-700">Players</h3>
+                    <p id="players-count" class="text-2xl font-bold text-orange-600">0</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button id="create-game-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">
+                    Create New Game
+                </button>
+                <button id="create-player-btn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold">
+                    Create Player
+                </button>
+                <button id="puzzle-constructor-btn" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold">
+                    Puzzle Constructor
+                </button>
+                <button id="subscription-btn" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold">
+                    Manage Subscription
+                </button>
+            </div>
+
+            <!-- Games List -->
+            <div id="games-section" class="bg-white rounded-lg shadow p-6 mb-8">
+                <h3 class="text-xl font-bold mb-4">Your Games</h3>
+                <div id="games-list" class="space-y-4">
+                    <!-- Games will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Puzzle Constructor (hidden by default) -->
+        <div id="puzzle-constructor" class="hidden">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-xl font-bold mb-4">Puzzle Logic Constructor</h3>
+                
+                <!-- Logic Blocks Palette -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div class="lg:col-span-1">
+                        <h4 class="font-semibold mb-3">Logic Blocks</h4>
+                        <div id="logic-palette" class="space-y-2">
+                            <!-- Logic blocks will be populated by puzzle-constructor.js -->
+                        </div>
+                    </div>
+                    
+                    <!-- Constructor Area -->
+                    <div class="lg:col-span-2">
+                        <h4 class="font-semibold mb-3">Constructor Area</h4>
+                        <div id="constructor-area" class="drop-zone bg-gray-50 rounded-lg p-4">
+                            <p class="text-gray-500 text-center">Drag logic blocks here to build your puzzle</p>
+                        </div>
+                        
+                        <!-- Code Generation -->
+                        <div class="mt-4">
+                            <div class="flex space-x-2 mb-2">
+                                <button id="gen-js" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">JavaScript</button>
+                                <button id="gen-php" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">PHP</button>
+                                <button id="gen-csharp" class="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm">C#</button>
+                            </div>
+                            <pre id="generated-code" class="bg-gray-800 text-green-400 p-4 rounded text-sm overflow-x-auto min-h-24"></pre>
+                        </div>
+                    </div>
+                    
+                    <!-- Properties Panel -->
+                    <div class="lg:col-span-1">
+                        <h4 class="font-semibold mb-3">Properties</h4>
+                        <div id="properties-panel" class="space-y-3">
+                            <!-- Properties will be populated based on selected block -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Login</h3>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="login-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="login-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="login-cancel" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Register</h3>
+            <form id="register-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" id="register-email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input type="password" id="register-password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                    <p class="text-xs text-gray-500 mt-1">Minimum 8 characters with uppercase, lowercase, number, and special character</p>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="register-cancel" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Game Creation Modal -->
+    <div id="game-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-lg">
+            <h3 class="text-xl font-bold mb-4">Create New Game</h3>
+            <form id="game-form">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Game Name</label>
+                    <input type="text" id="game-name" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <textarea id="game-description" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" rows="3"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Max Players</label>
+                    <input type="number" id="game-max-players" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500" min="1" max="200" value="10">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="game-cancel" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Create Game</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Choose Subscription Plan</h3>
+            <div class="space-y-4 mb-6">
+                <div class="border rounded-lg p-4 cursor-pointer hover:border-blue-500" data-plan="Standard">
+                    <h4 class="font-bold">Standard Plan - $9.99/month</h4>
+                    <p class="text-sm text-gray-600">10GB storage, 50 users, 20 games</p>
+                </div>
+                <div class="border rounded-lg p-4 cursor-pointer hover:border-purple-500" data-plan="Pro">
+                    <h4 class="font-bold">Pro Plan - $29.99/month</h4>
+                    <p class="text-sm text-gray-600">50GB storage, 200 users, 100 games</p>
+                </div>
+            </div>
+            <div id="paypal-buttons" class="mb-4"></div>
+            <div class="text-center">
+                <p class="text-sm text-gray-600 mb-2">Alternative payment methods:</p>
+                <button id="paynet-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mr-2">Paynet (Moldova)</button>
+                <button id="maib-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">MAIB Transfer</button>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button id="payment-cancel" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p id="loading-text">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="fixed top-4 right-4 space-y-2 z-40"></div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/puzzle-constructor.js"></script>
+    <script src="js/payment.js"></script>
+</body>
+</html>
