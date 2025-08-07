@@ -1,12 +1,12 @@
 <?php
 /**
- * Payment Manager Class for Multiplayer API
+ * Payment Manager Stub Class for Development
  */
 
 class PaymentManager {
     public function __construct() {
         if (defined('DEBUG_MODE') && DEBUG_MODE) {
-            error_log("PaymentManager: Class initialized");
+            error_log("PaymentManager: Stub class initialized");
         }
     }
     

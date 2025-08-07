@@ -1,12 +1,12 @@
 <?php
 /**
- * Game Manager Class for Multiplayer API
+ * Game Manager Stub Class for Development
  */
 
 class GameManager {
     public function __construct() {
         if (defined('DEBUG_MODE') && DEBUG_MODE) {
-            error_log("GameManager: Class initialized");
+            error_log("GameManager: Stub class initialized");
         }
     }
     

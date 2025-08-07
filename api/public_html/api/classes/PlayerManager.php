@@ -1,12 +1,12 @@
 <?php
 /**
- * Player Manager Class for Multiplayer API
+ * Player Manager Stub Class for Development
  */
 
 class PlayerManager {
     public function __construct() {
         if (defined('DEBUG_MODE') && DEBUG_MODE) {
-            error_log("PlayerManager: Class initialized");
+            error_log("PlayerManager: Stub class initialized");
         }
     }
     

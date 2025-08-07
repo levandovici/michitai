@@ -54,8 +54,8 @@ set_error_handler(function($severity, $message, $file, $line) use ($logPath) {
 
 try {
     // Include autoloader if available
-    if (file_exists($securePath . '/vendor/autoload.php')) {
-        require_once $securePath . '/vendor/autoload.php';
+    if (file_exists($apiPath . '/vendor/autoload.php')) {
+        require_once $apiPath . '/vendor/autoload.php';
         if (DEBUG_MODE) {
             error_log("API Debug: Composer autoloader loaded");
         }

@@ -202,7 +202,7 @@ class ErrorCodes {
             ];
         }
 
-        // Log to file in secure logs directory
+        // Log to file in logs directory
         $logDir = __DIR__ . '/../logs';
         if (!is_dir($logDir)) {
             mkdir($logDir, 0755, true);

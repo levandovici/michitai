@@ -10,7 +10,6 @@ require_once __DIR__ . '/../config/database.php';
 class Auth {
     private $db;
     private $debug;
-    private $isMySQL;
 
     public function __construct() {
         $this->debug = defined('DEBUG_MODE') && DEBUG_MODE;
@@ -19,18 +18,36 @@ class Auth {
 
     private function initializeDatabase() {
         try {
-            // Use the DatabaseConfig class to get connection
-            $this->db = DatabaseConfig::getConnection();
-            
-            // Detect if we're using MySQL or SQLite
-            $this->isMySQL = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
+            // Use Database class for MySQL connection with SQLite fallback
+            try {
+                $database = Database::getInstance();
+                $this->db = $database->getConnection();
+                
+                if ($this->debug) {
+                    error_log("Auth: MySQL database connected successfully");
+                }
+            } catch (Exception $e) {
+                // Fallback to SQLite for development
+                if ($this->debug) {
+                    error_log("Auth: MySQL failed, using SQLite fallback - " . $e->getMessage());
+                }
+                
+                $dbPath = __DIR__ . '/../data/multiplayer_api.db';
+                $dbDir = dirname($dbPath);
+                
+                if (!is_dir($dbDir)) {
+                    mkdir($dbDir, 0755, true);
+                }
+
+                $this->db = new PDO("sqlite:$dbPath");
+                $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            }
             
             // Create tables if they don't exist
             $this->createTables();
             
             if ($this->debug) {
-                $dbType = $this->isMySQL ? 'MySQL' : 'SQLite';
-                error_log("Auth: Database initialized successfully using $dbType");
+                error_log("Auth: Database initialized successfully");
             }
         } catch (Exception $e) {
             ErrorCodes::logError(ErrorCodes::DB_CONNECTION_FAILED, ['error' => $e->getMessage()], $e);
@@ -40,15 +57,79 @@ class Auth {
 
     private function createTables() {
         try {
-            if ($this->isMySQL) {
-                $sql = DatabaseConfig::getMySQLTableSQL();
+            // Detect database type
+            $driver = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME);
+            
+            if ($driver === 'mysql') {
+                // MySQL table creation
+                $sql = "
+                CREATE TABLE IF NOT EXISTS users (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    email VARCHAR(255) UNIQUE NOT NULL,
+                    password_hash VARCHAR(255) NOT NULL,
+                    api_token VARCHAR(255) UNIQUE,
+                    email_verified TINYINT(1) DEFAULT 0,
+                    verification_token VARCHAR(255),
+                    reset_token VARCHAR(255),
+                    reset_token_expires INT,
+                    plan_type VARCHAR(50) DEFAULT 'free',
+                    api_calls_used INT DEFAULT 0,
+                    api_calls_limit INT DEFAULT 1000,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    INDEX idx_email (email),
+                    INDEX idx_api_token (api_token)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+                CREATE TABLE IF NOT EXISTS api_logs (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT,
+                    endpoint VARCHAR(255),
+                    method VARCHAR(10),
+                    ip_address VARCHAR(45),
+                    user_agent TEXT,
+                    response_code INT,
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+                    INDEX idx_user_id (user_id),
+                    INDEX idx_endpoint (endpoint)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+                ";
             } else {
-                $sql = DatabaseConfig::getSQLiteTableSQL();
+                // SQLite table creation
+                $sql = "
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT UNIQUE NOT NULL,
+                    password_hash TEXT NOT NULL,
+                    api_token TEXT UNIQUE,
+                    email_verified INTEGER DEFAULT 0,
+                    verification_token TEXT,
+                    reset_token TEXT,
+                    reset_token_expires INTEGER,
+                    plan_type TEXT DEFAULT 'free',
+                    api_calls_used INTEGER DEFAULT 0,
+                    api_calls_limit INTEGER DEFAULT 1000,
+                    created_at INTEGER DEFAULT (strftime('%s', 'now')),
+                    updated_at INTEGER DEFAULT (strftime('%s', 'now'))
+                );
+
+                CREATE TABLE IF NOT EXISTS api_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    endpoint TEXT,
+                    method TEXT,
+                    ip_address TEXT,
+                    user_agent TEXT,
+                    response_code INTEGER,
+                    timestamp INTEGER DEFAULT (strftime('%s', 'now')),
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                );
+                ";
             }
-            
-            // Execute each statement separately for MySQL compatibility
+
+            // Execute each statement separately
             $statements = array_filter(array_map('trim', explode(';', $sql)));
-            
             foreach ($statements as $statement) {
                 if (!empty($statement)) {
                     $this->db->exec($statement);
@@ -56,8 +137,7 @@ class Auth {
             }
             
             if ($this->debug) {
-                $dbType = $this->isMySQL ? 'MySQL' : 'SQLite';
-                error_log("Auth: Tables created successfully in $dbType");
+                error_log("Auth: Tables created successfully using $driver");
             }
             
         } catch (Exception $e) {

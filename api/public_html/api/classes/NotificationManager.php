@@ -1,12 +1,12 @@
 <?php
 /**
- * Notification Manager Class for Multiplayer API
+ * Notification Manager Stub Class for Development
  */
 
 class NotificationManager {
     public function __construct() {
         if (defined('DEBUG_MODE') && DEBUG_MODE) {
-            error_log("NotificationManager: Class initialized");
+            error_log("NotificationManager: Stub class initialized");
         }
     }
     
