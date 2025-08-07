@@ -34,8 +34,40 @@ $context = stream_context_create([
     ]
 ]);
 
-// Test the API endpoint
-$url = 'http://localhost/api/register';
+// Test the API endpoint - try multiple possible URLs
+$possibleUrls = [
+    'http://localhost/api/register',
+    'http://api.michitai.com/api/register',
+    './public_html/api/index.php',
+    'public_html/api/index.php'
+];
+
+$url = null;
+foreach ($possibleUrls as $testUrl) {
+    if (strpos($testUrl, 'http') === 0) {
+        // HTTP URL - test connectivity
+        $headers = @get_headers($testUrl);
+        if ($headers && strpos($headers[0], '200') !== false) {
+            $url = $testUrl;
+            break;
+        }
+    } else {
+        // Local file path
+        if (file_exists($testUrl)) {
+            $url = $testUrl;
+            break;
+        }
+    }
+}
+
+if (!$url) {
+    echo "ERROR: Could not find accessible API endpoint\n";
+    echo "Tried URLs: " . implode(', ', $possibleUrls) . "\n";
+    echo "\nTrying direct PHP execution instead...\n\n";
+    
+    // Try direct execution
+    $url = 'public_html/api/index.php';
+}
 echo "Testing URL: $url\n";
 echo "Request data: " . json_encode(json_decode($data), JSON_PRETTY_PRINT) . "\n\n";
 
