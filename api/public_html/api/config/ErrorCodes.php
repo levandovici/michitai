@@ -63,17 +63,14 @@ class ErrorCodes {
     const GAME_ACCESS_DENIED = 7002;
     const GAME_LIMIT_EXCEEDED = 7003;
     const GAME_INVALID_DATA = 7004;
+    const GAME_PLAYER_LIMIT_REACHED = 7005;
+    const GAME_INVALID_STATE = 7006;
+    const GAME_PERMISSION_DENIED = 7007;
+    const GAME_LOGIC_ERROR = 7008;
     
     // Feature Implementation (9000-9999)
     const API_NOT_IMPLEMENTED = 9001;
     const FEATURE_COMING_SOON = 9002;
-
-    // Game Logic Errors (7000-7999)
-    const GAME_NOT_FOUND = 7001;
-    const GAME_PLAYER_LIMIT_REACHED = 7002;
-    const GAME_INVALID_STATE = 7003;
-    const GAME_PERMISSION_DENIED = 7004;
-    const GAME_LOGIC_ERROR = 7005;
 
     // Error Messages
     private static $messages = [
