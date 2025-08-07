@@ -383,28 +383,222 @@ class Auth {
     /**
      * Generate secure API token
      */
-    private function generateApiToken() {
-        return 'mapi_' . bin2hex(random_bytes(32));
-    }
-
-    /**
-     * Generate verification token
-     */
-    private function generateVerificationToken() {
-        return bin2hex(random_bytes(32));
-    }
-
-    /**
-     * Send verification email (simulated for development)
-     */
-    private function sendVerificationEmail($email, $token) {
         if ($this->debug) {
-            error_log("Auth::sendVerificationEmail - Simulating email send to: $email");
-            error_log("Auth::sendVerificationEmail - Verification URL: /confirm-email.html?token=$token");
+            error_log("Auth::login - Login attempt for email: $email");
         }
-        
-        // In development, always return true
-        // In production, implement actual email sending
-        return true;
+
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            if ($this->debug) {
+                error_log("Auth::login - User not found: $email");
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_CREDENTIALS);
+        }
+
+        if (!password_verify($password, $user['password_hash'])) {
+            if ($this->debug) {
+                error_log("Auth::login - Invalid password for: $email");
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_CREDENTIALS);
+        }
+
+        // Generate new API token
+        $apiToken = $this->generateApiToken();
+        $stmt = $this->db->prepare("UPDATE users SET api_token = ?, updated_at = ? WHERE id = ?");
+        $stmt->execute([$apiToken, time(), $user['id']]);
+
+        if ($this->debug) {
+            error_log("Auth::login - Login successful for: $email");
+        }
+
+        return ErrorCodes::createSuccessResponse([
+            'user_id' => $user['id'],
+            'email' => $user['email'],
+            'api_token' => $apiToken,
+            'email_verified' => (bool)$user['email_verified'],
+            'plan_type' => $user['plan_type']
+        ], 'Login successful');
+
+    } catch (Exception $e) {
+        ErrorCodes::logError(ErrorCodes::SYS_INTERNAL_ERROR, [
+            'email' => $email,
+            'function' => 'login'
+        ], $e);
+
+        return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
     }
+}
+
+/**
+ * Validate API token
+ */
+public function validateToken($token) {
+    if (!$token) {
+        return false;
+    }
+
+    try {
+        $stmt = $this->db->prepare("SELECT id, email FROM users WHERE api_token = ?");
+        $stmt->execute([$token]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($this->debug) {
+            error_log("Auth::validateToken - Token validation for: " . ($user ? $user['email'] : 'invalid token'));
+        }
+
+        return $user ? $user : false;
+    } catch (Exception $e) {
+        if ($this->debug) {
+            error_log("Auth::validateToken - Error: " . $e->getMessage());
+        }
+        return false;
+    }
+}
+
+/**
+ * Get user profile by token
+ */
+public function getUserProfile($token) {
+    try {
+        $user = $this->validateToken($token);
+        if (!$user) {
+            return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+        }
+
+        // Get full user data
+        $stmt = $this->db->prepare("SELECT id, email, email_verified, plan_type, api_calls_used, api_calls_limit, created_at FROM users WHERE api_token = ?");
+        $stmt->execute([$token]);
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($this->debug) {
+            error_log("Auth::getUserProfile - Retrieved profile for: " . $userData['email']);
+        }
+
+        return ErrorCodes::createSuccessResponse([
+            'user_id' => $userData['id'],
+            'email' => $userData['email'],
+            'email_verified' => (bool)$userData['email_verified'],
+            'plan_type' => $userData['plan_type'],
+            'api_calls_used' => (int)$userData['api_calls_used'],
+            'api_calls_limit' => (int)$userData['api_calls_limit'],
+            'created_at' => $userData['created_at']
+        ], 'User profile retrieved successfully');
+
+    } catch (Exception $e) {
+        ErrorCodes::logError(ErrorCodes::SYS_INTERNAL_ERROR, [
+            'function' => 'getUserProfile'
+        ], $e);
+
+        return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+    }
+}
+
+/**
+ * Log API call for rate limiting and analytics
+ */
+public function logApiCall($token, $endpoint) {
+    try {
+        $user = $this->validateToken($token);
+        $userId = $user ? $user['id'] : null;
+
+        $stmt = $this->db->prepare("
+            INSERT INTO api_logs (user_id, endpoint, method, ip_address, user_agent, timestamp) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        
+        $stmt->execute([
+            $userId,
+            $endpoint,
+            $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+            $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+            $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+            time()
+        ]);
+
+        if ($this->debug) {
+            error_log("Auth::logApiCall - Logged API call: $endpoint for user: " . ($userId ?? 'anonymous'));
+        }
+
+    } catch (Exception $e) {
+        if ($this->debug) {
+            error_log("Auth::logApiCall - Error: " . $e->getMessage());
+        }
+    }
+}
+
+/**
+ * Check password strength
+ */
+private function isPasswordStrong($password) {
+    return strlen($password) >= 8 && 
+           preg_match('/[A-Z]/', $password) && 
+           preg_match('/[a-z]/', $password) && 
+           preg_match('/[0-9]/', $password);
+}
+
+/**
+ * Generate secure API token
+ */
+private function generateApiToken() {
+    return 'mapi_' . bin2hex(random_bytes(32));
+}
+
+/**
+ * Generate verification token
+ */
+private function generateVerificationToken() {
+    return bin2hex(random_bytes(32));
+}
+
+/**
+ * Send verification email (simulated for development)
+ */
+private function sendVerificationEmail($email, $token) {
+    if ($this->debug) {
+        error_log("Auth::sendVerificationEmail - Simulating email send to: $email");
+        error_log("Auth::sendVerificationEmail - Verification URL: /confirm-email.html?token=$token");
+    }
+    
+    // In development, always return true
+    // In production, implement actual email sending
+    return true;
+}
+
+/**
+ * Send confirmation email
+ */
+private function sendConfirmationEmail($email, $token) {
+    $subject = "Confirm Your Multiplayer API Account";
+    $confirmUrl = "https://api.michitai.com/confirm-email.html?token=" . urlencode($token);
+    
+    $message = "
+    Welcome to Multiplayer API!
+    
+    Please confirm your email address by clicking the link below:
+    $confirmUrl
+    
+    If you didn't create this account, please ignore this email.
+    
+    Best regards,
+    Multiplayer API Team
+    ";
+
+    return $this->sendEmail($email, $subject, $message);
+}
+
+/**
+ * Simulate email sending (implement with real SMTP later)
+ */
+private function sendEmail($to, $subject, $message) {
+    if ($this->debug) {
+        error_log("Auth: Email would be sent to $to - Subject: $subject");
+        error_log("Auth: Email content: $message");
+    }
+    
+    // TODO: Implement real email sending with SMTP
+    // For now, just log the email content and return success
+    return true;
 }

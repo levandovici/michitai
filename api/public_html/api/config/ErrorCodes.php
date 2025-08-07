@@ -57,6 +57,16 @@ class ErrorCodes {
     const PAY_SUBSCRIPTION_EXPIRED = 6003;
     const PAY_INSUFFICIENT_FUNDS = 6004;
     const PAY_WEBHOOK_VERIFICATION_FAILED = 6005;
+    
+    // Game Errors (7000-7999)
+    const GAME_NOT_FOUND = 7001;
+    const GAME_ACCESS_DENIED = 7002;
+    const GAME_LIMIT_EXCEEDED = 7003;
+    const GAME_INVALID_DATA = 7004;
+    
+    // Feature Implementation (9000-9999)
+    const API_NOT_IMPLEMENTED = 9001;
+    const FEATURE_COMING_SOON = 9002;
 
     // Game Logic Errors (7000-7999)
     const GAME_NOT_FOUND = 7001;
