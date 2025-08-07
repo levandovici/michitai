@@ -1,7 +1,7 @@
 <?php
 /**
- * Development API Entry Point with Professional Debugging
- * Supports both development and production environments
+ * Multiplayer API Entry Point - Simplified Structure
+ * All backend code now in public_html/api/ secured with .htaccess
  */
 
 // Enable debug mode for development
@@ -24,40 +24,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Determine environment and set paths
-$isProduction = isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'michitai.com') !== false;
+// Set paths - everything is now in the api directory
+$apiPath = __DIR__;
+$logPath = $apiPath . '/logs';
 
-if ($isProduction) {
-    // Production paths
-    $basePath = '/home/u833544264/domains/api.michitai.com';
-    $securePath = $basePath . '/private/api_backend';
-    $logPath = $basePath . '/private/logs';
-} else {
-    // Development paths
-    $basePath = dirname(dirname(__DIR__));
-    $securePath = $basePath . '/private/api_backend';
-    $logPath = $basePath . '/private/logs';
-}
-
-// Create directories if they don't exist (development)
-if (!$isProduction) {
-    if (!is_dir($securePath)) {
-        mkdir($securePath, 0755, true);
-    }
-    if (!is_dir($logPath)) {
-        mkdir($logPath, 0755, true);
-    }
+// Create directories if they don't exist
+if (!is_dir($logPath)) {
+    mkdir($logPath, 0755, true);
 }
 
 // Debug logging
 if (DEBUG_MODE) {
-    error_log("API Debug: Environment = " . ($isProduction ? 'production' : 'development'));
-    error_log("API Debug: Base path = $basePath");
-    error_log("API Debug: Secure path = $securePath");
+    error_log("API Debug: API path = $apiPath");
+    error_log("API Debug: Log path = $logPath");
 }
-
-// Set include path
-set_include_path($securePath . PATH_SEPARATOR . get_include_path());
 
 // Error handling with secure logging
 set_error_handler(function($severity, $message, $file, $line) use ($logPath) {
@@ -83,8 +63,8 @@ try {
 
     // Include configuration files
     $configFiles = [
-        $securePath . '/config/ErrorCodes.php',
-        $securePath . '/config/database.php'
+        $apiPath . '/config/ErrorCodes.php',
+        $apiPath . '/config/database.php'
     ];
     
     foreach ($configFiles as $file) {
@@ -100,11 +80,11 @@ try {
 
     // Include class files
     $classFiles = [
-        $securePath . '/classes/Auth.php',
-        $securePath . '/classes/GameManager.php',
-        $securePath . '/classes/PlayerManager.php',
-        $securePath . '/classes/PaymentManager.php',
-        $securePath . '/classes/NotificationManager.php'
+        $apiPath . '/classes/Auth.php',
+        $apiPath . '/classes/GameManager.php',
+        $apiPath . '/classes/PlayerManager.php',
+        $apiPath . '/classes/PaymentManager.php',
+        $apiPath . '/classes/NotificationManager.php'
     ];
     
     foreach ($classFiles as $file) {
@@ -117,14 +97,12 @@ try {
             if (DEBUG_MODE) {
                 error_log("API Debug: Class file not found: $file");
             }
-            // For development, create stub classes if files don't exist
-            if (!$isProduction) {
-                $className = basename($file, '.php');
-                if (!class_exists($className)) {
-                    eval("class $className { public function __construct() {} }");
-                    if (DEBUG_MODE) {
-                        error_log("API Debug: Created stub class: $className");
-                    }
+            // Create stub classes if files don't exist
+            $className = basename($file, '.php');
+            if (!class_exists($className)) {
+                eval("class $className { public function __construct() {} }");
+                if (DEBUG_MODE) {
+                    error_log("API Debug: Created stub class: $className");
                 }
             }
         }
