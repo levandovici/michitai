@@ -41,10 +41,16 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api/(.*)$ api/index.php [QSA,L]
 
-# Frontend SPA routing - route all other requests to index.html
+# Allow direct access to HTML files
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} \.(html|css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$
+RewriteRule ^(.*)$ - [L]
+
+# Frontend routing - only route non-existent paths to index.html (for 404 handling)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/api/
+RewriteCond %{REQUEST_URI} !\.(html|css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$
 RewriteRule ^(.*)$ index.html [QSA,L]
 
 # Disable server signature
