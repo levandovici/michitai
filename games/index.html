@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Levandovici Games</title>
+    <style>
+        :root {
+            --primary-color: #ff69b4;
+            --accent-color: #ff4500;
+            --bg-color: #fff0f5;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex-grow: 1;
+            display: grid;
+            gap: 2rem;
+            align-content: center;
+            background: linear-gradient(to bottom, #fff0f5, #e6e6fa);
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(45deg, #ffd700, #ff69b4);
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px #00ced1;
+        }
+
+        .content:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #00ced1, 0 0 50px #00ced1;
+        }
+
+        .logo, .game-logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 1rem;
+            border: 3px solid #ffffff;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover, .game-logo:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color);
+            animation: glow 1.2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color);
+            }
+            to {
+                text-shadow: 0 0 25px var(--accent-color), 0 0 40px var(--accent-color);
+            }
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+
+        p {
+            font-size: 1rem;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--accent-color);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .game-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+                white-space: normal;
+                line-height: 1.2;
+            }
+
+            .game-title {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        footer {
+            background: linear-gradient(135deg, #ffd700, #ff69b4);
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-color);
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <a href="https://play.google.com/store/apps/dev?id=7538414649250605636" target="_blank">
+                <img src="levandovici_logo.png" alt="Levandovici Games" class="logo">
+            </a>
+            <h1>Welcome to Levandovici Games</h1>
+            <p>Immerse yourself in the world of our games!</p>
+        </div>
+        
+        <div class="content">
+            <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
+                <img src="zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force" class="game-logo">
+            </a>
+            <p class="game-title">Zombie Frenzy Force</p>
+            <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank" class="download-btn">Download Now on Google Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank">
+                <img src="monsters_rushing_logo.png" alt="Monsters Rushing" class="game-logo">
+            </a>
+            <p class="game-title">Monsters Rushing</p>
+            <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank" class="download-btn">Download Now on Google Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank">
+                <img src="car_driving_multiplayer_logo.png" alt="Car Driving Multiplayer" class="game-logo">
+            </a>
+            <p class="game-title">Car Driving Multiplayer</p>
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank" class="download-btn">Download Now on Google Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank">
+                <img src="scale_it_logo.png" alt="Scale It" class="game-logo">
+            </a>
+            <p class="game-title">Scale It</p>
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank" class="download-btn">Download Now on Google Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank">
+                <img src="hit_of_cube_logo.png" alt="Hit of Cube" class="game-logo">
+            </a>
+            <p class="game-title">Hit of Cube</p>
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank" class="download-btn">Download Now on Google Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank">
+                <img src="monsters_vs_bombs_logo.png" alt="Monsters vs Bombs" class="game-logo">
+            </a>
+            <p class="game-title">Monsters vs Bombs</p>
+            <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank" class="download-btn">Download Now on Google Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank">
+                <img src="space_flash_logo.png" alt="Space Flash" class="game-logo">
+            </a>
+            <p class="game-title">Space Flash</p>
+            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank" class="download-btn">Download Now on Google Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://games.limonadoent.com/web/blooming-garden" target="_blank">
+                <img src="blooming_garden_logo.jpg" alt="Blooming Garden" class="game-logo">
+            </a>
+            <p class="game-title">Blooming Garden</p>
+            <a href="https://games.limonadoent.com/web/blooming-garden" target="_blank" class="download-btn">Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://games.limonadoent.com/web/tea-time-tycoon" target="_blank">
+                <img src="tea_time_tycoon_logo.jpg" alt="Tea Time Tycoon" class="game-logo">
+            </a>
+            <p class="game-title">Tea Time Tycoon</p>
+            <a href="https://games.limonadoent.com/web/tea-time-tycoon" target="_blank" class="download-btn">Play</a>
+        </div>
+        
+        <div class="content">
+            <a href="https://games.limonadoent.com/web/latte-lab" target="_blank">
+                <img src="latte_lab_logo.jpg" alt="Latte Lab" class="game-logo">
+            </a>
+            <p class="game-title">Latte Lab</p>
+            <a href="https://games.limonadoent.com/web/latte-lab" target="_blank" class="download-btn">Play</a>
+        </div>
+        
+        <div class="content">
+            <a>
+                <img src="next.png" alt="Upcoming Release" class="game-logo">
+            </a>
+            <p class="game-title">Upcoming Release</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Contact: <a href="mailto:michitai@limonadoent.com">michitai@limonadoent.com</a></p>
+        <p>
+            <a href="privacy-policy.html">Privacy Policy</a> | 
+            <a href="terms-and-conditions.html">Terms and Conditions</a>
+        </p>
+        <p>© 2025 Nichita Levandovici</p>
+    </footer>
+</body>
+</html>
