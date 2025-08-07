@@ -1,28 +1,20 @@
 <?php
 /**
- * Secure API Entry Point for api.michitai.com
- * All sensitive files are stored in private/ directory outside web root
+ * Development API Entry Point with Professional Debugging
+ * Supports both development and production environments
  */
+
+// Enable debug mode for development
+define('DEBUG_MODE', true);
 
 // Security headers
 header('Content-Type: application/json');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header('X-XSS-Protection: 1; mode=block');
-header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
-header('Referrer-Policy: strict-origin-when-cross-origin');
 
-// CORS headers for your domains
-$allowedOrigins = [
-    'https://api.michitai.com',
-    'https://michitai.com',
-    'https://games.michitai.com'
-];
-
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
-}
+// CORS headers for development
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-API-Token, Authorization');
 
@@ -32,16 +24,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Set secure paths (private directory outside web root)
-$basePath = '/home/u833544264/domains/api.michitai.com';
-$securePath = $basePath . '/private/api_backend';
-$logPath = $basePath . '/private/logs';
+// Determine environment and set paths
+$isProduction = isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'michitai.com') !== false;
 
-// Verify secure path exists
-if (!is_dir($securePath)) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Configuration error']);
-    exit;
+if ($isProduction) {
+    // Production paths
+    $basePath = '/home/u833544264/domains/api.michitai.com';
+    $securePath = $basePath . '/private/api_backend';
+    $logPath = $basePath . '/private/logs';
+} else {
+    // Development paths
+    $basePath = dirname(dirname(__DIR__));
+    $securePath = $basePath . '/private/api_backend';
+    $logPath = $basePath . '/private/logs';
+}
+
+// Create directories if they don't exist (development)
+if (!$isProduction) {
+    if (!is_dir($securePath)) {
+        mkdir($securePath, 0755, true);
+    }
+    if (!is_dir($logPath)) {
+        mkdir($logPath, 0755, true);
+    }
+}
+
+// Debug logging
+if (DEBUG_MODE) {
+    error_log("API Debug: Environment = " . ($isProduction ? 'production' : 'development'));
+    error_log("API Debug: Base path = $basePath");
+    error_log("API Debug: Secure path = $securePath");
 }
 
 // Set include path
@@ -50,26 +62,73 @@ set_include_path($securePath . PATH_SEPARATOR . get_include_path());
 // Error handling with secure logging
 set_error_handler(function($severity, $message, $file, $line) use ($logPath) {
     $logFile = $logPath . '/error.log';
-    if (is_writable(dirname($logFile))) {
-        error_log(date('Y-m-d H:i:s') . " PHP Error: $message in $file on line $line\n", 3, $logFile);
+    if (!is_dir(dirname($logFile))) {
+        mkdir(dirname($logFile), 0755, true);
+    }
+    error_log(date('Y-m-d H:i:s') . " PHP Error: $message in $file on line $line\n", 3, $logFile);
+    
+    if (DEBUG_MODE) {
+        error_log("API Debug: PHP Error - $message in $file:$line");
     }
 });
 
 try {
-    // Include autoloader
+    // Include autoloader if available
     if (file_exists($securePath . '/vendor/autoload.php')) {
         require_once $securePath . '/vendor/autoload.php';
+        if (DEBUG_MODE) {
+            error_log("API Debug: Composer autoloader loaded");
+        }
     }
 
-    // Include configuration
-    require_once $securePath . '/config/database.php';
+    // Include configuration files
+    $configFiles = [
+        $securePath . '/config/ErrorCodes.php',
+        $securePath . '/config/database.php'
+    ];
+    
+    foreach ($configFiles as $file) {
+        if (file_exists($file)) {
+            require_once $file;
+            if (DEBUG_MODE) {
+                error_log("API Debug: Loaded config file: $file");
+            }
+        } else if (DEBUG_MODE) {
+            error_log("API Debug: Config file not found: $file");
+        }
+    }
 
-    // Include all classes
-    require_once $securePath . '/classes/Auth.php';
-    require_once $securePath . '/classes/GameManager.php';
-    require_once $securePath . '/classes/PlayerManager.php';
-    require_once $securePath . '/classes/PaymentManager.php';
-    require_once $securePath . '/classes/NotificationManager.php';
+    // Include class files
+    $classFiles = [
+        $securePath . '/classes/Auth.php',
+        $securePath . '/classes/GameManager.php',
+        $securePath . '/classes/PlayerManager.php',
+        $securePath . '/classes/PaymentManager.php',
+        $securePath . '/classes/NotificationManager.php'
+    ];
+    
+    foreach ($classFiles as $file) {
+        if (file_exists($file)) {
+            require_once $file;
+            if (DEBUG_MODE) {
+                error_log("API Debug: Loaded class file: $file");
+            }
+        } else {
+            if (DEBUG_MODE) {
+                error_log("API Debug: Class file not found: $file");
+            }
+            // For development, create stub classes if files don't exist
+            if (!$isProduction) {
+                $className = basename($file, '.php');
+                if (!class_exists($className)) {
+                    eval("class $className { public function __construct() {} }");
+                    if (DEBUG_MODE) {
+                        error_log("API Debug: Created stub class: $className");
+                    }
+                }
+            }
+        }
+    }
 
     // API Router class
     class APIRouter {
@@ -150,21 +209,86 @@ try {
         }
 
         private function handleRegister() {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                http_response_code(405);
-                echo json_encode(['error' => 'Method not allowed']);
-                return;
-            }
+            try {
+                if (DEBUG_MODE) {
+                    error_log("APIRouter::handleRegister - Starting registration request");
+                }
 
-            $input = json_decode(file_get_contents('php://input'), true);
-            if (!$input || !isset($input['email']) || !isset($input['password'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Email and password required']);
-                return;
-            }
+                // Debug point 1: Check HTTP method
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                    if (DEBUG_MODE) {
+                        error_log("APIRouter::handleRegister - Invalid method: " . $_SERVER['REQUEST_METHOD']);
+                    }
+                    http_response_code(405);
+                    echo json_encode(ErrorCodes::createErrorResponse(ErrorCodes::API_METHOD_NOT_ALLOWED));
+                    return;
+                }
 
-            $result = $this->auth->register($input['email'], $input['password']);
-            echo json_encode($result);
+                // Debug point 2: Parse JSON input
+                $rawInput = file_get_contents('php://input');
+                if (DEBUG_MODE) {
+                    error_log("APIRouter::handleRegister - Raw input: " . $rawInput);
+                }
+
+                $input = json_decode($rawInput, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    if (DEBUG_MODE) {
+                        error_log("APIRouter::handleRegister - JSON decode error: " . json_last_error_msg());
+                    }
+                    http_response_code(400);
+                    echo json_encode(ErrorCodes::createErrorResponse(ErrorCodes::API_INVALID_JSON));
+                    return;
+                }
+
+                // Debug point 3: Validate required fields
+                if (!$input || !isset($input['email']) || !isset($input['password'])) {
+                    if (DEBUG_MODE) {
+                        error_log("APIRouter::handleRegister - Missing required fields. Email: " . 
+                                 (isset($input['email']) ? 'present' : 'missing') . 
+                                 ", Password: " . (isset($input['password']) ? 'present' : 'missing'));
+                    }
+                    http_response_code(400);
+                    echo json_encode(ErrorCodes::createErrorResponse(ErrorCodes::AUTH_MISSING_PARAMETERS));
+                    return;
+                }
+
+                // Debug point 4: Call Auth service
+                if (DEBUG_MODE) {
+                    error_log("APIRouter::handleRegister - Calling Auth::register for email: " . $input['email']);
+                }
+
+                $newsletter = $input['newsletter'] ?? false;
+                $result = $this->auth->register($input['email'], $input['password'], $newsletter);
+
+                // Debug point 5: Return response
+                if (DEBUG_MODE) {
+                    error_log("APIRouter::handleRegister - Auth response: " . json_encode($result));
+                }
+
+                // Set appropriate HTTP status code
+                if (isset($result['success']) && $result['success']) {
+                    http_response_code(201); // Created
+                } else {
+                    http_response_code(400); // Bad Request
+                }
+
+                echo json_encode($result);
+
+            } catch (Exception $e) {
+                if (DEBUG_MODE) {
+                    error_log("APIRouter::handleRegister - Exception: " . $e->getMessage());
+                    error_log("APIRouter::handleRegister - Stack trace: " . $e->getTraceAsString());
+                }
+
+                ErrorCodes::logError(ErrorCodes::SYS_INTERNAL_ERROR, [
+                    'function' => 'handleRegister',
+                    'input' => $input ?? null
+                ], $e);
+
+                http_response_code(500);
+                echo json_encode(ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR, null,
+                    DEBUG_MODE ? $e->getMessage() : null));
+            }
         }
 
         private function handleLogin() {

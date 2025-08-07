@@ -405,25 +405,55 @@
                 const newsletter = $('#newsletter').is(':checked');
 
                 try {
+                    console.log('RegisterPage: Starting registration process for:', email);
                     this.showLoading('Creating your account...');
                     this.setButtonLoading(true);
+
+                    const requestData = {
+                        email: email,
+                        password: password,
+                        newsletter: newsletter
+                    };
+                    
+                    console.log('RegisterPage: Sending request data:', { ...requestData, password: '[HIDDEN]' });
 
                     const response = await fetch('/api/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({
-                            email: email,
-                            password: password,
-                            newsletter: newsletter
-                        })
+                        body: JSON.stringify(requestData)
                     });
 
-                    const result = await response.json();
+                    console.log('RegisterPage: Response status:', response.status);
+                    console.log('RegisterPage: Response headers:', Object.fromEntries(response.headers.entries()));
 
-                    if (response.ok && result.api_token) {
-                        this.showNotification('Account created successfully! Please check your email to verify your account.', 'success');
+                    // Check if response has content
+                    const responseText = await response.text();
+                    console.log('RegisterPage: Raw response text:', responseText);
+
+                    if (!responseText) {
+                        throw new Error('Empty response from server. Please check server logs.');
+                    }
+
+                    let result;
+                    try {
+                        result = JSON.parse(responseText);
+                        console.log('RegisterPage: Parsed response:', result);
+                    } catch (jsonError) {
+                        console.error('RegisterPage: JSON parse error:', jsonError);
+                        console.error('RegisterPage: Response text that failed to parse:', responseText);
+                        throw new Error(`Invalid JSON response from server: ${jsonError.message}`);
+                    }
+
+                    if (response.ok && result.success && result.data && result.data.api_token) {
+                        console.log('RegisterPage: Registration successful');
+                        
+                        // Store API token
+                        localStorage.setItem('api_token', result.data.api_token);
+                        localStorage.setItem('user_email', result.data.email);
+                        
+                        this.showNotification(result.message || 'Account created successfully! Please check your email to verify your account.', 'success');
                         
                         // Redirect to email confirmation page
                         setTimeout(() => {
@@ -431,11 +461,34 @@
                         }, 2000);
 
                     } else {
-                        throw new Error(result.error || 'Registration failed');
+                        console.error('RegisterPage: Registration failed:', result);
+                        
+                        let errorMessage = 'Registration failed';
+                        if (result.error_message) {
+                            errorMessage = result.error_message;
+                        } else if (result.error) {
+                            errorMessage = result.error;
+                        } else if (result.message) {
+                            errorMessage = result.message;
+                        }
+                        
+                        // Include error code if available
+                        if (result.error_code) {
+                            errorMessage += ` (Error Code: ${result.error_code})`;
+                        }
+                        
+                        throw new Error(errorMessage);
                     }
 
                 } catch (error) {
-                    this.showNotification(error.message, 'error');
+                    console.error('RegisterPage: Registration error:', error);
+                    
+                    let errorMessage = error.message;
+                    if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                        errorMessage = 'Unable to connect to server. Please check your internet connection and try again.';
+                    }
+                    
+                    this.showNotification(errorMessage, 'error');
                 } finally {
                     this.hideLoading();
                     this.setButtonLoading(false);
