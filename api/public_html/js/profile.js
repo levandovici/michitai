@@ -5,7 +5,7 @@
 
 class ProfilePage {
     constructor() {
-        this.apiToken = localStorage.getItem('api_token');
+        this.sessionToken = localStorage.getItem('session_token');
         this.baseUrl = '/api';
         this.currentUser = null;
         this.currentTab = 'dashboard';
@@ -20,7 +20,7 @@ class ProfilePage {
     }
 
     checkAuthentication() {
-        if (!this.apiToken) {
+        if (!this.sessionToken) {
             // User not logged in, redirect to login
             window.location.href = 'login.html';
             return;

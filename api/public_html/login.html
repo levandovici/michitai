@@ -312,11 +312,11 @@
 
                     const result = await response.json();
 
-                    if (response.ok && result.api_token) {
+                    if (response.ok && result.success && result.data && result.data.session_token) {
                         // Store authentication data
-                        localStorage.setItem('api_token', result.api_token);
-                        localStorage.setItem('user_email', result.email);
-                        localStorage.setItem('user_plan', result.plan_type || 'Free');
+                        localStorage.setItem('session_token', result.data.session_token);
+                        localStorage.setItem('user_email', result.data.email);
+                        localStorage.setItem('user_plan', result.data.plan_type || 'Free');
                         
                         if (remember) {
                             localStorage.setItem('remember_login', 'true');
@@ -342,7 +342,7 @@
             }
 
             checkExistingSession() {
-                const token = localStorage.getItem('api_token');
+                const token = localStorage.getItem('session_token');
                 if (token) {
                     // User is already logged in, redirect to profile
                     window.location.href = 'profile.html';

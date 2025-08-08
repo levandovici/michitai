@@ -305,10 +305,12 @@ class Auth {
                 return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_CREDENTIALS);
             }
 
-            // Generate new API token
-            $apiToken = $this->generateApiToken();
-            $stmt = $this->db->prepare("UPDATE users SET api_token = ?, updated_at = ? WHERE user_id = ?");
-            $stmt->execute([$apiToken, time(), $user['user_id']]);
+            // Generate session token for frontend (not API token)
+            $sessionToken = $this->generateApiToken();
+            
+            // Update last login time only
+            $stmt = $this->db->prepare("UPDATE users SET updated_at = ? WHERE user_id = ?");
+            $stmt->execute([time(), $user['user_id']]);
 
             if ($this->debug) {
                 error_log("Auth::login - Login successful for: $email");
@@ -317,7 +319,7 @@ class Auth {
             return ErrorCodes::createSuccessResponse([
                 'user_id' => $user['user_id'],
                 'email' => $user['email'],
-                'api_token' => $apiToken,
+                'session_token' => $sessionToken, // Session token for frontend, not API token
                 'email_verified' => isset($user['email_verified']) ? (bool)$user['email_verified'] : false,
                 'plan_type' => $user['plan_type'] ?? 'free'
             ], 'Login successful');
