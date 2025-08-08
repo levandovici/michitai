@@ -479,13 +479,20 @@ private function sendEmail($to, $subject, $message) {
     }
     
     try {
-        // Get SMTP configuration from environment
-        $smtpHost = $_ENV['SMTP_HOST'] ?? 'localhost';
-        $smtpPort = $_ENV['SMTP_PORT'] ?? 587;
-        $smtpUsername = $_ENV['SMTP_USERNAME'] ?? '';
-        $smtpPassword = $_ENV['SMTP_PASSWORD'] ?? '';
-        $fromEmail = $_ENV['SMTP_FROM_EMAIL'] ?? 'noreply@michitai.com';
-        $fromName = $_ENV['SMTP_FROM_NAME'] ?? 'Multiplayer API';
+        // Get SMTP configuration from environment using Database config loader
+        require_once __DIR__ . '/../config/database.php';
+        $config = Database::loadEnv();
+        
+        $smtpHost = $config['SMTP_HOST'] ?? 'localhost';
+        $smtpPort = $config['SMTP_PORT'] ?? 465; // Hostinger default SSL port
+        $smtpUsername = $config['SMTP_USERNAME'] ?? '';
+        $smtpPassword = $config['SMTP_PASSWORD'] ?? '';
+        $fromEmail = $config['SMTP_FROM_EMAIL'] ?? 'noreply@michitai.com';
+        $fromName = $config['SMTP_FROM_NAME'] ?? 'Multiplayer API';
+        
+        if ($this->debug) {
+            error_log("Auth: SMTP Config - Host: $smtpHost, Port: $smtpPort, Username: $smtpUsername, From: $fromEmail");
+        }
         
         // If SMTP credentials are not configured, fall back to PHP mail()
         if (empty($smtpUsername) || empty($smtpPassword)) {
@@ -544,12 +551,31 @@ private function sendEmailWithPHPMail($to, $subject, $message, $fromEmail, $from
 }
 
 /**
- * Send email using SMTP with authentication
+ * Send email using SMTP with authentication (Hostinger compatible)
  */
 private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $username, $password, $fromEmail, $fromName) {
     try {
-        // Create socket connection to SMTP server
-        $socket = fsockopen($host, $port, $errno, $errstr, 30);
+        // Determine if we should use SSL or TLS based on port
+        $useSSL = ($port == 465);
+        $useTLS = ($port == 587);
+        
+        if ($this->debug) {
+            error_log("Auth: SMTP connecting to $host:$port (SSL: " . ($useSSL ? 'yes' : 'no') . ", TLS: " . ($useTLS ? 'yes' : 'no') . ")");
+        }
+        
+        // Create socket connection - use SSL context if port 465
+        if ($useSSL) {
+            $context = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ]
+            ]);
+            $socket = stream_socket_client("ssl://$host:$port", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+        } else {
+            $socket = fsockopen($host, $port, $errno, $errstr, 30);
+        }
         
         if (!$socket) {
             if ($this->debug) {
@@ -561,24 +587,42 @@ private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $usern
         // Read server greeting
         $response = fgets($socket, 512);
         if ($this->debug) {
-            error_log("Auth: SMTP greeting - $response");
+            error_log("Auth: SMTP greeting - " . trim($response));
         }
         
         // Send EHLO command
         fputs($socket, "EHLO $host\r\n");
         $response = fgets($socket, 512);
+        if ($this->debug) {
+            error_log("Auth: EHLO response - " . trim($response));
+        }
         
-        // Start TLS if available
-        fputs($socket, "STARTTLS\r\n");
-        $response = fgets($socket, 512);
-        
-        if (strpos($response, '220') === 0) {
-            // Enable crypto
-            stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
-            
-            // Send EHLO again after TLS
-            fputs($socket, "EHLO $host\r\n");
+        // Start TLS if port 587 and not already using SSL
+        if ($useTLS && !$useSSL) {
+            fputs($socket, "STARTTLS\r\n");
             $response = fgets($socket, 512);
+            if ($this->debug) {
+                error_log("Auth: STARTTLS response - " . trim($response));
+            }
+            
+            if (strpos($response, '220') === 0) {
+                // Enable crypto
+                $cryptoResult = stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+                if (!$cryptoResult) {
+                    if ($this->debug) {
+                        error_log("Auth: TLS encryption failed");
+                    }
+                    fclose($socket);
+                    return false;
+                }
+                
+                // Send EHLO again after TLS
+                fputs($socket, "EHLO $host\r\n");
+                $response = fgets($socket, 512);
+                if ($this->debug) {
+                    error_log("Auth: EHLO after TLS response - " . trim($response));
+                }
+            }
         }
         
         // Authenticate
