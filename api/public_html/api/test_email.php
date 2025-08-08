@@ -197,13 +197,16 @@ function testSMTPEmail($to, $subject, $message, $config) {
         
         $logs[] = "Server capabilities: " . implode(', ', $capabilities);
         
-        // Check if AUTH is supported
+        // Check if AUTH is supported and extract methods
         $authSupported = false;
-        $supportedAuthMethods = [];
+        $supportedMethods = [];
         foreach ($capabilities as $cap) {
             if (strpos($cap, 'AUTH') !== false) {
                 $authSupported = true;
-                $supportedAuthMethods[] = $cap;
+                // Extract supported auth methods
+                if (preg_match('/AUTH\s+(.+)/', $cap, $matches)) {
+                    $supportedMethods = explode(' ', trim($matches[1]));
+                }
             }
         }
         
@@ -212,7 +215,7 @@ function testSMTPEmail($to, $subject, $message, $config) {
             return ['success' => false, 'error' => 'Server does not support authentication', 'logs' => $logs];
         }
         
-        $logs[] = "Authentication methods: " . implode(', ', $supportedAuthMethods);
+        $logs[] = "Supported auth methods: " . implode(', ', $supportedMethods);
         
         // STARTTLS if needed
         if ($useTLS && !$useSSL) {

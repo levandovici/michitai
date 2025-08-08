@@ -199,16 +199,18 @@ class Auth {
             $verificationToken = $this->generateVerificationToken();
 
             $stmt = $this->db->prepare("
-                INSERT INTO users (email, password, api_token, verification_token, email_verified, created_at, updated_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO users (email, password, api_token, verification_token, token_expires, email_verified, created_at, updated_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
         
             $timestamp = time();
+            $tokenExpires = $timestamp + (24 * 60 * 60); // 24 hours from now
             $result = $stmt->execute([
                 $email, 
                 $passwordHash, 
                 $apiToken, 
                 $verificationToken,
+                $tokenExpires,
                 0, // email_verified = false
                 $timestamp, 
                 $timestamp
@@ -223,17 +225,29 @@ class Auth {
 
             $userId = $this->db->lastInsertId();
 
-            // Debug point 4: Send verification email (simulated for development)
+            // Debug point 4: Send verification email (production implementation)
             if ($this->debug) {
                 error_log("Auth::register - Sending verification email to: $email");
                 error_log("Auth::register - Verification token: $verificationToken");
             }
 
-            // In development, we'll simulate email sending
+            // Send real verification email
             $emailSent = $this->sendVerificationEmail($email, $verificationToken);
             
-            if (!$emailSent && $this->debug) {
-                error_log("Auth::register - Warning: Verification email failed for: $email");
+            if (!$emailSent) {
+                if ($this->debug) {
+                    error_log("Auth::register - ERROR: Verification email failed for: $email");
+                }
+                // Don't fail registration if email fails, but log the error
+                ErrorCodes::logError(ErrorCodes::SYS_EMAIL_SEND_FAILED, [
+                    'email' => $email,
+                    'function' => 'register',
+                    'token' => $verificationToken
+                ]);
+            } else {
+                if ($this->debug) {
+                    error_log("Auth::register - SUCCESS: Verification email sent to: $email");
+                }
             }
 
             // Debug point 5: Success response
@@ -435,17 +449,16 @@ public function getUserProfile($token) {
 
 
 /**
- * Send verification email (simulated for development)
+ * Send verification email (production implementation)
  */
 private function sendVerificationEmail($email, $token) {
     if ($this->debug) {
-        error_log("Auth::sendVerificationEmail - Simulating email send to: $email");
-        error_log("Auth::sendVerificationEmail - Verification URL: /confirm-email.html?token=$token");
+        error_log("Auth::sendVerificationEmail - Sending verification email to: $email");
+        error_log("Auth::sendVerificationEmail - Verification token: $token");
     }
     
-    // In development, always return true
-    // In production, implement actual email sending
-    return true;
+    // Use the real email sending method
+    return $this->sendConfirmationEmail($email, $token);
 }
 
 /**
@@ -625,39 +638,84 @@ private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $usern
             }
         }
         
-        // Authenticate - try AUTH LOGIN first
-        fputs($socket, "AUTH LOGIN\r\n");
-        $response = fgets($socket, 512);
-        if ($this->debug) {
-            error_log("Auth: AUTH LOGIN response - " . trim($response));
+        // Read all EHLO capabilities first
+        $capabilities = [];
+        while (true) {
+            $line = fgets($socket, 512);
+            if (!$line || strpos($line, '250 ') === 0) {
+                $capabilities[] = trim($line);
+                break;
+            }
+            if (strpos($line, '250-') === 0) {
+                $capabilities[] = trim($line);
+            } else {
+                break;
+            }
         }
         
-        // Check if server supports AUTH LOGIN (should respond with 334)
-        if (strpos($response, '334') === 0) {
-            // Server supports AUTH LOGIN, proceed with base64 credentials
-            fputs($socket, base64_encode($username) . "\r\n");
-            $response = fgets($socket, 512);
-            if ($this->debug) {
-                error_log("Auth: Username response - " . trim($response));
-            }
-            
-            fputs($socket, base64_encode($password) . "\r\n");
-            $response = fgets($socket, 512);
-            if ($this->debug) {
-                error_log("Auth: Password response - " . trim($response));
-            }
-            
-            if (strpos($response, '235') !== 0) {
-                if ($this->debug) {
-                    error_log("Auth: SMTP authentication failed - " . trim($response));
+        if ($this->debug) {
+            error_log("Auth: Server capabilities - " . implode(', ', $capabilities));
+        }
+        
+        // Check if AUTH is supported and what methods
+        $authSupported = false;
+        $supportedMethods = [];
+        foreach ($capabilities as $cap) {
+            if (strpos($cap, 'AUTH') !== false) {
+                $authSupported = true;
+                // Extract supported auth methods
+                if (preg_match('/AUTH\s+(.+)/', $cap, $matches)) {
+                    $supportedMethods = explode(' ', trim($matches[1]));
                 }
-                fclose($socket);
-                return false;
             }
-        } else {
-            // Try AUTH PLAIN instead
+        }
+        
+        if (!$authSupported) {
             if ($this->debug) {
-                error_log("Auth: AUTH LOGIN not supported, trying AUTH PLAIN...");
+                error_log("Auth: Server does not support authentication");
+            }
+            fclose($socket);
+            return false;
+        }
+        
+        if ($this->debug) {
+            error_log("Auth: Supported auth methods - " . implode(', ', $supportedMethods));
+        }
+        
+        // Try authentication methods in order of preference
+        $authenticated = false;
+        
+        // Try LOGIN first if supported
+        if (in_array('LOGIN', $supportedMethods)) {
+            fputs($socket, "AUTH LOGIN\r\n");
+            $response = fgets($socket, 512);
+            if ($this->debug) {
+                error_log("Auth: AUTH LOGIN response - " . trim($response));
+            }
+            
+            if (strpos($response, '334') === 0) {
+                fputs($socket, base64_encode($username) . "\r\n");
+                $response = fgets($socket, 512);
+                if ($this->debug) {
+                    error_log("Auth: Username response - " . trim($response));
+                }
+                
+                fputs($socket, base64_encode($password) . "\r\n");
+                $response = fgets($socket, 512);
+                if ($this->debug) {
+                    error_log("Auth: Password response - " . trim($response));
+                }
+                
+                if (strpos($response, '235') === 0) {
+                    $authenticated = true;
+                }
+            }
+        }
+        
+        // Try PLAIN if LOGIN failed or not supported
+        if (!$authenticated && in_array('PLAIN', $supportedMethods)) {
+            if ($this->debug) {
+                error_log("Auth: Trying AUTH PLAIN...");
             }
             $authString = base64_encode("\0" . $username . "\0" . $password);
             fputs($socket, "AUTH PLAIN $authString\r\n");
@@ -666,13 +724,17 @@ private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $usern
                 error_log("Auth: AUTH PLAIN response - " . trim($response));
             }
             
-            if (strpos($response, '235') !== 0) {
-                if ($this->debug) {
-                    error_log("Auth: SMTP authentication failed with both LOGIN and PLAIN - " . trim($response));
-                }
-                fclose($socket);
-                return false;
+            if (strpos($response, '235') === 0) {
+                $authenticated = true;
             }
+        }
+        
+        if (!$authenticated) {
+            if ($this->debug) {
+                error_log("Auth: All authentication methods failed");
+            }
+            fclose($socket);
+            return false;
         }
         
         // Send email
@@ -732,68 +794,75 @@ private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $usern
                 error_log("Auth::confirmEmail - Confirming email with token: $token");
             }
 
-            if (!$token) {
-                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_MISSING_PARAMETERS, null, 'Confirmation token is required');
+            if (empty($token)) {
+                if ($this->debug) {
+                    error_log("Auth::confirmEmail - No token provided");
+                }
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_MISSING_PARAMETERS, null, 'No confirmation token provided');
             }
 
-            // Look up user by verification token
-            $stmt = $this->db->prepare("SELECT user_id, email, email_verified FROM users WHERE verification_token = ?");
+            // Find user by verification token
+            $stmt = $this->db->prepare("SELECT user_id, email, email_verified, token_expires FROM users WHERE verification_token = ?");
             $stmt->execute([$token]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$user) {
                 if ($this->debug) {
-                    error_log("Auth::confirmEmail - Invalid or expired token: $token");
+                    error_log("Auth::confirmEmail - Invalid token: $token");
                 }
                 return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN, null, 'Invalid or expired confirmation token');
             }
 
-            // Check if already confirmed
+            // Check if token has expired (24 hours)
+            $currentTime = time();
+            if ($user['token_expires'] && $currentTime > $user['token_expires']) {
+                if ($this->debug) {
+                    error_log("Auth::confirmEmail - Token expired for user: " . $user['email'] . ", expired at: " . date('Y-m-d H:i:s', $user['token_expires']));
+                }
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN, null, 'The confirmation link has expired (valid for 24 hours). Please request a new confirmation email.');
+            }
+
             if ($user['email_verified']) {
                 if ($this->debug) {
-                    error_log("Auth::confirmEmail - Email already confirmed for: " . $user['email']);
+                    error_log("Auth::confirmEmail - Email already verified for user: " . $user['email']);
                 }
-                return ErrorCodes::createSuccessResponse([
-                    'already_confirmed' => true,
-                    'email' => $user['email']
-                ], 'Email address already confirmed');
+                return ErrorCodes::createErrorResponse(ErrorCodes::REG_EMAIL_ALREADY_VERIFIED, null, 'Email is already verified');
             }
 
             // Mark email as verified and clear verification token
-            $stmt = $this->db->prepare("UPDATE users SET email_verified = 1, verification_token = NULL, updated_at = ? WHERE user_id = ?");
+            $stmt = $this->db->prepare("UPDATE users SET email_verified = 1, verification_token = NULL, token_expires = NULL, updated_at = ? WHERE user_id = ?");
             $result = $stmt->execute([time(), $user['user_id']]);
 
             if (!$result) {
                 if ($this->debug) {
                     error_log("Auth::confirmEmail - Database update failed for user: " . $user['email']);
                 }
-                return ErrorCodes::createErrorResponse(ErrorCodes::REG_DATABASE_ERROR, null, 'Failed to confirm email');
+                return ErrorCodes::createErrorResponse(ErrorCodes::SYS_DATABASE_ERROR, null, 'Failed to update verification status');
             }
 
             if ($this->debug) {
-                error_log("Auth::confirmEmail - Email confirmed successfully for: " . $user['email']);
+                error_log("Auth::confirmEmail - Email verified successfully for: " . $user['email']);
             }
 
             return ErrorCodes::createSuccessResponse([
-                'confirmed' => true,
                 'email' => $user['email'],
-                'user_id' => $user['user_id']
-            ], 'Email confirmed successfully');
+                'verified' => true
+            ], 'Email verified successfully');
 
         } catch (Exception $e) {
+            ErrorCodes::logError(ErrorCodes::SYS_INTERNAL_ERROR, [
+                'token' => $token,
+                'function' => 'confirmEmail'
+            ], $e);
+
             if ($this->debug) {
                 error_log("Auth::confirmEmail - Exception: " . $e->getMessage());
             }
 
-            ErrorCodes::logError(ErrorCodes::SYS_INTERNAL_ERROR, [
-                'function' => 'confirmEmail',
-                'token' => $token
-            ], $e);
-
-            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR, null, 
+                $this->debug ? $e->getMessage() : null);
         }
     }
-
     /**
      * Resend confirmation email
      */
@@ -827,10 +896,11 @@ private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $usern
 
             // Generate new verification token
             $verificationToken = $this->generateVerificationToken();
+            $tokenExpires = time() + (24 * 60 * 60); // 24 hours from now
 
             // Update verification token in database
-            $stmt = $this->db->prepare("UPDATE users SET verification_token = ?, updated_at = ? WHERE user_id = ?");
-            $result = $stmt->execute([$verificationToken, time(), $user['user_id']]);
+            $stmt = $this->db->prepare("UPDATE users SET verification_token = ?, token_expires = ?, updated_at = ? WHERE user_id = ?");
+            $result = $stmt->execute([$verificationToken, $tokenExpires, time(), $user['user_id']]);
 
             if (!$result) {
                 if ($this->debug) {
