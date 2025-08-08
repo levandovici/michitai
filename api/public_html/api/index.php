@@ -141,6 +141,9 @@ try {
                 case 'login':
                     $this->handleLogin();
                     break;
+                case 'auth':
+                    $this->handleAuth($segments, $method);
+                    break;
                 case 'user':
                     $this->handleUser();
                     break;
@@ -284,6 +287,56 @@ try {
             }
 
             $result = $this->auth->login($input['email'], $input['password']);
+            echo json_encode($result);
+        }
+
+        private function handleAuth($segments, $method) {
+            switch ($segments[1] ?? '') {
+                case 'confirm-email':
+                    $this->handleConfirmEmail($method);
+                    break;
+                case 'resend-confirmation':
+                    $this->handleResendConfirmation($method);
+                    break;
+                default:
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Auth endpoint not found']);
+            }
+        }
+
+        private function handleConfirmEmail($method) {
+            if ($method !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+                return;
+            }
+
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input || !isset($input['token'])) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Confirmation token required']);
+                return;
+            }
+
+            $result = $this->auth->confirmEmail($input['token']);
+            echo json_encode($result);
+        }
+
+        private function handleResendConfirmation($method) {
+            if ($method !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+                return;
+            }
+
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input || !isset($input['email'])) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Email address required']);
+                return;
+            }
+
+            $result = $this->auth->resendConfirmationEmail($input['email']);
             echo json_encode($result);
         }
 
