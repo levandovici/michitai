@@ -65,6 +65,32 @@
             border-radius: 2px;
             transition: all 0.3s ease;
         }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .glass-effect {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .w-full.max-w-md {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.875rem;
+            }
+            
+            .space-y-6 > * + * {
+                margin-top: 1rem;
+            }
+            
+            .success-message {
+                padding: 1rem;
+                margin: 1rem;
+            }
+        }
     </style>
 </head>
 
@@ -81,16 +107,26 @@
                     </div>
                 </a>
                 
-                <nav class="flex items-center space-x-6">
+                <nav class="hidden sm:flex items-center space-x-6">
                     <a href="index.html" class="text-white/70 hover:text-white transition-colors">Home</a>
                     <a href="login.html" class="text-white/70 hover:text-white transition-colors">Login</a>
                 </nav>
+                
+                <!-- Mobile Navigation -->
+                <div class="sm:hidden flex items-center space-x-2">
+                    <a href="index.html" class="text-white/70 hover:text-white transition-colors p-2">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="login.html" class="text-white/70 hover:text-white transition-colors p-2">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Register Form -->
-    <div class="w-full max-w-md mx-auto px-6 mt-20">
+    <div class="w-full max-w-md mx-auto px-4 sm:px-6 mt-16 sm:mt-20">
         <div class="glass-effect rounded-3xl p-8 shadow-2xl">
             <!-- Header -->
             <div class="text-center mb-8">

@@ -81,12 +81,42 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .w-full.max-w-md {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+            
+            .glass-effect {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .text-2xl {
+                font-size: 1.5rem;
+            }
+            
+            .text-xl {
+                font-size: 1.125rem;
+            }
+            
+            .space-y-3 > * + * {
+                margin-top: 0.75rem;
+            }
+            
+            .w-16.h-16 {
+                width: 3rem;
+                height: 3rem;
+            }
+        }
     </style>
 </head>
 
 <body class="min-h-screen animated-bg flex items-center justify-center p-4">
     <!-- Confirm Email Card -->
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-md px-4">
         <!-- Header -->
         <div class="text-center mb-8">
             <a href="index.html" class="inline-flex items-center space-x-3 mb-6">

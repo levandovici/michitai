@@ -112,6 +112,37 @@
         .hero-text {
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        
+        /* Mobile Navigation */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .hero-text {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .pricing-card {
+                margin-bottom: 2rem;
+            }
+        }
     </style>
 </head>
 
@@ -135,14 +166,64 @@
                     <a href="#api" class="text-white/70 hover:text-white transition-colors">API</a>
                 </nav>
                 
-                <div class="flex items-center space-x-3">
+                <div class="hidden md:flex items-center space-x-3">
                     <a href="login.html" class="text-white/70 hover:text-white transition-colors font-medium">Sign In</a>
                     <a href="register.html" class="btn-primary text-white px-6 py-2 rounded-xl font-semibold border-0">Get Started</a>
                     <a href="docs.html" class="text-white/70 hover:text-white transition-colors font-medium">Docs</a>
                 </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-white p-2">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 z-50 w-64 glass-effect border-l border-white/20 md:hidden">
+        <div class="flex flex-col h-full">
+            <div class="flex items-center justify-between p-6 border-b border-white/20">
+                <div class="flex items-center space-x-3">
+                    <img src="logo.png" alt="Multiplayer API" class="w-8 h-8 rounded-lg object-contain">
+                    <span class="text-white font-bold">Menu</span>
+                </div>
+                <button id="mobile-menu-close" class="text-white p-2">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <nav class="flex-1 p-6">
+                <div class="space-y-4">
+                    <a href="#features" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
+                        <i class="fas fa-puzzle-piece mr-3"></i>Features
+                    </a>
+                    <a href="#pricing" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
+                        <i class="fas fa-dollar-sign mr-3"></i>Pricing
+                    </a>
+                    <a href="#examples" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
+                        <i class="fas fa-code mr-3"></i>Examples
+                    </a>
+                    <a href="#api" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
+                        <i class="fas fa-cog mr-3"></i>API
+                    </a>
+                    <hr class="border-white/20 my-4">
+                    <a href="docs.html" class="block text-white/70 hover:text-white transition-colors py-2">
+                        <i class="fas fa-book mr-3"></i>Documentation
+                    </a>
+                    <a href="login.html" class="block text-white/70 hover:text-white transition-colors py-2">
+                        <i class="fas fa-sign-in-alt mr-3"></i>Sign In
+                    </a>
+                    <a href="register.html" class="block btn-primary text-white px-4 py-3 rounded-xl font-semibold border-0 text-center mt-4">
+                        <i class="fas fa-rocket mr-2"></i>Get Started
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Backdrop -->
+    <div id="mobile-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
 
     <!-- Hero Section -->
     <section class="relative py-20 overflow-hidden">
@@ -154,14 +235,14 @@
                 </span>
             </div>
             
-            <h2 class="text-5xl lg:text-6xl font-black text-white mb-8 leading-tight hero-text">
+            <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-white mb-8 leading-tight hero-text">
                 Build Multiplayer Games<br>
                 <span class="stats-number">With Ease</span>
             </h2>
             
-            <p class="text-xl lg:text-2xl text-white/80 mb-12 max-w-4xl mx-auto leading-relaxed">
+            <p class="text-lg sm:text-xl lg:text-2xl text-white/80 mb-12 max-w-4xl mx-auto leading-relaxed">
                 Professional API constructor for multiplayer game development.
-                <br>Visual logic builder, secure payments, and enterprise-grade infrastructure.
+                <br class="hidden sm:block">Visual logic builder, secure payments, and enterprise-grade infrastructure.
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-6 mb-16">
@@ -174,22 +255,22 @@
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="stats-grid grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
                 <div class="text-center">
-                    <div class="text-3xl font-black stats-number mb-2">100K</div>
-                    <div class="text-white/70 font-medium">Max Players</div>
+                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">100K</div>
+                    <div class="text-white/70 font-medium text-sm sm:text-base">Max Players</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl font-black stats-number mb-2">2K</div>
-                    <div class="text-white/70 font-medium">Max Online Players</div>
+                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">2K</div>
+                    <div class="text-white/70 font-medium text-sm sm:text-base">Max Online Players</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl font-black stats-number mb-2">25+</div>
-                    <div class="text-white/70 font-medium">API Endpoints</div>
+                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">25+</div>
+                    <div class="text-white/70 font-medium text-sm sm:text-base">API Endpoints</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl font-black stats-number mb-2">99.9%</div>
-                    <div class="text-white/70 font-medium">Uptime</div>
+                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">99.9%</div>
+                    <div class="text-white/70 font-medium text-sm sm:text-base">Uptime</div>
                 </div>
             </div>
         </div>
@@ -624,6 +705,35 @@ if (user.subscription === 'pro') {
                     $('header').addClass('backdrop-blur-xl');
                 } else {
                     $('header').removeClass('backdrop-blur-xl');
+                }
+            });
+            
+            // Mobile menu functionality
+            $('#mobile-menu-btn').click(function() {
+                $('#mobile-menu').addClass('active');
+                $('#mobile-backdrop').removeClass('hidden');
+                $('body').addClass('overflow-hidden');
+            });
+            
+            $('#mobile-menu-close, #mobile-backdrop').click(function() {
+                $('#mobile-menu').removeClass('active');
+                $('#mobile-backdrop').addClass('hidden');
+                $('body').removeClass('overflow-hidden');
+            });
+            
+            // Close mobile menu when clicking on navigation links
+            $('.mobile-menu-link').click(function() {
+                $('#mobile-menu').removeClass('active');
+                $('#mobile-backdrop').addClass('hidden');
+                $('body').removeClass('overflow-hidden');
+            });
+            
+            // Close mobile menu on escape key
+            $(document).keydown(function(e) {
+                if (e.keyCode === 27) { // ESC key
+                    $('#mobile-menu').removeClass('active');
+                    $('#mobile-backdrop').addClass('hidden');
+                    $('body').removeClass('overflow-hidden');
                 }
             });
         });
