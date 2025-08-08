@@ -69,17 +69,18 @@
         /* Mobile Optimizations */
         @media (max-width: 768px) {
             .glass-effect {
-                margin: 1rem;
-                padding: 1.5rem;
+                margin: 0.5rem;
+                padding: 1.25rem;
+                border-radius: 1.5rem;
             }
             
             .w-full.max-w-md {
                 max-width: 100%;
-                padding: 0 1rem;
+                padding: 0 0.75rem;
             }
             
             .text-3xl {
-                font-size: 1.875rem;
+                font-size: 1.75rem;
             }
             
             .space-y-6 > * + * {
@@ -88,7 +89,21 @@
             
             .success-message {
                 padding: 1rem;
-                margin: 1rem;
+                margin: 0.5rem;
+            }
+            
+            /* Adjust top margin for mobile */
+            .mt-16 {
+                margin-top: 2rem;
+            }
+            
+            .sm\:mt-20 {
+                margin-top: 2rem;
+            }
+            
+            /* Better mobile form spacing */
+            .mb-8 {
+                margin-bottom: 1.5rem;
             }
         }
     </style>
