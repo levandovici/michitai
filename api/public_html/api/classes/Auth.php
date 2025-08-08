@@ -199,15 +199,17 @@ class Auth {
             $verificationToken = $this->generateVerificationToken();
 
             $stmt = $this->db->prepare("
-                INSERT INTO users (email, password, api_token, created_at, updated_at) 
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO users (email, password, api_token, verification_token, email_verified, created_at, updated_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
-            
+        
             $timestamp = time();
             $result = $stmt->execute([
                 $email, 
                 $passwordHash, 
                 $apiToken, 
+                $verificationToken,
+                0, // email_verified = false
                 $timestamp, 
                 $timestamp
             ]);
@@ -282,7 +284,7 @@ class Auth {
                 return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_CREDENTIALS);
             }
 
-            if (!password_verify($password, $user['password_hash'])) {
+            if (!password_verify($password, $user['password'])) {
                 if ($this->debug) {
                     error_log("Auth::login - Invalid password for: $email");
                 }
@@ -291,19 +293,19 @@ class Auth {
 
             // Generate new API token
             $apiToken = $this->generateApiToken();
-            $stmt = $this->db->prepare("UPDATE users SET api_token = ?, updated_at = ? WHERE id = ?");
-            $stmt->execute([$apiToken, time(), $user['id']]);
+            $stmt = $this->db->prepare("UPDATE users SET api_token = ?, updated_at = ? WHERE user_id = ?");
+            $stmt->execute([$apiToken, time(), $user['user_id']]);
 
             if ($this->debug) {
                 error_log("Auth::login - Login successful for: $email");
             }
 
             return ErrorCodes::createSuccessResponse([
-                'user_id' => $user['id'],
+                'user_id' => $user['user_id'],
                 'email' => $user['email'],
                 'api_token' => $apiToken,
-                'email_verified' => (bool)$user['email_verified'],
-                'plan_type' => $user['plan_type']
+                'email_verified' => isset($user['email_verified']) ? (bool)$user['email_verified'] : false,
+                'plan_type' => $user['plan_type'] ?? 'free'
             ], 'Login successful');
 
         } catch (Exception $e) {
@@ -495,17 +497,49 @@ private function sendEmail($to, $subject, $message) {
                 return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_MISSING_PARAMETERS, null, 'Confirmation token is required');
             }
 
-            // Since we don't have verification_token column in the current schema,
-            // we'll simulate email confirmation for development
-            if ($this->debug) {
-                error_log("Auth::confirmEmail - Email confirmation simulated (no verification_token column in schema)");
+            // Look up user by verification token
+            $stmt = $this->db->prepare("SELECT user_id, email, email_verified FROM users WHERE verification_token = ?");
+            $stmt->execute([$token]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$user) {
+                if ($this->debug) {
+                    error_log("Auth::confirmEmail - Invalid or expired token: $token");
+                }
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN, null, 'Invalid or expired confirmation token');
             }
 
-            // For now, return success to allow frontend to work
+            // Check if already confirmed
+            if ($user['email_verified']) {
+                if ($this->debug) {
+                    error_log("Auth::confirmEmail - Email already confirmed for: " . $user['email']);
+                }
+                return ErrorCodes::createSuccessResponse([
+                    'already_confirmed' => true,
+                    'email' => $user['email']
+                ], 'Email address already confirmed');
+            }
+
+            // Mark email as verified and clear verification token
+            $stmt = $this->db->prepare("UPDATE users SET email_verified = 1, verification_token = NULL, updated_at = ? WHERE user_id = ?");
+            $result = $stmt->execute([time(), $user['user_id']]);
+
+            if (!$result) {
+                if ($this->debug) {
+                    error_log("Auth::confirmEmail - Database update failed for user: " . $user['email']);
+                }
+                return ErrorCodes::createErrorResponse(ErrorCodes::REG_DATABASE_ERROR, null, 'Failed to confirm email');
+            }
+
+            if ($this->debug) {
+                error_log("Auth::confirmEmail - Email confirmed successfully for: " . $user['email']);
+            }
+
             return ErrorCodes::createSuccessResponse([
                 'confirmed' => true,
-                'message' => 'Email confirmed successfully (simulated)'
-            ], 'Email confirmation successful');
+                'email' => $user['email'],
+                'user_id' => $user['user_id']
+            ], 'Email confirmed successfully');
 
         } catch (Exception $e) {
             if ($this->debug) {
@@ -535,8 +569,8 @@ private function sendEmail($to, $subject, $message) {
                 return ErrorCodes::createErrorResponse(ErrorCodes::REG_INVALID_EMAIL, null, 'Invalid email address');
             }
 
-            // Check if user exists
-            $stmt = $this->db->prepare("SELECT user_id FROM users WHERE email = ?");
+            // Check if user exists and get current verification status
+            $stmt = $this->db->prepare("SELECT user_id, email_verified FROM users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -544,19 +578,45 @@ private function sendEmail($to, $subject, $message) {
                 return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_USER_NOT_FOUND, null, 'User not found');
             }
 
-            // Generate new verification token (simulated)
+            // Check if email is already verified
+            if ($user['email_verified']) {
+                if ($this->debug) {
+                    error_log("Auth::resendConfirmationEmail - Email already verified for: $email");
+                }
+                return ErrorCodes::createErrorResponse(ErrorCodes::REG_EMAIL_ALREADY_VERIFIED, null, 'Email address is already verified');
+            }
+
+            // Generate new verification token
             $verificationToken = $this->generateVerificationToken();
 
-            // Send confirmation email (simulated)
+            // Update verification token in database
+            $stmt = $this->db->prepare("UPDATE users SET verification_token = ?, updated_at = ? WHERE user_id = ?");
+            $result = $stmt->execute([$verificationToken, time(), $user['user_id']]);
+
+            if (!$result) {
+                if ($this->debug) {
+                    error_log("Auth::resendConfirmationEmail - Database update failed for: $email");
+                }
+                return ErrorCodes::createErrorResponse(ErrorCodes::REG_DATABASE_ERROR, null, 'Failed to generate new verification token');
+            }
+
+            // Send confirmation email
             $emailSent = $this->sendConfirmationEmail($email, $verificationToken);
 
+            if (!$emailSent) {
+                if ($this->debug) {
+                    error_log("Auth::resendConfirmationEmail - Email sending failed for: $email");
+                }
+                return ErrorCodes::createErrorResponse(ErrorCodes::SYS_EMAIL_SEND_FAILED, null, 'Failed to send confirmation email');
+            }
+
             if ($this->debug) {
-                error_log("Auth::resendConfirmationEmail - Confirmation email sent to: $email");
+                error_log("Auth::resendConfirmationEmail - Confirmation email sent to: $email with token: $verificationToken");
             }
 
             return ErrorCodes::createSuccessResponse([
                 'email_sent' => true,
-                'message' => 'Confirmation email sent successfully (simulated)'
+                'message' => 'Confirmation email sent successfully'
             ], 'Confirmation email sent');
 
         } catch (Exception $e) {

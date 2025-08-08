@@ -25,6 +25,7 @@ class ErrorCodes {
     const REG_EMAIL_SEND_FAILED = 2005;
     const REG_DATABASE_ERROR = 2006;
     const REG_VALIDATION_FAILED = 2007;
+    const REG_EMAIL_ALREADY_VERIFIED = 2008;
 
     // API Errors (3000-3999)
     const API_METHOD_NOT_ALLOWED = 3001;
@@ -48,8 +49,9 @@ class ErrorCodes {
     const SYS_CONFIGURATION_ERROR = 5003;
     const SYS_FILE_NOT_FOUND = 5004;
     const SYS_PERMISSION_DENIED = 5005;
-    const SYS_MEMORY_LIMIT = 5006;
-    const SYS_TIMEOUT = 5007;
+    const SYS_EMAIL_SEND_FAILED = 5006;
+    const SYS_MEMORY_LIMIT = 5007;
+    const SYS_TIMEOUT = 5008;
 
     // Payment Errors (6000-6999)
     const PAY_INVALID_AMOUNT = 6001;
