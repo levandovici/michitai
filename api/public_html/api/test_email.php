@@ -62,6 +62,9 @@ try {
         exit;
     }
     
+    // Important note about email account
+    echo "<div class='info'>⚠️ <strong>Important:</strong> Make sure the email account <code>" . htmlspecialchars($config['SMTP_USERNAME']) . "</code> exists in your Hostinger email panel and the password is correct.</div>";
+    
     // Test email content
     $subject = "Test Email from Multiplayer API - " . date('Y-m-d H:i:s');
     $message = "Hello!\n\n";
@@ -172,10 +175,44 @@ function testSMTPEmail($to, $subject, $message, $config) {
         $response = fgets($socket, 512);
         $logs[] = "Server greeting: " . trim($response);
         
-        // EHLO
+        // EHLO and read all capabilities
         fputs($socket, "EHLO $smtpHost\r\n");
         $response = fgets($socket, 512);
         $logs[] = "EHLO response: " . trim($response);
+        
+        // Read all EHLO capabilities
+        $capabilities = [];
+        while (true) {
+            $line = fgets($socket, 512);
+            if (!$line || strpos($line, '250 ') === 0) {
+                $capabilities[] = trim($line);
+                break;
+            }
+            if (strpos($line, '250-') === 0) {
+                $capabilities[] = trim($line);
+            } else {
+                break;
+            }
+        }
+        
+        $logs[] = "Server capabilities: " . implode(', ', $capabilities);
+        
+        // Check if AUTH is supported
+        $authSupported = false;
+        $supportedAuthMethods = [];
+        foreach ($capabilities as $cap) {
+            if (strpos($cap, 'AUTH') !== false) {
+                $authSupported = true;
+                $supportedAuthMethods[] = $cap;
+            }
+        }
+        
+        if (!$authSupported) {
+            fclose($socket);
+            return ['success' => false, 'error' => 'Server does not support authentication', 'logs' => $logs];
+        }
+        
+        $logs[] = "Authentication methods: " . implode(', ', $supportedAuthMethods);
         
         // STARTTLS if needed
         if ($useTLS && !$useSSL) {
@@ -198,22 +235,38 @@ function testSMTPEmail($to, $subject, $message, $config) {
             }
         }
         
-        // Authentication
+        // Authentication - try AUTH LOGIN first
         fputs($socket, "AUTH LOGIN\r\n");
         $response = fgets($socket, 512);
         $logs[] = "AUTH LOGIN response: " . trim($response);
         
-        fputs($socket, base64_encode($smtpUsername) . "\r\n");
-        $response = fgets($socket, 512);
-        $logs[] = "Username response: " . trim($response);
-        
-        fputs($socket, base64_encode($smtpPassword) . "\r\n");
-        $response = fgets($socket, 512);
-        $logs[] = "Password response: " . trim($response);
-        
-        if (strpos($response, '235') !== 0) {
-            fclose($socket);
-            return ['success' => false, 'error' => 'Authentication failed: ' . trim($response), 'logs' => $logs];
+        // Check if server supports AUTH LOGIN (should respond with 334)
+        if (strpos($response, '334') === 0) {
+            // Server supports AUTH LOGIN, proceed with base64 credentials
+            fputs($socket, base64_encode($smtpUsername) . "\r\n");
+            $response = fgets($socket, 512);
+            $logs[] = "Username response: " . trim($response);
+            
+            fputs($socket, base64_encode($smtpPassword) . "\r\n");
+            $response = fgets($socket, 512);
+            $logs[] = "Password response: " . trim($response);
+            
+            if (strpos($response, '235') !== 0) {
+                fclose($socket);
+                return ['success' => false, 'error' => 'Authentication failed: ' . trim($response), 'logs' => $logs];
+            }
+        } else {
+            // Try AUTH PLAIN instead
+            $logs[] = "AUTH LOGIN not supported, trying AUTH PLAIN...";
+            $authString = base64_encode("\0" . $smtpUsername . "\0" . $smtpPassword);
+            fputs($socket, "AUTH PLAIN $authString\r\n");
+            $response = fgets($socket, 512);
+            $logs[] = "AUTH PLAIN response: " . trim($response);
+            
+            if (strpos($response, '235') !== 0) {
+                fclose($socket);
+                return ['success' => false, 'error' => 'Authentication failed with both LOGIN and PLAIN: ' . trim($response), 'logs' => $logs];
+            }
         }
         
         $logs[] = "✅ Authentication successful";

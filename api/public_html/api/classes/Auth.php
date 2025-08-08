@@ -625,22 +625,54 @@ private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $usern
             }
         }
         
-        // Authenticate
+        // Authenticate - try AUTH LOGIN first
         fputs($socket, "AUTH LOGIN\r\n");
         $response = fgets($socket, 512);
+        if ($this->debug) {
+            error_log("Auth: AUTH LOGIN response - " . trim($response));
+        }
         
-        fputs($socket, base64_encode($username) . "\r\n");
-        $response = fgets($socket, 512);
-        
-        fputs($socket, base64_encode($password) . "\r\n");
-        $response = fgets($socket, 512);
-        
-        if (strpos($response, '235') !== 0) {
+        // Check if server supports AUTH LOGIN (should respond with 334)
+        if (strpos($response, '334') === 0) {
+            // Server supports AUTH LOGIN, proceed with base64 credentials
+            fputs($socket, base64_encode($username) . "\r\n");
+            $response = fgets($socket, 512);
             if ($this->debug) {
-                error_log("Auth: SMTP authentication failed - $response");
+                error_log("Auth: Username response - " . trim($response));
             }
-            fclose($socket);
-            return false;
+            
+            fputs($socket, base64_encode($password) . "\r\n");
+            $response = fgets($socket, 512);
+            if ($this->debug) {
+                error_log("Auth: Password response - " . trim($response));
+            }
+            
+            if (strpos($response, '235') !== 0) {
+                if ($this->debug) {
+                    error_log("Auth: SMTP authentication failed - " . trim($response));
+                }
+                fclose($socket);
+                return false;
+            }
+        } else {
+            // Try AUTH PLAIN instead
+            if ($this->debug) {
+                error_log("Auth: AUTH LOGIN not supported, trying AUTH PLAIN...");
+            }
+            $authString = base64_encode("\0" . $username . "\0" . $password);
+            fputs($socket, "AUTH PLAIN $authString\r\n");
+            $response = fgets($socket, 512);
+            if ($this->debug) {
+                error_log("Auth: AUTH PLAIN response - " . trim($response));
+            }
+            
+            if (strpos($response, '235') !== 0) {
+                if ($this->debug) {
+                    error_log("Auth: SMTP authentication failed with both LOGIN and PLAIN - " . trim($response));
+                }
+                fclose($socket);
+                return false;
+            }
         }
         
         // Send email
