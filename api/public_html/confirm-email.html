@@ -143,6 +143,44 @@
                 </div>
             </div>
 
+            <!-- Check Email State -->
+            <div id="check-email-state" class="text-center hidden">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-envelope text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Check Your Email</h2>
+                <p class="text-white/70 mb-6">We've sent a confirmation email to your inbox. Please click the confirmation link to verify your account.</p>
+                
+                <div class="bg-white/5 rounded-xl p-4 mb-6">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-info-circle text-blue-400 mt-1"></i>
+                        <div class="text-left text-sm text-white/70">
+                            <p class="mb-2">What to do next:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Check your email inbox for the confirmation message</li>
+                                <li>Look in your spam/junk folder if you don't see it</li>
+                                <li>Click the confirmation link in the email</li>
+                                <li>The link expires in <strong>24 hours</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button id="resend-check-btn" class="btn-primary w-full text-white py-3 px-6 rounded-xl font-semibold border-0">
+                        <i class="fas fa-paper-plane mr-2" id="resend-check-icon"></i>
+                        <span id="resend-check-text">Resend Confirmation Email</span>
+                        <i id="resend-check-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                    </button>
+                    <div class="text-xs text-white/50 text-center">
+                        Didn't receive the email? Click above to send a new one
+                    </div>
+                    <a href="register.html" class="block w-full py-3 px-6 rounded-xl font-semibold border-2 border-white/20 text-white hover:bg-white/10 transition-colors text-center">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Registration
+                    </a>
+                </div>
+            </div>
+
             <!-- Error State -->
             <div id="error-state" class="text-center hidden">
                 <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center mx-auto mb-4">
@@ -238,7 +276,13 @@
                 if (this.confirmationToken) {
                     this.confirmEmail();
                 } else {
-                    this.showError('No confirmation token provided');
+                    // Check if user came from registration (has email in URL)
+                    const email = new URLSearchParams(window.location.search).get('email');
+                    if (email) {
+                        this.showCheckEmail(email);
+                    } else {
+                        this.showError('No confirmation token provided. Please use the complete link from your email.');
+                    }
                 }
             }
 
@@ -312,13 +356,66 @@
                 $('#error-state').removeClass('hidden');
             }
 
+            showCheckEmail(email) {
+                this.hideAllStates();
+                $('#check-email-state').removeClass('hidden');
+                // Store email for resend functionality
+                window.confirmationEmail = email;
+                
+                // Set up resend button for check email state
+                $('#resend-check-btn').off('click').on('click', () => this.handleResendFromCheckEmail());
+            }
+
             showAlreadyConfirmed() {
                 this.hideAllStates();
                 $('#already-confirmed-state').removeClass('hidden');
             }
 
             hideAllStates() {
-                $('#loading-state, #success-state, #error-state, #already-confirmed-state').addClass('hidden');
+                $('#loading-state, #success-state, #error-state, #already-confirmed-state, #check-email-state').addClass('hidden');
+            }
+
+            async handleResendFromCheckEmail() {
+                const email = window.confirmationEmail;
+                if (!email) {
+                    this.showNotification('No email address found. Please register again.', 'error');
+                    return;
+                }
+                
+                const btn = $('#resend-check-btn');
+                const originalText = $('#resend-check-text').text();
+                
+                try {
+                    btn.prop('disabled', true);
+                    $('#resend-check-icon').addClass('hidden');
+                    $('#resend-check-text').text('Sending...');
+                    $('#resend-check-spinner').removeClass('hidden');
+                    
+                    const response = await fetch('/api/resend-confirmation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: email })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.success) {
+                        this.showNotification('✅ New confirmation email sent! Check your inbox (and spam folder).', 'success');
+                    } else {
+                        throw new Error(result.error_message || result.error || 'Failed to resend confirmation email');
+                    }
+                    
+                } catch (error) {
+                    console.error('Resend error:', error);
+                    this.showNotification(error.message, 'error');
+                } finally {
+                    btn.prop('disabled', false);
+                    $('#resend-check-icon').removeClass('hidden');
+                    $('#resend-check-text').text(originalText);
+                    $('#resend-check-spinner').addClass('hidden');
+                }
             }
 
             showNotification(message, type = 'info') {
