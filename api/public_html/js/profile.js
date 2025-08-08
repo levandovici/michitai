@@ -20,8 +20,8 @@ class ProfilePage {
     }
 
     checkAuthentication() {
+        // Simple check - if no session token, redirect to login
         if (!this.sessionToken) {
-            // User not logged in, redirect to login
             window.location.href = 'login.html';
             return;
         }
@@ -456,6 +456,23 @@ class ProfilePage {
         setTimeout(() => {
             notification.fadeOut(() => notification.remove());
         }, 5000);
+    }
+
+    handleLogout() {
+        // Clear ALL localStorage data to ensure complete logout
+        localStorage.clear();
+        
+        // Also clear sessionStorage if any data is stored there
+        sessionStorage.clear();
+        
+        // Clear any cookies that might be set
+        document.cookie.split(";").forEach(function(c) { 
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+        
+        // Force immediate redirect without notification to prevent timing issues
+        // Use location.replace to prevent back button issues
+        window.location.replace('index.html');
     }
 }
 

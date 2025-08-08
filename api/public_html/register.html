@@ -269,11 +269,8 @@
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <button id="resend-confirmation" class="text-blue-300 hover:text-blue-200 text-sm transition-colors">
-                                <i class="fas fa-paper-plane mr-1"></i>Resend confirmation email
-                            </button>
                             <div class="text-xs text-white/50">
-                                Don't see the email? Check your spam folder or try resending.
+                                Don't see the email? Check your spam folder.
                             </div>
                         </div>
                     </div>
@@ -348,8 +345,6 @@
                     }
                 });
                 
-                // Resend confirmation email
-                $('#resend-confirmation').on('click', () => this.handleResendConfirmation());
             }
 
             togglePassword(fieldId) {
@@ -611,43 +606,6 @@
 
             hideLoading() {
                 $('#loading-modal').addClass('hidden').removeClass('flex');
-            }
-
-            async handleResendConfirmation() {
-                const email = window.registeredEmail;
-                if (!email) {
-                    this.showNotification('No email address found. Please register again.', 'error');
-                    return;
-                }
-                
-                const btn = $('#resend-confirmation');
-                const originalText = btn.html();
-                
-                try {
-                    btn.html('<i class="fas fa-spinner fa-spin mr-1"></i>Sending...').prop('disabled', true);
-                    
-                    const response = await fetch('/api/resend-confirmation', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ email: email })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok && result.success) {
-                        this.showNotification('Confirmation email sent successfully!', 'success');
-                    } else {
-                        throw new Error(result.error_message || result.error || 'Failed to resend confirmation email');
-                    }
-                    
-                } catch (error) {
-                    console.error('Resend confirmation error:', error);
-                    this.showNotification(error.message, 'error');
-                } finally {
-                    btn.html(originalText).prop('disabled', false);
-                }
             }
 
             showNotification(message, type = 'info') {

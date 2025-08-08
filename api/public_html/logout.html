@@ -247,16 +247,13 @@
             }
 
             clearUserData() {
-                // Remove all stored user data
-                localStorage.removeItem('api_token');
-                localStorage.removeItem('user_email');
-                localStorage.removeItem('user_plan');
-                localStorage.removeItem('remember_login');
+                // Clear ALL localStorage data to ensure complete logout
+                localStorage.clear();
                 
-                // Clear any session storage
+                // Also clear sessionStorage if any data is stored there
                 sessionStorage.clear();
                 
-                // Clear any cookies if needed
+                // Clear any cookies that might be set
                 document.cookie.split(";").forEach(function(c) { 
                     document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
                 });
