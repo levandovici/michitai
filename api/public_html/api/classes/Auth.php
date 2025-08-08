@@ -471,18 +471,181 @@ private function sendConfirmationEmail($email, $token) {
 }
 
 /**
- * Simulate email sending (implement with real SMTP later)
+ * Send email using SMTP (production implementation)
  */
 private function sendEmail($to, $subject, $message) {
     if ($this->debug) {
-        error_log("Auth: Email would be sent to $to - Subject: $subject");
-        error_log("Auth: Email content: $message");
+        error_log("Auth: Attempting to send email to $to - Subject: $subject");
     }
     
-    // TODO: Implement real email sending with SMTP
-    // For now, just log the email content and return success
-    return true;
+    try {
+        // Get SMTP configuration from environment
+        $smtpHost = $_ENV['SMTP_HOST'] ?? 'localhost';
+        $smtpPort = $_ENV['SMTP_PORT'] ?? 587;
+        $smtpUsername = $_ENV['SMTP_USERNAME'] ?? '';
+        $smtpPassword = $_ENV['SMTP_PASSWORD'] ?? '';
+        $fromEmail = $_ENV['SMTP_FROM_EMAIL'] ?? 'noreply@michitai.com';
+        $fromName = $_ENV['SMTP_FROM_NAME'] ?? 'Multiplayer API';
+        
+        // If SMTP credentials are not configured, fall back to PHP mail()
+        if (empty($smtpUsername) || empty($smtpPassword)) {
+            if ($this->debug) {
+                error_log("Auth: SMTP not configured, using PHP mail() function");
+            }
+            return $this->sendEmailWithPHPMail($to, $subject, $message, $fromEmail, $fromName);
+        }
+        
+        // Use SMTP with authentication
+        return $this->sendEmailWithSMTP($to, $subject, $message, $smtpHost, $smtpPort, $smtpUsername, $smtpPassword, $fromEmail, $fromName);
+        
+    } catch (Exception $e) {
+        if ($this->debug) {
+            error_log("Auth: Email sending failed - " . $e->getMessage());
+        }
+        return false;
     }
+}
+
+/**
+ * Send email using PHP's built-in mail() function
+ */
+private function sendEmailWithPHPMail($to, $subject, $message, $fromEmail, $fromName) {
+    try {
+        // Set headers
+        $headers = [
+            'From' => "$fromName <$fromEmail>",
+            'Reply-To' => $fromEmail,
+            'X-Mailer' => 'PHP/' . phpversion(),
+            'MIME-Version' => '1.0',
+            'Content-Type' => 'text/plain; charset=UTF-8',
+            'Content-Transfer-Encoding' => '8bit'
+        ];
+        
+        $headerString = '';
+        foreach ($headers as $key => $value) {
+            $headerString .= "$key: $value\r\n";
+        }
+        
+        // Send email
+        $result = mail($to, $subject, $message, $headerString);
+        
+        if ($this->debug) {
+            error_log("Auth: PHP mail() result: " . ($result ? 'success' : 'failed'));
+        }
+        
+        return $result;
+        
+    } catch (Exception $e) {
+        if ($this->debug) {
+            error_log("Auth: PHP mail() exception - " . $e->getMessage());
+        }
+        return false;
+    }
+}
+
+/**
+ * Send email using SMTP with authentication
+ */
+private function sendEmailWithSMTP($to, $subject, $message, $host, $port, $username, $password, $fromEmail, $fromName) {
+    try {
+        // Create socket connection to SMTP server
+        $socket = fsockopen($host, $port, $errno, $errstr, 30);
+        
+        if (!$socket) {
+            if ($this->debug) {
+                error_log("Auth: SMTP connection failed - $errstr ($errno)");
+            }
+            return false;
+        }
+        
+        // Read server greeting
+        $response = fgets($socket, 512);
+        if ($this->debug) {
+            error_log("Auth: SMTP greeting - $response");
+        }
+        
+        // Send EHLO command
+        fputs($socket, "EHLO $host\r\n");
+        $response = fgets($socket, 512);
+        
+        // Start TLS if available
+        fputs($socket, "STARTTLS\r\n");
+        $response = fgets($socket, 512);
+        
+        if (strpos($response, '220') === 0) {
+            // Enable crypto
+            stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+            
+            // Send EHLO again after TLS
+            fputs($socket, "EHLO $host\r\n");
+            $response = fgets($socket, 512);
+        }
+        
+        // Authenticate
+        fputs($socket, "AUTH LOGIN\r\n");
+        $response = fgets($socket, 512);
+        
+        fputs($socket, base64_encode($username) . "\r\n");
+        $response = fgets($socket, 512);
+        
+        fputs($socket, base64_encode($password) . "\r\n");
+        $response = fgets($socket, 512);
+        
+        if (strpos($response, '235') !== 0) {
+            if ($this->debug) {
+                error_log("Auth: SMTP authentication failed - $response");
+            }
+            fclose($socket);
+            return false;
+        }
+        
+        // Send email
+        fputs($socket, "MAIL FROM: <$fromEmail>\r\n");
+        $response = fgets($socket, 512);
+        
+        fputs($socket, "RCPT TO: <$to>\r\n");
+        $response = fgets($socket, 512);
+        
+        fputs($socket, "DATA\r\n");
+        $response = fgets($socket, 512);
+        
+        // Email headers and body
+        $emailData = "From: $fromName <$fromEmail>\r\n";
+        $emailData .= "To: $to\r\n";
+        $emailData .= "Subject: $subject\r\n";
+        $emailData .= "MIME-Version: 1.0\r\n";
+        $emailData .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        $emailData .= "\r\n";
+        $emailData .= $message;
+        $emailData .= "\r\n.\r\n";
+        
+        fputs($socket, $emailData);
+        $response = fgets($socket, 512);
+        
+        // Quit
+        fputs($socket, "QUIT\r\n");
+        $response = fgets($socket, 512);
+        
+        fclose($socket);
+        
+        if ($this->debug) {
+            error_log("Auth: SMTP email sent successfully to $to");
+        }
+        
+        return true;
+        
+    } catch (Exception $e) {
+        if ($this->debug) {
+            error_log("Auth: SMTP sending failed - " . $e->getMessage());
+        }
+        
+        if (isset($socket) && $socket) {
+            fclose($socket);
+        }
+        
+        return false;
+    }
+}
 
     /**
      * Confirm email address using verification token
