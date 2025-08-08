@@ -167,16 +167,11 @@
                 </div>
 
                 <div class="space-y-3">
-                    <button id="resend-check-btn" class="btn-primary w-full text-white py-3 px-6 rounded-xl font-semibold border-0">
-                        <i class="fas fa-paper-plane mr-2" id="resend-check-icon"></i>
-                        <span id="resend-check-text">Resend Confirmation Email</span>
-                        <i id="resend-check-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
-                    </button>
-                    <div class="text-xs text-white/50 text-center">
-                        Didn't receive the email? Click above to send a new one
-                    </div>
-                    <a href="register.html" class="block w-full py-3 px-6 rounded-xl font-semibold border-2 border-white/20 text-white hover:bg-white/10 transition-colors text-center">
+                    <a href="register.html" class="block w-full py-3 px-6 rounded-xl font-semibold btn-primary text-white transition-colors text-center border-0">
                         <i class="fas fa-arrow-left mr-2"></i>Back to Registration
+                    </a>
+                    <a href="index.html" class="block w-full py-3 px-6 rounded-xl font-semibold border-2 border-white/20 text-white hover:bg-white/10 transition-colors text-center">
+                        <i class="fas fa-home mr-2"></i>Back to Home
                     </a>
                 </div>
             </div>
@@ -359,11 +354,8 @@
             showCheckEmail(email) {
                 this.hideAllStates();
                 $('#check-email-state').removeClass('hidden');
-                // Store email for resend functionality
+                // Store email for reference
                 window.confirmationEmail = email;
-                
-                // Set up resend button for check email state
-                $('#resend-check-btn').off('click').on('click', () => this.handleResendFromCheckEmail());
             }
 
             showAlreadyConfirmed() {
@@ -375,48 +367,7 @@
                 $('#loading-state, #success-state, #error-state, #already-confirmed-state, #check-email-state').addClass('hidden');
             }
 
-            async handleResendFromCheckEmail() {
-                const email = window.confirmationEmail;
-                if (!email) {
-                    this.showNotification('No email address found. Please register again.', 'error');
-                    return;
-                }
-                
-                const btn = $('#resend-check-btn');
-                const originalText = $('#resend-check-text').text();
-                
-                try {
-                    btn.prop('disabled', true);
-                    $('#resend-check-icon').addClass('hidden');
-                    $('#resend-check-text').text('Sending...');
-                    $('#resend-check-spinner').removeClass('hidden');
-                    
-                    const response = await fetch('/api/resend-confirmation', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ email: email })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok && result.success) {
-                        this.showNotification('✅ New confirmation email sent! Check your inbox (and spam folder).', 'success');
-                    } else {
-                        throw new Error(result.error_message || result.error || 'Failed to resend confirmation email');
-                    }
-                    
-                } catch (error) {
-                    console.error('Resend error:', error);
-                    this.showNotification(error.message, 'error');
-                } finally {
-                    btn.prop('disabled', false);
-                    $('#resend-check-icon').removeClass('hidden');
-                    $('#resend-check-text').text(originalText);
-                    $('#resend-check-spinner').addClass('hidden');
-                }
-            }
+
 
             showNotification(message, type = 'info') {
                 const colors = {
