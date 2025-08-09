@@ -442,6 +442,62 @@ class GameManager {
             return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
         }
     }
+
+    /**
+     * Get all games (including anonymous ones) - no authentication required
+     */
+    public function getAllGames() {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT game_id, user_id, name, description, json_structure, json_properties, is_active, created_at, updated_at 
+                FROM games 
+                ORDER BY created_at DESC
+            ");
+            
+            $stmt->execute();
+            $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Process games to extract API tokens and format data
+            $processedGames = [];
+            foreach ($games as $game) {
+                $jsonStructure = json_decode($game['json_structure'], true);
+                $apiToken = $jsonStructure['api_token'] ?? 'No token';
+                $gameType = $jsonStructure['game_type'] ?? 'multiplayer';
+                $maxPlayers = $jsonStructure['max_players'] ?? 10;
+                $status = $jsonStructure['status'] ?? 'active';
+                
+                $processedGames[] = [
+                    'game_id' => (int)$game['game_id'],
+                    'user_id' => $game['user_id'] ? (int)$game['user_id'] : null,
+                    'name' => $game['name'],
+                    'description' => $game['description'],
+                    'game_type' => $gameType,
+                    'max_players' => (int)$maxPlayers,
+                    'status' => $status,
+                    'api_token' => $apiToken,
+                    'is_active' => (bool)$game['is_active'],
+                    'created_at' => $game['created_at'],
+                    'updated_at' => $game['updated_at'],
+                    'created_by' => $game['user_id'] ? 'User ' . $game['user_id'] : 'Anonymous'
+                ];
+            }
+            
+            if ($this->debug) {
+                error_log("GameManager: Retrieved " . count($processedGames) . " total games (including anonymous)");
+            }
+            
+            return ErrorCodes::createSuccessResponse([
+                'games' => $processedGames,
+                'total' => count($processedGames)
+            ], 'All games retrieved successfully');
+            
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Get all games error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
     
     /**
      * Get user statistics

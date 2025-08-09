@@ -461,22 +461,7 @@
                 </div>
             </div>
 
-            <!-- Authentication Section -->
-            <div class="mb-8">
-                <div class="glass-effect rounded-2xl p-6">
-                    <h2 class="text-xl font-semibold text-white mb-4">
-                        <i class="fas fa-key mr-2 text-yellow-400"></i>
-                        Authentication
-                    </h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="userToken" class="block text-sm font-medium text-white/80 mb-2">Your API Token</label>
-                            <input type="text" id="userToken" placeholder="Enter your user API token to access games" 
-                                   class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Quick Actions Section -->
             <div class="mb-8">
@@ -504,7 +489,7 @@
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-semibold text-white">
                         <i class="fas fa-list mr-2 text-blue-400"></i>
-                        Your Games
+                        All Games
                     </h2>
                     <div class="text-sm text-white/60" id="gameCount">
                         Loading...
@@ -571,25 +556,16 @@
             }
         }
 
-        // Get user token
+        // Get user token (not needed for anonymous games)
         function getUserToken() {
-            return document.getElementById('userToken').value.trim();
+            return null; // No authentication required
         }
 
         // Export games data
         document.getElementById('exportGames').addEventListener('click', async () => {
-            const token = getUserToken();
-            if (!token) {
-                showNotification('Please enter your API token first', 'error');
-                return;
-            }
-
             try {
-                const response = await fetch(`${API_BASE}/game/list`, {
-                    method: 'GET',
-                    headers: {
-                        'X-API-Token': token
-                    }
+                const response = await fetch(`${API_BASE}/game/list-all`, {
+                    method: 'GET'
                 });
 
                 const result = await response.json();
@@ -614,21 +590,12 @@
 
         // Load games
         async function loadGames() {
-            const token = getUserToken();
-            if (!token) {
-                document.getElementById('gamesContainer').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Please enter your API token to view games.</p>';
-                return;
-            }
-
             document.getElementById('loading').style.display = 'block';
             document.getElementById('gamesContainer').innerHTML = '';
 
             try {
-                const response = await fetch(`${API_BASE}/game/list`, {
-                    method: 'GET',
-                    headers: {
-                        'X-API-Token': token
-                    }
+                const response = await fetch(`${API_BASE}/game/list-all`, {
+                    method: 'GET'
                 });
 
                 const result = await response.json();
@@ -650,6 +617,10 @@
         // Display games
         function displayGames(games) {
             const container = document.getElementById('gamesContainer');
+            const gameCount = document.getElementById('gameCount');
+            
+            // Update game count
+            gameCount.textContent = games ? `${games.length} games found` : 'Loading...';
             
             if (!games || games.length === 0) {
                 container.innerHTML = `
@@ -668,7 +639,7 @@
             }
 
             container.innerHTML = games.map(game => `
-                <div class="game-card">
+                <div class="glass-effect rounded-2xl p-6 floating-card">
                     <div class="flex items-start justify-between mb-4">
                         <h3 class="text-xl font-bold text-white">${escapeHtml(game.name)}</h3>
                         <span class="px-3 py-1 rounded-full text-xs font-medium ${game.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}">
@@ -678,19 +649,28 @@
                     
                     ${game.description ? `<p class="text-white/70 mb-4">${escapeHtml(game.description)}</p>` : ''}
                     
-                    <div class="text-sm text-white/50 mb-4">
-                        <i class="fas fa-calendar mr-1"></i>
-                        Created: ${formatDate(game.created_at)}
+                    <div class="grid grid-cols-2 gap-4 mb-4 text-sm text-white/50">
+                        <div>
+                            <i class="fas fa-calendar mr-1"></i>
+                            Created: ${formatDate(game.created_at)}
+                        </div>
+                        <div>
+                            <i class="fas fa-user mr-1"></i>
+                            By: ${game.created_by || 'Anonymous'}
+                        </div>
                     </div>
                     
-                    <div class="token-container">
+                    <div class="bg-white/5 rounded-xl p-4 border border-white/10">
                         <div class="flex items-center justify-between mb-2">
                             <h4 class="text-white font-medium">
-                                <i class="fas fa-key mr-2"></i>API Token
+                                <i class="fas fa-key mr-2 text-yellow-400"></i>API Token
                             </h4>
+                            <span class="text-xs text-white/50">Game ID: ${game.game_id}</span>
                         </div>
-                        <div class="token-value">${escapeHtml(game.api_token)}</div>
-                        <button class="w-full mt-3 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all border border-blue-500/30" 
+                        <div class="bg-black/20 rounded-lg p-3 mb-3 font-mono text-sm text-white/80 break-all">
+                            ${escapeHtml(game.api_token)}
+                        </div>
+                        <button class="w-full px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all border border-blue-500/30" 
                                 onclick="copyToClipboard('${escapeHtml(game.api_token)}')">
                             <i class="fas fa-copy mr-2"></i>Copy Token
                         </button>
@@ -701,28 +681,25 @@
 
         // Escape HTML to prevent XSS
         function escapeHtml(text) {
+            if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        
+        // Format date helper
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }
 
         // Refresh games button
         document.getElementById('refreshGames').addEventListener('click', loadGames);
 
-        // Load games when token is entered
-        document.getElementById('userToken').addEventListener('input', () => {
-            const token = getUserToken();
-            if (token.length > 10) { // Basic validation
-                loadGames();
-            }
-        });
-
-        // Initial load
+        // Initial load - load games immediately since no authentication required
         document.addEventListener('DOMContentLoaded', () => {
-            // Try to load games if token is already present
-            if (getUserToken()) {
-                loadGames();
-            }
+            loadGames();
         });
     </script>
 </body>

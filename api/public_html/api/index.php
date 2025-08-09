@@ -418,6 +418,18 @@ try {
                 return;
             }
             
+            // Allow anonymous access for listing all games
+            if ($endpoint === 'list-all') {
+                if ($method !== 'GET') {
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Method not allowed']);
+                    return;
+                }
+                $result = $this->gameManager->getAllGames();
+                echo json_encode($result);
+                return;
+            }
+            
             // For all other game endpoints, require authentication
             $token = $_SERVER['HTTP_X_API_TOKEN'] ?? null;
             if (!$this->auth->validateToken($token)) {
