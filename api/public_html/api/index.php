@@ -403,6 +403,22 @@ try {
         }
 
         private function handleGame($segments, $method) {
+            $endpoint = $segments[1] ?? '';
+            
+            // Allow anonymous access for game creation
+            if ($endpoint === 'create') {
+                if ($method !== 'POST') {
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Method not allowed']);
+                    return;
+                }
+                $input = json_decode(file_get_contents('php://input'), true);
+                $result = $this->gameManager->createGameAnonymous($input);
+                echo json_encode($result);
+                return;
+            }
+            
+            // For all other game endpoints, require authentication
             $token = $_SERVER['HTTP_X_API_TOKEN'] ?? null;
             if (!$this->auth->validateToken($token)) {
                 http_response_code(401);
@@ -410,17 +426,7 @@ try {
                 return;
             }
 
-            switch ($segments[1] ?? '') {
-                case 'create':
-                    if ($method !== 'POST') {
-                        http_response_code(405);
-                        echo json_encode(['error' => 'Method not allowed']);
-                        return;
-                    }
-                    $input = json_decode(file_get_contents('php://input'), true);
-                    $result = $this->gameManager->createGame($token, $input);
-                    echo json_encode($result);
-                    break;
+            switch ($endpoint) {
                 case 'list':
                     if ($method !== 'GET') {
                         http_response_code(405);

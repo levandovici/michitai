@@ -68,7 +68,7 @@ class GameManager {
                 $sql = "
                 CREATE TABLE IF NOT EXISTS games (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    user_id INT NOT NULL,
+                    user_id INT NULL,
                     name VARCHAR(255) NOT NULL,
                     description TEXT,
                     game_type VARCHAR(100) DEFAULT 'multiplayer',
@@ -78,7 +78,6 @@ class GameManager {
                     settings JSON,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                     INDEX idx_user_id (user_id),
                     INDEX idx_status (status),
                     INDEX idx_api_token (api_token)
@@ -89,7 +88,7 @@ class GameManager {
                 $sql = "
                 CREATE TABLE IF NOT EXISTS games (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL,
+                    user_id INTEGER NULL,
                     name TEXT NOT NULL,
                     description TEXT,
                     game_type TEXT DEFAULT 'multiplayer',
@@ -98,8 +97,7 @@ class GameManager {
                     api_token TEXT NOT NULL UNIQUE,
                     settings TEXT,
                     created_at INTEGER DEFAULT (strftime('%s', 'now')),
-                    updated_at INTEGER DEFAULT (strftime('%s', 'now')),
-                    FOREIGN KEY (user_id) REFERENCES users(id)
+                    updated_at INTEGER DEFAULT (strftime('%s', 'now'))
                 );
                 ";
             }
@@ -108,6 +106,9 @@ class GameManager {
             
             // Add migration for existing games without API tokens
             $this->migrateExistingGames();
+            
+            // Add migration to allow anonymous games
+            $this->migrateForAnonymousGames();
             
             if ($this->debug) {
                 error_log("GameManager: Games table created successfully using $driver");
@@ -127,27 +128,69 @@ class GameManager {
     private function migrateExistingGames() {
         try {
             // Check if there are games without API tokens
-            $stmt = $this->db->prepare("SELECT id FROM games WHERE api_token IS NULL OR api_token = ''");
+            $stmt = $this->db->prepare("SELECT COUNT(*) FROM games WHERE api_token IS NULL OR api_token = ''");
             $stmt->execute();
-            $gamesWithoutTokens = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            $count = $stmt->fetchColumn();
             
-            if (!empty($gamesWithoutTokens)) {
-                foreach ($gamesWithoutTokens as $gameId) {
+            if ($count > 0) {
+                // Update games without API tokens
+                $stmt = $this->db->prepare("SELECT id FROM games WHERE api_token IS NULL OR api_token = ''");
+                $stmt->execute();
+                $games = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                
+                foreach ($games as $gameId) {
                     $apiToken = $this->generateApiToken();
                     $updateStmt = $this->db->prepare("UPDATE games SET api_token = ? WHERE id = ?");
                     $updateStmt->execute([$apiToken, $gameId]);
                 }
                 
                 if ($this->debug) {
-                    error_log("GameManager: Migrated " . count($gamesWithoutTokens) . " games with API tokens");
+                    error_log("GameManager: Migrated $count games with API tokens");
                 }
             }
-            
         } catch (Exception $e) {
             if ($this->debug) {
                 error_log("GameManager: Migration failed - " . $e->getMessage());
             }
-            // Don't throw here as this is not critical for table creation
+        }
+    }
+
+    private function migrateForAnonymousGames() {
+        try {
+            $driver = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME);
+            
+            if ($driver === 'mysql') {
+                // Check if user_id column allows NULL
+                $stmt = $this->db->prepare("SHOW COLUMNS FROM games LIKE 'user_id'");
+                $stmt->execute();
+                $column = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($column && $column['Null'] === 'NO') {
+                    // Modify column to allow NULL
+                    $this->db->exec("ALTER TABLE games MODIFY COLUMN user_id INT NULL");
+                    
+                    // Drop foreign key constraint if it exists
+                    try {
+                        $this->db->exec("ALTER TABLE games DROP FOREIGN KEY games_ibfk_1");
+                    } catch (Exception $e) {
+                        // Foreign key might not exist, ignore error
+                    }
+                    
+                    if ($this->debug) {
+                        error_log("GameManager: Updated user_id column to allow NULL for anonymous games");
+                    }
+                }
+            } else {
+                // SQLite doesn't support ALTER COLUMN, so we need to recreate the table
+                // But since we're using CREATE TABLE IF NOT EXISTS, it should be fine
+                if ($this->debug) {
+                    error_log("GameManager: SQLite schema updated for anonymous games");
+                }
+            }
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Anonymous games migration failed - " . $e->getMessage());
+            }
         }
     }
     
@@ -159,9 +202,9 @@ class GameManager {
             // Generate a secure random token
             $token = 'game_' . bin2hex(random_bytes(24)); // 48 character token with prefix
             
-            // Check if token already exists
-            $stmt = $this->db->prepare("SELECT id FROM games WHERE api_token = ?");
-            $stmt->execute([$token]);
+            // Check if token already exists in json_structure field
+            $stmt = $this->db->prepare("SELECT game_id FROM games WHERE json_structure LIKE ?");
+            $stmt->execute(['%"api_token":"' . $token . '"%']);
             $exists = $stmt->fetch();
             
         } while ($exists); // Keep generating until we get a unique token
@@ -187,7 +230,7 @@ class GameManager {
     }
     
     /**
-     * Create a new game
+     * Create a new game (authenticated)
      */
     public function createGame($token, $gameData) {
         try {
@@ -230,6 +273,87 @@ class GameManager {
         } catch (Exception $e) {
             if ($this->debug) {
                 error_log("GameManager: Create game error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * Create a new game without authentication (anonymous)
+     */
+    public function createGameAnonymous($gameData) {
+        try {
+            $name = $gameData['name'] ?? 'Untitled Game';
+            $description = $gameData['description'] ?? '';
+            
+            if ($this->debug) {
+                error_log("GameManager: Starting anonymous game creation with name: $name");
+            }
+            
+            // Generate unique API token for the game
+            $apiToken = $this->generateApiToken();
+            
+            if ($this->debug) {
+                error_log("GameManager: Generated API token: $apiToken");
+            }
+            
+            // Create basic JSON structure for the game
+            $jsonStructure = json_encode([
+                'api_token' => $apiToken,
+                'game_type' => 'multiplayer',
+                'max_players' => 10,
+                'status' => 'active'
+            ]);
+            
+            $jsonProperties = json_encode([
+                'created_by' => 'anonymous',
+                'version' => '1.0'
+            ]);
+            
+            if ($this->debug) {
+                error_log("GameManager: Prepared JSON data - Structure: $jsonStructure, Properties: $jsonProperties");
+            }
+            
+            // Use the existing database schema columns
+            $stmt = $this->db->prepare("
+                INSERT INTO games (user_id, name, description, json_structure, json_properties, json_rooms, json_communities, json_chats, is_active, created_at, updated_at) 
+                VALUES (NULL, ?, ?, ?, ?, '[]', '[]', '[]', 1, NOW(), NOW())
+            ");
+            
+            if ($this->debug) {
+                error_log("GameManager: Executing SQL insert with parameters: " . json_encode([$name, $description, $jsonStructure, $jsonProperties]));
+            }
+            
+            $result = $stmt->execute([$name, $description, $jsonStructure, $jsonProperties]);
+            
+            if (!$result) {
+                $errorInfo = $stmt->errorInfo();
+                if ($this->debug) {
+                    error_log("GameManager: SQL execution failed - " . json_encode($errorInfo));
+                }
+                throw new Exception("Database insert failed: " . $errorInfo[2]);
+            }
+            
+            $gameId = $this->db->lastInsertId();
+            
+            if ($this->debug) {
+                error_log("GameManager: Created anonymous game ID $gameId with API token $apiToken");
+            }
+            
+            return ErrorCodes::createSuccessResponse([
+                'game_id' => $gameId,
+                'name' => $name,
+                'description' => $description,
+                'game_type' => 'multiplayer',
+                'max_players' => 10,
+                'status' => 'active',
+                'api_token' => $apiToken
+            ], 'Game created successfully');
+            
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Create anonymous game error - " . $e->getMessage());
+                error_log("GameManager: Stack trace - " . $e->getTraceAsString());
             }
             return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
         }

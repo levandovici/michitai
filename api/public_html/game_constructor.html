@@ -490,22 +490,7 @@
                 </div>
             </div>
 
-            <!-- Authentication Section -->
-            <div class="mb-8">
-                <div class="glass-effect rounded-2xl p-6">
-                    <h2 class="text-xl font-semibold text-white mb-4">
-                        <i class="fas fa-key mr-2 text-yellow-400"></i>
-                        Authentication
-                    </h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="userToken" class="block text-sm font-medium text-white/80 mb-2">Your API Token</label>
-                            <input type="text" id="userToken" placeholder="Enter your user API token to create games" 
-                                   class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Game Creation Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -621,7 +606,7 @@
     </div>
 
     <script>
-        const API_BASE = '/api';
+        const API_BASE = 'api';
         
         // Show notification
         function showNotification(message, type = 'success') {
@@ -676,13 +661,16 @@
                 <div class="token-display">
                     <strong>🔑 Game API Token:</strong><br>
                     <code>${gameData.api_token}</code>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                        This token will be used to authenticate your game with the API
+                    </p>
                 </div>
                 <div style="text-align: left; margin-top: 20px;">
                     <p><strong>Game ID:</strong> ${gameData.game_id}</p>
                     <p><strong>Name:</strong> ${gameData.name}</p>
-                    <p><strong>Type:</strong> ${gameData.game_type}</p>
-                    <p><strong>Max Players:</strong> ${gameData.max_players}</p>
+                    ${gameData.description ? `<p><strong>Description:</strong> ${gameData.description}</p>` : ''}
                     <p><strong>Status:</strong> ${gameData.status}</p>
+                    <p><strong>Created:</strong> Just now</p>
                 </div>
             `;
             
@@ -706,16 +694,16 @@
         document.getElementById('gameConstructorForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const token = getUserToken();
-            if (!token) {
-                showNotification('Please enter your API token first', 'error');
-                return;
-            }
-
             const gameData = {
                 name: document.getElementById('gameName').value,
                 description: document.getElementById('gameDescription').value
             };
+
+            // Validate required fields
+            if (!gameData.name.trim()) {
+                showNotification('Please enter a game name', 'error');
+                return;
+            }
 
             showLoading();
 
@@ -723,8 +711,7 @@
                 const response = await fetch(`${API_BASE}/game/create`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-Token': token
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(gameData)
                 });
