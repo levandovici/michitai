@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MICHITAI</title>
-    <link rel="icon" href="levandovici_logo.png" type="image/png">
+    <title>MICHITAI - Upcoming Game</title>
+    <link rel="icon" href="../levandovici_logo.png" type="image/png">
     <style>
         :root {
             --primary-color: #ff69b4;
@@ -12,13 +12,11 @@
             --bg-color: #fff0f5;
             --text-color: #2c3e50;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background: var(--bg-color);
             color: var(--text-color);
@@ -29,7 +27,6 @@
             flex-direction: column;
             overflow-x: hidden;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -40,7 +37,6 @@
             align-content: center;
             background: linear-gradient(to bottom, #fff0f5, #e6e6fa);
         }
-
         .content {
             display: flex;
             flex-direction: column;
@@ -52,13 +48,11 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 0 15px #00ced1;
         }
-
         .content:hover {
             transform: scale(1.05);
             box-shadow: 0 0 25px #00ced1, 0 0 50px #00ced1;
         }
-
-        .logo, .game-logo {
+        .logo, .game-logo, .asset-image {
             max-width: 200px;
             height: auto;
             margin-bottom: 1rem;
@@ -66,11 +60,9 @@
             border-radius: 10px;
             transition: transform 0.3s ease;
         }
-
-        .logo:hover, .game-logo:hover {
+        .logo:hover, .game-logo:hover, .asset-image:hover {
             transform: scale(1.1);
         }
-
         h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -79,7 +71,6 @@
             text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color);
             animation: glow 1.2s infinite alternate;
         }
-
         @keyframes glow {
             from {
                 text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color);
@@ -88,22 +79,19 @@
                 text-shadow: 0 0 25px var(--accent-color), 0 0 40px var(--accent-color);
             }
         }
-
-        .game-title {
+        .game-title, .asset-title {
             font-size: 1.8rem;
             font-weight: 600;
             color: #ffffff;
             margin-bottom: 0.5rem;
             text-shadow: 0 0 10px var(--primary-color);
         }
-
         p {
             font-size: 1rem;
             color: var(--text-color);
             opacity: 0.9;
         }
-
-        .download-btn {
+        .asset-link {
             display: inline-block;
             margin-top: 1rem;
             padding: 0.8rem 1.5rem;
@@ -114,43 +102,35 @@
             font-weight: 500;
             transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .download-btn:hover {
+        .asset-link:hover {
             background: var(--primary-color);
             transform: translateY(-2px);
             box-shadow: 0 0 15px var(--primary-color);
         }
-
         @media (min-width: 768px) {
             .container {
                 grid-template-columns: repeat(2, 1fr);
             }
-
             h1 {
                 font-size: 3rem;
             }
-
-            .game-title {
+            .game-title, .asset-title {
                 font-size: 2rem;
             }
         }
-
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.8rem;
                 white-space: normal;
                 line-height: 1.2;
             }
-
-            .game-title {
+            .game-title, .asset-title {
                 font-size: 1.5rem;
             }
-
             .content {
                 padding: 1rem;
             }
         }
-
         footer {
             background: linear-gradient(135deg, #ffd700, #ff69b4);
             padding: 1.5rem;
@@ -158,7 +138,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.3);
             color: var(--text-color);
         }
-
         footer a {
             color: #ffffff;
             text-decoration: none;
@@ -166,12 +145,10 @@
             font-weight: 500;
             transition: color 0.3s ease, text-shadow 0.3s ease;
         }
-
         footer a:hover {
             color: var(--accent-color);
             text-shadow: 0 0 10px var(--accent-color);
         }
-
         footer p {
             font-size: 0.9rem;
             margin: 0.5rem 0;
@@ -181,91 +158,45 @@
 <body>
     <div class="container">
         <div class="content">
-            <a href="https://play.google.com/store/apps/dev?id=7538414649250605636" target="_blank">
-                <img src="levandovici_logo.png" alt="MICHITAI" class="logo">
+            <a href="../index.html">
+                <img src="../next.png" alt="MICHITAI" class="logo">
             </a>
-            <h1>Welcome to MICHITAI</h1>
-            <p>Immerse yourself in the world of our games!</p>
+            <h1>Upcoming Pirate Adventure</h1>
+            <p>Embark on a thrilling pirate journey! Stay tuned for our next game release.</p>
         </div>
-        
+
         <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
-                <img src="zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force" class="game-logo">
+            <a href="https://assetstore.unity.com/packages/3d/vehicles/sea/stylized-pirate-ship-200192" target="_blank">
+                <img src="stylized-pirate-ship.webp" alt="Stylized Pirate Ship" class="asset-image">
             </a>
-            <p class="game-title">Zombie Frenzy Force</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank" class="download-btn">Download Now on Google Play</a>
+            <p class="asset-title">Stylized Pirate Ship</p>
+            <p>A beautifully crafted pirate ship for your sea adventures. Compatible with Unity 2019.4.16f1 (Built-in Render Pipeline). File size: 25.1 MB.</p>
+            <a href="https://assetstore.unity.com/packages/3d/vehicles/sea/stylized-pirate-ship-200192" target="_blank" class="asset-link">View on Unity Asset Store</a>
         </div>
-        
+
         <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank">
-                <img src="monsters_rushing_logo.png" alt="Monsters Rushing" class="game-logo">
+            <a href="https://assetstore.unity.com/packages/3d/environments/historic/3d-pirates-lowpoly-pack-233903" target="_blank">
+                <img src="3d-pirates-lowpoly-pack.webp" alt="3D Pirates Lowpoly Pack" class="asset-image">
             </a>
-            <p class="game-title">Monsters Rushing</p>
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank" class="download-btn">Download Now on Google Play</a>
+            <p class="asset-title">3D Pirates Lowpoly Pack</p>
+            <p>Low-poly pirate-themed assets for creating immersive environments. Compatible with Unity 2021.3.8f1 (Built-in Render Pipeline). File size: 3.0 MB.</p>
+            <a href="https://assetstore.unity.com/packages/3d/environments/historic/3d-pirates-lowpoly-pack-233903" target="_blank" class="asset-link">View on Unity Asset Store</a>
         </div>
-        
+
         <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank">
-                <img src="car_driving_multiplayer_logo.png" alt="Car Driving Multiplayer" class="game-logo">
+            <a href="https://assetstore.unity.com/packages/3d/vehicles/sea/poly-angel-mini-pirates-island-267015" target="_blank">
+                <img src="poly-angel-mini-pirates-island.webp" alt="Poly Angel - Mini Pirates Island" class="asset-image">
             </a>
-            <p class="game-title">Car Driving Multiplayer</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank">
-                <img src="scale_it_logo.png" alt="Scale It" class="game-logo">
-            </a>
-            <p class="game-title">Scale It</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank">
-                <img src="hit_of_cube_logo.png" alt="Hit of Cube" class="game-logo">
-            </a>
-            <p class="game-title">Hit of Cube</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank">
-                <img src="monsters_vs_bombs_logo.png" alt="Monsters vs Bombs" class="game-logo">
-            </a>
-            <p class="game-title">Monsters vs Bombs</p>
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank">
-                <img src="space_flash_logo.png" alt="Space Flash" class="game-logo">
-            </a>
-            <p class="game-title">Space Flash</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://games.michitai.com/web/blooming-garden" target="_blank">
-                <img src="blooming_garden_logo.jpg" alt="Blooming Garden" class="game-logo">
-            </a>
-            <p class="game-title">Blooming Garden</p>
-            <a href="https://games.michitai.com/web/blooming-garden" target="_blank" class="download-btn">Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://games.michitai.com/next" target="_blank">
-                <img src="next.png" alt="Upcoming Release" class="game-logo">
-            </a>
-            <p class="game-title">Upcoming Pirate Adventure</p>
-            <a href="https://games.michitai.com/next" target="_blank" class="download-btn">View</a>
+            <p class="asset-title">Poly Angel - Mini Pirates Island</p>
+            <p>A compact pirate island for your game, with versatile compatibility. Compatible with Unity 2021.3.16f1 (Built-in, URP, HDRP). File size: 1.5 MB.</p>
+            <a href="https://assetstore.unity.com/packages/3d/vehicles/sea/poly-angel-mini-pirates-island-267015" target="_blank" class="asset-link">View on Unity Asset Store</a>
         </div>
     </div>
-
     <footer>
         <p>Contact: <a href="mailto:support@michitai.com">support@michitai.com</a></p>
         <p>
-            <a href="privacy-policy.html">Privacy Policy</a> | 
-            <a href="terms-and-conditions.html">Terms and Conditions</a>
+            <a href="../privacy-policy.html">Privacy Policy</a> |
+            <a href="../terms-and-conditions.html">Terms and Conditions</a>
         </p>
         <p>© 2025 Nichita Levandovici</p>
     </footer>
