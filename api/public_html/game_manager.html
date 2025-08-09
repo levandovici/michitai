@@ -3,19 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Manager - API Token Interface</title>
+    <title>Multiplayer API Constructor - Game Manager</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+        
+        .animated-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .floating-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .floating-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tab-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
             padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .token-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(79, 172, 254, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .token-value {
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            font-size: 0.9rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .copy-notification.show {
+            transform: translateX(0);
         }
 
         .container {
@@ -243,60 +391,137 @@
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>📋 Game Manager</h1>
-            <p>Manage your games and API tokens</p>
-        </div>
 
-        <div class="navigation" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e9ecef; text-align: center;">
-            <a href="game_constructor.html" class="nav-link" style="display: inline-block; margin: 0 15px; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; font-weight: 500;">🔨 Constructor</a>
-            <a href="game_manager.html" class="nav-link active" style="display: inline-block; margin: 0 15px; padding: 10px 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; font-weight: 500;">📋 Game Manager</a>
+<body class="min-h-screen animated-bg">
+    <!-- Header -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <img src="logo.png" alt="Multiplayer API Logo" class="w-10 h-10 rounded-xl object-contain">
+                    <div>
+                        <h1 class="text-lg font-bold text-white">Multiplayer API</h1>
+                        <p class="text-xs text-white/70">Game Server Constructor</p>
+                    </div>
+                </div>
+                
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="profile.html" class="text-white/70 hover:text-white transition-colors">Profile</a>
+                    <a href="game_constructor.html" class="text-white/70 hover:text-white transition-colors">
+                        <i class="fas fa-hammer mr-1"></i>Constructor
+                    </a>
+                    <a href="game_manager.html" class="text-white font-medium">
+                        <i class="fas fa-gamepad mr-1"></i>Games
+                    </a>
+                    <a href="docs.html" class="text-white/70 hover:text-white transition-colors">
+                        <i class="fas fa-book mr-1"></i>Docs
+                    </a>
+                    <a href="payments.html" class="text-white/70 hover:text-white transition-colors">Billing</a>
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                        </div>
+                        <div class="hidden sm:block">
+                            <p class="text-white font-medium text-sm" id="user-email">Loading...</p>
+                            <p class="text-white/70 text-xs"><span id="user-plan">Free Plan</span></p>
+                        </div>
+                    </div>
+                    <button id="logout-btn" class="text-white/70 hover:text-white transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
         </div>
+    </header>
 
-        <div class="content">
+    <!-- Main Content -->
+    <main class="py-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            
+            <!-- Welcome Section -->
+            <div class="mb-8">
+                <div class="glass-effect rounded-2xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-bold text-white mb-2">
+                                <i class="fas fa-gamepad mr-3 text-green-400"></i>
+                                Game Manager
+                            </h1>
+                            <p class="text-white/70">Manage your multiplayer games and API tokens</p>
+                        </div>
+                        <div class="hidden md:block">
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                                <i class="fas fa-cogs text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Authentication Section -->
-            <div class="auth-section">
-                <h3>🔐 Authentication</h3>
-                <div class="form-group">
-                    <label for="userToken">Your API Token:</label>
-                    <input type="text" id="userToken" placeholder="Enter your user API token to access games">
+            <div class="mb-8">
+                <div class="glass-effect rounded-2xl p-6">
+                    <h2 class="text-xl font-semibold text-white mb-4">
+                        <i class="fas fa-key mr-2 text-yellow-400"></i>
+                        Authentication
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="userToken" class="block text-sm font-medium text-white/80 mb-2">Your API Token</label>
+                            <input type="text" id="userToken" placeholder="Enter your user API token to access games" 
+                                   class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Quick Actions Section -->
-            <div class="section">
-                <h2>⚡ Quick Actions</h2>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <a href="game_constructor.html" class="btn" style="text-decoration: none;">
-                        🔨 Create New Game
-                    </a>
-                    <button id="refreshGames" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        🔄 Refresh Games
-                    </button>
-                    <button id="exportGames" class="btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                        📤 Export Games Data
-                    </button>
+            <div class="mb-8">
+                <div class="glass-effect rounded-2xl p-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">
+                        <i class="fas fa-bolt mr-2 text-purple-400"></i>
+                        Quick Actions
+                    </h2>
+                    <div class="flex gap-4 flex-wrap">
+                        <a href="game_constructor.html" class="btn-primary text-white px-6 py-3 rounded-xl font-medium text-decoration-none">
+                            <i class="fas fa-plus mr-2"></i>Create New Game
+                        </a>
+                        <button id="refreshGames" class="btn-secondary text-white px-6 py-3 rounded-xl font-medium border-0">
+                            <i class="fas fa-sync mr-2"></i>Refresh Games
+                        </button>
+                        <button id="exportGames" class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-3 rounded-xl font-medium transition-all border-0">
+                            <i class="fas fa-download mr-2"></i>Export Data
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <!-- Games List Section -->
-            <div class="section">
-                <h2>🎯 Your Games</h2>
-                <button id="refreshGames" class="btn" style="margin-bottom: 20px;">Refresh Games List</button>
-                
-                <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <p>Loading games...</p>
+            <div class="glass-effect rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-white">
+                        <i class="fas fa-list mr-2 text-blue-400"></i>
+                        Your Games
+                    </h2>
+                    <div class="text-sm text-white/60" id="gameCount">
+                        Loading...
+                    </div>
                 </div>
                 
-                <div id="gamesContainer" class="games-grid">
+                <div id="loading" class="text-center py-12 hidden">
+                    <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p class="text-white/70">Loading games...</p>
+                </div>
+                
+                <div id="gamesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Games will be loaded here -->
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <!-- Copy notification -->
     <div id="copyNotification" class="copy-notification">
@@ -427,24 +652,47 @@
             const container = document.getElementById('gamesContainer');
             
             if (!games || games.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No games found. Create your first game above!</p>';
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <div class="text-white/50 text-6xl mb-4">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3 class="text-xl text-white/70 mb-2">No games found</h3>
+                        <p class="text-white/50 mb-6">Create your first game to get started!</p>
+                        <a href="game_constructor.html" class="btn-primary text-white px-6 py-3 rounded-xl font-medium transition-all text-decoration-none">
+                            <i class="fas fa-plus mr-2"></i>Create New Game
+                        </a>
+                    </div>
+                `;
                 return;
             }
 
             container.innerHTML = games.map(game => `
                 <div class="game-card">
-                    <h3>${escapeHtml(game.name)}</h3>
-                    <p><strong>Status:</strong> ${escapeHtml(game.status)}</p>
-                    <p><strong>Max Players:</strong> ${game.max_players}</p>
-                    <p><strong>Type:</strong> ${escapeHtml(game.game_type)}</p>
-                    ${game.description ? `<p><strong>Description:</strong> ${escapeHtml(game.description)}</p>` : ''}
-                    <p><strong>Created:</strong> ${new Date(game.created_at).toLocaleDateString()}</p>
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-xl font-bold text-white">${escapeHtml(game.name)}</h3>
+                        <span class="px-3 py-1 rounded-full text-xs font-medium ${game.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}">
+                            ${escapeHtml(game.status)}
+                        </span>
+                    </div>
+                    
+                    ${game.description ? `<p class="text-white/70 mb-4">${escapeHtml(game.description)}</p>` : ''}
+                    
+                    <div class="text-sm text-white/50 mb-4">
+                        <i class="fas fa-calendar mr-1"></i>
+                        Created: ${formatDate(game.created_at)}
+                    </div>
                     
                     <div class="token-container">
-                        <span class="token-label">🔑 Game API Token</span>
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-white font-medium">
+                                <i class="fas fa-key mr-2"></i>API Token
+                            </h4>
+                        </div>
                         <div class="token-value">${escapeHtml(game.api_token)}</div>
-                        <button class="btn btn-copy" onclick="copyToClipboard('${escapeHtml(game.api_token)}')">
-                            📋 Copy Token
+                        <button class="w-full mt-3 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all border border-blue-500/30" 
+                                onclick="copyToClipboard('${escapeHtml(game.api_token)}')">
+                            <i class="fas fa-copy mr-2"></i>Copy Token
                         </button>
                     </div>
                 </div>
