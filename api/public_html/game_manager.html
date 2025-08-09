@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Manager - API Token Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #4facfe;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .games-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+
+        .game-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .game-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .game-card p {
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .token-container {
+            background: #fff;
+            border: 2px dashed #4facfe;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .token-label {
+            font-weight: 600;
+            color: #4facfe;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .token-value {
+            font-family: 'Courier New', monospace;
+            background: #f1f3f4;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4facfe;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .auth-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .auth-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .copy-notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Game Manager</h1>
+            <p>Manage your games and API tokens</p>
+        </div>
+
+        <div class="navigation" style="background: #f8f9fa; padding: 20px; border-bottom: 1px solid #e9ecef; text-align: center;">
+            <a href="game_constructor.html" class="nav-link" style="display: inline-block; margin: 0 15px; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; font-weight: 500;">🔨 Constructor</a>
+            <a href="game_manager.html" class="nav-link active" style="display: inline-block; margin: 0 15px; padding: 10px 20px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; font-weight: 500;">📋 Game Manager</a>
+        </div>
+
+        <div class="content">
+            <!-- Authentication Section -->
+            <div class="auth-section">
+                <h3>🔐 Authentication</h3>
+                <div class="form-group">
+                    <label for="userToken">Your API Token:</label>
+                    <input type="text" id="userToken" placeholder="Enter your user API token to access games">
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="section">
+                <h2>⚡ Quick Actions</h2>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <a href="game_constructor.html" class="btn" style="text-decoration: none;">
+                        🔨 Create New Game
+                    </a>
+                    <button id="refreshGames" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        🔄 Refresh Games
+                    </button>
+                    <button id="exportGames" class="btn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        📤 Export Games Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Games List Section -->
+            <div class="section">
+                <h2>🎯 Your Games</h2>
+                <button id="refreshGames" class="btn" style="margin-bottom: 20px;">Refresh Games List</button>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Loading games...</p>
+                </div>
+                
+                <div id="gamesContainer" class="games-grid">
+                    <!-- Games will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copy notification -->
+    <div id="copyNotification" class="copy-notification">
+        ✅ API Token copied to clipboard!
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            const content = document.querySelector('.content');
+            content.insertBefore(alertDiv, content.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Show copy notification
+        function showCopyNotification() {
+            const notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Copy to clipboard
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showCopyNotification();
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopyNotification();
+            }
+        }
+
+        // Get user token
+        function getUserToken() {
+            return document.getElementById('userToken').value.trim();
+        }
+
+        // Export games data
+        document.getElementById('exportGames').addEventListener('click', async () => {
+            const token = getUserToken();
+            if (!token) {
+                showNotification('Please enter your API token first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/game/list`, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-Token': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    const dataStr = JSON.stringify(result.data.games, null, 2);
+                    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                    
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(dataBlob);
+                    link.download = `games-export-${new Date().toISOString().split('T')[0]}.json`;
+                    link.click();
+                    
+                    showNotification('Games data exported successfully!');
+                } else {
+                    showNotification(result.message || 'Failed to export games', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error: ' + error.message, 'error');
+            }
+        });
+
+        // Load games
+        async function loadGames() {
+            const token = getUserToken();
+            if (!token) {
+                document.getElementById('gamesContainer').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Please enter your API token to view games.</p>';
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('gamesContainer').innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/game/list`, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-Token': token
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    displayGames(result.data.games);
+                } else {
+                    showNotification(result.message || 'Failed to load games', 'error');
+                    document.getElementById('gamesContainer').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Failed to load games.</p>';
+                }
+            } catch (error) {
+                showNotification('Network error: ' + error.message, 'error');
+                document.getElementById('gamesContainer').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Network error occurred.</p>';
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Display games
+        function displayGames(games) {
+            const container = document.getElementById('gamesContainer');
+            
+            if (!games || games.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No games found. Create your first game above!</p>';
+                return;
+            }
+
+            container.innerHTML = games.map(game => `
+                <div class="game-card">
+                    <h3>${escapeHtml(game.name)}</h3>
+                    <p><strong>Status:</strong> ${escapeHtml(game.status)}</p>
+                    <p><strong>Max Players:</strong> ${game.max_players}</p>
+                    <p><strong>Type:</strong> ${escapeHtml(game.game_type)}</p>
+                    ${game.description ? `<p><strong>Description:</strong> ${escapeHtml(game.description)}</p>` : ''}
+                    <p><strong>Created:</strong> ${new Date(game.created_at).toLocaleDateString()}</p>
+                    
+                    <div class="token-container">
+                        <span class="token-label">🔑 Game API Token</span>
+                        <div class="token-value">${escapeHtml(game.api_token)}</div>
+                        <button class="btn btn-copy" onclick="copyToClipboard('${escapeHtml(game.api_token)}')">
+                            📋 Copy Token
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Refresh games button
+        document.getElementById('refreshGames').addEventListener('click', loadGames);
+
+        // Load games when token is entered
+        document.getElementById('userToken').addEventListener('input', () => {
+            const token = getUserToken();
+            if (token.length > 10) { // Basic validation
+                loadGames();
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Try to load games if token is already present
+            if (getUserToken()) {
+                loadGames();
+            }
+        });
+    </script>
+</body>
+</html>

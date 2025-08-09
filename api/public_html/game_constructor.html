@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Constructor - Create New Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .navigation {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: #495057;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .auth-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #f8d7da;
+        }
+
+        .auth-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-preview {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .game-preview h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .preview-value {
+            color: #333;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .success-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 500px;
+            margin: 20px;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .token-display {
+            background: #f8f9fa;
+            border: 2px dashed #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🎮 Game Constructor</h1>
+                <p>Build and deploy your multiplayer games</p>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="game_constructor.html" class="nav-link active">🔨 Constructor</a>
+            <a href="game_manager.html" class="nav-link">📋 Game Manager</a>
+        </div>
+
+        <div class="content">
+            <!-- Authentication Section -->
+            <div class="auth-section">
+                <h3>🔐 Authentication Required</h3>
+                <div class="form-group">
+                    <label for="userToken">Your API Token:</label>
+                    <input type="text" id="userToken" placeholder="Enter your user API token to create games">
+                </div>
+            </div>
+
+            <!-- Game Creation Form -->
+            <div class="form-section">
+                <h2>🎯 Game Configuration</h2>
+                <form id="gameConstructorForm">
+                    <div class="form-group">
+                        <label for="gameName">Game Name *</label>
+                        <input type="text" id="gameName" required placeholder="Enter your game name" maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gameDescription">Game Description</label>
+                        <textarea id="gameDescription" rows="4" placeholder="Describe your game (optional)" maxlength="500"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gameType">Game Type</label>
+                            <select id="gameType">
+                                <option value="multiplayer">Multiplayer</option>
+                                <option value="battle-royale">Battle Royale</option>
+                                <option value="co-op">Co-operative</option>
+                                <option value="mmo">MMO</option>
+                                <option value="puzzle">Puzzle</option>
+                                <option value="strategy">Strategy</option>
+                                <option value="action">Action</option>
+                                <option value="adventure">Adventure</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maxPlayers">Maximum Players</label>
+                            <input type="number" id="maxPlayers" min="1" max="1000" value="10" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gameMode">Game Mode</label>
+                            <select id="gameMode">
+                                <option value="realtime">Real-time</option>
+                                <option value="turn-based">Turn-based</option>
+                                <option value="hybrid">Hybrid</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="difficulty">Difficulty Level</label>
+                            <select id="difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Game Preview -->
+                    <div class="game-preview">
+                        <h3>🔍 Game Preview</h3>
+                        <div class="preview-item">
+                            <span class="preview-label">Name:</span>
+                            <span class="preview-value" id="previewName">-</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Type:</span>
+                            <span class="preview-value" id="previewType">Multiplayer</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Max Players:</span>
+                            <span class="preview-value" id="previewPlayers">10</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Mode:</span>
+                            <span class="preview-value" id="previewMode">Real-time</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Difficulty:</span>
+                            <span class="preview-value" id="previewDifficulty">Easy</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px; text-align: center;">
+                        <button type="submit" class="btn">
+                            🚀 Create Game
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            🔄 Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Creating Your Game...</h3>
+            <p>Please wait while we set up your game environment</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="success-content">
+            <div class="success-icon">🎉</div>
+            <h2>Game Created Successfully!</h2>
+            <p>Your game has been created and is ready to use.</p>
+            
+            <div id="gameDetails">
+                <!-- Game details will be inserted here -->
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button class="btn" onclick="goToGameManager()">
+                    📋 View All Games
+                </button>
+                <button class="btn btn-secondary" onclick="createAnother()">
+                    🔨 Create Another
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <span>${type === 'success' ? '✅' : '❌'}</span>
+                <span>${message}</span>
+            `;
+            
+            const content = document.querySelector('.content');
+            content.insertBefore(alertDiv, content.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Get user token
+        function getUserToken() {
+            return document.getElementById('userToken').value.trim();
+        }
+
+        // Update preview
+        function updatePreview() {
+            document.getElementById('previewName').textContent = 
+                document.getElementById('gameName').value || '-';
+            document.getElementById('previewType').textContent = 
+                document.getElementById('gameType').value;
+            document.getElementById('previewPlayers').textContent = 
+                document.getElementById('maxPlayers').value;
+            document.getElementById('previewMode').textContent = 
+                document.getElementById('gameMode').value;
+            document.getElementById('previewDifficulty').textContent = 
+                document.getElementById('difficulty').value;
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('gameConstructorForm').reset();
+            document.getElementById('maxPlayers').value = 10;
+            updatePreview();
+        }
+
+        // Show loading
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Show success modal
+        function showSuccess(gameData) {
+            const details = `
+                <div class="token-display">
+                    <strong>🔑 Game API Token:</strong><br>
+                    <code>${gameData.api_token}</code>
+                </div>
+                <div style="text-align: left; margin-top: 20px;">
+                    <p><strong>Game ID:</strong> ${gameData.game_id}</p>
+                    <p><strong>Name:</strong> ${gameData.name}</p>
+                    <p><strong>Type:</strong> ${gameData.game_type}</p>
+                    <p><strong>Max Players:</strong> ${gameData.max_players}</p>
+                    <p><strong>Status:</strong> ${gameData.status}</p>
+                </div>
+            `;
+            
+            document.getElementById('gameDetails').innerHTML = details;
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        // Navigate to game manager
+        function goToGameManager() {
+            window.location.href = 'game_manager.html';
+        }
+
+        // Create another game
+        function createAnother() {
+            document.getElementById('successModal').style.display = 'none';
+            resetForm();
+            window.scrollTo(0, 0);
+        }
+
+        // Form submission
+        document.getElementById('gameConstructorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = getUserToken();
+            if (!token) {
+                showNotification('Please enter your API token first', 'error');
+                return;
+            }
+
+            const gameData = {
+                name: document.getElementById('gameName').value,
+                description: document.getElementById('gameDescription').value,
+                game_type: document.getElementById('gameType').value,
+                max_players: parseInt(document.getElementById('maxPlayers').value),
+                settings: {
+                    mode: document.getElementById('gameMode').value,
+                    difficulty: document.getElementById('difficulty').value
+                }
+            };
+
+            showLoading();
+
+            try {
+                const response = await fetch(`${API_BASE}/game/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Token': token
+                    },
+                    body: JSON.stringify(gameData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    hideLoading();
+                    showSuccess(result.data);
+                } else {
+                    hideLoading();
+                    showNotification(result.message || 'Failed to create game', 'error');
+                }
+            } catch (error) {
+                hideLoading();
+                showNotification('Network error: ' + error.message, 'error');
+            }
+        });
+
+        // Add event listeners for preview updates
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = ['gameName', 'gameType', 'maxPlayers', 'gameMode', 'difficulty'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', updatePreview);
+                document.getElementById(id).addEventListener('change', updatePreview);
+            });
+            
+            updatePreview();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('successModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('successModal')) {
+                document.getElementById('successModal').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

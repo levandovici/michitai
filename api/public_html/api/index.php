@@ -421,6 +421,15 @@ try {
                     $result = $this->gameManager->createGame($token, $input);
                     echo json_encode($result);
                     break;
+                case 'list':
+                    if ($method !== 'GET') {
+                        http_response_code(405);
+                        echo json_encode(['error' => 'Method not allowed']);
+                        return;
+                    }
+                    $result = $this->gameManager->getGames($token);
+                    echo json_encode($result);
+                    break;
                 case 'get':
                     $gameId = $segments[2] ?? null;
                     if (!$gameId) {
@@ -432,16 +441,27 @@ try {
                     echo json_encode($result);
                     break;
                 case 'update':
-                    if ($method !== 'POST') {
+                    if ($method !== 'PUT' && $method !== 'POST') {
                         http_response_code(405);
                         echo json_encode(['error' => 'Method not allowed']);
                         return;
                     }
+                    $gameId = $segments[2] ?? null;
+                    if (!$gameId) {
+                        http_response_code(400);
+                        echo json_encode(['error' => 'Game ID required']);
+                        return;
+                    }
                     $input = json_decode(file_get_contents('php://input'), true);
-                    $result = $this->gameManager->updateGame($token, $input);
+                    $result = $this->gameManager->updateGame($token, $gameId, $input);
                     echo json_encode($result);
                     break;
                 case 'delete':
+                    if ($method !== 'DELETE') {
+                        http_response_code(405);
+                        echo json_encode(['error' => 'Method not allowed']);
+                        return;
+                    }
                     $gameId = $segments[2] ?? null;
                     if (!$gameId) {
                         http_response_code(400);

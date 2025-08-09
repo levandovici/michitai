@@ -74,12 +74,14 @@ class GameManager {
                     game_type VARCHAR(100) DEFAULT 'multiplayer',
                     max_players INT DEFAULT 10,
                     status VARCHAR(50) DEFAULT 'active',
+                    api_token VARCHAR(64) NOT NULL UNIQUE,
                     settings JSON,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                     INDEX idx_user_id (user_id),
-                    INDEX idx_status (status)
+                    INDEX idx_status (status),
+                    INDEX idx_api_token (api_token)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
                 ";
             } else {
@@ -93,6 +95,7 @@ class GameManager {
                     game_type TEXT DEFAULT 'multiplayer',
                     max_players INTEGER DEFAULT 10,
                     status TEXT DEFAULT 'active',
+                    api_token TEXT NOT NULL UNIQUE,
                     settings TEXT,
                     created_at INTEGER DEFAULT (strftime('%s', 'now')),
                     updated_at INTEGER DEFAULT (strftime('%s', 'now')),
@@ -102,6 +105,9 @@ class GameManager {
             }
 
             $this->db->exec($sql);
+            
+            // Add migration for existing games without API tokens
+            $this->migrateExistingGames();
             
             if ($this->debug) {
                 error_log("GameManager: Games table created successfully using $driver");
@@ -113,6 +119,54 @@ class GameManager {
             }
             throw $e;
         }
+    }
+    
+    /**
+     * Migrate existing games to add API tokens
+     */
+    private function migrateExistingGames() {
+        try {
+            // Check if there are games without API tokens
+            $stmt = $this->db->prepare("SELECT id FROM games WHERE api_token IS NULL OR api_token = ''");
+            $stmt->execute();
+            $gamesWithoutTokens = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            if (!empty($gamesWithoutTokens)) {
+                foreach ($gamesWithoutTokens as $gameId) {
+                    $apiToken = $this->generateApiToken();
+                    $updateStmt = $this->db->prepare("UPDATE games SET api_token = ? WHERE id = ?");
+                    $updateStmt->execute([$apiToken, $gameId]);
+                }
+                
+                if ($this->debug) {
+                    error_log("GameManager: Migrated " . count($gamesWithoutTokens) . " games with API tokens");
+                }
+            }
+            
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Migration failed - " . $e->getMessage());
+            }
+            // Don't throw here as this is not critical for table creation
+        }
+    }
+    
+    /**
+     * Generate a unique API token for a game
+     */
+    private function generateApiToken() {
+        do {
+            // Generate a secure random token
+            $token = 'game_' . bin2hex(random_bytes(24)); // 48 character token with prefix
+            
+            // Check if token already exists
+            $stmt = $this->db->prepare("SELECT id FROM games WHERE api_token = ?");
+            $stmt->execute([$token]);
+            $exists = $stmt->fetch();
+            
+        } while ($exists); // Keep generating until we get a unique token
+        
+        return $token;
     }
     
     /**
@@ -148,16 +202,19 @@ class GameManager {
             $maxPlayers = $gameData['max_players'] ?? 10;
             $settings = json_encode($gameData['settings'] ?? []);
             
+            // Generate unique API token for the game
+            $apiToken = $this->generateApiToken();
+            
             $stmt = $this->db->prepare("
-                INSERT INTO games (user_id, name, description, game_type, max_players, settings) 
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO games (user_id, name, description, game_type, max_players, api_token, settings) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
             
-            $stmt->execute([$userId, $name, $description, $gameType, $maxPlayers, $settings]);
+            $stmt->execute([$userId, $name, $description, $gameType, $maxPlayers, $apiToken, $settings]);
             $gameId = $this->db->lastInsertId();
             
             if ($this->debug) {
-                error_log("GameManager: Created game ID $gameId for user $userId");
+                error_log("GameManager: Created game ID $gameId for user $userId with API token");
             }
             
             return ErrorCodes::createSuccessResponse([
@@ -166,12 +223,54 @@ class GameManager {
                 'description' => $description,
                 'game_type' => $gameType,
                 'max_players' => $maxPlayers,
-                'status' => 'active'
+                'status' => 'active',
+                'api_token' => $apiToken
             ], 'Game created successfully');
             
         } catch (Exception $e) {
             if ($this->debug) {
                 error_log("GameManager: Create game error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
+    
+    /**
+     * Get a specific game by ID
+     */
+    public function getGame($token, $gameId) {
+        try {
+            $userId = $this->getUserIdFromToken($token);
+            if (!$userId) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+            }
+            
+            $stmt = $this->db->prepare("
+                SELECT id, name, description, game_type, max_players, status, api_token, created_at, updated_at 
+                FROM games 
+                WHERE id = ? AND user_id = ?
+            ");
+            
+            $stmt->execute([$gameId, $userId]);
+            $game = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$game) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::GAME_NOT_FOUND);
+            }
+            
+            // Convert data types
+            $game['id'] = (int)$game['id'];
+            $game['max_players'] = (int)$game['max_players'];
+            
+            if ($this->debug) {
+                error_log("GameManager: Retrieved game $gameId for user $userId");
+            }
+            
+            return ErrorCodes::createSuccessResponse($game, 'Game retrieved successfully');
+            
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Get game error - " . $e->getMessage());
             }
             return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
         }
@@ -188,7 +287,7 @@ class GameManager {
             }
             
             $stmt = $this->db->prepare("
-                SELECT id, name, description, game_type, max_players, status, created_at, updated_at 
+                SELECT id, name, description, game_type, max_players, status, api_token, created_at, updated_at 
                 FROM games 
                 WHERE user_id = ? 
                 ORDER BY created_at DESC

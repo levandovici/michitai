@@ -108,10 +108,15 @@
                     </div>
                 </div>
                 
-                <nav class="hidden md:flex items-center space-x-6">
-                    <a href="#dashboard" class="text-white font-medium">Dashboard</a>
-                    <a href="#games" class="text-white/70 hover:text-white transition-colors">Games</a>
-                    <a href="#constructor" class="text-white/70 hover:text-white transition-colors">Constructor</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-white/70 hover:text-white transition-colors">Dashboard</a>
+                    <a href="profile.html" class="text-white font-medium">Profile</a>
+                    <a href="game_constructor.html" class="text-white/70 hover:text-white transition-colors">
+                        <i class="fas fa-hammer mr-1"></i>Constructor
+                    </a>
+                    <a href="game_manager.html" class="text-white/70 hover:text-white transition-colors">
+                        <i class="fas fa-gamepad mr-1"></i>Games
+                    </a>
                     <a href="payments.html" class="text-white/70 hover:text-white transition-colors">Billing</a>
                 </nav>
                 
@@ -193,11 +198,16 @@
 
                 <div class="stats-card rounded-2xl p-6">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-white font-semibold">Active Games</h3>
-                        <i class="fas fa-gamepad text-purple-400"></i>
+                        <h3 class="text-white font-semibold">Games Created</h3>
+                        <i class="fas fa-gamepad text-2xl text-white/50"></i>
                     </div>
                     <div class="text-3xl font-bold text-white mb-1" id="games-count">0</div>
-                    <div class="text-white/70 text-sm">of 3 allowed</div>
+                    <div class="text-white/70 text-sm">Active games with API tokens</div>
+                    <div class="mt-3">
+                        <a href="game_constructor.html" class="text-blue-400 hover:text-blue-300 text-sm transition-colors">
+                            <i class="fas fa-plus mr-1"></i>Create New Game
+                        </a>
+                    </div>
                 </div>
 
                 <div class="stats-card rounded-2xl p-6">
@@ -211,20 +221,22 @@
             </div>
 
             <!-- Tab Navigation -->
-            <div class="glass-effect rounded-2xl p-2 mb-8">
-                <div class="flex space-x-2 overflow-x-auto">
-                    <button id="tab-dashboard" class="tab-btn active px-6 py-3 rounded-xl font-semibold whitespace-nowrap transition-all">
-                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                    </button>
-                    <button id="tab-games" class="tab-btn px-6 py-3 rounded-xl font-semibold text-white/70 hover:text-white whitespace-nowrap transition-all">
-                        <i class="fas fa-gamepad mr-2"></i>My Games
-                    </button>
-                    <button id="tab-constructor" class="tab-btn px-6 py-3 rounded-xl font-semibold text-white/70 hover:text-white whitespace-nowrap transition-all">
-                        <i class="fas fa-puzzle-piece mr-2"></i>Logic Constructor
-                    </button>
-                    <button id="tab-api" class="tab-btn px-6 py-3 rounded-xl font-semibold text-white/70 hover:text-white whitespace-nowrap transition-all">
-                        <i class="fas fa-code mr-2"></i>API Explorer
-                    </button>
+            <div class="mb-8">
+                <div class="glass-effect rounded-2xl p-2">
+                    <div class="flex space-x-2">
+                        <button class="tab-btn active flex-1 py-3 px-6 rounded-xl font-medium transition-all" data-tab="dashboard">
+                            <i class="fas fa-chart-line mr-2"></i>Dashboard
+                        </button>
+                        <button class="tab-btn flex-1 py-3 px-6 rounded-xl font-medium transition-all text-white/70" data-tab="games">
+                            <i class="fas fa-gamepad mr-2"></i>My Games
+                        </button>
+                        <button class="tab-btn flex-1 py-3 px-6 rounded-xl font-medium transition-all text-white/70" data-tab="constructor">
+                            <i class="fas fa-puzzle-piece mr-2"></i>Constructor
+                        </button>
+                        <button class="tab-btn flex-1 py-3 px-6 rounded-xl font-medium transition-all text-white/70" data-tab="api">
+                            <i class="fas fa-code mr-2"></i>API Explorer
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -362,6 +374,43 @@
                                 Select a block to edit its properties
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Games Tab Content -->
+            <div id="games-section" class="tab-content hidden">
+                <div class="glass-effect rounded-2xl p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-white">
+                            <i class="fas fa-gamepad mr-2"></i>My Games
+                        </h3>
+                        <div class="flex space-x-3">
+                            <a href="game_constructor.html" class="btn-primary text-white px-4 py-2 rounded-xl font-medium transition-all">
+                                <i class="fas fa-plus mr-2"></i>Create Game
+                            </a>
+                            <a href="game_manager.html" class="btn-secondary text-white px-4 py-2 rounded-xl font-medium transition-all">
+                                <i class="fas fa-cog mr-2"></i>Manage All
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div id="games-loading" class="text-center py-8">
+                        <div class="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                        <p class="text-white/70">Loading your games...</p>
+                    </div>
+                    
+                    <div id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                        <!-- Games will be loaded here -->
+                    </div>
+                    
+                    <div id="no-games" class="text-center py-12 hidden">
+                        <div class="text-6xl mb-4">🎮</div>
+                        <h4 class="text-xl font-semibold text-white mb-2">No Games Yet</h4>
+                        <p class="text-white/70 mb-6">Create your first game to get started with the multiplayer API</p>
+                        <a href="game_constructor.html" class="btn-primary text-white px-6 py-3 rounded-xl font-medium transition-all">
+                            <i class="fas fa-plus mr-2"></i>Create Your First Game
+                        </a>
                     </div>
                 </div>
             </div>
