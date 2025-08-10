@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .animated-bg {
             background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
@@ -36,186 +37,359 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
         }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px rgba(102, 126, 234, 0.4); }
+            to { box-shadow: 0 0 30px rgba(102, 126, 234, 0.8); }
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .glass-effect {
+                margin: 0.5rem;
+                padding: 1.25rem;
+                border-radius: 1.5rem;
+            }
+            
+            .w-full.max-w-md {
+                max-width: 100%;
+                padding: 0 0.75rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.75rem;
+            }
+            
+            .space-y-6 > * + * {
+                margin-top: 1rem;
+            }
+            
+            /* Adjust top margin for mobile */
+            .mt-20 {
+                margin-top: 4rem;
+            }
+            
+            /* Better mobile form spacing */
+            .mb-8 {
+                margin-bottom: 1.5rem;
+            }
+        }
     </style>
 </head>
+
 <body class="min-h-screen animated-bg flex items-center justify-center">
-    <div class="w-full max-w-md">
-        <!-- Login Form -->
-        <div class="glass-effect rounded-2xl p-8 shadow-2xl">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-gamepad text-white text-2xl"></i>
+    <!-- Header -->
+    <header class="glass-effect border-b border-white/20 fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <img src="logo.png" alt="Multiplayer API Logo" class="w-10 h-10 rounded-xl object-contain">
+                    <div>
+                        <h1 class="text-lg font-bold text-white">Multiplayer API</h1>
+                        <p class="text-xs text-white/70">Game Server Constructor</p>
+                    </div>
+                </a>
+                
+                <nav class="hidden sm:flex items-center space-x-6">
+                    <a href="index.html" class="text-white/70 hover:text-white transition-colors">Home</a>
+                    <a href="register.html" class="text-white/70 hover:text-white transition-colors">Register</a>
+                </nav>
+                
+                <!-- Mobile Navigation -->
+                <div class="sm:hidden flex items-center space-x-2">
+                    <a href="index.html" class="text-white/70 hover:text-white transition-colors p-2">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="register.html" class="text-white/70 hover:text-white transition-colors p-2">
+                        <i class="fas fa-user-plus"></i>
+                    </a>
                 </div>
-                <h1 class="text-2xl font-bold text-white mb-2">Welcome Back</h1>
-                <p class="text-white/70">Sign in to access your games</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Form -->
+    <div class="w-full max-w-md mx-auto px-4 sm:px-6 mt-20">
+        <div class="glass-effect rounded-3xl p-8 shadow-2xl">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-4">
+                    <img src="logo.png" alt="Multiplayer API Logo" class="w-15 h-15 rounded-xl object-contain">
+                </div>
+                <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+                <p class="text-white/70">Sign in to your account</p>
             </div>
 
-            <form id="loginForm">
-                <div class="mb-6">
-                    <label class="block text-white font-medium mb-2">Email</label>
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-6" autocomplete="off">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-white mb-2">
+                        <i class="fas fa-envelope mr-2"></i>Email Address
+                    </label>
                     <input 
                         type="email" 
                         id="email" 
+                        name="email" 
                         required
-                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400 focus:bg-white/20 transition-all"
+                        autocomplete="off"
+                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         placeholder="Enter your email"
                     >
                 </div>
 
-                <div class="mb-6">
-                    <label class="block text-white font-medium mb-2">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        required
-                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400 focus:bg-white/20 transition-all"
-                        placeholder="Enter your password"
-                    >
+                <div>
+                    <label for="password" class="block text-sm font-medium text-white mb-2">
+                        <i class="fas fa-lock mr-2"></i>Password
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required
+                            autocomplete="off"
+                            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-12"
+                            placeholder="Enter your password"
+                        >
+                        <button 
+                            type="button" 
+                            id="toggle-password"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white transition-colors"
+                        >
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="remember" class="rounded border-white/20 bg-white/10 text-blue-500 focus:ring-blue-500">
+                        <span class="ml-2 text-sm text-white/70">Remember me</span>
+                    </label>
+                    <a href="reset-password.html" class="text-sm text-blue-300 hover:text-blue-200 transition-colors">
+                        Forgot password?
+                    </a>
                 </div>
 
                 <button 
                     type="submit" 
-                    class="w-full btn-primary text-white font-medium py-3 px-6 rounded-xl border-0 cursor-pointer"
-                    id="loginBtn"
+                    class="w-full btn-primary text-white py-3 rounded-xl font-semibold text-lg border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                    id="login-btn"
                 >
                     <i class="fas fa-sign-in-alt mr-2"></i>
-                    Sign In
+                    <span id="login-text">Sign In</span>
                 </button>
             </form>
 
-            <!-- Status Messages -->
-            <div id="statusMessage" class="mt-4 p-3 rounded-xl hidden"></div>
+            <!-- Divider -->
+            <div class="my-8 flex items-center">
+                <div class="flex-1 border-t border-white/20"></div>
+                <span class="px-4 text-white/50 text-sm">or</span>
+                <div class="flex-1 border-t border-white/20"></div>
+            </div>
 
-            <!-- Quick Access -->
-            <div class="mt-8 pt-6 border-t border-white/20">
-                <p class="text-white/70 text-sm text-center mb-4">Quick Access (if already logged in)</p>
-                <div class="flex gap-2">
-                    <a href="game_manager.html" class="flex-1 bg-white/10 hover:bg-white/20 text-white text-center py-2 px-4 rounded-lg transition-all text-sm">
-                        <i class="fas fa-list mr-1"></i>Games
+            <!-- Register Link -->
+            <div class="text-center">
+                <p class="text-white/70">
+                    Don't have an account? 
+                    <a href="register.html" class="text-blue-300 hover:text-blue-200 font-medium transition-colors">
+                        Create one now
                     </a>
-                    <a href="game_constructor.html" class="flex-1 bg-white/10 hover:bg-white/20 text-white text-center py-2 px-4 rounded-lg transition-all text-sm">
-                        <i class="fas fa-plus mr-1"></i>Create
-                    </a>
-                </div>
+                </p>
             </div>
         </div>
 
-        <!-- Debug Info -->
-        <div class="glass-effect rounded-2xl p-4 mt-4">
-            <h3 class="text-white font-medium mb-2">Debug Info</h3>
-            <div class="text-white/70 text-sm">
-                <p><strong>API Token:</strong> <span id="currentToken">Not set</span></p>
-                <p><strong>Status:</strong> <span id="authStatus">Not authenticated</span></p>
-            </div>
-            <button onclick="clearTokens()" class="mt-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 px-3 py-1 rounded text-xs">
-                Clear Tokens
-            </button>
+        <!-- Additional Links -->
+        <div class="text-center mt-6 space-y-2">
+            <p class="text-white/50 text-sm">
+                <a href="index.html" class="hover:text-white transition-colors">← Back to Home</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications" class="fixed top-20 right-6 z-50 space-y-2"></div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="glass-effect rounded-2xl p-8 text-center">
+            <div class="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p class="text-white font-medium" id="loading-text">Signing in...</p>
         </div>
     </div>
 
     <script>
-        const API_BASE = 'https://api.michitai.com/api';
-
-        // Check current authentication status
-        function checkAuthStatus() {
-            const token = localStorage.getItem('api_token');
-            const tokenDisplay = document.getElementById('currentToken');
-            const statusDisplay = document.getElementById('authStatus');
-            
-            if (token) {
-                tokenDisplay.textContent = token.substring(0, 20) + '...';
-                statusDisplay.textContent = 'Authenticated';
-                statusDisplay.className = 'text-green-400';
-            } else {
-                tokenDisplay.textContent = 'Not set';
-                statusDisplay.textContent = 'Not authenticated';
-                statusDisplay.className = 'text-red-400';
+        class LoginPage {
+            constructor() {
+                this.init();
             }
-        }
 
-        // Clear stored tokens
-        function clearTokens() {
-            localStorage.removeItem('api_token');
-            localStorage.removeItem('session_token');
-            checkAuthStatus();
-            showMessage('Tokens cleared', 'info');
-        }
+            init() {
+                this.setupEventListeners();
+                this.checkExistingSession();
+            }
 
-        // Show status message
-        function showMessage(message, type = 'success') {
-            const messageDiv = document.getElementById('statusMessage');
-            messageDiv.className = `mt-4 p-3 rounded-xl ${type === 'error' ? 'bg-red-500/20 text-red-300' : 
-                                                        type === 'info' ? 'bg-blue-500/20 text-blue-300' : 
-                                                        'bg-green-500/20 text-green-300'}`;
-            messageDiv.textContent = message;
-            messageDiv.classList.remove('hidden');
-            
-            setTimeout(() => {
-                messageDiv.classList.add('hidden');
-            }, 5000);
-        }
-
-        // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            
-            // Disable button and show loading
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
-            
-            try {
-                const response = await fetch(`${API_BASE}/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
+            setupEventListeners() {
+                // Form submission
+                $('#login-form').on('submit', (e) => this.handleLogin(e));
+                
+                // Password toggle
+                $('#toggle-password').on('click', () => this.togglePassword());
+                
+                // Enter key support
+                $(document).on('keypress', (e) => {
+                    if (e.which === 13 && $('#login-form').is(':visible')) {
+                        $('#login-form').submit();
+                    }
                 });
-                
-                const result = await response.json();
-                
-                if (response.ok && result.success) {
-                    // Store both tokens
-                    localStorage.setItem('api_token', result.data.api_token);
-                    localStorage.setItem('session_token', result.data.session_token);
-                    
-                    showMessage('Login successful! You can now access your games.', 'success');
-                    checkAuthStatus();
-                    
-                    // Clear form
-                    document.getElementById('loginForm').reset();
-                    
-                    // Redirect to game manager after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'game_manager.html';
-                    }, 2000);
-                    
-                } else {
-                    showMessage(result.error_message || 'Login failed', 'error');
-                }
-                
-            } catch (error) {
-                showMessage('Network error: ' + error.message, 'error');
-            } finally {
-                // Re-enable button
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Sign In';
             }
-        });
 
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAuthStatus();
-            
-            // Pre-fill email for testing
-            document.getElementById('email').value = 'nichitalnc@gmail.com';
+            togglePassword() {
+                const passwordInput = $('#password');
+                const toggleIcon = $('#toggle-password i');
+                
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    toggleIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            }
+
+            async handleLogin(e) {
+                e.preventDefault();
+                
+                const email = $('#email').val().trim();
+                const password = $('#password').val();
+                const remember = $('#remember').is(':checked');
+
+                if (!email || !password) {
+                    this.showNotification('Please fill in all fields', 'error');
+                    return;
+                }
+
+                if (!this.isValidEmail(email)) {
+                    this.showNotification('Please enter a valid email address', 'error');
+                    return;
+                }
+
+                try {
+                    this.showLoading('Signing in...');
+                    this.setButtonLoading(true);
+
+                    const response = await fetch('https://api.michitai.com/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            password: password,
+                            remember: remember
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Store tokens
+                        localStorage.setItem('session_token', result.data.session_token);
+                        localStorage.setItem('api_token', result.data.api_token);
+                        localStorage.setItem('user_email', result.data.email);
+                        localStorage.setItem('user_plan', result.data.plan_type || 'Free');
+                        
+                        if (remember) {
+                            localStorage.setItem('remember_login', 'true');
+                        }
+
+                        this.showNotification('Login successful! Redirecting...', 'success');
+                        
+                        // Redirect to game manager page
+                        setTimeout(() => {
+                            window.location.href = 'game_manager.html';
+                        }, 1500);
+
+                    } else {
+                        throw new Error(result.error || 'Login failed');
+                    }
+
+                } catch (error) {
+                    this.showNotification(error.message, 'error');
+                } finally {
+                    this.hideLoading();
+                    this.setButtonLoading(false);
+                }
+            }
+
+            checkExistingSession() {
+                const token = localStorage.getItem('session_token');
+                
+                // Simple check - if session token exists, redirect to game manager
+                if (token) {
+                    window.location.href = 'game_manager.html';
+                }
+            }
+
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            setButtonLoading(loading) {
+                const btn = $('#login-btn');
+                const text = $('#login-text');
+                
+                if (loading) {
+                    btn.prop('disabled', true);
+                    text.html('<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...');
+                } else {
+                    btn.prop('disabled', false);
+                    text.html('<i class="fas fa-sign-in-alt mr-2"></i>Sign In');
+                }
+            }
+
+            showLoading(message = 'Loading...') {
+                $('#loading-text').text(message);
+                $('#loading-modal').removeClass('hidden').addClass('flex');
+            }
+
+            hideLoading() {
+                $('#loading-modal').addClass('hidden').removeClass('flex');
+            }
+
+            showNotification(message, type = 'info') {
+                const colors = {
+                    success: 'bg-green-500',
+                    error: 'bg-red-500',
+                    warning: 'bg-yellow-500',
+                    info: 'bg-blue-500'
+                };
+
+                const notification = $(`
+                    <div class="notification ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg max-w-sm">
+                        <div class="flex items-center">
+                            <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'info'} mr-2"></i>
+                            ${message}
+                        </div>
+                    </div>
+                `);
+
+                $('#notifications').append(notification);
+
+                setTimeout(() => {
+                    notification.fadeOut(() => notification.remove());
+                }, 5000);
+            }
+        }
+
+        // Initialize login page
+        $(document).ready(() => {
+            new LoginPage();
         });
     </script>
 </body>
