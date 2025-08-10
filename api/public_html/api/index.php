@@ -405,46 +405,84 @@ try {
         private function handleGame($segments, $method) {
             $endpoint = $segments[1] ?? '';
             
-            // Allow anonymous access for game creation
-            if ($endpoint === 'create') {
-                if ($method !== 'POST') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Method not allowed']);
-                    return;
-                }
-                $input = json_decode(file_get_contents('php://input'), true);
-                $result = $this->gameManager->createGameAnonymous($input);
-                echo json_encode($result);
-                return;
-            }
-            
-            // Allow anonymous access for listing all games
-            if ($endpoint === 'list-all') {
-                if ($method !== 'GET') {
-                    http_response_code(405);
-                    echo json_encode(['error' => 'Method not allowed']);
-                    return;
-                }
-                $result = $this->gameManager->getAllGames();
-                echo json_encode($result);
-                return;
-            }
-            
-            // For all other game endpoints, require authentication
+            // Get API token from headers
             $token = $_SERVER['HTTP_X_API_TOKEN'] ?? null;
-            if (!$this->auth->validateToken($token)) {
+            
+            // Require authentication for all game endpoints
+            if (!$token || !$this->auth->validateToken($token)) {
                 http_response_code(401);
-                echo json_encode(['error' => 'Invalid token']);
+                echo json_encode([
+                    'error' => 'Authentication required',
+                    'code' => 'AUTH_REQUIRED',
+                    'message' => 'A valid API token is required to access this resource'
+                ]);
                 return;
             }
 
+            // Get user ID from token
+            $userId = $this->auth->getUserIdFromToken($token);
+            if (!$userId) {
+                http_response_code(401);
+                echo json_encode([
+                    'error' => 'Invalid user',
+                    'code' => 'INVALID_USER',
+                    'message' => 'Could not determine user from token'
+                ]);
+                return;
+            }
+
+            // Route to appropriate handler based on endpoint
             switch ($endpoint) {
+                case 'create':
+                    if ($method !== 'POST') {
+                        http_response_code(405);
+                        echo json_encode([
+                            'error' => 'Method not allowed',
+                            'code' => 'METHOD_NOT_ALLOWED',
+                            'allowed_methods' => ['POST']
+                        ]);
+                        return;
+                    }
+                    
+                    // Parse and validate input
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        http_response_code(400);
+                        echo json_encode([
+                            'error' => 'Invalid JSON input',
+                            'code' => 'INVALID_JSON'
+                        ]);
+                        return;
+                    }
+                    
+                    // Ensure required fields are present
+                    if (empty($input['name'])) {
+                        http_response_code(400);
+                        echo json_encode([
+                            'error' => 'Game name is required',
+                            'code' => 'MISSING_FIELD',
+                            'field' => 'name'
+                        ]);
+                        return;
+                    }
+                    
+                    // Create the game
+                    $result = $this->gameManager->createGame($token, $input);
+                    echo json_encode($result);
+                    break;
+                    
                 case 'list':
                     if ($method !== 'GET') {
                         http_response_code(405);
-                        echo json_encode(['error' => 'Method not allowed']);
+                        echo json_encode([
+                            'error' => 'Method not allowed',
+                            'code' => 'METHOD_NOT_ALLOWED',
+                            'allowed_methods' => ['GET']
+                        ]);
                         return;
                     }
+                    
+                    // Get games for the authenticated user
                     $result = $this->gameManager->getGames($token);
                     echo json_encode($result);
                     break;

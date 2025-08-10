@@ -515,6 +515,11 @@
 
     <script>
         const API_BASE = '/api';
+
+        // Retrieve user API token from localStorage
+        function getUserToken() {
+            return localStorage.getItem('api_token');
+        }
         
         // Show notification
         function showNotification(message, type = 'success') {
@@ -556,16 +561,22 @@
             }
         }
 
-        // Get user token (not needed for anonymous games)
-        function getUserToken() {
-            return null; // No authentication required
-        }
+        
 
-        // Export games data
+        // Export games data (authenticated)
         document.getElementById('exportGames').addEventListener('click', async () => {
+            const token = getUserToken();
+            if (!token) {
+                showNotification('Please authenticate to export your games. Missing API token.', 'error');
+                return;
+            }
+
             try {
-                const response = await fetch(`${API_BASE}/game/list-all`, {
-                    method: 'GET'
+                const response = await fetch(`${API_BASE}/game/list`, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-Token': token
+                    }
                 });
 
                 const result = await response.json();
@@ -581,21 +592,34 @@
                     
                     showNotification('Games data exported successfully!');
                 } else {
-                    showNotification(result.message || 'Failed to export games', 'error');
+                    if (response.status === 401) {
+                        showNotification('Invalid token. Please re-authenticate.', 'error');
+                    } else {
+                        showNotification(result.message || 'Failed to export games', 'error');
+                    }
                 }
             } catch (error) {
                 showNotification('Network error: ' + error.message, 'error');
             }
         });
 
-        // Load games
         async function loadGames() {
             document.getElementById('loading').style.display = 'block';
             document.getElementById('gamesContainer').innerHTML = '';
 
+            const token = getUserToken();
+            if (!token) {
+                document.getElementById('loading').style.display = 'none';
+                showNotification('Please authenticate to view your games. Missing API token.', 'error');
+                return;
+            }
+
             try {
-                const response = await fetch(`${API_BASE}/game/list-all`, {
-                    method: 'GET'
+                const response = await fetch(`${API_BASE}/game/list`, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-Token': token
+                    }
                 });
 
                 const result = await response.json();
@@ -603,7 +627,11 @@
                 if (response.ok && result.success) {
                     displayGames(result.data.games);
                 } else {
-                    showNotification(result.message || 'Failed to load games', 'error');
+                    if (response.status === 401) {
+                        showNotification('Invalid token. Please re-authenticate.', 'error');
+                    } else {
+                        showNotification(result.message || 'Failed to load games', 'error');
+                    }
                     document.getElementById('gamesContainer').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Failed to load games.</p>';
                 }
             } catch (error) {
@@ -697,7 +725,7 @@
         // Refresh games button
         document.getElementById('refreshGames').addEventListener('click', loadGames);
 
-        // Initial load - load games immediately since no authentication required
+        // Initial load - requires authentication
         document.addEventListener('DOMContentLoaded', () => {
             loadGames();
         });

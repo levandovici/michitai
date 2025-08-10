@@ -708,10 +708,18 @@
             showLoading();
 
             try {
+                const token = localStorage.getItem('api_token');
+                if (!token) {
+                    hideLoading();
+                    showNotification('Please authenticate first. Missing API token.', 'error');
+                    return;
+                }
+
                 const response = await fetch(`${API_BASE}/game/create`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-API-Token': token
                     },
                     body: JSON.stringify(gameData)
                 });
@@ -723,7 +731,11 @@
                     showSuccess(result.data);
                 } else {
                     hideLoading();
-                    showNotification(result.message || 'Failed to create game', 'error');
+                    if (response.status === 401) {
+                        showNotification('Invalid or missing token. Please authenticate and try again.', 'error');
+                    } else {
+                        showNotification(result.message || 'Failed to create game', 'error');
+                    }
                 }
             } catch (error) {
                 hideLoading();

@@ -217,10 +217,10 @@ class GameManager {
      */
     private function getUserIdFromToken($token) {
         try {
-            $stmt = $this->db->prepare("SELECT id FROM users WHERE api_token = ?");
+            $stmt = $this->db->prepare("SELECT user_id FROM users WHERE api_token = ?");
             $stmt->execute([$token]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $user ? $user['id'] : null;
+            return $user ? $user['user_id'] : null;
         } catch (Exception $e) {
             if ($this->debug) {
                 error_log("GameManager: Error getting user ID - " . $e->getMessage());
@@ -230,133 +230,117 @@ class GameManager {
     }
     
     /**
-     * Create a new game (authenticated)
+     * Create a new game
+     * 
+     * @param string|null $token User authentication token (null for anonymous creation if allowed)
+     * @param array $gameData Game data including name, description, etc.
+     * @return array API response with created game data or error
      */
     public function createGame($token, $gameData) {
         try {
-            $userId = $this->getUserIdFromToken($token);
-            if (!$userId) {
-                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+            $userId = null;
+            $isAnonymous = false;
+            
+            // If token is provided, validate it and get user ID
+            if ($token !== null) {
+                $userId = $this->getUserIdFromToken($token);
+                if (!$userId) {
+                    return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+                }
+            } else {
+                // Check if anonymous creation is allowed
+                $allowAnonymous = defined('ALLOW_ANONYMOUS_GAME_CREATION') && ALLOW_ANONYMOUS_GAME_CREATION;
+                if (!$allowAnonymous) {
+                    return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_REQUIRED, 'Authentication is required to create games');
+                }
+                $isAnonymous = true;
             }
             
             $name = $gameData['name'] ?? 'Untitled Game';
             $description = $gameData['description'] ?? '';
             $gameType = $gameData['game_type'] ?? 'multiplayer';
-            $maxPlayers = $gameData['max_players'] ?? 10;
+            $maxPlayers = min(100, max(1, (int)($gameData['max_players'] ?? 10))); // Ensure reasonable limits
             $settings = json_encode($gameData['settings'] ?? []);
             
             // Generate unique API token for the game
             $apiToken = $this->generateApiToken();
             
+            // Prepare game data for storage
+            $jsonStructure = json_encode([
+                'api_token' => $apiToken,
+                'game_type' => $gameType,
+                'max_players' => $maxPlayers,
+                'status' => 'active',
+                'created_by' => $isAnonymous ? 'anonymous' : 'user:' . $userId,
+                'version' => '1.0',
+                'created_at' => date('c')
+            ]);
+            
+            // Use prepared statement to prevent SQL injection
             $stmt = $this->db->prepare("
-                INSERT INTO games (user_id, name, description, game_type, max_players, api_token, settings) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO games (
+                    user_id, name, description, 
+                    game_type, max_players, status,
+                    api_token, settings, json_structure,
+                    is_active, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, 1, NOW(), NOW())
             ");
             
-            $stmt->execute([$userId, $name, $description, $gameType, $maxPlayers, $apiToken, $settings]);
+            $result = $stmt->execute([
+                $userId, // Can be null for anonymous games
+                $name,
+                $description,
+                $gameType,
+                $maxPlayers,
+                $apiToken,
+                $settings,
+                $jsonStructure
+            ]);
+            
+            if (!$result) {
+                $errorInfo = $stmt->errorInfo();
+                throw new Exception("Database insert failed: " . ($errorInfo[2] ?? 'Unknown error'));
+            }
+            
             $gameId = $this->db->lastInsertId();
             
             if ($this->debug) {
-                error_log("GameManager: Created game ID $gameId for user $userId with API token");
+                $logMessage = $isAnonymous 
+                    ? "Created anonymous game ID $gameId"
+                    : "Created game ID $gameId for user $userId";
+                error_log("GameManager: $logMessage with API token: $apiToken");
             }
             
             return ErrorCodes::createSuccessResponse([
-                'game_id' => $gameId,
+                'game_id' => (int)$gameId,
                 'name' => $name,
                 'description' => $description,
                 'game_type' => $gameType,
                 'max_players' => $maxPlayers,
                 'status' => 'active',
-                'api_token' => $apiToken
+                'api_token' => $apiToken,
+                'is_anonymous' => $isAnonymous,
+                'created_at' => date('c')
             ], 'Game created successfully');
             
         } catch (Exception $e) {
             if ($this->debug) {
                 error_log("GameManager: Create game error - " . $e->getMessage());
+                error_log("Stack trace: " . $e->getTraceAsString());
             }
-            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+            return ErrorCodes::createErrorResponse(
+                ErrorCodes::SYS_INTERNAL_ERROR,
+                'Failed to create game: ' . ($this->debug ? $e->getMessage() : 'Internal server error')
+            );
         }
     }
 
     /**
-     * Create a new game without authentication (anonymous)
+     * @deprecated Use createGame() instead. This method is kept for backward compatibility.
      */
     public function createGameAnonymous($gameData) {
-        try {
-            $name = $gameData['name'] ?? 'Untitled Game';
-            $description = $gameData['description'] ?? '';
-            
-            if ($this->debug) {
-                error_log("GameManager: Starting anonymous game creation with name: $name");
-            }
-            
-            // Generate unique API token for the game
-            $apiToken = $this->generateApiToken();
-            
-            if ($this->debug) {
-                error_log("GameManager: Generated API token: $apiToken");
-            }
-            
-            // Create basic JSON structure for the game
-            $jsonStructure = json_encode([
-                'api_token' => $apiToken,
-                'game_type' => 'multiplayer',
-                'max_players' => 10,
-                'status' => 'active'
-            ]);
-            
-            $jsonProperties = json_encode([
-                'created_by' => 'anonymous',
-                'version' => '1.0'
-            ]);
-            
-            if ($this->debug) {
-                error_log("GameManager: Prepared JSON data - Structure: $jsonStructure, Properties: $jsonProperties");
-            }
-            
-            // Use the existing database schema columns
-            $stmt = $this->db->prepare("
-                INSERT INTO games (user_id, name, description, json_structure, json_properties, json_rooms, json_communities, json_chats, is_active, created_at, updated_at) 
-                VALUES (NULL, ?, ?, ?, ?, '[]', '[]', '[]', 1, NOW(), NOW())
-            ");
-            
-            if ($this->debug) {
-                error_log("GameManager: Executing SQL insert with parameters: " . json_encode([$name, $description, $jsonStructure, $jsonProperties]));
-            }
-            
-            $result = $stmt->execute([$name, $description, $jsonStructure, $jsonProperties]);
-            
-            if (!$result) {
-                $errorInfo = $stmt->errorInfo();
-                if ($this->debug) {
-                    error_log("GameManager: SQL execution failed - " . json_encode($errorInfo));
-                }
-                throw new Exception("Database insert failed: " . $errorInfo[2]);
-            }
-            
-            $gameId = $this->db->lastInsertId();
-            
-            if ($this->debug) {
-                error_log("GameManager: Created anonymous game ID $gameId with API token $apiToken");
-            }
-            
-            return ErrorCodes::createSuccessResponse([
-                'game_id' => $gameId,
-                'name' => $name,
-                'description' => $description,
-                'game_type' => 'multiplayer',
-                'max_players' => 10,
-                'status' => 'active',
-                'api_token' => $apiToken
-            ], 'Game created successfully');
-            
-        } catch (Exception $e) {
-            if ($this->debug) {
-                error_log("GameManager: Create anonymous game error - " . $e->getMessage());
-                error_log("GameManager: Stack trace - " . $e->getTraceAsString());
-            }
-            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
-        }
+        // For backward compatibility, route to createGame with null token
+        return $this->createGame(null, $gameData);
     }
     
     /**
@@ -411,25 +395,45 @@ class GameManager {
             }
             
             $stmt = $this->db->prepare("
-                SELECT id, name, description, game_type, max_players, status, api_token, created_at, updated_at 
+                SELECT game_id, user_id, name, description, json_structure, is_active, created_at, updated_at 
                 FROM games 
                 WHERE user_id = ? 
                 ORDER BY created_at DESC
             ");
             
             $stmt->execute([$userId]);
-            $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            // Convert timestamps for display
-            foreach ($games as &$game) {
-                $game['id'] = (int)$game['id'];
-                $game['max_players'] = (int)$game['max_players'];
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $games = [];
+            foreach ($rows as $row) {
+                $json = [];
+                if (!empty($row['json_structure'])) {
+                    $decoded = json_decode($row['json_structure'], true);
+                    if (is_array($decoded)) {
+                        $json = $decoded;
+                    }
+                }
+
+                $games[] = [
+                    'game_id' => (int)$row['game_id'],
+                    'user_id' => $row['user_id'] !== null ? (int)$row['user_id'] : null,
+                    'name' => $row['name'],
+                    'description' => $row['description'],
+                    'game_type' => $json['game_type'] ?? 'multiplayer',
+                    'max_players' => (int)($json['max_players'] ?? 10),
+                    'status' => $json['status'] ?? 'active',
+                    'api_token' => $json['api_token'] ?? 'No token',
+                    'is_active' => (bool)$row['is_active'],
+                    'created_at' => $row['created_at'],
+                    'updated_at' => $row['updated_at'],
+                    'created_by' => 'User ' . $userId
+                ];
             }
-            
+
             if ($this->debug) {
                 error_log("GameManager: Retrieved " . count($games) . " games for user $userId");
             }
-            
+
             return ErrorCodes::createSuccessResponse([
                 'games' => $games,
                 'total' => count($games)
@@ -444,59 +448,13 @@ class GameManager {
     }
 
     /**
-     * Get all games (including anonymous ones) - no authentication required
+     * @deprecated This method is no longer supported. Use getGames() instead.
      */
     public function getAllGames() {
-        try {
-            $stmt = $this->db->prepare("
-                SELECT game_id, user_id, name, description, json_structure, json_properties, is_active, created_at, updated_at 
-                FROM games 
-                ORDER BY created_at DESC
-            ");
-            
-            $stmt->execute();
-            $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            // Process games to extract API tokens and format data
-            $processedGames = [];
-            foreach ($games as $game) {
-                $jsonStructure = json_decode($game['json_structure'], true);
-                $apiToken = $jsonStructure['api_token'] ?? 'No token';
-                $gameType = $jsonStructure['game_type'] ?? 'multiplayer';
-                $maxPlayers = $jsonStructure['max_players'] ?? 10;
-                $status = $jsonStructure['status'] ?? 'active';
-                
-                $processedGames[] = [
-                    'game_id' => (int)$game['game_id'],
-                    'user_id' => $game['user_id'] ? (int)$game['user_id'] : null,
-                    'name' => $game['name'],
-                    'description' => $game['description'],
-                    'game_type' => $gameType,
-                    'max_players' => (int)$maxPlayers,
-                    'status' => $status,
-                    'api_token' => $apiToken,
-                    'is_active' => (bool)$game['is_active'],
-                    'created_at' => $game['created_at'],
-                    'updated_at' => $game['updated_at'],
-                    'created_by' => $game['user_id'] ? 'User ' . $game['user_id'] : 'Anonymous'
-                ];
-            }
-            
-            if ($this->debug) {
-                error_log("GameManager: Retrieved " . count($processedGames) . " total games (including anonymous)");
-            }
-            
-            return ErrorCodes::createSuccessResponse([
-                'games' => $processedGames,
-                'total' => count($processedGames)
-            ], 'All games retrieved successfully');
-            
-        } catch (Exception $e) {
-            if ($this->debug) {
-                error_log("GameManager: Get all games error - " . $e->getMessage());
-            }
-            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        if ($this->debug) {
+            error_log("GameManager: Deprecated method getAllGames() called");
         }
+        return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_REQUIRED, 'This endpoint is no longer available. Authentication is required.');
     }
     
     /**
