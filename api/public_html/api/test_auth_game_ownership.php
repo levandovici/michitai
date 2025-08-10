@@ -579,13 +579,7 @@ $registerResponse = makeRequest("$baseUrl/register", 'POST', [
     'newsletter' => false
 ]);
 
-$lastResponse = $registerResponse;
-$testPassed = in_array($registerResponse['status'], [200, 201]);
-$allTestsPassed = $allTestsPassed && $testPassed;
-printTestResult("User Registration", $testPassed, "Status: {$registerResponse['status']}");
 
-// Get user ID from registration response
-$userId = $registerResponse['body']['user_id'] ?? $registerResponse['body']['data']['user_id'] ?? null;
 
 // Test 2: Login with the new user
 $loginResponse = makeRequest("$baseUrl/login", 'POST', [

@@ -260,12 +260,11 @@ class GameManager {
             $description = $gameData['description'] ?? '';
             $gameType = $gameData['game_type'] ?? 'multiplayer';
             $maxPlayers = min(100, max(1, (int)($gameData['max_players'] ?? 10))); // Ensure reasonable limits
-            $settings = json_encode($gameData['settings'] ?? []);
             
             // Generate unique API token for the game
             $apiToken = $this->generateApiToken();
             
-            // Prepare game data for storage
+            // Prepare game data for storage - match actual database schema
             $jsonStructure = json_encode([
                 'api_token' => $apiToken,
                 'game_type' => $gameType,
@@ -276,25 +275,30 @@ class GameManager {
                 'created_at' => date('c')
             ]);
             
-            // Use prepared statement to prevent SQL injection
+            $jsonProperties = json_encode([
+                'settings' => $gameData['settings'] ?? [],
+                'game_type' => $gameType,
+                'max_players' => $maxPlayers,
+                'status' => 'active',
+                'api_token' => $apiToken
+            ]);
+            
+            // Use prepared statement matching actual database schema
             $stmt = $this->db->prepare("
                 INSERT INTO games (
                     user_id, name, description, 
-                    game_type, max_players, status,
-                    api_token, settings, json_structure,
-                    is_active, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, 1, NOW(), NOW())
+                    json_structure, json_properties,
+                    json_rooms, json_communities, json_chats,
+                    is_active
+                ) VALUES (?, ?, ?, ?, ?, '[]', '[]', '[]', 1)
             ");
             
             $result = $stmt->execute([
                 $userId, // Can be null for anonymous games
                 $name,
                 $description,
-                $gameType,
-                $maxPlayers,
-                $apiToken,
-                $settings,
-                $jsonStructure
+                $jsonStructure,
+                $jsonProperties
             ]);
             
             if (!$result) {
