@@ -484,6 +484,31 @@
                 </div>
             </div>
 
+            <!-- Authentication Panel -->
+            <div id="authPanel" class="glass-effect rounded-2xl p-6 mb-8 hidden">
+                <h2 class="text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-lock mr-2 text-red-400"></i>
+                    Authentication Required
+                </h2>
+                <p class="text-white/70 mb-4">Please login to access your games</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="email" id="authEmail" placeholder="Email" class="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400">
+                    <input type="password" id="authPassword" placeholder="Password" class="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400">
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button id="loginBtn" class="btn-primary text-white px-6 py-2 rounded-lg font-medium border-0">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button id="clearTokenBtn" class="bg-red-500/20 hover:bg-red-500/30 text-red-300 px-4 py-2 rounded-lg border-0">
+                        Clear Tokens
+                    </button>
+                </div>
+                
+                <div id="authStatus" class="mt-3 text-sm"></div>
+            </div>
+
             <!-- Games List Section -->
             <div class="glass-effect rounded-2xl p-6">
                 <div class="flex items-center justify-between mb-6">
@@ -725,9 +750,90 @@
         // Refresh games button
         document.getElementById('refreshGames').addEventListener('click', loadGames);
 
+        // Authentication functions
+        async function handleLogin() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!email || !password) {
+                showAuthStatus('Please enter email and password', 'error');
+                return;
+            }
+            
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging in...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    localStorage.setItem('api_token', result.data.api_token);
+                    localStorage.setItem('session_token', result.data.session_token);
+                    showAuthStatus('Login successful!', 'success');
+                    document.getElementById('authPanel').classList.add('hidden');
+                    loadGames();
+                } else {
+                    showAuthStatus(result.error_message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showAuthStatus('Network error: ' + error.message, 'error');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Login';
+            }
+        }
+        
+        function showAuthStatus(message, type) {
+            const statusDiv = document.getElementById('authStatus');
+            statusDiv.className = `mt-3 text-sm ${type === 'error' ? 'text-red-300' : 'text-green-300'}`;
+            statusDiv.textContent = message;
+        }
+        
+        function clearTokens() {
+            localStorage.removeItem('api_token');
+            localStorage.removeItem('session_token');
+            showAuthStatus('Tokens cleared', 'info');
+            document.getElementById('authPanel').classList.remove('hidden');
+            document.getElementById('gamesContainer').innerHTML = '';
+            document.getElementById('gameCount').textContent = 'Please authenticate';
+        }
+        
+        function checkAuthentication() {
+            const token = getUserToken();
+            if (!token) {
+                document.getElementById('authPanel').classList.remove('hidden');
+                document.getElementById('authEmail').value = 'nichitalnc@gmail.com'; // Pre-fill for testing
+                return false;
+            }
+            return true;
+        }
+
+        // Event listeners
+        document.getElementById('loginBtn').addEventListener('click', handleLogin);
+        document.getElementById('clearTokenBtn').addEventListener('click', clearTokens);
+        
+        // Handle Enter key in auth inputs
+        document.getElementById('authEmail').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+        document.getElementById('authPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+
         // Initial load - requires authentication
         document.addEventListener('DOMContentLoaded', () => {
-            loadGames();
+            if (checkAuthentication()) {
+                loadGames();
+            }
         });
     </script>
 </body>

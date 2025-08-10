@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Michitai Game Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .animated-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen animated-bg flex items-center justify-center">
+    <div class="w-full max-w-md">
+        <!-- Login Form -->
+        <div class="glass-effect rounded-2xl p-8 shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-gamepad text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white mb-2">Welcome Back</h1>
+                <p class="text-white/70">Sign in to access your games</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="mb-6">
+                    <label class="block text-white font-medium mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        required
+                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400 focus:bg-white/20 transition-all"
+                        placeholder="Enter your email"
+                    >
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-white font-medium mb-2">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        required
+                        class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400 focus:bg-white/20 transition-all"
+                        placeholder="Enter your password"
+                    >
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="w-full btn-primary text-white font-medium py-3 px-6 rounded-xl border-0 cursor-pointer"
+                    id="loginBtn"
+                >
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Status Messages -->
+            <div id="statusMessage" class="mt-4 p-3 rounded-xl hidden"></div>
+
+            <!-- Quick Access -->
+            <div class="mt-8 pt-6 border-t border-white/20">
+                <p class="text-white/70 text-sm text-center mb-4">Quick Access (if already logged in)</p>
+                <div class="flex gap-2">
+                    <a href="game_manager.html" class="flex-1 bg-white/10 hover:bg-white/20 text-white text-center py-2 px-4 rounded-lg transition-all text-sm">
+                        <i class="fas fa-list mr-1"></i>Games
+                    </a>
+                    <a href="game_constructor.html" class="flex-1 bg-white/10 hover:bg-white/20 text-white text-center py-2 px-4 rounded-lg transition-all text-sm">
+                        <i class="fas fa-plus mr-1"></i>Create
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debug Info -->
+        <div class="glass-effect rounded-2xl p-4 mt-4">
+            <h3 class="text-white font-medium mb-2">Debug Info</h3>
+            <div class="text-white/70 text-sm">
+                <p><strong>API Token:</strong> <span id="currentToken">Not set</span></p>
+                <p><strong>Status:</strong> <span id="authStatus">Not authenticated</span></p>
+            </div>
+            <button onclick="clearTokens()" class="mt-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 px-3 py-1 rounded text-xs">
+                Clear Tokens
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://api.michitai.com/api';
+
+        // Check current authentication status
+        function checkAuthStatus() {
+            const token = localStorage.getItem('api_token');
+            const tokenDisplay = document.getElementById('currentToken');
+            const statusDisplay = document.getElementById('authStatus');
+            
+            if (token) {
+                tokenDisplay.textContent = token.substring(0, 20) + '...';
+                statusDisplay.textContent = 'Authenticated';
+                statusDisplay.className = 'text-green-400';
+            } else {
+                tokenDisplay.textContent = 'Not set';
+                statusDisplay.textContent = 'Not authenticated';
+                statusDisplay.className = 'text-red-400';
+            }
+        }
+
+        // Clear stored tokens
+        function clearTokens() {
+            localStorage.removeItem('api_token');
+            localStorage.removeItem('session_token');
+            checkAuthStatus();
+            showMessage('Tokens cleared', 'info');
+        }
+
+        // Show status message
+        function showMessage(message, type = 'success') {
+            const messageDiv = document.getElementById('statusMessage');
+            messageDiv.className = `mt-4 p-3 rounded-xl ${type === 'error' ? 'bg-red-500/20 text-red-300' : 
+                                                        type === 'info' ? 'bg-blue-500/20 text-blue-300' : 
+                                                        'bg-green-500/20 text-green-300'}`;
+            messageDiv.textContent = message;
+            messageDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                messageDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Disable button and show loading
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    // Store both tokens
+                    localStorage.setItem('api_token', result.data.api_token);
+                    localStorage.setItem('session_token', result.data.session_token);
+                    
+                    showMessage('Login successful! You can now access your games.', 'success');
+                    checkAuthStatus();
+                    
+                    // Clear form
+                    document.getElementById('loginForm').reset();
+                    
+                    // Redirect to game manager after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'game_manager.html';
+                    }, 2000);
+                    
+                } else {
+                    showMessage(result.error_message || 'Login failed', 'error');
+                }
+                
+            } catch (error) {
+                showMessage('Network error: ' + error.message, 'error');
+            } finally {
+                // Re-enable button
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Sign In';
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthStatus();
+            
+            // Pre-fill email for testing
+            document.getElementById('email').value = 'nichitalnc@gmail.com';
+        });
+    </script>
+</body>
+</html>

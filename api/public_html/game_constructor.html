@@ -476,21 +476,44 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <h1 class="text-2xl font-bold text-white mb-2">
-                                <i class="fas fa-hammer mr-3 text-blue-400"></i>
+                                <i class="fas fa-hammer mr-3 text-purple-400"></i>
                                 Game Constructor
                             </h1>
-                            <p class="text-white/70">Create and configure new multiplayer games with automatic API token generation</p>
+                            <p class="text-white/70">Create and configure your multiplayer game</p>
                         </div>
                         <div class="hidden md:block">
-                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                                <i class="fas fa-gamepad text-white text-2xl"></i>
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                                <i class="fas fa-cogs text-white text-2xl"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-
+            <!-- Authentication Panel -->
+            <div id="authPanel" class="glass-effect rounded-2xl p-6 mb-8 hidden">
+                <h2 class="text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-lock mr-2 text-red-400"></i>
+                    Authentication Required
+                </h2>
+                <p class="text-white/70 mb-4">Please login to create games</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="email" id="authEmail" placeholder="Email" class="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400">
+                    <input type="password" id="authPassword" placeholder="Password" class="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-blue-400">
+                </div>
+                
+                <div class="flex gap-2 mt-4">
+                    <button id="loginBtn" class="btn-primary text-white px-6 py-2 rounded-lg font-medium border-0">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button id="clearTokenBtn" class="bg-red-500/20 hover:bg-red-500/30 text-red-300 px-4 py-2 rounded-lg border-0">
+                        Clear Tokens
+                    </button>
+                </div>
+                
+                <div id="authStatus" class="mt-3 text-sm"></div>
+            </div>
 
             <!-- Game Creation Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">

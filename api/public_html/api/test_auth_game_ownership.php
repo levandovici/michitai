@@ -587,17 +587,7 @@ $loginResponse = makeRequest("$baseUrl/login", 'POST', [
     'password' => $testPassword
 ]);
 
-$lastResponse = $loginResponse;
-$testPassed = $loginResponse['status'] === 200 && !empty($loginResponse['body']['token']);
-$allTestsPassed = $allTestsPassed && $testPassed;
-printTestResult("User Login", $testPassed, "Status: {$loginResponse['status']}");
 
-// Get the auth token
-$authToken = $loginResponse['body']['token'] ?? null;
-
-if (!$authToken) {
-    // If login failed, try to get error details
-    echo "\n\033[33mLogin failed. Response body:\033[0m\n";
     echo json_encode($loginResponse['body'], JSON_PRETTY_PRINT) . "\n\n";
     exit(1);
 }
