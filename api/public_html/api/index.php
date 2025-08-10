@@ -419,9 +419,9 @@ try {
                 return;
             }
 
-            // Get user ID from token
-            $userId = $this->auth->getUserIdFromToken($token);
-            if (!$userId) {
+            // Get user ID from token (works with both api_token and session_token)
+            $user = $this->auth->validateToken($token);
+            if (!$user) {
                 http_response_code(401);
                 echo json_encode([
                     'error' => 'Invalid user',
@@ -430,6 +430,7 @@ try {
                 ]);
                 return;
             }
+            $userId = $user['user_id'];
 
             // Route to appropriate handler based on endpoint
             switch ($endpoint) {

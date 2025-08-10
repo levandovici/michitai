@@ -142,7 +142,8 @@ function runAllTests($baseUrl, $testEmail, $testPassword) {
     ], null, $baseUrl);
     
     $loginPassed = $loginResponse['status'] === 200 && !empty($loginResponse['body']['data']['session_token']);
-    $authToken = $loginResponse['body']['data']['session_token'] ?? null;
+    // Try to get api_token first, fall back to session_token
+    $authToken = $loginResponse['body']['data']['api_token'] ?? $loginResponse['body']['data']['session_token'] ?? null;
     
     $results[] = [
         'test' => 'User Login',

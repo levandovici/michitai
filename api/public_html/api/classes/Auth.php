@@ -319,7 +319,8 @@ class Auth {
             return ErrorCodes::createSuccessResponse([
                 'user_id' => $user['user_id'],
                 'email' => $user['email'],
-                'session_token' => $sessionToken, // Session token for frontend, not API token
+                'session_token' => $sessionToken, // Session token for frontend
+                'api_token' => $user['api_token'], // API token for game operations
                 'email_verified' => isset($user['email_verified']) ? (bool)$user['email_verified'] : false,
                 'plan_type' => $user['plan_type'] ?? 'free'
             ], 'Login successful');
