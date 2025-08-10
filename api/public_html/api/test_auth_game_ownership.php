@@ -587,10 +587,7 @@ $loginResponse = makeRequest("$baseUrl/login", 'POST', [
     'password' => $testPassword
 ]);
 
-
-    echo json_encode($loginResponse['body'], JSON_PRETTY_PRINT) . "\n\n";
-    exit(1);
-}
+?>
 
 // Test 3: Create a game while authenticated
 $gameName = 'Test Game ' . uniqid();
