@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Module 2: C# Programming Fundamentals - Code examples for Unity developers">
+    <meta name="keywords" content="c#, programming, variables, functions, classes, fundamentals">
+    <meta name="author" content="Nichita Levandovici">
+    <title>Module 2: C# Programming Fundamentals - Code Examples</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Module 2: C# Programming Fundamentals</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../index.html">Course</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>C# Programming Fundamentals</h1>
+            <p>Learn the fundamental concepts of C# programming</p>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>Code Examples</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('variables')">Variables</button>
+                    <button class="tab" onclick="showTab('functions')">Functions</button>
+                    <button class="tab" onclick="showTab('classes')">Classes</button>
+                    <button class="tab" onclick="showTab('arrays')">Arrays</button>
+                    <button class="tab" onclick="showTab('conditions')">Conditions</button>
+                </div>
+
+                <div id="variables" class="tab-content active">
+                    <h3>Example 1: Variables and Data Types</h3>
+                    <p>Basic data types and working with variables in C#:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class VariablesExample : MonoBehaviour
+{
+    // Numeric types
+    public int playerHealth = 100;
+    public float moveSpeed = 5.5f;
+    public double preciseValue = 3.14159;
+
+    // Text and logic
+    public string playerName = "Player";
+    public bool isAlive = true;
+    public char grade = 'A';
+
+    // Unity types
+    public Vector3 position;
+    public Color playerColor = Color.red;
+
+    void Start()
+    {
+        ShowVariableTypes();
+        PerformCalculations();
+    }
+
+    void ShowVariableTypes()
+    {
+        Debug.Log("Health (int): " + playerHealth);
+        Debug.Log("Speed (float): " + moveSpeed);
+        Debug.Log("Name (string): " + playerName);
+        Debug.Log("Alive (bool): " + isAlive);
+    }
+
+    void PerformCalculations()
+    {
+        int damage = 25;
+        int newHealth = playerHealth - damage;
+        Debug.Log($"Health after damage: {newHealth}");
+
+        float distance = moveSpeed * Time.deltaTime;
+        Debug.Log($"Distance per frame: {distance}");
+
+        bool isHealthLow = playerHealth < 30;
+        Debug.Log($"Low health? {isHealthLow}");
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            playerHealth -= 10;
+            Debug.Log("Damage! Health: " + playerHealth);
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="functions" class="tab-content">
+                    <h3>Example 2: Functions and Methods</h3>
+                    <p>Creating and using functions in C#:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class FunctionsExample : MonoBehaviour
+{
+    private int currentHealth = 100;
+    private int experience = 0;
+
+    void Start()
+    {
+        InitializePlayer();
+        ShowPlayerInfo();
+    }
+
+    // Function without parameters
+    void InitializePlayer()
+    {
+        currentHealth = 100;
+        experience = 0;
+        Debug.Log("Player initialized");
+    }
+
+    // Function with parameters
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        currentHealth = Mathf.Max(0, currentHealth);
+        Debug.Log($"Damage: {damage}. Health: {currentHealth}");
+    }
+
+    // Function with return value
+    bool IsAlive()
+    {
+        return currentHealth > 0;
+    }
+
+    // Function with multiple parameters
+    float CalculateDamage(float baseDamage, float multiplier)
+    {
+        return baseDamage * multiplier;
+    }
+
+    // Function with default parameter
+    void Heal(int healAmount = 20)
+    {
+        currentHealth += healAmount;
+        Debug.Log($"Healing: {healAmount}. Health: {currentHealth}");
+    }
+
+    public void ShowPlayerInfo()
+    {
+        Debug.Log($"Health: {currentHealth}");
+        Debug.Log($"Experience: {experience}");
+        Debug.Log($"Alive: {IsAlive()}");
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            float damage = CalculateDamage(20f, 1.5f);
+            TakeDamage(Mathf.RoundToInt(damage));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Heal();
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="classes" class="tab-content">
+                    <h3>Example 3: Classes and Objects</h3>
+                    <p>Creating and using classes in C#:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+// Base character class
+public class Character
+{
+    protected string characterName;
+    protected int health;
+    protected int maxHealth;
+
+    public string Name { get { return characterName; } }
+    public int Health { get { return health; } }
+    public bool IsAlive => health > 0;
+
+    public Character(string name, int maxHp)
+    {
+        characterName = name;
+        maxHealth = maxHp;
+        health = maxHealth;
+    }
+
+    public virtual void TakeDamage(int damage)
+    {
+        health -= damage;
+        health = Mathf.Max(0, health);
+        Debug.Log($"{characterName} took {damage} damage");
+    }
+}
+
+// Player class
+public class Player : Character
+{
+    private int experience;
+
+    public Player(string name) : base(name, 100)
+    {
+        experience = 0;
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        int reducedDamage = Mathf.Max(1, damage - 5);
+        base.TakeDamage(reducedDamage);
+        Debug.Log("Armor absorbed damage!");
+    }
+
+    public void AddExperience(int exp)
+    {
+        experience += exp;
+        Debug.Log($"Experience gained: {exp}");
+    }
+}
+
+// Enemy class
+public class Enemy : Character
+{
+    private int attackPower;
+
+    public Enemy(string name, int hp, int attack) : base(name, hp)
+    {
+        attackPower = attack;
+    }
+
+    public void Attack(Character target)
+    {
+        Debug.Log($"{characterName} attacks!");
+        target.TakeDamage(attackPower);
+    }
+}
+
+public class ClassesExample : MonoBehaviour
+{
+    private Player player;
+    private Enemy enemy;
+
+    void Start()
+    {
+        player = new Player("Hero");
+        enemy = new Enemy("Goblin", 50, 15);
+        
+        Debug.Log("Characters created!");
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            player.TakeDamage(10);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            enemy.Attack(player);
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="arrays" class="tab-content">
+                    <h3>Example 4: Arrays and Lists</h3>
+                    <p>Working with arrays and collections in C#:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+using System.Collections.Generic;
+
+public class ArraysExample : MonoBehaviour
+{
+    // Arrays
+    public string[] playerNames = {"Alex", "Maria", "John"};
+    public int[] scores = {100, 250, 180};
+
+    // Lists
+    public List&lt;string&gt; inventory = new List&lt;string&gt;();
+
+    void Start()
+    {
+        DemonstrateArrays();
+        DemonstrateLists();
+    }
+
+    void DemonstrateArrays()
+    {
+        Debug.Log("=== Arrays ===");
+        
+        // Creating an array
+        int[] numbers = new int[5];
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            numbers[i] = i * 10;
+        }
+
+        // Displaying array
+        foreach (int number in numbers)
+        {
+            Debug.Log("Number: " + number);
+        }
+
+        // Working with names and scores
+        for (int i = 0; i < playerNames.Length; i++)
+        {
+            Debug.Log($"{playerNames[i]} - {scores[i]} points");
+        }
+    }
+
+    void DemonstrateLists()
+    {
+        Debug.Log("=== Lists ===");
+        
+        // Adding elements
+        inventory.Add("Sword");
+        inventory.Add("Shield");
+        inventory.Add("Potion");
+
+        // Displaying list
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            Debug.Log($"{i + 1}. {inventory[i]}");
+        }
+
+        // Searching and removing
+        bool hasSword = inventory.Contains("Sword");
+        Debug.Log("Has sword: " + hasSword);
+
+        inventory.Remove("Potion");
+        Debug.Log("Potion used");
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            string[] items = {"Ring", "Amulet", "Scroll"};
+            string randomItem = items[Random.Range(0, items.Length)];
+            inventory.Add(randomItem);
+            Debug.Log("Found: " + randomItem);
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="conditions" class="tab-content">
+                    <h3>Example 5: Conditional Operators</h3>
+                    <p>Using conditions and loops in C#:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class ConditionsExample : MonoBehaviour
+{
+    public int playerLevel = 1;
+    public int playerHealth = 100;
+    public string playerClass = "Warrior";
+
+    void Start()
+    {
+        DemonstrateConditions();
+        DemonstrateLoops();
+    }
+
+    void DemonstrateConditions()
+    {
+        Debug.Log("=== Conditions ===");
+
+        // Simple if condition
+        if (playerHealth > 50)
+        {
+            Debug.Log("Health is OK");
+        }
+
+        // if-else
+        if (playerLevel >= 10)
+        {
+            Debug.Log("Experienced player");
+        }
+        else
+        {
+            Debug.Log("Beginner");
+        }
+
+        // if-else if-else
+        if (playerHealth > 80)
+        {
+            Debug.Log("Excellent health");
+        }
+        else if (playerHealth > 50)
+        {
+            Debug.Log("Good health");
+        }
+        else if (playerHealth > 20)
+        {
+            Debug.Log("Low health");
+        }
+        else
+        {
+            Debug.Log("Critical condition!");
+        }
+
+        // switch
+        switch (playerClass)
+        {
+            case "Warrior":
+                Debug.Log("Strong in close combat");
+                break;
+            case "Mage":
+                Debug.Log("Masters magic");
+                break;
+            case "Archer":
+                Debug.Log("Master of ranged combat");
+                break;
+            default:
+                Debug.Log("Unknown class");
+                break;
+        }
+    }
+
+    void DemonstrateLoops()
+    {
+        Debug.Log("=== Loops ===");
+
+        // for loop
+        Debug.Log("For loop:");
+        for (int i = 1; i <= 5; i++)
+        {
+            Debug.Log("Iteration: " + i);
+        }
+
+        // while loop
+        Debug.Log("While loop:");
+        int count = 0;
+        while (count < 3)
+        {
+            Debug.Log("Count: " + count);
+            count++;
+        }
+
+        // foreach loop with array
+        string[] weapons = {"Sword", "Bow", "Staff"};
+        Debug.Log("Weapons:");
+        foreach (string weapon in weapons)
+        {
+            Debug.Log("- " + weapon);
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            playerHealth -= 20;
+            CheckHealthStatus();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            playerLevel++;
+            CheckLevelRewards();
+        }
+    }
+
+    void CheckHealthStatus()
+    {
+        if (playerHealth <= 0)
+        {
+            Debug.Log("Player died!");
+        }
+        else if (playerHealth < 30)
+        {
+            Debug.Log("Need healing!");
+        }
+    }
+
+    void CheckLevelRewards()
+    {
+        if (playerLevel % 5 == 0)
+        {
+            Debug.Log("Level reward received!");
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Nichita Levandovici. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
