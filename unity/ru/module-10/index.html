@@ -33,7 +33,13 @@
         .tab-content.active { display: block; }
         .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
         .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
-        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
+        .module-navigation { background: #f8f9fa; padding: 30px 0; margin-top: 40px; border-top: 1px solid #e2e8f0; }
+        .module-navigation .container { display: flex; justify-content: space-between; align-items: center; }
+        .nav-btn { display: inline-flex; align-items: center; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; }
+        .nav-btn:hover { background: #5a67d8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
+        .prev-btn { margin-right: auto; }
+        .next-btn { margin-left: auto; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 0; }
 
         .nav {
             max-width: 1200px;
@@ -204,6 +210,9 @@
 
             .tab {
                 text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -240,12 +249,12 @@
                     <button class="tab" onclick="showTab('platform-specific')">Платформо-специфичные решения</button>
                 </div>
 
-                <div id="addressables" class="tab-content active">
+                <div id="advanced-scripting" class="tab-content active">
                     <div class="example">
                         <h3>Управление памятью с Addressables</h3>
                         <p>Эффективная загрузка и выгрузка ресурсов для оптимизации памяти.</p>
-                        <div class="code-block">using UnityEngine;
-                    <div class="code-block">using UnityEngine;
+                        <div class="code-example">
+                            <pre>using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using System.Collections.Generic;
@@ -282,6 +291,210 @@ public class AddressableManager : MonoBehaviour
         await audioHandle.Task;
         
         if (audioHandle.Status == AsyncOperationStatus.Succeeded)
+        {
+            loadedAssets["audio"] = audioHandle;
+            Debug.Log("Аудио загружено");
+        }
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="custom-editors" class="tab-content">
+                    <div class="example">
+                        <h3>Пользовательские редакторы</h3>
+                        <p>Создание инструментов для упрощения разработки.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
+using UnityEditor;
+
+[CustomEditor(typeof(PlayerController))]
+public class PlayerControllerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        
+        PlayerController player = (PlayerController)target;
+        
+        GUILayout.Space(10);
+        
+        if (GUILayout.Button("Reset Position"))
+        {
+            player.transform.position = Vector3.zero;
+        }
+        
+        if (GUILayout.Button("Add Health"))
+        {
+            player.AddHealth(10);
+        }
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="asset-management" class="tab-content">
+                    <div class="example">
+                        <h3>Управление ассетами</h3>
+                        <p>Автоматизация работы с ресурсами проекта.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
+using UnityEditor;
+using System.IO;
+
+public class AssetProcessor : AssetPostprocessor
+{
+    void OnPreprocessTexture()
+    {
+        TextureImporter importer = (TextureImporter)assetImporter;
+        
+        if (assetPath.Contains("UI/"))
+        {
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+        }
+        else if (assetPath.Contains("Textures/"))
+        {
+            importer.textureType = TextureImporterType.Default;
+            importer.maxTextureSize = 1024;
+        }
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="build-automation" class="tab-content">
+                    <div class="example">
+                        <h3>Автоматизация сборки</h3>
+                        <p>Скрипты для автоматической сборки проекта.</p>
+                        <div class="code-example">
+                            <pre>using UnityEditor;
+using UnityEngine;
+
+public class BuildScript
+{
+    [MenuItem("Build/Build All Platforms")]
+    public static void BuildAllPlatforms()
+    {
+        BuildWindows();
+        BuildAndroid();
+        BuildWebGL();
+    }
+    
+    static void BuildWindows()
+    {
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes = GetScenePaths();
+        options.locationPathName = "Builds/Windows/Game.exe";
+        options.target = BuildTarget.StandaloneWindows64;
+        options.options = BuildOptions.None;
+        
+        BuildPipeline.BuildPlayer(options);
+    }
+    
+    static string[] GetScenePaths()
+    {
+        return new string[] { "Assets/Scenes/MainMenu.unity", "Assets/Scenes/Game.unity" };
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="platform-specific" class="tab-content">
+                    <div class="example">
+                        <h3>Платформо-специфичные решения</h3>
+                        <p>Код для разных платформ и устройств.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
+
+public class PlatformManager : MonoBehaviour
+{
+    void Start()
+    {
+        ConfigureForPlatform();
+    }
+    
+    void ConfigureForPlatform()
+    {
+#if UNITY_ANDROID
+        ConfigureAndroid();
+#elif UNITY_IOS
+        ConfigureiOS();
+#elif UNITY_WEBGL
+        ConfigureWebGL();
+#else
+        ConfigureDesktop();
+#endif
+    }
+    
+    void ConfigureAndroid()
+    {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        Application.targetFrameRate = 60;
+    }
+    
+    void ConfigureiOS()
+    {
+        Application.targetFrameRate = 60;
+    }
+    
+    void ConfigureWebGL()
+    {
+        Application.targetFrameRate = 30;
+    }
+    
+    void ConfigureDesktop()
+    {
+        Application.targetFrameRate = -1;
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="module-navigation">
+        <div class="container">
+            <a href="../module-9/index.html" class="nav-btn prev-btn">← Модуль 9</a>
+            <a href="../module-11/index.html" class="nav-btn next-btn">Модуль 11 →</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Никита Левандович. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            // Скрыть все вкладки
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Убрать активный класс с кнопок
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Показать выбранную вкладку
+            document.getElementById(tabName).classList.add('active');
+            
+            // Добавить активный класс к нажатой кнопке
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
         {
             loadedAssets["audio"] = audioHandle;
             PlayAudio(audioHandle.Result);

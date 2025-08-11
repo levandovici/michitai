@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Модуль 8: Оптимизация и Профилирование - Примеры кода для Unity разработчиков">
-    <meta name="keywords" content="unity, оптимизация, профилирование, производительность, оптимизация">
+    <meta name="description" content="Модуль 8: Мультиплеер в Unity - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, мультиплеер, netcode, сеть, multiplayer">
     <meta name="author" content="Никита Левандович">
-    <title>Модуль 8: Оптимизация и Профилирование - Примеры кода</title>
+    <title>Модуль 8: Мультиплеер в Unity - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
@@ -35,178 +33,21 @@
         .tab-content.active { display: block; }
         .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
         .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
-        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
-
-        .nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #667eea;
-        }
-
-        .hero {
-            padding: 120px 2rem 80px;
-            text-align: center;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .examples-section {
-            background: white;
-            margin: -40px auto 40px;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #f0f0f0;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .tab {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            color: #666;
-            border-radius: 8px 8px 0 0;
-            transition: all 0.3s ease;
-        }
-
-        .tab.active {
-            color: #667eea;
-            background: #f8f9ff;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .tab:hover {
-            background: #f5f5f5;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .example {
-            margin-bottom: 30px;
-        }
-
-        .example h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .example p {
-            color: #666;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .code-block {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            color: #333;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background 0.3s ease;
-        }
-
-        .back-link:hover {
-            background: #5a6fd8;
-        }
-
+        .module-navigation { background: #f8f9fa; padding: 30px 0; margin-top: 40px; border-top: 1px solid #e2e8f0; }
+        .module-navigation .container { display: flex; justify-content: space-between; align-items: center; }
+        .nav-btn { display: inline-flex; align-items: center; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; }
+        .nav-btn:hover { background: #5a67d8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
+        .prev-btn { margin-right: auto; }
+        .next-btn { margin-left: auto; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 0; }
+        
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .nav {
-                padding: 0 1rem;
-            }
-
-            .examples-section {
-                margin: -20px 1rem 20px;
-                padding: 20px;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab {
-                text-align: center;
-            }
+            .hero-section h1 { font-size: 2.5rem; }
+            .hero-section p { font-size: 1.1rem; }
+            .container { padding: 0 1rem; }
+            .example-section { margin: -20px 1rem 20px; padding: 20px; }
+            .tabs { flex-direction: column; }
+            .tab { text-align: center; }
         }
     </style>
 </head>
@@ -228,7 +69,7 @@
     <section class="hero-section">
         <div class="container">
             <h1>Мультиплеер в Unity</h1>
-            <p>Изучите создание мультиплеерных игр с Netcode for GameObjects</p>
+            <p>Изучите создание многопользовательских игр с Unity Netcode</p>
         </div>
     </section>
 
