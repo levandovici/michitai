@@ -225,15 +225,43 @@
             font-size: 1rem;
             color: #2d3748;
         }
-        .module .module-btn {
-            background: #48bb78;
-            color: #1a202c;
+        .module-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .module .code-btn {
+            background: #4299e1;
+            color: white;
             padding: 10px 20px;
             font-size: 1rem;
-            margin-top: 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
         }
-        .module .module-btn:hover {
+        .module .code-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        .module .study-btn {
+            background: #48bb78;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+        .module .study-btn:hover {
             background: #38a169;
+            transform: translateY(-2px);
         }
         .chart-container {
             max-width: 800px;
@@ -570,7 +598,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Создай скрипт для управления персонажем (движение, здоровье, сохранение данных).</p>
                 <p class="outcomes"><strong>Итог:</strong> Понимание C# для создания игровой логики.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-1/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 2: Основы Unity</h3>
@@ -584,7 +615,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Создай сцену с движущимся кубом, реагирующим на физику и ввод.</p>
                 <p class="outcomes"><strong>Итог:</strong> Способность создавать простые сцены в Unity.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-2/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 3: Разработка 2D-игр</h3>
@@ -598,7 +632,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Разработай 2D-платформер с прыгающим персонажем, врагами и меню.</p>
                 <p class="outcomes"><strong>Итог:</strong> Полноценная 2D-игра с интерактивными элементами.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-3/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 4: Разработка 3D-игр</h3>
@@ -612,7 +649,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Построй 3D-приключение с игроком, врагами и AI-навигацией.</p>
                 <p class="outcomes"><strong>Итог:</strong> Навыки создания immersive 3D-игр.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-4/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 5: Промежуточные темы Unity</h3>
@@ -624,7 +664,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Оптимизируй сцену с частицами и создай HUD с мини-картой.</p>
                 <p class="outcomes"><strong>Итог:</strong> Умение создавать визуально привлекательные и оптимизированные игры.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-5/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 6: Основы сетевого программирования</h3>
@@ -636,7 +679,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Создай клиент-серверное приложение для чата.</p>
                 <p class="outcomes"><strong>Итог:</strong> Понимание основ сетевого программирования.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-6/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 7: Многопоточное программирование</h3>
@@ -648,7 +694,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Реализуй фоновое вычисление пути для AI в Unity.</p>
                 <p class="outcomes"><strong>Итог:</strong> Навыки оптимизации производительности через потоки.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-7/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 8: Мультиплеер в Unity</h3>
@@ -660,7 +709,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Разработай 2D-мультиплеерный шутер с синхронизированным геймплеем.</p>
                 <p class="outcomes"><strong>Итог:</strong> Способность создавать мультиплеерные игры.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-8/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 9: Data-Oriented Technology Stack (DOTS)</h3>
@@ -672,7 +724,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Построй игру с тысячами движущихся объектов, используя DOTS.</p>
                 <p class="outcomes"><strong>Итог:</strong> Навыки создания высокопроизводительных игр.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-9/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 10: Продвинутая оптимизация и выпуск</h3>
@@ -685,7 +740,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Оптимизируй и выпусти игру с аналитикой.</p>
                 <p class="outcomes"><strong>Итог:</strong> Готовая к релизу игра с монетизацией.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-10/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 11: Итоговый проект</h3>
@@ -697,7 +755,27 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Разработай и опубликуй полноценную игру.</p>
                 <p class="outcomes"><strong>Итог:</strong> Портфолио-готовая игра, демонстрирующая твои навыки.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="module-11/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
+            </div>
+            <div class="module">
+                <h3>Модуль 12: Блокчейн и Web3 игры</h3>
+                <p>Изучи технологии будущего! Создавай игры с NFT, криптовалютами и смарт-контрактами. Освой интеграцию кошельков, торговые площадки и токеномику.</p>
+                <ul>
+                    <li>Интеграция Web3 кошельков: MetaMask, WalletConnect.</li>
+                    <li>NFT системы: создание, торговля, редкость.</li>
+                    <li>Смарт-контракты: взаимодействие с блокчейном.</li>
+                    <li>Токеномика: игровые токены, стейкинг, вознаграждения.</li>
+                    <li>Торговые площадки: покупка и продажа игровых активов.</li>
+                </ul>
+                <p class="practice"><strong>Практика:</strong> Создай Web3 игру с NFT предметами и токеновой экономикой.</p>
+                <p class="outcomes"><strong>Итог:</strong> Навыки разработки современных блокчейн игр.</p>
+                <div class="module-buttons">
+                    <a href="module-12/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать обучение</a>
+                </div>
             </div>
         </div>
     </section>
@@ -924,12 +1002,12 @@
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ["Модуль 1", "Модуль 2", "Модуль 3", "Модуль 4", "Модуль 5", "Модуль 6", "Модуль 7", "Модуль 8", "Модуль 9", "Модуль 10", "Модуль 11"],
+                        labels: ["Модуль 1", "Модуль 2", "Модуль 3", "Модуль 4", "Модуль 5", "Модуль 6", "Модуль 7", "Модуль 8", "Модуль 9", "Модуль 10", "Модуль 11", "Модуль 12"],
                         datasets: [{
                             label: "Сложность курса",
-                            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                            backgroundColor: ["#4299e1", "#4299e1", "#4299e1", "#4299e1", "#4299e1", "#48bb78", "#48bb78", "#48bb78", "#f6ad55", "#f6ad55", "#f6ad55"],
-                            borderColor: ["#3182ce", "#3182ce", "#3182ce", "#3182ce", "#3182ce", "#38a169", "#38a169", "#38a169", "#ed8936", "#ed8936", "#ed8936"],
+                            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                            backgroundColor: ["#4299e1", "#4299e1", "#4299e1", "#4299e1", "#4299e1", "#48bb78", "#48bb78", "#48bb78", "#f6ad55", "#f6ad55", "#f6ad55", "#e53e3e"],
+                            borderColor: ["#3182ce", "#3182ce", "#3182ce", "#3182ce", "#3182ce", "#38a169", "#38a169", "#38a169", "#ed8936", "#ed8936", "#ed8936", "#c53030"],
                             borderWidth: 1
                         }]
                     },
