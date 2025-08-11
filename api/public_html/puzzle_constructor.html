@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockly Puzzle Logic Constructor - Michitai</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <!-- Blockly CDN -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1::before {
+            content: "🧩";
+            font-size: 1.2em;
+        }
+
+        .game-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .game-selector select {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .auth-panel {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .auth-panel.show {
+            display: block;
+        }
+
+        .auth-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .auth-form input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .auth-form button {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .auth-form button:hover {
+            background: #0056b3;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #a0aec0;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #718096;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+        }
+
+        .workspace-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            height: 600px;
+            position: relative;
+        }
+
+        #puzzle-constructor {
+            width: 100%;
+            height: 100%;
+        }
+
+        .status-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .status-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .status-item h4 {
+            color: #2d3748;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-item p {
+            color: #4a5568;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .simulation-panel {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .simulation-panel.show {
+            display: block;
+        }
+
+        .simulation-results {
+            margin-top: 10px;
+        }
+
+        .simulation-results h4 {
+            color: #2f855a;
+            margin-bottom: 10px;
+        }
+
+        .simulation-results ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .simulation-results li {
+            padding: 5px 0;
+            border-bottom: 1px solid #e6fffa;
+        }
+
+        .warning {
+            color: #d69e2e;
+        }
+
+        .error {
+            color: #e53e3e;
+        }
+
+        .success {
+            color: #38a169;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .autosave-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .autosave-indicator.show {
+            opacity: 1;
+        }
+
+        /* Navigation styles */
+        .nav-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .nav-brand h1 {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links a.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .toolbar {
+                justify-content: center;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .workspace-container {
+                height: 500px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <div class="container">
+        <div class="nav-header">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <img src="logo.png" alt="Michitai Logo">
+                    <h1>Puzzle Builder</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="profile.html"><i class="fas fa-user mr-1"></i>Profile</a>
+                    <a href="game_constructor.html"><i class="fas fa-hammer mr-1"></i>Constructor</a>
+                    <a href="puzzle_constructor.html" class="active"><i class="fas fa-puzzle-piece mr-1"></i>Builder</a>
+                    <a href="game_manager.html"><i class="fas fa-gamepad mr-1"></i>Games</a>
+                    <a href="docs.html"><i class="fas fa-book mr-1"></i>Docs</a>
+                    <a href="logout.html"><i class="fas fa-sign-out-alt mr-1"></i>Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Blockly Puzzle Logic Constructor</h1>
+            <p>Create multiplayer game logic using visual programming blocks</p>
+            
+            <!-- Game Selector -->
+            <div class="game-selector">
+                <label for="gameSelect"><strong>Select Game:</strong></label>
+                <select id="gameSelect">
+                    <option value="">Loading games...</option>
+                </select>
+                <button class="btn btn-secondary" onclick="loadGames()">🔄 Refresh</button>
+            </div>
+        </div>
+
+        <!-- Authentication Panel -->
+        <div id="authPanel" class="auth-panel">
+            <h3>🔐 Authentication Required</h3>
+            <p>Please login to access the puzzle constructor:</p>
+            <div class="auth-form">
+                <input type="email" id="authEmail" placeholder="Email" value="nichitalnc@gmail.com">
+                <input type="password" id="authPassword" placeholder="Password">
+                <button onclick="login()">Login</button>
+                <span id="authStatus"></span>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <button class="btn btn-success" onclick="saveLogic()">💾 Save Logic</button>
+            <button class="btn btn-primary" onclick="loadLogic()">📂 Load Logic</button>
+            <button class="btn btn-secondary" onclick="exportLogic()">📤 Export JSON</button>
+            <button class="btn btn-secondary" onclick="importLogic()">📥 Import JSON</button>
+            <button class="btn btn-warning" onclick="simulateLogic()">🧪 Test/Simulate</button>
+            <button class="btn btn-secondary" onclick="undoAction()">↶ Undo</button>
+            <button class="btn btn-secondary" onclick="redoAction()">↷ Redo</button>
+            <button class="btn btn-danger" onclick="clearWorkspace()">🗑️ Clear All</button>
+        </div>
+
+        <!-- Blockly Workspace -->
+        <div class="workspace-container">
+            <div id="puzzle-constructor"></div>
+        </div>
+
+        <!-- Status Panel -->
+        <div class="status-panel">
+            <h3>📊 Workspace Status</h3>
+            <div class="status-grid">
+                <div class="status-item">
+                    <h4>Blocks Count</h4>
+                    <p id="blocksCount">0</p>
+                </div>
+                <div class="status-item">
+                    <h4>Logic Size</h4>
+                    <p id="logicSize">0 KB</p>
+                </div>
+                <div class="status-item">
+                    <h4>Last Saved</h4>
+                    <p id="lastSaved">Never</p>
+                </div>
+                <div class="status-item">
+                    <h4>Auto-save</h4>
+                    <p id="autosaveStatus">Enabled</p>
+                </div>
+            </div>
+
+            <!-- Simulation Results -->
+            <div id="simulationPanel" class="simulation-panel">
+                <h4>🧪 Simulation Results</h4>
+                <div id="simulationResults" class="simulation-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="fileInput" class="file-input" accept=".json" onchange="handleFileImport(event)">
+
+    <!-- Auto-save indicator -->
+    <div id="autosaveIndicator" class="autosave-indicator">Auto-saved ✓</div>
+
+    <!-- JavaScript will be added in next part -->
+    <script src="js/puzzle_constructor.js"></script>
+</body>
+</html>

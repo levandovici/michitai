@@ -528,6 +528,87 @@ try {
                     $result = $this->gameManager->deleteGame($token, $gameId);
                     echo json_encode($result);
                     break;
+                case 'saveLogic':
+                    if ($method !== 'POST') {
+                        http_response_code(405);
+                        echo json_encode(['error' => 'Method not allowed']);
+                        return;
+                    }
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    if (!isset($input['game_id'])) {
+                        http_response_code(400);
+                        echo json_encode(['error' => 'Game ID required']);
+                        return;
+                    }
+                    $result = $this->gameManager->saveLogic($token, $input['game_id'], $input);
+                    echo json_encode($result);
+                    break;
+                case 'getLogic':
+                    if ($method !== 'GET') {
+                        http_response_code(405);
+                        echo json_encode(['error' => 'Method not allowed']);
+                        return;
+                    }
+                    $gameId = $_GET['game_id'] ?? null;
+                    if (!$gameId) {
+                        http_response_code(400);
+                        echo json_encode(['error' => 'Game ID required']);
+                        return;
+                    }
+                    $result = $this->gameManager->getLogic($token, $gameId);
+                    echo json_encode($result);
+                    break;
+                case 'exportLogic':
+                    if ($method !== 'POST') {
+                        http_response_code(405);
+                        echo json_encode(['error' => 'Method not allowed']);
+                        return;
+                    }
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    if (!isset($input['game_id'])) {
+                        http_response_code(400);
+                        echo json_encode(['error' => 'Game ID required']);
+                        return;
+                    }
+                    $result = $this->gameManager->exportLogic($token, $input['game_id']);
+                    if ($result['success']) {
+                        header('Content-Type: ' . $result['data']['content_type']);
+                        header('Content-Disposition: attachment; filename="' . $result['data']['filename'] . '"');
+                        echo $result['data']['content'];
+                    } else {
+                        echo json_encode($result);
+                    }
+                    break;
+                case 'importLogic':
+                    if ($method !== 'POST') {
+                        http_response_code(405);
+                        echo json_encode(['error' => 'Method not allowed']);
+                        return;
+                    }
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    if (!isset($input['game_id'])) {
+                        http_response_code(400);
+                        echo json_encode(['error' => 'Game ID required']);
+                        return;
+                    }
+                    $result = $this->gameManager->importLogic($token, $input['game_id'], $input);
+                    echo json_encode($result);
+                    break;
+                case 'simulateLogic':
+                    if ($method !== 'POST') {
+                        http_response_code(405);
+                        echo json_encode(['error' => 'Method not allowed']);
+                        return;
+                    }
+                    $input = json_decode(file_get_contents('php://input'), true);
+                    if (!isset($input['game_id'])) {
+                        http_response_code(400);
+                        echo json_encode(['error' => 'Game ID required']);
+                        return;
+                    }
+                    $result = $this->gameManager->simulateLogic($token, $input['game_id'], $input);
+                    echo json_encode($result);
+                    break;
                 default:
                     http_response_code(404);
                     echo json_encode(['error' => 'Game endpoint not found']);

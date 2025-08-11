@@ -609,4 +609,385 @@ class GameManager {
     public function createTimer($token, $timerData) {
         return ErrorCodes::createErrorResponse(ErrorCodes::API_NOT_IMPLEMENTED, 'Timers not yet implemented');
     }
+
+    /**
+     * Save Blockly puzzle logic for a game
+     * @param string $token User authentication token
+     * @param int $gameId Game ID
+     * @param array $logicData Logic data containing JSON workspace
+     * @return array API response
+     */
+    public function saveLogic($token, $gameId, $logicData) {
+        try {
+            $userId = $this->getUserIdFromToken($token);
+            if (!$userId) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+            }
+
+            // Verify game ownership
+            $stmt = $this->db->prepare("SELECT id FROM games WHERE id = ? AND user_id = ?");
+            $stmt->execute([$gameId, $userId]);
+            if (!$stmt->fetch()) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::GAME_NOT_FOUND);
+            }
+
+            // Validate logic JSON
+            if (!isset($logicData['logic']) || !is_array($logicData['logic'])) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::API_INVALID_INPUT, 'Invalid logic JSON format');
+            }
+
+            $logicJson = json_encode($logicData['logic']);
+            if ($logicJson === false) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::API_INVALID_INPUT, 'Invalid JSON data');
+            }
+
+            // Check size limits (max 10MB for logic)
+            $sizeBytes = strlen($logicJson);
+            if ($sizeBytes > 10 * 1024 * 1024) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::API_INVALID_INPUT, 'Logic JSON too large (max 10MB)');
+            }
+
+            // Update game with logic
+            $stmt = $this->db->prepare("
+                UPDATE games 
+                SET logic_json = ?, 
+                    logic_size_bytes = ?, 
+                    logic_updated_at = CURRENT_TIMESTAMP,
+                    logic_version = COALESCE(logic_version, 0) + 1
+                WHERE id = ? AND user_id = ?
+            ");
+            
+            $stmt->execute([$logicJson, $sizeBytes, $gameId, $userId]);
+
+            // Save version if versioning is enabled
+            if (isset($logicData['save_version']) && $logicData['save_version']) {
+                $this->saveLogicVersion($gameId, $userId, $logicJson, $sizeBytes, $logicData['version_description'] ?? null);
+            }
+
+            return ErrorCodes::createSuccessResponse([
+                'game_id' => $gameId,
+                'logic_size_bytes' => $sizeBytes,
+                'saved_at' => date('Y-m-d H:i:s')
+            ], 'Logic saved successfully');
+
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Save logic error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * Get Blockly puzzle logic for a game
+     * @param string $token User authentication token
+     * @param int $gameId Game ID
+     * @return array API response with logic JSON
+     */
+    public function getLogic($token, $gameId) {
+        try {
+            $userId = $this->getUserIdFromToken($token);
+            if (!$userId) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+            }
+
+            // Get game logic
+            $stmt = $this->db->prepare("
+                SELECT logic_json, logic_size_bytes, logic_version, logic_updated_at 
+                FROM games 
+                WHERE id = ? AND user_id = ?
+            ");
+            $stmt->execute([$gameId, $userId]);
+            $game = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$game) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::GAME_NOT_FOUND);
+            }
+
+            $logicJson = $game['logic_json'] ?? '{}';
+            $logic = json_decode($logicJson, true);
+
+            return ErrorCodes::createSuccessResponse([
+                'game_id' => $gameId,
+                'logic' => $logic,
+                'logic_size_bytes' => $game['logic_size_bytes'] ?? 0,
+                'logic_version' => $game['logic_version'] ?? 1,
+                'logic_updated_at' => $game['logic_updated_at']
+            ], 'Logic retrieved successfully');
+
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Get logic error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * Export logic as downloadable JSON file
+     * @param string $token User authentication token
+     * @param int $gameId Game ID
+     * @return array API response with file data
+     */
+    public function exportLogic($token, $gameId) {
+        try {
+            $logicResponse = $this->getLogic($token, $gameId);
+            if (!$logicResponse['success']) {
+                return $logicResponse;
+            }
+
+            $logic = $logicResponse['data']['logic'];
+            $gameName = $this->getGameName($gameId);
+            
+            $exportData = [
+                'game_id' => $gameId,
+                'game_name' => $gameName,
+                'logic' => $logic,
+                'exported_at' => date('Y-m-d H:i:s'),
+                'version' => $logicResponse['data']['logic_version']
+            ];
+
+            return ErrorCodes::createSuccessResponse([
+                'filename' => "game_{$gameId}_logic.json",
+                'content' => json_encode($exportData, JSON_PRETTY_PRINT),
+                'content_type' => 'application/json'
+            ], 'Logic exported successfully');
+
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Export logic error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * Import logic from JSON file
+     * @param string $token User authentication token
+     * @param int $gameId Game ID
+     * @param array $importData Import data with logic JSON
+     * @return array API response
+     */
+    public function importLogic($token, $gameId, $importData) {
+        try {
+            $userId = $this->getUserIdFromToken($token);
+            if (!$userId) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+            }
+
+            // Validate import data
+            if (!isset($importData['logic']) || !is_array($importData['logic'])) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::API_INVALID_INPUT, 'Invalid import data format');
+            }
+
+            // Save the imported logic
+            return $this->saveLogic($token, $gameId, [
+                'logic' => $importData['logic'],
+                'save_version' => true,
+                'version_description' => 'Imported from file'
+            ]);
+
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Import logic error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * Simulate/validate logic without saving
+     * @param string $token User authentication token
+     * @param int $gameId Game ID
+     * @param array $logicData Logic data to simulate
+     * @return array API response with simulation results
+     */
+    public function simulateLogic($token, $gameId, $logicData) {
+        try {
+            $userId = $this->getUserIdFromToken($token);
+            if (!$userId) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::AUTH_INVALID_TOKEN);
+            }
+
+            // Verify game ownership
+            $stmt = $this->db->prepare("SELECT id FROM games WHERE id = ? AND user_id = ?");
+            $stmt->execute([$gameId, $userId]);
+            if (!$stmt->fetch()) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::GAME_NOT_FOUND);
+            }
+
+            // Validate logic JSON
+            if (!isset($logicData['logic']) || !is_array($logicData['logic'])) {
+                return ErrorCodes::createErrorResponse(ErrorCodes::API_INVALID_INPUT, 'Invalid logic JSON format');
+            }
+
+            $startTime = microtime(true);
+            $simulationResult = $this->performLogicSimulation($logicData['logic']);
+            $executionTime = round((microtime(true) - $startTime) * 1000);
+
+            // Save simulation record
+            $this->saveSimulationRecord($gameId, $userId, $logicData['logic'], $simulationResult, $executionTime);
+
+            return ErrorCodes::createSuccessResponse([
+                'game_id' => $gameId,
+                'simulation_result' => $simulationResult,
+                'execution_time_ms' => $executionTime,
+                'validated_at' => date('Y-m-d H:i:s')
+            ], 'Logic simulation completed');
+
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Simulate logic error - " . $e->getMessage());
+            }
+            return ErrorCodes::createErrorResponse(ErrorCodes::SYS_INTERNAL_ERROR);
+        }
+    }
+
+    /**
+     * Save logic version for versioning
+     * @param int $gameId Game ID
+     * @param int $userId User ID
+     * @param string $logicJson Logic JSON string
+     * @param int $sizeBytes Size in bytes
+     * @param string|null $description Version description
+     */
+    private function saveLogicVersion($gameId, $userId, $logicJson, $sizeBytes, $description = null) {
+        try {
+            // Get current version number
+            $stmt = $this->db->prepare("SELECT MAX(version_number) as max_version FROM game_logic_versions WHERE game_id = ?");
+            $stmt->execute([$gameId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $nextVersion = ($result['max_version'] ?? 0) + 1;
+
+            // Save version
+            $stmt = $this->db->prepare("
+                INSERT INTO game_logic_versions (game_id, user_id, logic_json, logic_size_bytes, version_number, description)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([$gameId, $userId, $logicJson, $sizeBytes, $nextVersion, $description]);
+
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Save logic version error - " . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Perform basic logic simulation/validation
+     * @param array $logic Logic blocks to simulate
+     * @return array Simulation results
+     */
+    private function performLogicSimulation($logic) {
+        $result = [
+            'valid' => true,
+            'blocks_count' => 0,
+            'categories_used' => [],
+            'warnings' => [],
+            'errors' => []
+        ];
+
+        try {
+            // Basic validation of Blockly workspace structure
+            if (isset($logic['blocks']) && is_array($logic['blocks'])) {
+                $result['blocks_count'] = count($logic['blocks']);
+                
+                foreach ($logic['blocks'] as $block) {
+                    if (isset($block['type'])) {
+                        $category = $this->getBlockCategory($block['type']);
+                        if (!in_array($category, $result['categories_used'])) {
+                            $result['categories_used'][] = $category;
+                        }
+                    }
+                }
+            }
+
+            // Add simulation warnings/suggestions
+            if ($result['blocks_count'] === 0) {
+                $result['warnings'][] = 'No blocks found in workspace';
+            }
+
+            if ($result['blocks_count'] > 100) {
+                $result['warnings'][] = 'Large number of blocks may impact performance';
+            }
+
+        } catch (Exception $e) {
+            $result['valid'] = false;
+            $result['errors'][] = 'Simulation error: ' . $e->getMessage();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get block category from block type
+     * @param string $blockType Block type identifier
+     * @return string Category name
+     */
+    private function getBlockCategory($blockType) {
+        $categoryMap = [
+            'trigger_' => 'Main Puzzles',
+            'timer_' => 'Main Puzzles',
+            'data_' => 'Data Puzzles',
+            'logic_' => 'Logic',
+            'math_' => 'Operators',
+            'function_' => 'Functions',
+            'notification_' => 'Notifications',
+            'matchmaking_' => 'Matchmaking',
+            'room_' => 'Room',
+            'chat_' => 'Chat'
+        ];
+
+        foreach ($categoryMap as $prefix => $category) {
+            if (strpos($blockType, $prefix) === 0) {
+                return $category;
+            }
+        }
+
+        return 'Unknown';
+    }
+
+    /**
+     * Save simulation record
+     * @param int $gameId Game ID
+     * @param int $userId User ID
+     * @param array $logic Logic data
+     * @param array $result Simulation result
+     * @param int $executionTime Execution time in ms
+     */
+    private function saveSimulationRecord($gameId, $userId, $logic, $result, $executionTime) {
+        try {
+            $stmt = $this->db->prepare("
+                INSERT INTO game_logic_simulations (game_id, user_id, logic_json, simulation_result, status, execution_time_ms, completed_at)
+                VALUES (?, ?, ?, ?, 'completed', ?, CURRENT_TIMESTAMP)
+            ");
+            $stmt->execute([
+                $gameId, 
+                $userId, 
+                json_encode($logic), 
+                json_encode($result), 
+                $executionTime
+            ]);
+        } catch (Exception $e) {
+            if ($this->debug) {
+                error_log("GameManager: Save simulation record error - " . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Get game name for export
+     * @param int $gameId Game ID
+     * @return string Game name
+     */
+    private function getGameName($gameId) {
+        try {
+            $stmt = $this->db->prepare("SELECT name FROM games WHERE id = ?");
+            $stmt->execute([$gameId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['name'] ?? "Game_{$gameId}";
+        } catch (Exception $e) {
+            return "Game_{$gameId}";
+        }
+    }
 }

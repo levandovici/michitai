@@ -1,0 +1,297 @@
+{
+  "examples": [
+    {
+      "name": "Matchmaking to Room Creation",
+      "description": "When a player joins matchmaking, create a room and redirect them",
+      "category": "matchmaking",
+      "logic": {
+        "blocks": [
+          {
+            "type": "trigger_event",
+            "id": "trigger_1",
+            "fields": {
+              "NAME": "player_join_matchmaking"
+            },
+            "inputs": {
+              "PARAMS": {
+                "block": {
+                  "type": "data_get_player",
+                  "fields": {
+                    "FIELD": "player_id"
+                  }
+                }
+              },
+              "DO": {
+                "block": {
+                  "type": "room_create",
+                  "next": {
+                    "block": {
+                      "type": "matchmaking_redirect_to_room",
+                      "inputs": {
+                        "ROOM_ID": {
+                          "block": {
+                            "type": "data_get_game",
+                            "fields": {
+                              "FIELD": "last_created_room_id"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "variables": [],
+        "procedures": []
+      }
+    },
+    {
+      "name": "Timer Trigger Award Points",
+      "description": "When a timer completes, award points to the player",
+      "category": "timer",
+      "logic": {
+        "blocks": [
+          {
+            "type": "trigger_event",
+            "id": "trigger_2",
+            "fields": {
+              "NAME": "timer_completed"
+            },
+            "inputs": {
+              "PARAMS": {
+                "block": {
+                  "type": "text",
+                  "fields": {
+                    "TEXT": "daily_bonus_timer"
+                  }
+                }
+              },
+              "DO": {
+                "block": {
+                  "type": "data_set_player",
+                  "fields": {
+                    "FIELD": "points"
+                  },
+                  "inputs": {
+                    "VALUE": {
+                      "block": {
+                        "type": "math_arithmetic",
+                        "fields": {
+                          "OP": "ADD"
+                        },
+                        "inputs": {
+                          "A": {
+                            "block": {
+                              "type": "data_get_player",
+                              "fields": {
+                                "FIELD": "points"
+                              }
+                            }
+                          },
+                          "B": {
+                            "block": {
+                              "type": "math_number",
+                              "fields": {
+                                "NUM": 100
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "next": {
+                    "block": {
+                      "type": "notification_ingame",
+                      "inputs": {
+                        "MESSAGE": {
+                          "block": {
+                            "type": "text",
+                            "fields": {
+                              "TEXT": "Daily bonus: +100 points!"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "variables": [],
+        "procedures": []
+      }
+    },
+    {
+      "name": "Chat Broadcast System",
+      "description": "Broadcast important messages to all players in a room",
+      "category": "chat",
+      "logic": {
+        "blocks": [
+          {
+            "type": "trigger_event",
+            "id": "trigger_3",
+            "fields": {
+              "NAME": "admin_broadcast"
+            },
+            "inputs": {
+              "PARAMS": {
+                "block": {
+                  "type": "text",
+                  "fields": {
+                    "TEXT": "broadcast_message"
+                  }
+                }
+              },
+              "DO": {
+                "block": {
+                  "type": "controls_repeat_ext",
+                  "inputs": {
+                    "TIMES": {
+                      "block": {
+                        "type": "data_get_room",
+                        "fields": {
+                          "FIELD": "player_count"
+                        }
+                      }
+                    },
+                    "DO": {
+                      "block": {
+                        "type": "chat_write",
+                        "inputs": {
+                          "MESSAGE": {
+                            "block": {
+                              "type": "text_join",
+                              "inputs": {
+                                "ADD0": {
+                                  "block": {
+                                    "type": "text",
+                                    "fields": {
+                                      "TEXT": "[SYSTEM] "
+                                    }
+                                  }
+                                },
+                                "ADD1": {
+                                  "block": {
+                                    "type": "data_get_game",
+                                    "fields": {
+                                      "FIELD": "broadcast_message"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "PLAYER": {
+                            "block": {
+                              "type": "data_get_room",
+                              "fields": {
+                                "FIELD": "current_player"
+                              }
+                            }
+                          }
+                        },
+                        "next": {
+                          "block": {
+                            "type": "notification_push",
+                            "inputs": {
+                              "MESSAGE": {
+                                "block": {
+                                  "type": "text",
+                                  "fields": {
+                                    "TEXT": "New system message in chat"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "variables": [],
+        "procedures": []
+      }
+    }
+  ],
+  "block_definitions": {
+    "custom_blocks": [
+      {
+        "type": "trigger_event",
+        "category": "Main Puzzles",
+        "description": "Creates a trigger event that responds to game events",
+        "inputs": ["NAME", "PARAMS"],
+        "outputs": ["DO"]
+      },
+      {
+        "type": "timer_set",
+        "category": "Main Puzzles", 
+        "description": "Sets a timer with specified value and multiplier",
+        "inputs": ["NAME", "VALUE", "MULTIPLIER"]
+      },
+      {
+        "type": "data_get_player",
+        "category": "Data Puzzles",
+        "description": "Retrieves player data field",
+        "inputs": ["FIELD"],
+        "outputs": ["value"]
+      },
+      {
+        "type": "data_set_player",
+        "category": "Data Puzzles",
+        "description": "Sets player data field to specified value",
+        "inputs": ["FIELD", "VALUE"]
+      },
+      {
+        "type": "notification_ingame",
+        "category": "Notifications",
+        "description": "Sends in-game notification to player",
+        "inputs": ["MESSAGE", "PLAYER"]
+      },
+      {
+        "type": "room_create",
+        "category": "Room",
+        "description": "Creates a new game room",
+        "inputs": ["SETTINGS"],
+        "outputs": ["room_id"]
+      },
+      {
+        "type": "chat_write",
+        "category": "Chat",
+        "description": "Writes a message to chat",
+        "inputs": ["MESSAGE", "PLAYER", "ROOM"]
+      }
+    ]
+  },
+  "usage_guide": {
+    "getting_started": [
+      "1. Select a game from the dropdown",
+      "2. Drag blocks from the toolbox to the workspace",
+      "3. Connect blocks to create logic flow",
+      "4. Use the simulation feature to test your logic",
+      "5. Save your logic when ready"
+    ],
+    "best_practices": [
+      "Start with trigger events as entry points",
+      "Use data blocks to store and retrieve game state",
+      "Test logic frequently with the simulation feature",
+      "Keep logic modular and well-organized",
+      "Use meaningful names for variables and events"
+    ],
+    "common_patterns": [
+      "Event -> Condition -> Action",
+      "Timer -> Data Update -> Notification",
+      "Player Action -> Validation -> Response"
+    ]
+  }
+}
