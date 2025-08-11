@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 8: Unity Multiplayer - Examples</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 120px 2rem 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .examples-section {
+            background: white;
+            margin: -40px auto 40px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: #f8f9ff;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .example {
+            margin-bottom: 30px;
+        }
+
+        .example h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .example p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                padding: 0 1rem;
+            }
+
+            .examples-section {
+                margin: -20px 1rem 20px;
+                padding: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">Michitai Unity</div>
+            <ul class="nav-links">
+                <li><a href="../../en/index.html">Home</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Module 8: Unity Multiplayer</h1>
+            <p>Comprehensive multiplayer game examples with Netcode for GameObjects</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="examples-section" id="examples">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'netcode-basics')">Netcode Basics</button>
+                <button class="tab" onclick="openTab(event, 'network-objects')">NetworkObjects</button>
+                <button class="tab" onclick="openTab(event, 'rpc-communication')">RPC & Communication</button>
+                <button class="tab" onclick="openTab(event, 'network-variables')">NetworkVariables</button>
+                <button class="tab" onclick="openTab(event, 'multiplayer-game')">Multiplayer Game</button>
+            </div>
+
+            <div id="netcode-basics" class="tab-content active">
+                <div class="example">
+                    <h3>Netcode for GameObjects Basics</h3>
+                    <p>Setting up basic network architecture and client connections.</p>
+                    <div class="code-block">using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class NetworkManagerUI : MonoBehaviour
+{
+    [Header("UI Elements")]
+    public Button hostButton;
+    public Button clientButton;
+    public Text statusText;
+    
+    void Start()
+    {
+        hostButton.onClick.AddListener(StartHost);
+        clientButton.onClick.AddListener(StartClient);
+        Debug.Log("Network Manager UI initialized");
+    }
+    
+    public void StartHost()
+    {
+        if (NetworkManager.Singleton.StartHost())
+        {
+            statusText.text = "Host started successfully";
+            Debug.Log("Host server started");
+        }
+        else
+        {
+            statusText.text = "Failed to start host";
+        }
+    }
+    
+    public void StartClient()
+    {
+        if (NetworkManager.Singleton.StartClient())
+        {
+            statusText.text = "Connecting to server...";
+            Debug.Log("Client connecting");
+        }
+        else
+        {
+            statusText.text = "Connection failed";
+        }
+    }
+    
+    void Update()
+    {
+        if (NetworkManager.Singleton.IsHost)
+        {
+            statusText.text = $"Host - Clients: {NetworkManager.Singleton.ConnectedClients.Count}";
+        }
+        else if (NetworkManager.Singleton.IsClient && NetworkManager.Singleton.IsConnectedClient)
+        {
+            statusText.text = "Connected as client";
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="network-objects" class="tab-content">
+                <div class="example">
+                    <h3>NetworkObjects and Synchronization</h3>
+                    <p>Working with network objects and their synchronization between clients.</p>
+                    <div class="code-block">using Unity.Netcode;
+using UnityEngine;
+
+public class NetworkPlayer : NetworkBehaviour
+{
+    [Header("Player Settings")]
+    public float moveSpeed = 5f;
+    
+    private NetworkVariable&lt;Vector3&gt; networkPosition = new NetworkVariable&lt;Vector3&gt;();
+    private NetworkVariable&lt;Color&gt; playerColor = new NetworkVariable&lt;Color&gt;(
+        Color.white, 
+        NetworkVariableReadPermission.Everyone, 
+        NetworkVariableWritePermission.Owner
+    );
+    
+    public override void OnNetworkSpawn()
+    {
+        playerColor.OnValueChanged += OnColorChanged;
+        networkPosition.OnValueChanged += OnPositionChanged;
+        
+        if (IsOwner)
+        {
+            playerColor.Value = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        }
+        
+        GetComponent&lt;Renderer&gt;().material.color = playerColor.Value;
+        Debug.Log($"Network player created. Owner: {OwnerClientId}");
+    }
+    
+    void Update()
+    {
+        if (IsOwner)
+        {
+            HandleMovement();
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, networkPosition.Value, Time.deltaTime * 10f);
+        }
+    }
+    
+    void HandleMovement()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        
+        Vector3 movement = new Vector3(horizontal, 0, vertical) * moveSpeed * Time.deltaTime;
+        transform.Translate(movement);
+        
+        networkPosition.Value = transform.position;
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            playerColor.Value = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+        }
+    }
+    
+    void OnColorChanged(Color previousColor, Color newColor)
+    {
+        GetComponent&lt;Renderer&gt;().material.color = newColor;
+        Debug.Log($"Player color changed to: {newColor}");
+    }
+    
+    void OnPositionChanged(Vector3 previousPos, Vector3 newPos)
+    {
+        if (!IsOwner)
+        {
+            Debug.Log($"Position updated: {newPos}");
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="rpc-communication" class="tab-content">
+                <div class="example">
+                    <h3>RPC and Network Communication</h3>
+                    <p>Remote procedure calls for instant communication between clients.</p>
+                    <div class="code-block">using Unity.Netcode;
+using UnityEngine;
+
+public class NetworkCommunication : NetworkBehaviour
+{
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            SendMessage($"Player {OwnerClientId}: Hello!");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            NotifyAction("jumped");
+        }
+    }
+    
+    public void SendMessage(string message)
+    {
+        if (IsOwner)
+        {
+            SendMessageServerRpc(message);
+        }
+    }
+    
+    [ServerRpc]
+    void SendMessageServerRpc(string message)
+    {
+        Debug.Log($"Server received: {message}");
+        ReceiveMessageClientRpc(message);
+    }
+    
+    [ClientRpc]
+    void ReceiveMessageClientRpc(string message)
+    {
+        Debug.Log($"Message: {message}");
+    }
+    
+    public void NotifyAction(string action)
+    {
+        if (IsOwner)
+        {
+            NotifyActionServerRpc(OwnerClientId, action);
+        }
+    }
+    
+    [ServerRpc]
+    void NotifyActionServerRpc(ulong playerId, string action)
+    {
+        NotifyActionClientRpc(playerId, action);
+    }
+    
+    [ClientRpc]
+    void NotifyActionClientRpc(ulong playerId, string action)
+    {
+        Debug.Log($"Player {playerId} {action}");
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="network-variables" class="tab-content">
+                <div class="example">
+                    <h3>NetworkVariables and Game State</h3>
+                    <p>Synchronizing game state through NetworkVariables.</p>
+                    <div class="code-block">using Unity.Netcode;
+using UnityEngine;
+
+public class GameStateManager : NetworkBehaviour
+{
+    private NetworkVariable&lt;float&gt; gameTime = new NetworkVariable&lt;float&gt;(300f);
+    private NetworkVariable&lt;bool&gt; gameActive = new NetworkVariable&lt;bool&gt;(false);
+    private NetworkVariable&lt;int&gt; playerCount = new NetworkVariable&lt;int&gt;(0);
+    
+    public override void OnNetworkSpawn()
+    {
+        gameTime.OnValueChanged += OnTimeChanged;
+        gameActive.OnValueChanged += OnGameStateChanged;
+        playerCount.OnValueChanged += OnPlayerCountChanged;
+        
+        if (IsServer)
+        {
+            UpdatePlayerCount();
+        }
+        
+        Debug.Log("Game State Manager initialized");
+    }
+    
+    void Update()
+    {
+        if (IsServer && gameActive.Value && gameTime.Value > 0)
+        {
+            gameTime.Value -= Time.deltaTime;
+            
+            if (gameTime.Value <= 0)
+            {
+                EndGame();
+            }
+        }
+        
+        if (Input.GetKeyDown(KeyCode.G) && IsHost)
+        {
+            if (!gameActive.Value)
+                StartGame();
+            else
+                EndGame();
+        }
+    }
+    
+    void StartGame()
+    {
+        if (IsServer)
+        {
+            gameActive.Value = true;
+            gameTime.Value = 300f;
+            Debug.Log("Game started!");
+        }
+    }
+    
+    void EndGame()
+    {
+        if (IsServer)
+        {
+            gameActive.Value = false;
+            Debug.Log("Game ended!");
+        }
+    }
+    
+    void UpdatePlayerCount()
+    {
+        if (IsServer)
+        {
+            playerCount.Value = NetworkManager.Singleton.ConnectedClients.Count;
+        }
+    }
+    
+    void OnTimeChanged(float previousTime, float newTime)
+    {
+        Debug.Log($"Game time: {newTime:F1} sec");
+    }
+    
+    void OnGameStateChanged(bool previousState, bool newState)
+    {
+        Debug.Log($"Game state: {(newState ? "Active" : "Inactive")}");
+    }
+    
+    void OnPlayerCountChanged(int previousCount, int newCount)
+    {
+        Debug.Log($"Players connected: {newCount}");
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="multiplayer-game" class="tab-content">
+                <div class="example">
+                    <h3>Simple Multiplayer Game</h3>
+                    <p>Example of a basic multiplayer game with scoring and interaction.</p>
+                    <div class="code-block">using Unity.Netcode;
+using UnityEngine;
+
+public class MultiplayerGame : NetworkBehaviour
+{
+    [Header("Game Objects")]
+    public GameObject collectiblePrefab;
+    public Transform[] spawnPoints;
+    
+    private NetworkVariable&lt;int&gt; playerScore = new NetworkVariable&lt;int&gt;(0);
+    private NetworkList&lt;Vector3&gt; collectiblePositions;
+    
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+        {
+            collectiblePositions = new NetworkList&lt;Vector3&gt;();
+            SpawnCollectibles();
+        }
+        
+        playerScore.OnValueChanged += OnScoreChanged;
+        Debug.Log("Multiplayer game initialized");
+    }
+    
+    void SpawnCollectibles()
+    {
+        if (IsServer)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Vector3 randomPos = new Vector3(
+                    Random.Range(-10f, 10f),
+                    1f,
+                    Random.Range(-10f, 10f)
+                );
+                
+                var collectible = Instantiate(collectiblePrefab, randomPos, Quaternion.identity);
+                collectible.GetComponent&lt;NetworkObject&gt;().Spawn();
+                collectiblePositions.Add(randomPos);
+            }
+            
+            Debug.Log("Collectibles spawned");
+        }
+    }
+    
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Collectible") && IsOwner)
+        {
+            CollectItemServerRpc();
+        }
+    }
+    
+    [ServerRpc]
+    void CollectItemServerRpc()
+    {
+        playerScore.Value += 10;
+        Debug.Log($"Player {OwnerClientId} collected item. Score: {playerScore.Value}");
+        
+        // Spawn new collectible
+        Vector3 newPos = new Vector3(
+            Random.Range(-10f, 10f),
+            1f,
+            Random.Range(-10f, 10f)
+        );
+        
+        var newCollectible = Instantiate(collectiblePrefab, newPos, Quaternion.identity);
+        newCollectible.GetComponent&lt;NetworkObject&gt;().Spawn();
+    }
+    
+    void OnScoreChanged(int previousScore, int newScore)
+    {
+        Debug.Log($"Score updated: {newScore}");
+        UpdateScoreUI(newScore);
+    }
+    
+    void UpdateScoreUI(int score)
+    {
+        // Update score UI
+        var scoreText = GameObject.Find("ScoreText");
+        if (scoreText != null)
+        {
+            scoreText.GetComponent&lt;UnityEngine.UI.Text&gt;().text = $"Score: {score}";
+        }
+    }
+    
+    public void ResetGame()
+    {
+        if (IsServer)
+        {
+            ResetGameServerRpc();
+        }
+    }
+    
+    [ServerRpc(RequireOwnership = false)]
+    void ResetGameServerRpc()
+    {
+        // Reset all player scores
+        foreach (var client in NetworkManager.Singleton.ConnectedClients.Values)
+        {
+            var playerGame = client.PlayerObject.GetComponent&lt;MultiplayerGame&gt;();
+            if (playerGame != null)
+            {
+                playerGame.playerScore.Value = 0;
+            }
+        }
+        
+        Debug.Log("Game reset");
+    }
+}</div>
+                </div>
+            </div>
+
+            <a href="../../en/index.html" class="back-link">← Back to Courses</a>
+        </section>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
