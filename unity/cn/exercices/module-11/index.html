@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="模块11：游戏中的区块链和Web3 - Unity开发者的练习和代码示例">
+    <meta name="keywords" content="区块链, web3, unity, 以太坊, nft, 智能合约, 加密货币, 游戏">
+    <meta name="author" content="Nichita Levandovici">
+    <title>模块11：游戏中的区块链和Web3 - 练习</title>
+    <link rel="icon" href="../../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            background-color: #f5f7fa;
+            color: #1a202c;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            padding: 16px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #48bb78;
+        }
+        .header-spacer {
+            height: 80px;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .breadcrumb {
+            background: #e2e8f0;
+            padding: 15px 0;
+        }
+        .breadcrumb a {
+            color: #4a5568;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .breadcrumb a:hover {
+            color: #2d3748;
+        }
+        .main-content {
+            padding: 60px 0;
+        }
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .exercise-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #48bb78;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 15px;
+        }
+        .exercise-card .difficulty {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .difficulty.beginner {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .difficulty.intermediate {
+            background: #feebc8;
+            color: #c05621;
+        }
+        .difficulty.advanced {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        .exercise-card p {
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .exercise-card ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        .exercise-card ul li {
+            padding: 5px 0;
+            color: #2d3748;
+        }
+        .exercise-card ul li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .btn {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #38a169;
+        }
+        .btn-secondary {
+            background: #4299e1;
+        }
+        .btn-secondary:hover {
+            background: #3182ce;
+        }
+        .code-example {
+            background: #1a202c;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .code-example pre {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .example-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .example-section h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #48bb78;
+            padding-bottom: 10px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .tab.active {
+            color: #48bb78;
+            border-bottom: 2px solid #48bb78;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        footer {
+            background: #1a202c;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 80px;
+        }
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.4rem;
+            }
+            nav ul {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>模块11：区块链和Web3</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../../index.html">首页</a></li>
+                    <li><a href="../../../cn/index.html">课程</a></li>
+                    <li><a href="#exercises">练习</a></li>
+                    <li><a href="#examples">示例</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>游戏中的区块链和Web3</h1>
+            <p>学习将区块链技术集成到Unity游戏中</p>
+        </div>
+    </section>
+
+    <section class="breadcrumb">
+        <div class="container">
+            <a href="../../../index.html">首页</a> > 
+            <a href="../../../cn/index.html">Unity课程</a> > 
+            <span>模块11：区块链和Web3</span>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="exercises">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px; color: #1a202c;">互动练习</h2>
+                
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <span class="difficulty beginner">初级</span>
+                        <h3>练习1：钱包连接</h3>
+                        <p>实现基本的MetaMask钱包连接系统、余额显示和连接状态管理。</p>
+                        <ul>
+                            <li>连接到MetaMask</li>
+                            <li>获取和显示ETH余额</li>
+                            <li>处理连接错误</li>
+                            <li>Unity UI集成</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(1)">开始练习</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty intermediate">中级</span>
+                        <h3>练习2：NFT显示系统</h3>
+                        <p>创建一个UI系统来显示玩家的NFT收藏，具有过滤和排序功能。</p>
+                        <ul>
+                            <li>从区块链加载NFT</li>
+                            <li>显示NFT元数据</li>
+                            <li>按稀有度过滤</li>
+                            <li>收藏排序</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(2)">开始练习</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty intermediate">中级</span>
+                        <h3>练习3：代币交易</h3>
+                        <p>构建一个系统来处理使用加密货币代币的游戏内购买。</p>
+                        <ul>
+                            <li>发送代币交易</li>
+                            <li>交易确认</li>
+                            <li>更新游戏状态</li>
+                            <li>网络错误处理</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(3)">开始练习</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty advanced">高级</span>
+                        <h3>练习4：智能合约交互</h3>
+                        <p>为游戏市场实现完整的智能合约交互。</p>
+                        <ul>
+                            <li>调用智能合约函数</li>
+                            <li>处理合约事件</li>
+                            <li>管理交易Gas</li>
+                            <li>交易安全</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(4)">开始练习</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty advanced">高级</span>
+                        <h3>练习5：边玩边赚机制</h3>
+                        <p>设计和实现带有代币奖励的边玩边赚系统。</p>
+                        <ul>
+                            <li>成就奖励系统</li>
+                            <li>游戏代币经济学</li>
+                            <li>经济平衡</li>
+                            <li>反欺诈保护</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(5)">开始练习</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="examples" class="example-section">
+                <h2>代码示例</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('wallet')">钱包连接</button>
+                    <button class="tab" onclick="showTab('nft')">NFT管理</button>
+                    <button class="tab" onclick="showTab('contract')">智能合约</button>
+                </div>
+
+                <div id="wallet" class="tab-content active">
+                    <h3>示例：Web3钱包连接</h3>
+                    <p>此示例展示如何将MetaMask钱包连接到Unity游戏：</p>
+                    <div class="code-example">
+                        <pre><code>using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using Nethereum.Web3;
+
+/// <summary>
+/// 从Unity连接到Web3钱包（MetaMask）
+/// 演示与区块链钱包建立连接
+/// 并执行基本操作
+/// </summary>
+public class WalletConnection : MonoBehaviour
+{
+    [Header("区块链配置")]
+    [SerializeField] private string rpcUrl = "https://mainnet.infura.io/v3/YOUR_PROJECT_ID";
+    
+    private Web3 web3;
+    public string PlayerWalletAddress { get; private set; }
+    
+    // UI更新事件
+    public event Action&lt;string&gt; OnWalletConnected;
+    public event Action&lt;decimal&gt; OnBalanceUpdated;
+
+    void Start()
+    {
+        InitializeWeb3();
+    }
+
+    /// <summary>
+    /// 初始化Web3连接
+    /// </summary>
+    private void InitializeWeb3()
+    {
+        try
+        {
+            web3 = new Web3(rpcUrl);
+            Debug.Log("Web3连接初始化成功");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Web3初始化失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 连接到MetaMask钱包
+    /// </summary>
+    public async Task&lt;bool&gt; ConnectWallet()
+    {
+        try
+        {
+            // 请求账户访问
+            var accounts = await RequestAccountAccess();
+            
+            if (accounts != null && accounts.Length > 0)
+            {
+                PlayerWalletAddress = accounts[0];
+                Debug.Log($"钱包已连接: {PlayerWalletAddress}");
+                
+                OnWalletConnected?.Invoke(PlayerWalletAddress);
+                await UpdateBalance();
+                
+                return true;
+            }
+            
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"钱包连接失败: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 获取当前ETH余额
+    /// </summary>
+    public async Task UpdateBalance()
+    {
+        if (string.IsNullOrEmpty(PlayerWalletAddress)) return;
+
+        try
+        {
+            var balanceWei = await web3.Eth.GetBalance.SendRequestAsync(PlayerWalletAddress);
+            var balanceEth = Web3.Convert.FromWei(balanceWei.Value);
+            
+            Debug.Log($"钱包余额: {balanceEth} ETH");
+            OnBalanceUpdated?.Invoke(balanceEth);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"获取余额失败: {ex.Message}");
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="nft" class="tab-content">
+                    <h3>示例：NFT管理</h3>
+                    <p>游戏中处理NFT代币的系统：</p>
+                    <div class="code-example">
+                        <pre><code>using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// Unity游戏中的NFT管理
+/// 加载、显示和与NFT代币交互
+/// </summary>
+public class NFTManager : MonoBehaviour 
+{
+    [System.Serializable]
+    public class GameNFT
+    {
+        public string tokenId;
+        public string name;
+        public string description;
+        public string imageUrl;
+        public string rarity;
+        public Dictionary&lt;string, object&gt; attributes;
+        
+        public GameNFT(string id, string nftName, string desc, string image, string nftRarity)
+        {
+            tokenId = id;
+            name = nftName;
+            description = desc;
+            imageUrl = image;
+            rarity = nftRarity;
+            attributes = new Dictionary&lt;string, object&gt;();
+        }
+    }
+
+    private List&lt;GameNFT&gt; playerNFTs = new List&lt;GameNFT&gt;();
+    
+    /// <summary>
+    /// 从区块链加载玩家的NFT
+    /// </summary>
+    public async Task LoadPlayerNFTs(string playerAddress)
+    {
+        try
+        {
+            playerNFTs.Clear();
+            
+            // 获取玩家拥有的NFT数量
+            var balance = await GetNFTBalance(playerAddress);
+            Debug.Log($"玩家拥有 {balance} 个NFT");
+            
+            // 加载每个NFT
+            for (int i = 0; i < balance; i++)
+            {
+                var tokenId = await GetTokenByIndex(playerAddress, i);
+                var nft = await LoadNFTMetadata(tokenId);
+                
+                if (nft != null)
+                {
+                    playerNFTs.Add(nft);
+                }
+            }
+            
+            Debug.Log($"为玩家加载了 {playerNFTs.Count} 个NFT");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"加载NFT失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 按稀有度过滤NFT
+    /// </summary>
+    public List&lt;GameNFT&gt; GetNFTsByRarity(string rarity)
+    {
+        return playerNFTs.FindAll(nft => 
+            nft.rarity.Equals(rarity, StringComparison.OrdinalIgnoreCase));
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="contract" class="tab-content">
+                    <h3>示例：Solidity智能合约</h3>
+                    <p>游戏代币的基本智能合约：</p>
+                    <div class="code-example">
+                        <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+/**
+ * @title GameCoin
+ * @dev Unity游戏的游戏货币
+ * 包括边玩边赚机制和游戏内购买
+ */
+contract GameCoin is ERC20, Ownable {
+    uint256 public constant MAX_SUPPLY = 1000000000 * 10**18; // 10亿代币
+    
+    // 跟踪玩家成就的映射
+    mapping(address => uint256) public playerScore;
+    mapping(address => uint256) public lastRewardClaim;
+    
+    // 游戏集成事件
+    event RewardClaimed(address indexed player, uint256 amount, uint256 score);
+    event ScoreUpdated(address indexed player, uint256 newScore);
+    
+    constructor() ERC20("GameCoin", "GC") {
+        // 向合约所有者初始铸造
+        _mint(msg.sender, 100000000 * 10**18); // 1亿代币
+    }
+    
+    /**
+     * @dev 更新玩家分数（由游戏服务器调用）
+     * 只有合约所有者可以更新分数
+     */
+    function updatePlayerScore(address player, uint256 score) external onlyOwner {
+        playerScore[player] = score;
+        emit ScoreUpdated(player, score);
+    }
+    
+    /**
+     * @dev 允许玩家领取每日奖励
+     * 玩家可以根据他们的分数每天领取一次
+     */
+    function claimDailyReward() external {
+        require(block.timestamp >= lastRewardClaim[msg.sender] + 1 days, 
+                "今天已经领取过了");
+        require(playerScore[msg.sender] > 0, "没有记录的分数");
+        
+        // 根据玩家分数计算奖励（每100分获得1个代币）
+        uint256 reward = playerScore[msg.sender] / 100;
+        require(reward > 0, "分数太低无法获得奖励");
+        
+        // 检查最大供应量
+        require(totalSupply() + reward <= MAX_SUPPLY, 
+                "将超过最大供应量");
+        
+        // 更新最后领取时间
+        lastRewardClaim[msg.sender] = block.timestamp;
+        
+        // 向玩家铸造奖励代币
+        _mint(msg.sender, reward);
+        
+        emit RewardClaimed(msg.sender, reward, playerScore[msg.sender]);
+    }
+    
+    /**
+     * @dev 销毁代币（用于游戏内购买）
+     */
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Nichita Levandovici. 版权所有。</p>
+            <p>Unity和编程课程 | <a href="mailto:contact@michitai.com" style="color: #48bb78;">contact@michitai.com</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        function showTab(tabName) {
+            // 隐藏所有标签页
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 显示选中的标签页
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function startExercise(exerciseNumber) {
+            alert(`开始练习 ${exerciseNumber}！在实际实现中，这里将是一个交互式开发环境。`);
+            
+            // 在实际实现中，这里将：
+            // - 导航到练习页面
+            // - 加载交互式环境
+            // - 初始化测试
+            
+            console.log(`练习 ${exerciseNumber} 已开始`);
+        }
+
+        // 滚动时卡片动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 为练习卡片应用动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.exercise-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
