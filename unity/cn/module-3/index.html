@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="模块3：Unity物理和刚体 - Unity开发者代码示例">
+    <meta name="keywords" content="unity, 物理, 刚体, 碰撞, 力, 关节">
+    <meta name="author" content="尼基塔·列万多维奇">
+    <title>模块3：Unity物理和刚体 - 代码示例</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', 'Microsoft YaHei', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>模块3：Unity物理和刚体</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">首页</a></li>
+                    <li><a href="../index.html">课程</a></li>
+                    <li><a href="#examples">示例</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Unity物理和刚体</h1>
+            <p>学习Unity中的物理模拟和刚体使用</p>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>代码示例</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('rigidbody')">刚体</button>
+                    <button class="tab" onclick="showTab('forces')">力</button>
+                    <button class="tab" onclick="showTab('joints')">关节</button>
+                    <button class="tab" onclick="showTab('collisions')">碰撞</button>
+                    <button class="tab" onclick="showTab('physics')">物理</button>
+                </div>
+
+                <div id="rigidbody" class="tab-content active">
+                    <h3>示例1：刚体基础</h3>
+                    <p>使用刚体组件及其属性：</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class RigidbodyExample : MonoBehaviour
+{
+    [Header("刚体设置")]
+    public float mass = 1f;
+    public float drag = 0.5f;
+    public float angularDrag = 0.05f;
+    
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent&lt;Rigidbody&gt;();
+        
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent&lt;Rigidbody&gt;();
+        }
+
+        SetupRigidbody();
+    }
+
+    void SetupRigidbody()
+    {
+        rb.mass = mass;
+        rb.drag = drag;
+        rb.angularDrag = angularDrag;
+        rb.useGravity = true;
+        
+        Debug.Log($"刚体已配置：质量={mass}");
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            rb.useGravity = !rb.useGravity;
+            Debug.Log($"重力：{rb.useGravity}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            rb.isKinematic = !rb.isKinematic;
+            Debug.Log($"运动学：{rb.isKinematic}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetRigidbody();
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShowInfo();
+        }
+    }
+
+    void ResetRigidbody()
+    {
+        rb.position = Vector3.zero;
+        rb.rotation = Quaternion.identity;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        Debug.Log("刚体已重置");
+    }
+
+    void ShowInfo()
+    {
+        Debug.Log($"速度：{rb.velocity}");
+        Debug.Log($"位置：{rb.position}");
+        Debug.Log($"休眠：{rb.IsSleeping()}");
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="forces" class="tab-content">
+                    <h3>示例2：施加力</h3>
+                    <p>对刚体施加力的不同方法：</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class ForcesExample : MonoBehaviour
+{
+    [Header("力")]
+    public float forceAmount = 10f;
+    public float jumpForce = 300f;
+    public float moveSpeed = 5f;
+    
+    private Rigidbody rb;
+    private bool isGrounded = false;
+
+    void Start()
+    {
+        rb = GetComponent&lt;Rigidbody&gt;();
+    }
+
+    void Update()
+    {
+        HandleMovement();
+        HandleForces();
+    }
+
+    void HandleMovement()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
+        rb.AddForce(moveDirection * moveSpeed);
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce);
+            Debug.Log("跳跃！");
+        }
+    }
+
+    void HandleForces()
+    {
+        // 冲量 (F)
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Vector3 impulse = transform.forward * forceAmount;
+            rb.AddForce(impulse, ForceMode.Impulse);
+            Debug.Log("冲量！");
+        }
+
+        // 爆炸 (E)
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Vector3 explosion = Vector3.up + Random.insideUnitSphere;
+            rb.AddForce(explosion * forceAmount, ForceMode.VelocityChange);
+            Debug.Log("爆炸！");
+        }
+
+        // 扭矩 (T)
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            rb.AddTorque(Vector3.up * forceAmount);
+            Debug.Log("扭矩！");
+        }
+
+        // 在位置施力 (P)
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Vector3 position = transform.position + Vector3.right;
+            rb.AddForceAtPosition(Vector3.forward * forceAmount, position);
+            Debug.Log("在位置施力！");
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="joints" class="tab-content">
+                    <h3>示例3：物理关节</h3>
+                    <p>使用不同类型的关节：</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class JointsExample : MonoBehaviour
+{
+    [Header("关节")]
+    public GameObject connectedObject;
+    public float springForce = 50f;
+    public float damperForce = 5f;
+    
+    private Joint currentJoint;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CreateFixedJoint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CreateHingeJoint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CreateSpringJoint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            RemoveJoint();
+        }
+    }
+
+    void CreateFixedJoint()
+    {
+        RemoveJoint();
+        
+        FixedJoint joint = gameObject.AddComponent&lt;FixedJoint&gt;();
+        if (connectedObject != null)
+        {
+            joint.connectedBody = connectedObject.GetComponent&lt;Rigidbody&gt;();
+        }
+        joint.breakForce = 1000f;
+        
+        currentJoint = joint;
+        Debug.Log("固定关节已创建");
+    }
+
+    void CreateHingeJoint()
+    {
+        RemoveJoint();
+        
+        HingeJoint joint = gameObject.AddComponent&lt;HingeJoint&gt;();
+        if (connectedObject != null)
+        {
+            joint.connectedBody = connectedObject.GetComponent&lt;Rigidbody&gt;();
+        }
+        
+        joint.axis = Vector3.right;
+        joint.useLimits = true;
+        
+        JointLimits limits = joint.limits;
+        limits.min = -90f;
+        limits.max = 90f;
+        joint.limits = limits;
+        
+        currentJoint = joint;
+        Debug.Log("铰链关节已创建");
+    }
+
+    void CreateSpringJoint()
+    {
+        RemoveJoint();
+        
+        SpringJoint joint = gameObject.AddComponent&lt;SpringJoint&gt;();
+        if (connectedObject != null)
+        {
+            joint.connectedBody = connectedObject.GetComponent&lt;Rigidbody&gt;();
+        }
+        
+        joint.spring = springForce;
+        joint.damper = damperForce;
+        joint.minDistance = 1f;
+        joint.maxDistance = 5f;
+        
+        currentJoint = joint;
+        Debug.Log("弹簧关节已创建");
+    }
+
+    void RemoveJoint()
+    {
+        if (currentJoint != null)
+        {
+            DestroyImmediate(currentJoint);
+            currentJoint = null;
+            Debug.Log("关节已移除");
+        }
+    }
+
+    void OnJointBreak(float breakForce)
+    {
+        Debug.Log($"关节断裂！力：{breakForce}");
+        currentJoint = null;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="collisions" class="tab-content">
+                    <h3>示例4：高级碰撞</h3>
+                    <p>使用碰撞和物理材质：</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class CollisionsExample : MonoBehaviour
+{
+    [Header("碰撞")]
+    public PhysicMaterial bouncyMaterial;
+    public float damageThreshold = 5f;
+    
+    private Rigidbody rb;
+    private Collider col;
+    private int collisionCount = 0;
+
+    void Start()
+    {
+        rb = GetComponent&lt;Rigidbody&gt;();
+        col = GetComponent&lt;Collider&gt;();
+        
+        CreateBouncyMaterial();
+    }
+
+    void CreateBouncyMaterial()
+    {
+        if (bouncyMaterial == null)
+        {
+            bouncyMaterial = new PhysicMaterial("Bouncy");
+            bouncyMaterial.bounciness = 0.9f;
+            bouncyMaterial.dynamicFriction = 0.1f;
+            bouncyMaterial.staticFriction = 0.1f;
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            col.material = bouncyMaterial;
+            Debug.Log("弹性材质已应用");
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            PerformRaycast();
+        }
+    }
+
+    void PerformRaycast()
+    {
+        Vector3 direction = transform.forward;
+        float distance = 10f;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, direction, out hit, distance))
+        {
+            Debug.Log($"射线命中：{hit.collider.name}");
+            Debug.Log($"距离：{hit.distance}");
+            
+            // 施加力
+            Rigidbody hitRb = hit.collider.GetComponent&lt;Rigidbody&gt;();
+            if (hitRb != null)
+            {
+                hitRb.AddForce(direction * 10f, ForceMode.Impulse);
+            }
+        }
+        
+        Debug.DrawRay(transform.position, direction * distance, Color.blue, 2f);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        collisionCount++;
+        Debug.Log($"碰撞 #{collisionCount} 与：{collision.gameObject.name}");
+        
+        float impactForce = collision.relativeVelocity.magnitude;
+        Debug.Log($"冲击力：{impactForce}");
+
+        if (impactForce > damageThreshold)
+        {
+            Debug.Log("强烈冲击造成伤害！");
+        }
+
+        // 分析接触点
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            Debug.Log($"接触点：{contact.point}");
+            Debug.Log($"法线：{contact.normal}");
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"进入触发器：{other.name}");
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        Debug.Log($"离开触发器：{other.name}");
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="physics" class="tab-content">
+                    <h3>示例5：物理设置</h3>
+                    <p>使用全局物理设置：</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class PhysicsSettings : MonoBehaviour
+{
+    [Header("物理设置")]
+    public Vector3 customGravity = new Vector3(0, -9.81f, 0);
+    public float timeScale = 1f;
+    
+    private Vector3 originalGravity;
+
+    void Start()
+    {
+        originalGravity = Physics.gravity;
+        ShowPhysicsInfo();
+    }
+
+    void Update()
+    {
+        HandlePhysicsControls();
+    }
+
+    void HandlePhysicsControls()
+    {
+        // 切换重力 (G)
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            ToggleGravity();
+        }
+
+        // 自定义重力 (C)
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            SetCustomGravity();
+        }
+
+        // 重置重力 (N)
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            ResetGravity();
+        }
+
+        // 慢动作 (T)
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ToggleSlowMotion();
+        }
+
+        // 物理信息 (I)
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShowPhysicsInfo();
+        }
+    }
+
+    void ToggleGravity()
+    {
+        if (Physics.gravity.magnitude > 0)
+        {
+            Physics.gravity = Vector3.zero;
+            Debug.Log("重力已禁用");
+        }
+        else
+        {
+            Physics.gravity = originalGravity;
+            Debug.Log("重力已启用");
+        }
+    }
+
+    void SetCustomGravity()
+    {
+        Physics.gravity = customGravity;
+        Debug.Log($"自定义重力已设置：{customGravity}");
+    }
+
+    void ResetGravity()
+    {
+        Physics.gravity = originalGravity;
+        Debug.Log("重力已重置");
+    }
+
+    void ToggleSlowMotion()
+    {
+        if (Time.timeScale == 1f)
+        {
+            Time.timeScale = 0.3f;
+            Debug.Log("慢动作");
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            Debug.Log("正常时间");
+        }
+    }
+
+    void ShowPhysicsInfo()
+    {
+        Debug.Log("=== 物理设置 ===");
+        Debug.Log($"重力：{Physics.gravity}");
+        Debug.Log($"时间缩放：{Time.timeScale}");
+        Debug.Log($"固定时间步：{Time.fixedDeltaTime}");
+        Debug.Log($"最大角速度：{Physics.defaultMaxAngularSpeed}");
+    }
+
+    // 创建物理对象示例
+    void CreatePhysicsObject()
+    {
+        GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        obj.transform.position = transform.position + Vector3.up * 3f;
+        
+        Rigidbody rb = obj.AddComponent&lt;Rigidbody&gt;();
+        rb.mass = Random.Range(0.5f, 2f);
+        
+        // 随机材质
+        Collider col = obj.GetComponent&lt;Collider&gt;();
+        PhysicMaterial mat = new PhysicMaterial();
+        mat.bounciness = Random.Range(0f, 1f);
+        mat.dynamicFriction = Random.Range(0f, 1f);
+        col.material = mat;
+        
+        Debug.Log($"对象已创建，质量：{rb.mass}");
+    }
+
+    void OnDrawGizmos()
+    {
+        // 可视化重力方向
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Physics.gravity.normalized * 3f);
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 尼基塔·列万多维奇. 版权所有。</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
