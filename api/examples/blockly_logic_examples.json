@@ -1,0 +1,328 @@
+{
+  "examples": [
+    {
+      "name": "Simple Quiz Game",
+      "description": "A basic quiz game where players answer questions and earn points",
+      "logic": {
+        "blocks": {
+          "languageVersion": 0,
+          "blocks": [
+            {
+              "type": "game_start",
+              "id": "start_block",
+              "x": 50,
+              "y": 50,
+              "next": {
+                "block": {
+                  "type": "send_notification",
+                  "id": "welcome_msg",
+                  "fields": {
+                    "MESSAGE": "Welcome to the Quiz Game! First to 10 points wins!"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "set_timer",
+                      "id": "question_timer",
+                      "fields": {
+                        "DURATION": "30",
+                        "REPEAT": "true"
+                      },
+                      "next": {
+                        "block": {
+                          "type": "ask_question",
+                          "id": "quiz_question",
+                          "fields": {
+                            "QUESTION": "What is 2 + 2?",
+                            "CORRECT_ANSWER": "4"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "player_answer",
+              "id": "answer_handler",
+              "x": 300,
+              "y": 50,
+              "next": {
+                "block": {
+                  "type": "if_correct_answer",
+                  "id": "check_answer",
+                  "next": {
+                    "block": {
+                      "type": "add_points",
+                      "id": "award_points",
+                      "fields": {
+                        "POINTS": "1"
+                      },
+                      "next": {
+                        "block": {
+                          "type": "if_score_greater",
+                          "id": "check_win",
+                          "fields": {
+                            "SCORE": "10"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "end_game",
+                              "id": "game_end",
+                              "fields": {
+                                "MESSAGE": "Game Over! Winner declared!"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Team Battle Arena",
+      "description": "A team-based combat game with respawning and objectives",
+      "logic": {
+        "blocks": {
+          "languageVersion": 0,
+          "blocks": [
+            {
+              "type": "game_start",
+              "id": "arena_start",
+              "x": 50,
+              "y": 50,
+              "next": {
+                "block": {
+                  "type": "create_teams",
+                  "id": "team_setup",
+                  "fields": {
+                    "TEAM_COUNT": "2",
+                    "MAX_PLAYERS_PER_TEAM": "5"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "set_game_variable",
+                      "id": "set_match_time",
+                      "fields": {
+                        "VARIABLE": "match_duration",
+                        "VALUE": "300"
+                      },
+                      "next": {
+                        "block": {
+                          "type": "spawn_players",
+                          "id": "initial_spawn",
+                          "fields": {
+                            "SPAWN_POINTS": "team_bases"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "player_eliminated",
+              "id": "death_handler",
+              "x": 400,
+              "y": 50,
+              "next": {
+                "block": {
+                  "type": "add_team_points",
+                  "id": "elimination_points",
+                  "fields": {
+                    "POINTS": "1",
+                    "TARGET_TEAM": "eliminator_team"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "set_timer",
+                      "id": "respawn_timer",
+                      "fields": {
+                        "DURATION": "5",
+                        "REPEAT": "false"
+                      },
+                      "next": {
+                        "block": {
+                          "type": "respawn_player",
+                          "id": "player_respawn",
+                          "fields": {
+                            "SPAWN_POINT": "team_base"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "timer_trigger",
+              "id": "match_timer",
+              "fields": {
+                "DURATION": "300"
+              },
+              "x": 50,
+              "y": 300,
+              "next": {
+                "block": {
+                  "type": "if_team_score_higher",
+                  "id": "determine_winner",
+                  "next": {
+                    "block": {
+                      "type": "end_game",
+                      "id": "match_end",
+                      "fields": {
+                        "MESSAGE": "Time's up! Victory goes to the highest scoring team!"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cooperative Puzzle Room",
+      "description": "Players must work together to solve puzzles and escape",
+      "logic": {
+        "blocks": {
+          "languageVersion": 0,
+          "blocks": [
+            {
+              "type": "game_start",
+              "id": "puzzle_start",
+              "x": 50,
+              "y": 50,
+              "next": {
+                "block": {
+                  "type": "set_game_variable",
+                  "id": "init_puzzles",
+                  "fields": {
+                    "VARIABLE": "puzzles_solved",
+                    "VALUE": "0"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "set_game_variable",
+                      "id": "total_puzzles",
+                      "fields": {
+                        "VARIABLE": "total_puzzles",
+                        "VALUE": "3"
+                      },
+                      "next": {
+                        "block": {
+                          "type": "send_notification",
+                          "id": "coop_instructions",
+                          "fields": {
+                            "MESSAGE": "Work together to solve all puzzles and escape!"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "activate_puzzle",
+                              "id": "first_puzzle",
+                              "fields": {
+                                "PUZZLE_ID": "lever_puzzle"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "puzzle_solved",
+              "id": "puzzle_complete",
+              "x": 400,
+              "y": 50,
+              "next": {
+                "block": {
+                  "type": "increment_variable",
+                  "id": "count_solved",
+                  "fields": {
+                    "VARIABLE": "puzzles_solved"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "send_notification",
+                      "id": "progress_update",
+                      "fields": {
+                        "MESSAGE": "Puzzle solved! Great teamwork!"
+                      },
+                      "next": {
+                        "block": {
+                          "type": "if_variable_equals",
+                          "id": "check_completion",
+                          "fields": {
+                            "VARIABLE": "puzzles_solved",
+                            "VALUE": "3"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "open_exit_door",
+                              "id": "unlock_exit",
+                              "next": {
+                                "block": {
+                                  "type": "end_game",
+                                  "id": "escape_success",
+                                  "fields": {
+                                    "MESSAGE": "Congratulations! You've escaped together!"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "else": {
+                            "block": {
+                              "type": "activate_next_puzzle",
+                              "id": "next_challenge"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "player_leave",
+              "id": "player_disconnect",
+              "x": 50,
+              "y": 400,
+              "next": {
+                "block": {
+                  "type": "if_player_count_less",
+                  "id": "check_minimum",
+                  "fields": {
+                    "COUNT": "2"
+                  },
+                  "next": {
+                    "block": {
+                      "type": "pause_game",
+                      "id": "wait_for_players",
+                      "fields": {
+                        "MESSAGE": "Waiting for more players to continue..."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
