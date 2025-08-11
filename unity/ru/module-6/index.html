@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модуль 6: Unity Audio и Звуковая Система - Примеры</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 120px 2rem 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .examples-section {
+            background: white;
+            margin: -40px auto 40px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: #f8f9ff;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .example {
+            margin-bottom: 30px;
+        }
+
+        .example h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .example p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                padding: 0 1rem;
+            }
+
+            .examples-section {
+                margin: -20px 1rem 20px;
+                padding: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">Michitai Unity</div>
+            <ul class="nav-links">
+                <li><a href="../../ru/index.html">Главная</a></li>
+                <li><a href="#examples">Примеры</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Модуль 6: Unity Audio и Звуковая Система</h1>
+            <p>Комплексные примеры для аудио системы Unity и управления звуком</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="examples-section" id="examples">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'audio-basics')">Основы Audio</button>
+                <button class="tab" onclick="openTab(event, 'audio-source')">AudioSource</button>
+                <button class="tab" onclick="openTab(event, 'audio-mixer')">Audio Mixer</button>
+                <button class="tab" onclick="openTab(event, 'spatial-audio')">3D Звук</button>
+                <button class="tab" onclick="openTab(event, 'advanced-audio')">Продвинутый Audio</button>
+            </div>
+
+            <div id="audio-basics" class="tab-content active">
+                <div class="example">
+                    <h3>Основы Audio System</h3>
+                    <p>Базовое управление аудио и настройка звуковой системы Unity.</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AudioManager : MonoBehaviour
+{
+    [Header("Аудио Клипы")]
+    public AudioClip backgroundMusic;
+    public AudioClip buttonClickSound;
+    public AudioClip explosionSound;
+    
+    [Header("Аудио Источники")]
+    public AudioSource musicSource;
+    public AudioSource sfxSource;
+    
+    [Header("Настройки Громкости")]
+    [Range(0f, 1f)]
+    public float masterVolume = 1f;
+    [Range(0f, 1f)]
+    public float musicVolume = 0.7f;
+    [Range(0f, 1f)]
+    public float sfxVolume = 1f;
+    
+    void Start()
+    {
+        SetupAudioSources();
+        PlayBackgroundMusic();
+        Debug.Log("Audio Manager инициализирован");
+    }
+    
+    void SetupAudioSources()
+    {
+        if (musicSource == null)
+        {
+            musicSource = gameObject.AddComponent&lt;AudioSource&gt;();
+        }
+        
+        musicSource.loop = true;
+        musicSource.playOnAwake = false;
+        musicSource.volume = musicVolume;
+        
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent&lt;AudioSource&gt;();
+        }
+        
+        sfxSource.loop = false;
+        sfxSource.playOnAwake = false;
+        sfxSource.volume = sfxVolume;
+        
+        Debug.Log("Аудио источники настроены");
+    }
+    
+    public void PlayBackgroundMusic()
+    {
+        if (backgroundMusic != null && musicSource != null)
+        {
+            musicSource.clip = backgroundMusic;
+            musicSource.Play();
+            Debug.Log("Фоновая музыка запущена");
+        }
+    }
+    
+    public void PlaySoundEffect(AudioClip clip)
+    {
+        if (clip != null && sfxSource != null)
+        {
+            sfxSource.PlayOneShot(clip);
+            Debug.Log("Звуковой эффект воспроизведен: " + clip.name);
+        }
+    }
+    
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = Mathf.Clamp01(volume);
+        AudioListener.volume = masterVolume;
+        Debug.Log("Общая громкость: " + masterVolume);
+    }
+    
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = Mathf.Clamp01(volume);
+        if (musicSource != null)
+        {
+            musicSource.volume = musicVolume;
+        }
+        Debug.Log("Громкость музыки: " + musicVolume);
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="audio-source" class="tab-content">
+                <div class="example">
+                    <h3>Управление AudioSource</h3>
+                    <p>Детальная работа с компонентом AudioSource и его параметрами.</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AudioSourceController : MonoBehaviour
+{
+    [Header("AudioSource Компоненты")]
+    public AudioSource primarySource;
+    
+    [Header("Аудио Клипы")]
+    public AudioClip[] musicTracks;
+    
+    [Header("Параметры Воспроизведения")]
+    [Range(0f, 3f)]
+    public float pitch = 1f;
+    [Range(0f, 1f)]
+    public float volume = 1f;
+    [Range(-1f, 1f)]
+    public float stereoPan = 0f;
+    
+    private int currentTrackIndex = 0;
+    private bool isPlaying = false;
+    
+    void Start()
+    {
+        if (primarySource == null)
+            primarySource = GetComponent&lt;AudioSource&gt;();
+            
+        Debug.Log("AudioSource Controller инициализирован");
+    }
+    
+    void Update()
+    {
+        UpdateAudioParameters();
+        CheckPlaybackStatus();
+        HandleInput();
+    }
+    
+    void UpdateAudioParameters()
+    {
+        if (primarySource != null)
+        {
+            primarySource.pitch = pitch;
+            primarySource.volume = volume;
+            primarySource.panStereo = stereoPan;
+        }
+    }
+    
+    void CheckPlaybackStatus()
+    {
+        if (primarySource != null && isPlaying && !primarySource.isPlaying)
+        {
+            Debug.Log("Воспроизведение завершено");
+            isPlaying = false;
+            
+            if (musicTracks.Length > 0)
+            {
+                PlayNextTrack();
+            }
+        }
+    }
+    
+    void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TogglePlayback();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            PlayNextTrack();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PlayPreviousTrack();
+        }
+    }
+    
+    public void TogglePlayback()
+    {
+        if (primarySource == null) return;
+        
+        if (primarySource.isPlaying)
+        {
+            primarySource.Pause();
+            Debug.Log("Воспроизведение приостановлено");
+        }
+        else
+        {
+            primarySource.UnPause();
+            isPlaying = true;
+            Debug.Log("Воспроизведение возобновлено");
+        }
+    }
+    
+    public void PlayNextTrack()
+    {
+        if (musicTracks.Length > 0)
+        {
+            currentTrackIndex = (currentTrackIndex + 1) % musicTracks.Length;
+            PlayCurrentTrack();
+            Debug.Log($"Следующий трек: {currentTrackIndex + 1}/{musicTracks.Length}");
+        }
+    }
+    
+    public void PlayPreviousTrack()
+    {
+        if (musicTracks.Length > 0)
+        {
+            currentTrackIndex = (currentTrackIndex - 1 + musicTracks.Length) % musicTracks.Length;
+            PlayCurrentTrack();
+            Debug.Log($"Предыдущий трек: {currentTrackIndex + 1}/{musicTracks.Length}");
+        }
+    }
+    
+    public void PlayCurrentTrack()
+    {
+        if (musicTracks.Length > 0 && primarySource != null)
+        {
+            AudioClip currentClip = musicTracks[currentTrackIndex];
+            primarySource.clip = currentClip;
+            primarySource.Play();
+            isPlaying = true;
+            Debug.Log("Воспроизводится: " + currentClip.name);
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="audio-mixer" class="tab-content">
+                <div class="example">
+                    <h3>Audio Mixer и Группы</h3>
+                    <p>Работа с Audio Mixer для профессионального микширования звука.</p>
+                    <div class="code-block">using UnityEngine;
+using UnityEngine.Audio;
+
+public class AudioMixerController : MonoBehaviour
+{
+    [Header("Audio Mixer")]
+    public AudioMixer mainMixer;
+    
+    [Header("Параметры Mixer")]
+    [Range(-80f, 20f)]
+    public float masterVolume = 0f;
+    [Range(-80f, 20f)]
+    public float musicVolume = 0f;
+    [Range(-80f, 20f)]
+    public float sfxVolume = 0f;
+    
+    void Start()
+    {
+        SetupMixer();
+        Debug.Log("Audio Mixer Controller инициализирован");
+    }
+    
+    void SetupMixer()
+    {
+        if (mainMixer != null)
+        {
+            SetMasterVolume(masterVolume);
+            SetMusicVolume(musicVolume);
+            SetSFXVolume(sfxVolume);
+            
+            Debug.Log("Audio Mixer настроен");
+        }
+    }
+    
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = volume;
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("MasterVolume", volume);
+            Debug.Log("Master Volume: " + volume + " dB");
+        }
+    }
+    
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = volume;
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("MusicVolume", volume);
+            Debug.Log("Music Volume: " + volume + " dB");
+        }
+    }
+    
+    public void SetSFXVolume(float volume)
+    {
+        sfxVolume = volume;
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("SFXVolume", volume);
+            Debug.Log("SFX Volume: " + volume + " dB");
+        }
+    }
+    
+    public void SetLowPassFilter(float frequency)
+    {
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("LowPassFreq", frequency);
+            Debug.Log("Low Pass Filter: " + frequency + " Hz");
+        }
+    }
+    
+    public void SetReverb(float level)
+    {
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("ReverbLevel", level);
+            Debug.Log("Reverb Level: " + level);
+        }
+    }
+    
+    public void CreateSnapshot(string snapshotName)
+    {
+        if (mainMixer != null)
+        {
+            AudioMixerSnapshot snapshot = mainMixer.FindSnapshot(snapshotName);
+            if (snapshot != null)
+            {
+                snapshot.TransitionTo(1f);
+                Debug.Log("Переход к снимку: " + snapshotName);
+            }
+        }
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CreateSnapshot("Normal");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CreateSnapshot("Underwater");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CreateSnapshot("Cave");
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="spatial-audio" class="tab-content">
+                <div class="example">
+                    <h3>3D Пространственный Звук</h3>
+                    <p>Реализация 3D аудио с пространственным позиционированием.</p>
+                    <div class="code-block">using UnityEngine;
+
+public class SpatialAudioController : MonoBehaviour
+{
+    [Header("3D Audio Settings")]
+    public AudioSource spatialSource;
+    
+    [Header("Spatial Parameters")]
+    [Range(0f, 1f)]
+    public float spatialBlend = 1f;
+    [Range(0f, 5f)]
+    public float dopplerLevel = 1f;
+    [Range(0f, 360f)]
+    public float spread = 0f;
+    
+    [Header("Distance Settings")]
+    public float minDistance = 1f;
+    public float maxDistance = 500f;
+    public AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic;
+    
+    void Start()
+    {
+        SetupSpatialAudio();
+        Debug.Log("Spatial Audio Controller инициализирован");
+    }
+    
+    void SetupSpatialAudio()
+    {
+        if (spatialSource == null)
+            spatialSource = GetComponent&lt;AudioSource&gt;();
+            
+        if (spatialSource != null)
+        {
+            spatialSource.spatialBlend = spatialBlend;
+            spatialSource.dopplerLevel = dopplerLevel;
+            spatialSource.spread = spread;
+            spatialSource.rolloffMode = rolloffMode;
+            spatialSource.minDistance = minDistance;
+            spatialSource.maxDistance = maxDistance;
+            
+            Debug.Log("3D Audio настроен");
+        }
+    }
+    
+    void Update()
+    {
+        UpdateSpatialParameters();
+        HandleInput();
+    }
+    
+    void UpdateSpatialParameters()
+    {
+        if (spatialSource != null)
+        {
+            spatialSource.spatialBlend = spatialBlend;
+            spatialSource.dopplerLevel = dopplerLevel;
+            spatialSource.spread = spread;
+            spatialSource.minDistance = minDistance;
+            spatialSource.maxDistance = maxDistance;
+            spatialSource.rolloffMode = rolloffMode;
+        }
+    }
+    
+    void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Plus))
+        {
+            IncreaseDistance();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Minus))
+        {
+            DecreaseDistance();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            ToggleDoppler();
+        }
+    }
+    
+    public void IncreaseDistance()
+    {
+        maxDistance = Mathf.Min(maxDistance + 50f, 1000f);
+        Debug.Log("Максимальная дистанция: " + maxDistance);
+    }
+    
+    public void DecreaseDistance()
+    {
+        maxDistance = Mathf.Max(maxDistance - 50f, minDistance + 1f);
+        Debug.Log("Максимальная дистанция: " + maxDistance);
+    }
+    
+    public void ToggleDoppler()
+    {
+        dopplerLevel = dopplerLevel > 0 ? 0f : 1f;
+        Debug.Log("Эффект Доплера: " + (dopplerLevel > 0 ? "включен" : "выключен"));
+    }
+    
+    public void SetSpatialBlend(float blend)
+    {
+        spatialBlend = Mathf.Clamp01(blend);
+        Debug.Log("Пространственное смешивание: " + spatialBlend);
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="advanced-audio" class="tab-content">
+                <div class="example">
+                    <h3>Продвинутые Audio Техники</h3>
+                    <p>Динамическая музыка, аудио эффекты и оптимизация производительности.</p>
+                    <div class="code-block">using UnityEngine;
+using System.Collections;
+
+public class AdvancedAudioController : MonoBehaviour
+{
+    [Header("Dynamic Music")]
+    public AudioSource[] musicLayers;
+    public float crossfadeDuration = 2f;
+    
+    [Header("Audio Effects")]
+    public AudioLowPassFilter lowPassFilter;
+    public AudioHighPassFilter highPassFilter;
+    public AudioReverbFilter reverbFilter;
+    
+    [Header("Performance")]
+    public int maxAudioSources = 32;
+    
+    private int currentMusicLayer = 0;
+    private bool isCrossfading = false;
+    
+    void Start()
+    {
+        SetupAdvancedAudio();
+        Debug.Log("Advanced Audio Controller инициализирован");
+    }
+    
+    void SetupAdvancedAudio()
+    {
+        // Настройка слоев музыки
+        for (int i = 0; i < musicLayers.Length; i++)
+        {
+            if (musicLayers[i] != null)
+            {
+                musicLayers[i].volume = (i == 0) ? 1f : 0f;
+                musicLayers[i].Play();
+            }
+        }
+        
+        // Настройка фильтров
+        if (lowPassFilter == null)
+            lowPassFilter = gameObject.AddComponent&lt;AudioLowPassFilter&gt;();
+            
+        if (highPassFilter == null)
+            highPassFilter = gameObject.AddComponent&lt;AudioHighPassFilter&gt;();
+            
+        if (reverbFilter == null)
+            reverbFilter = gameObject.AddComponent&lt;AudioReverbFilter&gt;();
+    }
+    
+    public void CrossfadeToLayer(int layerIndex)
+    {
+        if (layerIndex >= 0 && layerIndex < musicLayers.Length && !isCrossfading)
+        {
+            StartCoroutine(CrossfadeCoroutine(layerIndex));
+        }
+    }
+    
+    IEnumerator CrossfadeCoroutine(int targetLayer)
+    {
+        isCrossfading = true;
+        int previousLayer = currentMusicLayer;
+        currentMusicLayer = targetLayer;
+        
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < crossfadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / crossfadeDuration;
+            
+            if (musicLayers[previousLayer] != null)
+                musicLayers[previousLayer].volume = Mathf.Lerp(1f, 0f, t);
+                
+            if (musicLayers[targetLayer] != null)
+                musicLayers[targetLayer].volume = Mathf.Lerp(0f, 1f, t);
+            
+            yield return null;
+        }
+        
+        if (musicLayers[previousLayer] != null)
+            musicLayers[previousLayer].volume = 0f;
+            
+        if (musicLayers[targetLayer] != null)
+            musicLayers[targetLayer].volume = 1f;
+        
+        isCrossfading = false;
+        Debug.Log($"Переключение на слой {targetLayer} завершено");
+    }
+    
+    public void ApplyLowPassFilter(float frequency)
+    {
+        if (lowPassFilter != null)
+        {
+            lowPassFilter.cutoffFrequency = Mathf.Clamp(frequency, 10f, 22000f);
+            Debug.Log("Low Pass Filter: " + frequency + " Hz");
+        }
+    }
+    
+    public void ApplyHighPassFilter(float frequency)
+    {
+        if (highPassFilter != null)
+        {
+            highPassFilter.cutoffFrequency = Mathf.Clamp(frequency, 10f, 22000f);
+            Debug.Log("High Pass Filter: " + frequency + " Hz");
+        }
+    }
+    
+    public void ApplyReverb(AudioReverbPreset preset)
+    {
+        if (reverbFilter != null)
+        {
+            reverbFilter.reverbPreset = preset;
+            Debug.Log("Reverb Preset: " + preset);
+        }
+    }
+    
+    public void PlaySoundWithDelay(AudioClip clip, float delay)
+    {
+        StartCoroutine(PlayDelayedSound(clip, delay));
+    }
+    
+    IEnumerator PlayDelayedSound(AudioClip clip, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        AudioSource tempSource = gameObject.AddComponent&lt;AudioSource&gt;();
+        tempSource.clip = clip;
+        tempSource.Play();
+        
+        yield return new WaitForSeconds(clip.length);
+        Destroy(tempSource);
+        
+        Debug.Log("Отложенный звук воспроизведен: " + clip.name);
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CrossfadeToLayer(0);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CrossfadeToLayer(1);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CrossfadeToLayer(2);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            ApplyLowPassFilter(1000f);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            ApplyHighPassFilter(1000f);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ApplyReverb(AudioReverbPreset.Cave);
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <a href="../../ru/index.html" class="back-link">← Назад к Курсам</a>
+        </section>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
