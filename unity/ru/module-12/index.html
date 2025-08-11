@@ -3,36 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Модуль 12: Блокчейн и Web3 игры - Примеры</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <meta name="description" content="Модуль 12: Блокчейн и Web3 игры - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, блокчейн, web3, nft, криптовалюта, смарт-контракты">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 12: Блокчейн и Web3 игры - Примеры кода</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
 
         .nav {
             max-width: 1200px;
@@ -208,39 +209,45 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav">
-            <div class="logo">Michitai Unity</div>
-            <ul class="nav-links">
-                <li><a href="../../ru/index.html">Главная</a></li>
-                <li><a href="#examples">Примеры</a></li>
-                <li><a href="#contact">Контакты</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section class="hero">
+    <header>
         <div class="container">
             <h1>Модуль 12: Блокчейн и Web3 игры</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Блокчейн и Web3 игры</h1>
             <p>Комплексные примеры создания игр с NFT, криптовалютами и смарт-контрактами</p>
         </div>
     </section>
 
-    <div class="container">
-        <section class="examples-section" id="examples">
-            <div class="tabs">
-                <button class="tab active" onclick="openTab(event, 'wallet-integration')">Кошелек</button>
-                <button class="tab" onclick="openTab(event, 'nft-system')">NFT система</button>
-                <button class="tab" onclick="openTab(event, 'smart-contracts')">Смарт-контракты</button>
-                <button class="tab" onclick="openTab(event, 'token-economy')">Токеномика</button>
-                <button class="tab" onclick="openTab(event, 'marketplace')">Маркетплейс</button>
-            </div>
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>Примеры кода</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('wallet-integration')">Кошелек</button>
+                    <button class="tab" onclick="showTab('nft-system')">NFT система</button>
+                    <button class="tab" onclick="showTab('smart-contracts')">Смарт-контракты</button>
+                    <button class="tab" onclick="showTab('token-economy')">Токеномика</button>
+                    <button class="tab" onclick="showTab('marketplace')">Маркетплейс</button>
+                </div>
 
-            <div id="wallet-integration" class="tab-content active">
-                <div class="example">
-                    <h3>Интеграция криптокошелька</h3>
-                    <p>Подключение MetaMask и других Web3 кошельков к Unity игре.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="wallet-integration" class="tab-content active">
+                    <h3>Пример 1: Интеграция Web3 кошелька</h3>
+                    <p>Подключение MetaMask и других Web3 кошельков к Unity игре:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
 using System.Collections;
 
 public class WalletManager : MonoBehaviour
@@ -251,28 +258,23 @@ public class WalletManager : MonoBehaviour
     void Start()
     {
         Debug.Log("Web3 Wallet Manager инициализирован");
+        ConnectWallet();
     }
     
-    public void ConnectWallet()
+    void ConnectWallet()
     {
-        Debug.Log("Подключение к кошельку...");
-        StartCoroutine(SimulateWalletConnection());
-    }
-    
-    IEnumerator SimulateWalletConnection()
-    {
-        yield return new WaitForSeconds(2f);
+        Debug.Log("Подключение к Web3 кошельку...");
         
-        playerWalletAddress = "0x742d35Cc6634C0532925a3b8D4C2C8b5C2C8b5C2";
+        playerWalletAddress = "0x" + System.Guid.NewGuid().ToString("N").Substring(0, 40);
         isWalletConnected = true;
         
         Debug.Log($"Кошелек подключен: {playerWalletAddress}");
         GetWalletBalance();
     }
     
-    IEnumerator FetchBalance()
+    void GetWalletBalance()
     {
-        yield return new WaitForSeconds(1f);
+        Debug.Log("Получение баланса кошелька...");
         
         float balance = Random.Range(0.1f, 5.0f);
         Debug.Log($"Баланс кошелька: {balance:F4} ETH");
@@ -282,15 +284,15 @@ public class WalletManager : MonoBehaviour
     {
         return isWalletConnected;
     }
-}</div>
+}</code></pre>
+                    </div>
                 </div>
-            </div>
 
-            <div id="nft-system" class="tab-content">
-                <div class="example">
-                    <h3>NFT система в игре</h3>
-                    <p>Создание, отображение и использование NFT предметов в игре.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="nft-system" class="tab-content">
+                    <h3>Пример 2: NFT система в игре</h3>
+                    <p>Создание и управление NFT предметами в Unity:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -319,93 +321,99 @@ public class NFTManager : MonoBehaviour
         {
             tokenId = 1,
             name = "Огненный меч",
-            rarity = "Легендарный",
+            rarity = "Редкий",
             attack = 25,
             defense = 5
+        });
+        
+        playerNFTs.Add(new NFTData
+        {
+            tokenId = 2,
+            name = "Ледяной щит",
+            rarity = "Эпический",
+            attack = 5,
+            defense = 30
         });
         
         Debug.Log($"Создано {playerNFTs.Count} NFT предметов");
     }
     
-    public void MintNewNFT(string name, string rarity)
+    public NFTData GetNFTById(int tokenId)
     {
-        var newNFT = new NFTData
-        {
-            tokenId = playerNFTs.Count + 1,
-            name = name,
-            rarity = rarity,
-            attack = Random.Range(10, 30),
-            defense = Random.Range(10, 30)
-        };
-        
-        playerNFTs.Add(newNFT);
-        Debug.Log($"Создан новый NFT: {name}");
+        return playerNFTs.Find(nft => nft.tokenId == tokenId);
     }
-}</div>
+    
+    public void TransferNFT(int tokenId, string toAddress)
+    {
+        var nft = GetNFTById(tokenId);
+        if (nft != null)
+        {
+            Debug.Log($"NFT {nft.name} передан на адрес: {toAddress}");
+        }
+    }
+}</code></pre>
+                    </div>
                 </div>
-            </div>
 
-            <div id="smart-contracts" class="tab-content">
-                <div class="example">
-                    <h3>Взаимодействие со смарт-контрактами</h3>
-                    <p>Вызов функций смарт-контрактов для игровой логики.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="smart-contracts" class="tab-content">
+                    <h3>Пример 3: Взаимодействие со смарт-контрактами</h3>
+                    <p>Вызов функций смарт-контрактов для игровой логики:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
 using System.Collections;
 
 public class SmartContractManager : MonoBehaviour
 {
-    public string gameContractAddress = "0x...";
+    private string contractAddress = "0x742d35Cc6634C0532925a3b8D4C2Aa8Db7C4E3C8";
+    private string playerAddress;
     
     void Start()
     {
+        playerAddress = FindObjectOfType&lt;WalletManager&gt;()?.playerWalletAddress ?? "0x123...456";
         Debug.Log("Smart Contract Manager инициализирован");
     }
     
-    public void ClaimReward(int amount)
+    public void CallMintFunction(int tokenId, string tokenURI)
     {
-        StartCoroutine(ExecuteClaimReward(amount));
+        Debug.Log($"Вызов функции mint({tokenId}, {tokenURI})");
+        Debug.Log($"Контракт: {contractAddress}");
+        Debug.Log($"От адреса: {playerAddress}");
+        
+        StartCoroutine(SimulateMintTransaction(tokenId));
     }
     
-    IEnumerator ExecuteClaimReward(int amount)
+    IEnumerator SimulateMintTransaction(int tokenId)
     {
-        Debug.Log($"Вызов смарт-контракта: claimReward({amount})");
-        
-        yield return new WaitForSeconds(3f);
-        
-        string txHash = "0x" + System.Guid.NewGuid().ToString("N").Substring(0, 16);
-        Debug.Log($"Награда получена! Транзакция: {txHash}");
-    }
-    
-    public void PurchaseItem(int itemId, int price)
-    {
-        StartCoroutine(ExecutePurchaseItem(itemId, price));
-    }
-    
-    IEnumerator ExecutePurchaseItem(int itemId, int price)
-    {
-        Debug.Log($"Покупка предмета {itemId} за {price} токенов");
-        
+        Debug.Log("Отправка транзакции...");
         yield return new WaitForSeconds(2f);
         
-        string txHash = "0x" + System.Guid.NewGuid().ToString("N").Substring(0, 16);
-        Debug.Log($"Предмет куплен! Транзакция: {txHash}");
+        Debug.Log($"NFT #{tokenId} успешно создан!");
+        Debug.Log("Транзакция подтверждена в блокчейне");
     }
-}</div>
+    
+    public void GetTokenBalance()
+    {
+        Debug.Log("Запрос баланса токенов...");
+        int balance = Random.Range(100, 1000);
+        Debug.Log($"Баланс игровых токенов: {balance} GAME");
+    }
+}</code></pre>
+                    </div>
                 </div>
-            </div>
 
-            <div id="token-economy" class="tab-content">
-                <div class="example">
-                    <h3>Токеномика игры</h3>
-                    <p>Система игровых токенов, стейкинга и экономических механик.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="token-economy" class="tab-content">
+                    <h3>Пример 4: Токеномика игры</h3>
+                    <p>Система игровых токенов и экономика:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
 
 public class TokenManager : MonoBehaviour
 {
+    [Header("Token Settings")]
+    public string tokenName = "GameToken";
     public string tokenSymbol = "GAME";
-    
-    private int currentBalance = 1000;
-    private int stakedAmount = 0;
+    public int currentBalance = 1000;
+    public int stakedAmount = 0;
     
     void Start()
     {
@@ -445,15 +453,15 @@ public class TokenManager : MonoBehaviour
     {
         return currentBalance;
     }
-}</div>
+}</code></pre>
+                    </div>
                 </div>
-            </div>
 
-            <div id="marketplace" class="tab-content">
-                <div class="example">
-                    <h3>NFT маркетплейс</h3>
-                    <p>Торговая площадка для покупки и продажи NFT предметов.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="marketplace" class="tab-content">
+                    <h3>Пример 5: NFT маркетплейс</h3>
+                    <p>Торговая площадка для покупки и продажи NFT предметов:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -517,30 +525,44 @@ public class MarketplaceManager : MonoBehaviour
         marketplaceItems.Add(marketItem);
         Debug.Log($"NFT {nft.name} выставлен на продажу за {price} токенов");
     }
-}</div>
+}</code></pre>
+                    </div>
                 </div>
-            </div>
+            </section>
+        </div>
+    </main>
 
-            <a href="../../ru/index.html" class="back-link">← Назад к курсам</a>
-        </section>
-    </div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Никита Левандович. Все права защищены.</p>
+        </div>
+    </footer>
 
     <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tabs;
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
             
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active");
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
             }
             
-            tabs = document.getElementsByClassName("tab");
-            for (i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove("active");
+            // Add active class to clicked tab
+            const clickedTab = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+            if (clickedTab) {
+                clickedTab.classList.add('active');
             }
-            
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
         }
     </script>
 </body>
