@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модуль 9: DOTS (Data-Oriented Technology Stack) - Примеры</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 120px 2rem 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .examples-section {
+            background: white;
+            margin: -40px auto 40px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: #f8f9ff;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .example {
+            margin-bottom: 30px;
+        }
+
+        .example h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .example p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                padding: 0 1rem;
+            }
+
+            .examples-section {
+                margin: -20px 1rem 20px;
+                padding: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">Michitai Unity</div>
+            <ul class="nav-links">
+                <li><a href="../../ru/index.html">Главная</a></li>
+                <li><a href="#examples">Примеры</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Модуль 9: DOTS (Data-Oriented Technology Stack)</h1>
+            <p>Комплексные примеры высокопроизводительных игр с ECS, Jobs System и Burst Compiler</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="examples-section" id="examples">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'ecs-basics')">Основы ECS</button>
+                <button class="tab" onclick="openTab(event, 'jobs-system')">Jobs System</button>
+                <button class="tab" onclick="openTab(event, 'burst-compiler')">Burst Compiler</button>
+                <button class="tab" onclick="openTab(event, 'performance-optimization')">Оптимизация</button>
+                <button class="tab" onclick="openTab(event, 'massive-simulation')">Массовая симуляция</button>
+            </div>
+
+            <div id="ecs-basics" class="tab-content active">
+                <div class="example">
+                    <h3>Основы Entity Component System (ECS)</h3>
+                    <p>Создание сущностей, компонентов и систем для высокопроизводительной архитектуры.</p>
+                    <div class="code-block">using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using UnityEngine;
+
+// Компонент для движения
+public struct MovementComponent : IComponentData
+{
+    public float3 velocity;
+    public float speed;
+}
+
+// Система движения
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+public partial class MovementSystem : SystemBase
+{
+    protected override void OnUpdate()
+    {
+        float deltaTime = Time.DeltaTime;
+        
+        Entities
+            .WithAll&lt;MovementComponent&gt;()
+            .ForEach((ref Translation translation, in MovementComponent movement) =>
+            {
+                translation.Value += movement.velocity * movement.speed * deltaTime;
+                
+                // Ограничение области движения
+                if (math.abs(translation.Value.x) > 50f)
+                    translation.Value.x = -translation.Value.x;
+                if (math.abs(translation.Value.z) > 50f)
+                    translation.Value.z = -translation.Value.z;
+                    
+            }).ScheduleParallel();
+    }
+}
+
+// MonoBehaviour для создания сущностей
+public class EntitySpawner : MonoBehaviour
+{
+    public GameObject prefab;
+    public int spawnCount = 1000;
+    
+    void Start()
+    {
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        var settings = GameObjectConversionSettings.FromWorld(
+            World.DefaultGameObjectInjectionWorld, null);
+        var prefabEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(
+            prefab, settings);
+            
+        Debug.Log($"Создание {spawnCount} сущностей с ECS");
+        
+        for (int i = 0; i < spawnCount; i++)
+        {
+            var entity = entityManager.Instantiate(prefabEntity);
+            
+            entityManager.AddComponentData(entity, new MovementComponent
+            {
+                velocity = new float3(
+                    UnityEngine.Random.Range(-1f, 1f),
+                    0,
+                    UnityEngine.Random.Range(-1f, 1f)
+                ),
+                speed = UnityEngine.Random.Range(5f, 15f)
+            });
+        }
+        
+        Debug.Log("ECS сущности созданы успешно");
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="jobs-system" class="tab-content">
+                <div class="example">
+                    <h3>Jobs System для параллельных вычислений</h3>
+                    <p>Использование Jobs System для эффективной обработки больших объемов данных.</p>
+                    <div class="code-block">using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
+using UnityEngine;
+
+// Job для обработки позиций частиц
+public struct ParticleUpdateJob : IJobParallelFor
+{
+    public NativeArray&lt;float3&gt; positions;
+    public NativeArray&lt;float3&gt; velocities;
+    [ReadOnly] public float deltaTime;
+    [ReadOnly] public float3 gravity;
+    
+    public void Execute(int index)
+    {
+        velocities[index] += gravity * deltaTime;
+        positions[index] += velocities[index] * deltaTime;
+        
+        // Отскок от земли
+        if (positions[index].y < 0)
+        {
+            positions[index] = new float3(positions[index].x, 0, positions[index].z);
+            velocities[index] = new float3(
+                velocities[index].x * 0.8f,
+                -velocities[index].y * 0.8f,
+                velocities[index].z * 0.8f
+            );
+        }
+    }
+}
+
+// Менеджер системы частиц
+public class ParticleSystemManager : MonoBehaviour
+{
+    public int particleCount = 10000;
+    public GameObject particlePrefab;
+    
+    private NativeArray&lt;float3&gt; positions;
+    private NativeArray&lt;float3&gt; velocities;
+    private Transform[] particleTransforms;
+    private JobHandle jobHandle;
+    
+    void Start()
+    {
+        InitializeParticles();
+        Debug.Log($"Инициализирована система частиц с {particleCount} частицами");
+    }
+    
+    void InitializeParticles()
+    {
+        positions = new NativeArray&lt;float3&gt;(particleCount, Allocator.Persistent);
+        velocities = new NativeArray&lt;float3&gt;(particleCount, Allocator.Persistent);
+        particleTransforms = new Transform[particleCount];
+        
+        for (int i = 0; i < particleCount; i++)
+        {
+            var particle = Instantiate(particlePrefab);
+            particleTransforms[i] = particle.transform;
+            
+            positions[i] = new float3(
+                UnityEngine.Random.Range(-25f, 25f),
+                UnityEngine.Random.Range(10f, 50f),
+                UnityEngine.Random.Range(-25f, 25f)
+            );
+            
+            velocities[i] = new float3(
+                UnityEngine.Random.Range(-10f, 10f),
+                0,
+                UnityEngine.Random.Range(-10f, 10f)
+            );
+        }
+    }
+    
+    void Update()
+    {
+        jobHandle.Complete();
+        
+        var particleJob = new ParticleUpdateJob
+        {
+            positions = positions,
+            velocities = velocities,
+            deltaTime = Time.deltaTime,
+            gravity = new float3(0, -9.81f, 0)
+        };
+        
+        jobHandle = particleJob.Schedule(particleCount, 64);
+        jobHandle.Complete();
+        
+        // Обновление Transform компонентов
+        for (int i = 0; i < particleCount; i++)
+        {
+            if (particleTransforms[i] != null)
+            {
+                particleTransforms[i].position = positions[i];
+            }
+        }
+    }
+    
+    void OnDestroy()
+    {
+        jobHandle.Complete();
+        if (positions.IsCreated) positions.Dispose();
+        if (velocities.IsCreated) velocities.Dispose();
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="burst-compiler" class="tab-content">
+                <div class="example">
+                    <h3>Burst Compiler для максимальной производительности</h3>
+                    <p>Использование Burst Compiler для компиляции высокопроизводительного кода.</p>
+                    <div class="code-block">using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
+using UnityEngine;
+
+// Burst-компилированный job
+[BurstCompile]
+public struct MathIntensiveJob : IJobParallelFor
+{
+    [ReadOnly] public NativeArray&lt;float3&gt; inputPositions;
+    public NativeArray&lt;float3&gt; outputPositions;
+    [ReadOnly] public float time;
+    [ReadOnly] public float frequency;
+    [ReadOnly] public float amplitude;
+    
+    public void Execute(int index)
+    {
+        float3 pos = inputPositions[index];
+        
+        // Сложные математические вычисления
+        float wave1 = math.sin(pos.x * frequency + time) * amplitude;
+        float wave2 = math.cos(pos.z * frequency + time) * amplitude;
+        float height = wave1 + wave2;
+        
+        outputPositions[index] = new float3(pos.x, height, pos.z);
+    }
+}
+
+// Менеджер с Burst-оптимизацией
+public class BurstOptimizedManager : MonoBehaviour
+{
+    public int objectCount = 50000;
+    public GameObject objectPrefab;
+    public float waveFrequency = 0.5f;
+    public float waveAmplitude = 5f;
+    
+    private NativeArray&lt;float3&gt; originalPositions;
+    private NativeArray&lt;float3&gt; currentPositions;
+    private Transform[] objectTransforms;
+    private JobHandle jobHandle;
+    
+    void Start()
+    {
+        InitializeSimulation();
+        Debug.Log($"Burst-оптимизированная симуляция с {objectCount} объектами");
+    }
+    
+    void InitializeSimulation()
+    {
+        originalPositions = new NativeArray&lt;float3&gt;(objectCount, Allocator.Persistent);
+        currentPositions = new NativeArray&lt;float3&gt;(objectCount, Allocator.Persistent);
+        objectTransforms = new Transform[objectCount];
+        
+        int gridSize = Mathf.CeilToInt(Mathf.Sqrt(objectCount));
+        
+        for (int i = 0; i < objectCount; i++)
+        {
+            int x = i % gridSize;
+            int z = i / gridSize;
+            
+            float3 position = new float3(x * 2f - gridSize, 0, z * 2f - gridSize);
+            originalPositions[i] = position;
+            
+            var obj = Instantiate(objectPrefab);
+            objectTransforms[i] = obj.transform;
+        }
+    }
+    
+    void Update()
+    {
+        jobHandle.Complete();
+        
+        var mathJob = new MathIntensiveJob
+        {
+            inputPositions = originalPositions,
+            outputPositions = currentPositions,
+            time = Time.time,
+            frequency = waveFrequency,
+            amplitude = waveAmplitude
+        };
+        
+        jobHandle = mathJob.Schedule(objectCount, 128);
+        jobHandle.Complete();
+        
+        // Обновление Transform компонентов
+        for (int i = 0; i < objectCount; i++)
+        {
+            if (objectTransforms[i] != null)
+            {
+                objectTransforms[i].position = currentPositions[i];
+            }
+        }
+    }
+    
+    void OnDestroy()
+    {
+        jobHandle.Complete();
+        if (originalPositions.IsCreated) originalPositions.Dispose();
+        if (currentPositions.IsCreated) currentPositions.Dispose();
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="performance-optimization" class="tab-content">
+                <div class="example">
+                    <h3>Оптимизация производительности</h3>
+                    <p>Продвинутые техники оптимизации для максимальной производительности.</p>
+                    <div class="code-block">using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+using UnityEngine;
+
+// Компонент для LOD системы
+public struct LODComponent : IComponentData
+{
+    public float distance;
+    public int lodLevel;
+    public bool isVisible;
+}
+
+// Система LOD
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+public partial class LODSystem : SystemBase
+{
+    protected override void OnUpdate()
+    {
+        float3 cameraPosition = Camera.main.transform.position;
+        
+        Entities
+            .WithAll&lt;LODComponent&gt;()
+            .ForEach((ref LODComponent lod, in Translation translation) =>
+            {
+                float distance = math.distance(translation.Value, cameraPosition);
+                lod.distance = distance;
+                
+                if (distance < 10f)
+                {
+                    lod.lodLevel = 0; // Высокая детализация
+                    lod.isVisible = true;
+                }
+                else if (distance < 50f)
+                {
+                    lod.lodLevel = 1; // Средняя детализация
+                    lod.isVisible = true;
+                }
+                else
+                {
+                    lod.isVisible = false; // Не отображать
+                }
+                
+            }).ScheduleParallel();
+    }
+}
+
+// Менеджер производительности
+public class PerformanceManager : MonoBehaviour
+{
+    public int targetFPS = 60;
+    public float cullingDistance = 200f;
+    
+    private float frameTime;
+    
+    void Update()
+    {
+        frameTime = Time.deltaTime;
+        float currentFPS = 1f / frameTime;
+        
+        // Адаптивная оптимизация
+        if (currentFPS < targetFPS * 0.8f)
+        {
+            ReduceQuality();
+        }
+        else if (currentFPS > targetFPS * 1.2f)
+        {
+            IncreaseQuality();
+        }
+        
+        if (Time.frameCount % 60 == 0)
+        {
+            Debug.Log($"FPS: {currentFPS:F1}");
+        }
+    }
+    
+    void ReduceQuality()
+    {
+        cullingDistance = math.max(50f, cullingDistance * 0.9f);
+        Debug.Log("Качество снижено для улучшения производительности");
+    }
+    
+    void IncreaseQuality()
+    {
+        cullingDistance = math.min(200f, cullingDistance * 1.05f);
+        Debug.Log("Качество повышено");
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="massive-simulation" class="tab-content">
+                <div class="example">
+                    <h3>Массовая симуляция с тысячами объектов</h3>
+                    <p>Создание масштабируемых симуляций с большим количеством объектов.</p>
+                    <div class="code-block">using Unity.Entities;
+using Unity.Collections;
+using Unity.Mathematics;
+using Unity.Transforms;
+using UnityEngine;
+
+// Компонент для роя
+public struct SwarmComponent : IComponentData
+{
+    public float3 target;
+    public float speed;
+    public float separationRadius;
+}
+
+// Система роя (Boids)
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+public partial class SwarmSystem : SystemBase
+{
+    protected override void OnUpdate()
+    {
+        float deltaTime = Time.DeltaTime;
+        
+        Entities
+            .ForEach((ref Translation translation, in SwarmComponent swarm) =>
+            {
+                // Движение к цели
+                float3 toTarget = math.normalize(swarm.target - translation.Value);
+                translation.Value += toTarget * swarm.speed * deltaTime;
+                
+            }).ScheduleParallel();
+    }
+}
+
+// Массовый симулятор
+public class MassiveSimulation : MonoBehaviour
+{
+    public GameObject entityPrefab;
+    public int entityCount = 50000;
+    public float spawnRadius = 100f;
+    
+    private EntityManager entityManager;
+    
+    void Start()
+    {
+        InitializeMassiveSimulation();
+        Debug.Log($"Массовая симуляция с {entityCount} объектами");
+    }
+    
+    void InitializeMassiveSimulation()
+    {
+        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        
+        var settings = GameObjectConversionSettings.FromWorld(
+            World.DefaultGameObjectInjectionWorld, null);
+        var prefabEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(
+            entityPrefab, settings);
+        
+        var entities = new NativeArray&lt;Entity&gt;(entityCount, Allocator.Temp);
+        entityManager.Instantiate(prefabEntity, entities);
+        
+        for (int i = 0; i < entityCount; i++)
+        {
+            var entity = entities[i];
+            
+            float3 randomPos = UnityEngine.Random.insideUnitSphere * spawnRadius;
+            randomPos.y = math.abs(randomPos.y);
+            
+            entityManager.SetComponentData(entity, new Translation
+            {
+                Value = randomPos
+            });
+            
+            entityManager.AddComponentData(entity, new SwarmComponent
+            {
+                target = float3.zero,
+                speed = UnityEngine.Random.Range(5f, 15f),
+                separationRadius = 2f
+            });
+        }
+        
+        entities.Dispose();
+    }
+    
+    void Update()
+    {
+        // Обновление цели на основе позиции мыши
+        if (Input.GetMouseButton(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                UpdateSwarmTarget(hit.point);
+            }
+        }
+    }
+    
+    void UpdateSwarmTarget(float3 newTarget)
+    {
+        Entities
+            .WithAll&lt;SwarmComponent&gt;()
+            .ForEach((ref SwarmComponent swarm) =>
+            {
+                swarm.target = newTarget;
+            }).Run();
+    }
+}</div>
+                </div>
+            </div>
+
+            <a href="../../ru/index.html" class="back-link">← Назад к курсам</a>
+        </section>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
