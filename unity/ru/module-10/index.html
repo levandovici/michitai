@@ -3,36 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Модуль 10: Продвинутая оптимизация и выпуск - Примеры</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <meta name="description" content="Модуль 10: Продвинутая оптимизация и выпуск - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, оптимизация, выпуск, продвинутые техники, производительность">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 10: Продвинутая оптимизация и выпуск - Примеры кода</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
 
         .nav {
             max-width: 1200px;
@@ -203,43 +204,47 @@
 
             .tab {
                 text-align: center;
-            }
-        }
-    </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav">
-            <div class="logo">Michitai Unity</div>
-            <ul class="nav-links">
-                <li><a href="../../ru/index.html">Главная</a></li>
-                <li><a href="#examples">Примеры</a></li>
-                <li><a href="#contact">Контакты</a></li>
-            </ul>
-        </nav>
+    <header>
+        <div class="container">
+            <h1>Модуль 10: Продвинутые техники Unity</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <section class="hero">
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
         <div class="container">
-            <h1>Модуль 10: Продвинутая оптимизация и выпуск</h1>
-            <p>Комплексные примеры управления памятью, кроссплатформенной разработки и монетизации</p>
+            <h1>Продвинутые техники Unity</h1>
+            <p>Изучите продвинутые техники разработки в Unity</p>
         </div>
     </section>
 
-    <div class="container">
-        <section class="examples-section" id="examples">
-            <div class="tabs">
-                <button class="tab active" onclick="openTab(event, 'addressables')">Addressables</button>
-                <button class="tab" onclick="openTab(event, 'cross-platform')">Кроссплатформа</button>
-                <button class="tab" onclick="openTab(event, 'analytics')">Аналитика</button>
-                <button class="tab" onclick="openTab(event, 'monetization')">Монетизация</button>
-                <button class="tab" onclick="openTab(event, 'publishing')">Публикация</button>
-            </div>
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>Примеры кода</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('advanced-scripting')">Продвинутое скриптинг</button>
+                    <button class="tab" onclick="showTab('custom-editors')">Пользовательские редакторы</button>
+                    <button class="tab" onclick="showTab('asset-management')">Управление ассетами</button>
+                    <button class="tab" onclick="showTab('build-automation')">Автоматизация сборки</button>
+                    <button class="tab" onclick="showTab('platform-specific')">Платформо-специфичные решения</button>
+                </div>
 
-            <div id="addressables" class="tab-content active">
-                <div class="example">
-                    <h3>Управление памятью с Addressables</h3>
-                    <p>Эффективная загрузка и выгрузка ресурсов для оптимизации памяти.</p>
+                <div id="addressables" class="tab-content active">
+                    <div class="example">
+                        <h3>Управление памятью с Addressables</h3>
+                        <p>Эффективная загрузка и выгрузка ресурсов для оптимизации памяти.</p>
+                        <div class="code-block">using UnityEngine;
                     <div class="code-block">using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;

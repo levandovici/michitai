@@ -3,45 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Модуль 6: Unity Audio и Звуковая Система - Примеры</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <meta name="description" content="Модуль 6: Unity Audio и Звуковая Система - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, audio, звук, музыка, аудиосистема, эффекты">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 6: Unity Audio и Звуковая Система - Примеры кода</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
 
         .logo {
             font-size: 1.5rem;
@@ -208,39 +200,45 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav">
-            <div class="logo">Michitai Unity</div>
-            <ul class="nav-links">
-                <li><a href="../../ru/index.html">Главная</a></li>
-                <li><a href="#examples">Примеры</a></li>
-                <li><a href="#contact">Контакты</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section class="hero">
+    <header>
         <div class="container">
             <h1>Модуль 6: Unity Audio и Звуковая Система</h1>
-            <p>Комплексные примеры для аудио системы Unity и управления звуком</p>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Unity Audio и Звуковая Система</h1>
+            <p>Изучите аудио систему Unity и управление звуком в играх</p>
         </div>
     </section>
 
-    <div class="container">
-        <section class="examples-section" id="examples">
-            <div class="tabs">
-                <button class="tab active" onclick="openTab(event, 'audio-basics')">Основы Audio</button>
-                <button class="tab" onclick="openTab(event, 'audio-source')">AudioSource</button>
-                <button class="tab" onclick="openTab(event, 'audio-mixer')">Audio Mixer</button>
-                <button class="tab" onclick="openTab(event, 'spatial-audio')">3D Звук</button>
-                <button class="tab" onclick="openTab(event, 'advanced-audio')">Продвинутый Audio</button>
-            </div>
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>Примеры кода</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('audio-basics')">Основы Audio</button>
+                    <button class="tab" onclick="showTab('audio-source')">AudioSource</button>
+                    <button class="tab" onclick="showTab('audio-mixer')">Audio Mixer</button>
+                    <button class="tab" onclick="showTab('spatial-audio')">3D Звук</button>
+                    <button class="tab" onclick="showTab('advanced-audio')">Продвинутый Audio</button>
+                </div>
 
-            <div id="audio-basics" class="tab-content active">
-                <div class="example">
-                    <h3>Основы Audio System</h3>
-                    <p>Базовое управление аудио и настройка звуковой системы Unity.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="audio-basics" class="tab-content active">
+                    <h3>Пример 1: Основы Audio System</h3>
+                    <p>Базовое управление аудио и настройка звуковой системы Unity:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
