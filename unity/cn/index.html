@@ -223,15 +223,43 @@
             font-size: 1rem;
             color: #2d3748;
         }
-        .module .module-btn {
-            background: #48bb78;
-            color: #1a202c;
+        .module-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .module .code-btn {
+            background: #4299e1;
+            color: white;
             padding: 10px 20px;
             font-size: 1rem;
-            margin-top: 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
         }
-        .module .module-btn:hover {
+        .module .code-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        .module .study-btn {
+            background: #48bb78;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+        .module .study-btn:hover {
             background: #38a169;
+            transform: translateY(-2px);
         }
         .chart-container {
             max-width: 800px;
@@ -568,7 +596,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>创建用于控制角色（移动、健康、数据保存）的脚本。</p>
                 <p class="outcomes"><strong>成果：</strong>理解C#以创建游戏逻辑。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-2/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块2：Unity基础</h3>
@@ -582,7 +613,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>创建具有移动立方体、响应物理和输入的场景。</p>
                 <p class="outcomes"><strong>成果：</strong>能够创建简单的Unity场景。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-3/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块3：2D游戏开发</h3>
@@ -596,7 +630,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>开发一个带有跳跃角色、敌人和菜单的2D平台游戏。</p>
                 <p class="outcomes"><strong>成果：</strong>具有交互元素的完整2D游戏。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-4/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块4：3D游戏开发</h3>
@@ -610,7 +647,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>构建一个具有玩家、敌人和AI导航的3D冒险游戏。</p>
                 <p class="outcomes"><strong>成果：</strong>创建引人入胜的3D游戏技能。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-5/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块5：Unity进阶主题</h3>
@@ -622,7 +662,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>优化带有粒子的场景并创建带有迷你地图的HUD。</p>
                 <p class="outcomes"><strong>成果：</strong>创建视觉吸引力和优化的游戏能力。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-6/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块6：网络编程基础</h3>
@@ -634,7 +677,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>创建客户端-服务器聊天应用程序。</p>
                 <p class="outcomes"><strong>成果：</strong>理解网络编程基础。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-7/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块7：多线程编程</h3>
@@ -646,7 +692,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>在Unity中为AI实现后台路径计算。</p>
                 <p class="outcomes"><strong>成果：</strong>通过线程优化性能的技能。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-7/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块8：Unity多人游戏</h3>
@@ -658,7 +707,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>开发具有同步游戏玩法的2D多人射击游戏。</p>
                 <p class="outcomes"><strong>成果：</strong>创建多人游戏的能力。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-8/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块9：数据导向技术栈（DOTS）</h3>
@@ -670,7 +722,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>使用DOTS构建具有数千个移动对象的游戏。</p>
                 <p class="outcomes"><strong>成果：</strong>创建高性能游戏的技能。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-9/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块10：高级优化和发布</h3>
@@ -683,7 +738,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>优化并发布带有分析的游戏。</p>
                 <p class="outcomes"><strong>成果：</strong>准备好发布的带有盈利的游戏。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-10/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块11：区块链和Web3游戏</h3>
@@ -697,7 +755,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>创建带有NFT物品和加密经济的游戏。</p>
                 <p class="outcomes"><strong>成果：</strong>使用区块链技术创建Web3游戏的技能。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-11/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
             <div class="module">
                 <h3>模块12：最终项目</h3>
@@ -709,7 +770,10 @@
                 </ul>
                 <p class="practice"><strong>实践：</strong>开发并发布一款完整游戏。</p>
                 <p class="outcomes"><strong>成果：</strong>展示你技能的作品集游戏。</p>
-                <a href="#contact" class="btn module-btn">开始学习</a>
+                <div class="module-buttons">
+                    <a href="module-12/index.html" class="code-btn">代码</a>
+                    <a href="#contact" class="study-btn">开始学习</a>
+                </div>
             </div>
         </div>
     </section>

@@ -233,6 +233,44 @@
         .module .module-btn:hover {
             background: #38a169;
         }
+        .module-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .module .code-btn {
+            background: #4299e1;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+        .module .code-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        .module .study-btn {
+            background: #48bb78;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+        .module .study-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
         .chart-container {
             max-width: 800px;
             margin: 40px auto;
@@ -533,10 +571,7 @@
                     <a href="https://michitai.com/en/" title="English"><img src="flags/en.png" alt="Флаг английского языка" class="flag"></a>
                     <a href="https://michitai.com/ro/" title="Română"><img src="flags/ro.png" alt="Флаг румынского языка" class="flag"></a>
                     <a href="https://michitai.com/ru/" title="Русский"><img src="flags/ru.png" alt="Флаг русского языка" class="flag"></a>
-                    <a href="https://michitai.com/ua/" title="Українська"><img src="flags/ua.png" alt="Флаг украинского языка" class="flag"></a>
                     <a href="https://michitai.com/cn/" title="Китайский"><img src="flags/cn.png" alt="Китайский флаг" class="flag"></a>
-                    <a href="https://michitai.com/bg/" title="Болгарский"><img src="flags/bg.png" alt="Флаг Болгарии" class="flag"></a>
-                    <a href="https://michitai.com/gr/" title="Греческий"><img src="flags/gr.png" alt="Флаг Греции" class="flag"></a>
                 </div>
             </nav>
         </div>
@@ -571,7 +606,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Создай скрипт для управления персонажем (движение, здоровье, сохранение данных).</p>
                 <p class="outcomes"><strong>Итог:</strong> Понимание C# для создания игровой логики.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-1/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 2: Основы Unity</h3>
@@ -585,7 +623,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Создай сцену с движущимся кубом, реагирующим на физику и ввод.</p>
                 <p class="outcomes"><strong>Итог:</strong> Способность создавать простые сцены в Unity.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-2/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 3: Разработка 2D-игр</h3>
@@ -599,7 +640,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Разработай 2D-платформер с прыгающим персонажем, врагами и меню.</p>
                 <p class="outcomes"><strong>Итог:</strong> Полноценная 2D-игра с интерактивными элементами.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-3/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 4: Разработка 3D-игр</h3>
@@ -613,7 +657,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Построй 3D-приключение с игроком, врагами и AI-навигацией.</p>
                 <p class="outcomes"><strong>Итог:</strong> Навыки создания immersive 3D-игр.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-4/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 5: Промежуточные темы Unity</h3>
@@ -625,7 +672,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Оптимизируй сцену с частицами и создай HUD с мини-картой.</p>
                 <p class="outcomes"><strong>Итог:</strong> Умение создавать визуально привлекательные и оптимизированные игры.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-5/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 6: Основы сетевого программирования</h3>
@@ -637,7 +687,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Создай клиент-серверное приложение для чата.</p>
                 <p class="outcomes"><strong>Итог:</strong> Понимание основ сетевого программирования.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-6/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 7: Многопоточное программирование</h3>
@@ -649,7 +702,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Реализуй фоновое вычисление пути для AI в Unity.</p>
                 <p class="outcomes"><strong>Итог:</strong> Навыки оптимизации производительности через потоки.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-7/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 8: Мультиплеер в Unity</h3>
@@ -661,7 +717,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Разработай 2D-мультиплеерный шутер с синхронизированным геймплеем.</p>
                 <p class="outcomes"><strong>Итог:</strong> Способность создавать мультиплеерные игры.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-8/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 9: Data-Oriented Technology Stack (DOTS)</h3>
@@ -673,7 +732,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Построй игру с тысячами движущихся объектов, используя DOTS.</p>
                 <p class="outcomes"><strong>Итог:</strong> Навыки создания высокопроизводительных игр.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-9/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 10: Продвинутая оптимизация и выпуск</h3>
@@ -686,7 +748,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Оптимизируй и выпусти игру с аналитикой.</p>
                 <p class="outcomes"><strong>Итог:</strong> Готовая к релизу игра с монетизацией.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-10/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 11: Блокчейн и Web3 в играх</h3>
@@ -700,7 +765,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Создай игру с NFT предметами и криптовалютной экономикой.</p>
                 <p class="outcomes"><strong>Итог:</strong> Навыки создания Web3 игр с блокчейн технологиями.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-11/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Модуль 12: Итоговый проект</h3>
@@ -712,7 +780,10 @@
                 </ul>
                 <p class="practice"><strong>Практика:</strong> Разработай и опубликуй полноценную игру.</p>
                 <p class="outcomes"><strong>Итог:</strong> Портфолио-готовая игра, демонстрирующая твои навыки.</p>
-                <a href="#contact" class="btn module-btn">Начать обучение</a>
+                <div class="module-buttons">
+                    <a href="ru/module-12/index.html" class="code-btn">Код</a>
+                    <a href="#contact" class="study-btn">Начать изучение</a>
+                </div>
             </div>
         </div>
     </section>

@@ -225,15 +225,43 @@
             font-size: 1rem;
             color: #2d3748;
         }
-        .module .module-btn {
-            background: #48bb78;
-            color: #1a202c;
+        .module-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .module .code-btn {
+            background: #4299e1;
+            color: white;
             padding: 10px 20px;
             font-size: 1rem;
-            margin-top: 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
         }
-        .module .module-btn:hover {
+        .module .code-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        .module .study-btn {
+            background: #48bb78;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+        .module .study-btn:hover {
             background: #38a169;
+            transform: translateY(-2px);
         }
         .chart-container {
             max-width: 800px;
@@ -570,7 +598,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Creează un script pentru controlul unui personaj (mișcare, sănătate, salvare date).</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Înțelegerea C# pentru crearea logicii de joc.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-2/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 2: Bazele Unity</h3>
@@ -584,7 +615,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Creează o scenă cu un cub în mișcare care reacționează la fizică și intrare.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Capacitatea de a crea scene simple în Unity.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-3/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 3: Dezvoltarea Jocurilor 2D</h3>
@@ -598,7 +632,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Dezvoltă un platformer 2D cu un personaj care sare, inamici și un meniu.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Un joc 2D complet cu elemente interactive.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-4/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 4: Dezvoltarea Jocurilor 3D</h3>
@@ -612,7 +649,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Construiește o aventură 3D cu un jucător, inamici și navigație AI.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Abilități pentru crearea de jocuri 3D captivante.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-5/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 5: Subiecte Intermediare Unity</h3>
@@ -624,7 +664,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Optimizează o scenă cu particule și creează un HUD cu o minimapă.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Capacitatea de a crea jocuri atractive vizual și optimizate.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-6/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 6: Bazele Programării în Rețea</h3>
@@ -636,7 +679,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Creează o aplicație client-server pentru chat.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Înțelegerea fundamentelor programării în rețea.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-6/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 7: Programare Multithread</h3>
@@ -648,7 +694,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Implementează găsirea traseului în fundal pentru AI în Unity.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Abilități în optimizarea performanței prin fire.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-7/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 8: Multiplayer în Unity</h3>
@@ -660,7 +709,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Dezvoltă un shooter multiplayer 2D cu gameplay sincronizat.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Capacitatea de a crea jocuri multiplayer.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-8/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 9: Data-Oriented Technology Stack (DOTS)</h3>
@@ -672,7 +724,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Construiește un joc cu mii de obiecte în mișcare folosind DOTS.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Abilități în crearea de jocuri de înaltă performanță.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-9/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 10: Optimizare Avansată și Lansare</h3>
@@ -685,7 +740,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Optimizează și lansează un joc cu analize.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Un joc gata de lansare cu monetizare.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-10/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 11: Blockchain și Web3 în Jocuri</h3>
@@ -699,7 +757,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Creează un joc cu obiecte NFT și economie de criptomonede.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Abilități pentru a crea jocuri Web3 cu tehnologii blockchain.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-11/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Modul 12: Proiect Final</h3>
@@ -711,7 +772,10 @@
                 </ul>
                 <p class="practice"><strong>Practică:</strong> Dezvoltă și publică un joc complet.</p>
                 <p class="outcomes"><strong>Rezultat:</strong> Un joc gata pentru portofoliu care îți demonstrează abilitățile.</p>
-                <a href="#contact" class="btn module-btn">Începe învățarea</a>
+                <div class="module-buttons">
+                    <a href="module-12/index.html" class="code-btn">Cod</a>
+                    <a href="#contact" class="study-btn">Începe învățarea</a>
+                </div>
             </div>
         </div>
     </section>

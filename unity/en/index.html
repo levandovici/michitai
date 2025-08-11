@@ -225,15 +225,43 @@
             font-size: 1rem;
             color: #2d3748;
         }
-        .module .module-btn {
-            background: #48bb78;
-            color: #1a202c;
+        .module-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .module .code-btn {
+            background: #4299e1;
+            color: white;
             padding: 10px 20px;
             font-size: 1rem;
-            margin-top: 16px;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
         }
-        .module .module-btn:hover {
+        .module .code-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        .module .study-btn {
+            background: #48bb78;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+        .module .study-btn:hover {
             background: #38a169;
+            transform: translateY(-2px);
         }
         .chart-container {
             max-width: 800px;
@@ -570,7 +598,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Create a script for character control (movement, health, data saving).</p>
                 <p class="outcomes"><strong>Outcome:</strong> Understanding C# for game logic creation.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-2/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 2: Unity Fundamentals</h3>
@@ -584,7 +615,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Create a scene with a moving cube responding to physics and input.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Ability to create simple Unity scenes.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-3/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 3: 2D Game Development</h3>
@@ -598,7 +632,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Develop a 2D platformer with a jumping character, enemies, and a menu.</p>
                 <p class="outcomes"><strong>Outcome:</strong> A complete 2D game with interactive elements.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-4/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 4: 3D Game Development</h3>
@@ -612,7 +649,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Build a 3D adventure with a player, enemies, and AI navigation.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Skills to create immersive 3D games.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-5/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 5: Intermediate Unity Topics</h3>
@@ -624,7 +664,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Optimize a scene with particles and create a HUD with a minimap.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Ability to create visually appealing and optimized games.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-6/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 6: Networking Fundamentals</h3>
@@ -636,7 +679,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Create a client-server chat application.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Understanding of networking fundamentals.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-7/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 7: Multithreaded Programming</h3>
@@ -648,7 +694,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Implement background pathfinding for AI in Unity.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Skills to optimize performance with threads.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-7/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 8: Multiplayer in Unity</h3>
@@ -660,7 +709,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Develop a 2D multiplayer shooter with synchronized gameplay.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Ability to create multiplayer games.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-8/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 9: Data-Oriented Technology Stack (DOTS)</h3>
@@ -672,7 +724,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Build a game with thousands of moving objects using DOTS.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Skills to create high-performance games.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-9/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 10: Advanced Optimization and Release</h3>
@@ -685,7 +740,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Optimize and release a game with analytics.</p>
                 <p class="outcomes"><strong>Outcome:</strong> A release-ready game with monetization.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-10/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 11: Blockchain and Web3 in Games</h3>
@@ -699,7 +757,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Create a game with NFT items and cryptocurrency economy.</p>
                 <p class="outcomes"><strong>Outcome:</strong> Skills to create Web3 games with blockchain technologies.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-11/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
             <div class="module">
                 <h3>Module 12: Final Project</h3>
@@ -711,7 +772,10 @@
                 </ul>
                 <p class="practice"><strong>Practice:</strong> Develop and publish a complete game.</p>
                 <p class="outcomes"><strong>Outcome:</strong> A portfolio-ready game showcasing your skills.</p>
-                <a href="#contact" class="btn module-btn">Start Learning</a>
+                <div class="module-buttons">
+                    <a href="module-12/index.html" class="code-btn">Code</a>
+                    <a href="#contact" class="study-btn">Start Studying</a>
+                </div>
             </div>
         </div>
     </section>
