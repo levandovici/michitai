@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模块6：Unity音频和声音系统 - 示例</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 120px 2rem 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .examples-section {
+            background: white;
+            margin: -40px auto 40px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: #f8f9ff;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .example {
+            margin-bottom: 30px;
+        }
+
+        .example h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .example p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                padding: 0 1rem;
+            }
+
+            .examples-section {
+                margin: -20px 1rem 20px;
+                padding: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">Michitai Unity</div>
+            <ul class="nav-links">
+                <li><a href="../../cn/index.html">首页</a></li>
+                <li><a href="#examples">示例</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>模块6：Unity音频和声音系统</h1>
+            <p>Unity音频系统和声音管理的全面示例</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="examples-section" id="examples">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'audio-basics')">音频基础</button>
+                <button class="tab" onclick="openTab(event, 'audio-source')">音频源</button>
+                <button class="tab" onclick="openTab(event, 'audio-mixer')">音频混合器</button>
+                <button class="tab" onclick="openTab(event, 'spatial-audio')">3D音频</button>
+                <button class="tab" onclick="openTab(event, 'advanced-audio')">高级音频</button>
+            </div>
+
+            <div id="audio-basics" class="tab-content active">
+                <div class="example">
+                    <h3>音频系统基础</h3>
+                    <p>基本音频管理和Unity声音系统配置。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AudioManager : MonoBehaviour
+{
+    [Header("音频剪辑")]
+    public AudioClip backgroundMusic;
+    public AudioClip buttonClickSound;
+    public AudioClip explosionSound;
+    
+    [Header("音频源")]
+    public AudioSource musicSource;
+    public AudioSource sfxSource;
+    
+    [Header("音量设置")]
+    [Range(0f, 1f)]
+    public float masterVolume = 1f;
+    [Range(0f, 1f)]
+    public float musicVolume = 0.7f;
+    [Range(0f, 1f)]
+    public float sfxVolume = 1f;
+    
+    void Start()
+    {
+        SetupAudioSources();
+        PlayBackgroundMusic();
+        Debug.Log("音频管理器已初始化");
+    }
+    
+    void SetupAudioSources()
+    {
+        if (musicSource == null)
+        {
+            musicSource = gameObject.AddComponent&lt;AudioSource&gt;();
+        }
+        
+        musicSource.loop = true;
+        musicSource.playOnAwake = false;
+        musicSource.volume = musicVolume;
+        
+        if (sfxSource == null)
+        {
+            sfxSource = gameObject.AddComponent&lt;AudioSource&gt;();
+        }
+        
+        sfxSource.loop = false;
+        sfxSource.playOnAwake = false;
+        sfxSource.volume = sfxVolume;
+        
+        Debug.Log("音频源已配置");
+    }
+    
+    public void PlayBackgroundMusic()
+    {
+        if (backgroundMusic != null && musicSource != null)
+        {
+            musicSource.clip = backgroundMusic;
+            musicSource.Play();
+            Debug.Log("背景音乐已开始播放");
+        }
+    }
+    
+    public void PlaySoundEffect(AudioClip clip)
+    {
+        if (clip != null && sfxSource != null)
+        {
+            sfxSource.PlayOneShot(clip);
+            Debug.Log("音效已播放：" + clip.name);
+        }
+    }
+    
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = Mathf.Clamp01(volume);
+        AudioListener.volume = masterVolume;
+        Debug.Log("主音量：" + masterVolume);
+    }
+    
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = Mathf.Clamp01(volume);
+        if (musicSource != null)
+        {
+            musicSource.volume = musicVolume;
+        }
+        Debug.Log("音乐音量：" + musicVolume);
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="audio-source" class="tab-content">
+                <div class="example">
+                    <h3>音频源管理</h3>
+                    <p>详细使用AudioSource组件及其参数。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AudioSourceController : MonoBehaviour
+{
+    [Header("音频源组件")]
+    public AudioSource primarySource;
+    
+    [Header("音频剪辑")]
+    public AudioClip[] musicTracks;
+    
+    [Header("播放参数")]
+    [Range(0f, 3f)]
+    public float pitch = 1f;
+    [Range(0f, 1f)]
+    public float volume = 1f;
+    [Range(-1f, 1f)]
+    public float stereoPan = 0f;
+    
+    private int currentTrackIndex = 0;
+    private bool isPlaying = false;
+    
+    void Start()
+    {
+        if (primarySource == null)
+            primarySource = GetComponent&lt;AudioSource&gt;();
+            
+        Debug.Log("音频源控制器已初始化");
+    }
+    
+    void Update()
+    {
+        UpdateAudioParameters();
+        CheckPlaybackStatus();
+        HandleInput();
+    }
+    
+    void UpdateAudioParameters()
+    {
+        if (primarySource != null)
+        {
+            primarySource.pitch = pitch;
+            primarySource.volume = volume;
+            primarySource.panStereo = stereoPan;
+        }
+    }
+    
+    void CheckPlaybackStatus()
+    {
+        if (primarySource != null && isPlaying && !primarySource.isPlaying)
+        {
+            Debug.Log("播放完成");
+            isPlaying = false;
+            
+            if (musicTracks.Length > 0)
+            {
+                PlayNextTrack();
+            }
+        }
+    }
+    
+    void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TogglePlayback();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            PlayNextTrack();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PlayPreviousTrack();
+        }
+    }
+    
+    public void TogglePlayback()
+    {
+        if (primarySource == null) return;
+        
+        if (primarySource.isPlaying)
+        {
+            primarySource.Pause();
+            Debug.Log("播放已暂停");
+        }
+        else
+        {
+            primarySource.UnPause();
+            isPlaying = true;
+            Debug.Log("播放已恢复");
+        }
+    }
+    
+    public void PlayNextTrack()
+    {
+        if (musicTracks.Length > 0)
+        {
+            currentTrackIndex = (currentTrackIndex + 1) % musicTracks.Length;
+            PlayCurrentTrack();
+            Debug.Log($"下一首：{currentTrackIndex + 1}/{musicTracks.Length}");
+        }
+    }
+    
+    public void PlayPreviousTrack()
+    {
+        if (musicTracks.Length > 0)
+        {
+            currentTrackIndex = (currentTrackIndex - 1 + musicTracks.Length) % musicTracks.Length;
+            PlayCurrentTrack();
+            Debug.Log($"上一首：{currentTrackIndex + 1}/{musicTracks.Length}");
+        }
+    }
+    
+    public void PlayCurrentTrack()
+    {
+        if (musicTracks.Length > 0 && primarySource != null)
+        {
+            AudioClip currentClip = musicTracks[currentTrackIndex];
+            primarySource.clip = currentClip;
+            primarySource.Play();
+            isPlaying = true;
+            Debug.Log("正在播放：" + currentClip.name);
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="audio-mixer" class="tab-content">
+                <div class="example">
+                    <h3>音频混合器和组</h3>
+                    <p>使用音频混合器进行专业声音混合。</p>
+                    <div class="code-block">using UnityEngine;
+using UnityEngine.Audio;
+
+public class AudioMixerController : MonoBehaviour
+{
+    [Header("音频混合器")]
+    public AudioMixer mainMixer;
+    
+    [Header("混合器参数")]
+    [Range(-80f, 20f)]
+    public float masterVolume = 0f;
+    [Range(-80f, 20f)]
+    public float musicVolume = 0f;
+    [Range(-80f, 20f)]
+    public float sfxVolume = 0f;
+    
+    void Start()
+    {
+        SetupMixer();
+        Debug.Log("音频混合器控制器已初始化");
+    }
+    
+    void SetupMixer()
+    {
+        if (mainMixer != null)
+        {
+            SetMasterVolume(masterVolume);
+            SetMusicVolume(musicVolume);
+            SetSFXVolume(sfxVolume);
+            
+            Debug.Log("音频混合器已配置");
+        }
+    }
+    
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = volume;
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("MasterVolume", volume);
+            Debug.Log("主音量：" + volume + " dB");
+        }
+    }
+    
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = volume;
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("MusicVolume", volume);
+            Debug.Log("音乐音量：" + volume + " dB");
+        }
+    }
+    
+    public void SetSFXVolume(float volume)
+    {
+        sfxVolume = volume;
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("SFXVolume", volume);
+            Debug.Log("音效音量：" + volume + " dB");
+        }
+    }
+    
+    public void SetLowPassFilter(float frequency)
+    {
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("LowPassFreq", frequency);
+            Debug.Log("低通滤波器：" + frequency + " Hz");
+        }
+    }
+    
+    public void SetReverb(float level)
+    {
+        if (mainMixer != null)
+        {
+            mainMixer.SetFloat("ReverbLevel", level);
+            Debug.Log("混响级别：" + level);
+        }
+    }
+    
+    public void CreateSnapshot(string snapshotName)
+    {
+        if (mainMixer != null)
+        {
+            AudioMixerSnapshot snapshot = mainMixer.FindSnapshot(snapshotName);
+            if (snapshot != null)
+            {
+                snapshot.TransitionTo(1f);
+                Debug.Log("切换到快照：" + snapshotName);
+            }
+        }
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CreateSnapshot("Normal");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CreateSnapshot("Underwater");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CreateSnapshot("Cave");
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="spatial-audio" class="tab-content">
+                <div class="example">
+                    <h3>3D空间音频</h3>
+                    <p>实现具有空间定位的3D音频。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class SpatialAudioController : MonoBehaviour
+{
+    [Header("3D音频设置")]
+    public AudioSource spatialSource;
+    
+    [Header("空间参数")]
+    [Range(0f, 1f)]
+    public float spatialBlend = 1f;
+    [Range(0f, 5f)]
+    public float dopplerLevel = 1f;
+    [Range(0f, 360f)]
+    public float spread = 0f;
+    
+    [Header("距离设置")]
+    public float minDistance = 1f;
+    public float maxDistance = 500f;
+    public AudioRolloffMode rolloffMode = AudioRolloffMode.Logarithmic;
+    
+    void Start()
+    {
+        SetupSpatialAudio();
+        Debug.Log("空间音频控制器已初始化");
+    }
+    
+    void SetupSpatialAudio()
+    {
+        if (spatialSource == null)
+            spatialSource = GetComponent&lt;AudioSource&gt;();
+            
+        if (spatialSource != null)
+        {
+            spatialSource.spatialBlend = spatialBlend;
+            spatialSource.dopplerLevel = dopplerLevel;
+            spatialSource.spread = spread;
+            spatialSource.rolloffMode = rolloffMode;
+            spatialSource.minDistance = minDistance;
+            spatialSource.maxDistance = maxDistance;
+            
+            Debug.Log("3D音频已配置");
+        }
+    }
+    
+    void Update()
+    {
+        UpdateSpatialParameters();
+        HandleInput();
+    }
+    
+    void UpdateSpatialParameters()
+    {
+        if (spatialSource != null)
+        {
+            spatialSource.spatialBlend = spatialBlend;
+            spatialSource.dopplerLevel = dopplerLevel;
+            spatialSource.spread = spread;
+            spatialSource.minDistance = minDistance;
+            spatialSource.maxDistance = maxDistance;
+            spatialSource.rolloffMode = rolloffMode;
+        }
+    }
+    
+    void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Plus))
+        {
+            IncreaseDistance();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Minus))
+        {
+            DecreaseDistance();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            ToggleDoppler();
+        }
+    }
+    
+    public void IncreaseDistance()
+    {
+        maxDistance = Mathf.Min(maxDistance + 50f, 1000f);
+        Debug.Log("最大距离：" + maxDistance);
+    }
+    
+    public void DecreaseDistance()
+    {
+        maxDistance = Mathf.Max(maxDistance - 50f, minDistance + 1f);
+        Debug.Log("最大距离：" + maxDistance);
+    }
+    
+    public void ToggleDoppler()
+    {
+        dopplerLevel = dopplerLevel > 0 ? 0f : 1f;
+        Debug.Log("多普勒效应：" + (dopplerLevel > 0 ? "启用" : "禁用"));
+    }
+    
+    public void SetSpatialBlend(float blend)
+    {
+        spatialBlend = Mathf.Clamp01(blend);
+        Debug.Log("空间混合：" + spatialBlend);
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="advanced-audio" class="tab-content">
+                <div class="example">
+                    <h3>高级音频技术</h3>
+                    <p>动态音乐、音频效果和性能优化。</p>
+                    <div class="code-block">using UnityEngine;
+using System.Collections;
+
+public class AdvancedAudioController : MonoBehaviour
+{
+    [Header("动态音乐")]
+    public AudioSource[] musicLayers;
+    public float crossfadeDuration = 2f;
+    
+    [Header("音频效果")]
+    public AudioLowPassFilter lowPassFilter;
+    public AudioHighPassFilter highPassFilter;
+    public AudioReverbFilter reverbFilter;
+    
+    private int currentMusicLayer = 0;
+    private bool isCrossfading = false;
+    
+    void Start()
+    {
+        SetupAdvancedAudio();
+        Debug.Log("高级音频控制器已初始化");
+    }
+    
+    void SetupAdvancedAudio()
+    {
+        for (int i = 0; i < musicLayers.Length; i++)
+        {
+            if (musicLayers[i] != null)
+            {
+                musicLayers[i].volume = (i == 0) ? 1f : 0f;
+                musicLayers[i].Play();
+            }
+        }
+        
+        if (lowPassFilter == null)
+            lowPassFilter = gameObject.AddComponent&lt;AudioLowPassFilter&gt;();
+            
+        if (highPassFilter == null)
+            highPassFilter = gameObject.AddComponent&lt;AudioHighPassFilter&gt;();
+            
+        if (reverbFilter == null)
+            reverbFilter = gameObject.AddComponent&lt;AudioReverbFilter&gt;();
+    }
+    
+    public void CrossfadeToLayer(int layerIndex)
+    {
+        if (layerIndex >= 0 && layerIndex < musicLayers.Length && !isCrossfading)
+        {
+            StartCoroutine(CrossfadeCoroutine(layerIndex));
+        }
+    }
+    
+    IEnumerator CrossfadeCoroutine(int targetLayer)
+    {
+        isCrossfading = true;
+        int previousLayer = currentMusicLayer;
+        currentMusicLayer = targetLayer;
+        
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < crossfadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / crossfadeDuration;
+            
+            if (musicLayers[previousLayer] != null)
+                musicLayers[previousLayer].volume = Mathf.Lerp(1f, 0f, t);
+                
+            if (musicLayers[targetLayer] != null)
+                musicLayers[targetLayer].volume = Mathf.Lerp(0f, 1f, t);
+            
+            yield return null;
+        }
+        
+        if (musicLayers[previousLayer] != null)
+            musicLayers[previousLayer].volume = 0f;
+            
+        if (musicLayers[targetLayer] != null)
+            musicLayers[targetLayer].volume = 1f;
+        
+        isCrossfading = false;
+        Debug.Log($"切换到层 {targetLayer} 完成");
+    }
+    
+    public void ApplyLowPassFilter(float frequency)
+    {
+        if (lowPassFilter != null)
+        {
+            lowPassFilter.cutoffFrequency = Mathf.Clamp(frequency, 10f, 22000f);
+            Debug.Log("低通滤波器：" + frequency + " Hz");
+        }
+    }
+    
+    public void ApplyReverb(AudioReverbPreset preset)
+    {
+        if (reverbFilter != null)
+        {
+            reverbFilter.reverbPreset = preset;
+            Debug.Log("混响预设：" + preset);
+        }
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CrossfadeToLayer(0);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CrossfadeToLayer(1);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            ApplyLowPassFilter(1000f);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ApplyReverb(AudioReverbPreset.Cave);
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <a href="../../cn/index.html" class="back-link">← 返回课程</a>
+        </section>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
