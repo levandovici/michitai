@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模块4：Unity动画和Animator - 示例</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 120px 2rem 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .examples-section {
+            background: white;
+            margin: -40px auto 40px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: #f8f9ff;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .example {
+            margin-bottom: 30px;
+        }
+
+        .example h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .example p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                padding: 0 1rem;
+            }
+
+            .examples-section {
+                margin: -20px 1rem 20px;
+                padding: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">Michitai Unity</div>
+            <ul class="nav-links">
+                <li><a href="../../cn/index.html">首页</a></li>
+                <li><a href="#examples">示例</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>模块4：Unity动画和Animator</h1>
+            <p>Unity动画系统和Animator控制的综合示例</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="examples-section" id="examples">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'animator-basics')">Animator基础</button>
+                <button class="tab" onclick="openTab(event, 'animation-states')">动画状态</button>
+                <button class="tab" onclick="openTab(event, 'blend-trees')">混合树</button>
+                <button class="tab" onclick="openTab(event, 'animation-events')">动画事件</button>
+                <button class="tab" onclick="openTab(event, 'advanced-animation')">高级动画</button>
+            </div>
+
+            <div id="animator-basics" class="tab-content active">
+                <div class="example">
+                    <h3>基础Animator控制</h3>
+                    <p>控制Animator参数并从脚本触发动画。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AnimatorController : MonoBehaviour
+{
+    private Animator animator;
+    
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+        Debug.Log("为 " + gameObject.name + " 初始化Animator");
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            animator.SetBool("IsWalking", true);
+            Debug.Log("激活行走动画");
+        }
+        
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            animator.SetBool("IsWalking", false);
+            Debug.Log("停止行走动画");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.SetTrigger("Jump");
+            Debug.Log("触发跳跃动画");
+        }
+    }
+    
+    public void SetAnimationSpeed(float speed)
+    {
+        animator.SetFloat("Speed", speed);
+        Debug.Log("动画速度设置为: " + speed);
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="animation-states" class="tab-content">
+                <div class="example">
+                    <h3>动画状态管理</h3>
+                    <p>管理状态之间的转换并监控动画进度。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AnimationStateManager : MonoBehaviour
+{
+    private Animator animator;
+    private Rigidbody rb;
+    
+    [Header("动画参数")]
+    public float walkSpeed = 2f;
+    public float runSpeed = 5f;
+    
+    private bool isGrounded = true;
+    
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+        rb = GetComponent&lt;Rigidbody&gt;();
+        Debug.Log("动画状态管理器已初始化");
+    }
+    
+    void Update()
+    {
+        HandleMovementInput();
+        UpdateAnimationParameters();
+        MonitorAnimationStates();
+    }
+    
+    void HandleMovementInput()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        
+        Vector3 movement = new Vector3(horizontal, 0, vertical);
+        bool isMoving = movement.magnitude > 0.1f;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        
+        animator.SetBool("IsWalking", isMoving && !isRunning);
+        animator.SetBool("IsRunning", isMoving && isRunning);
+        animator.SetFloat("MovementSpeed", movement.magnitude);
+    }
+    
+    void UpdateAnimationParameters()
+    {
+        animator.SetBool("IsGrounded", isGrounded);
+        animator.SetFloat("VerticalVelocity", rb.velocity.y);
+    }
+    
+    void MonitorAnimationStates()
+    {
+        AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
+        
+        if (currentState.IsName("Jump") && currentState.normalizedTime >= 1.0f)
+        {
+            Debug.Log("跳跃动画完成");
+        }
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="blend-trees" class="tab-content">
+                <div class="example">
+                    <h3>混合树控制</h3>
+                    <p>使用混合树实现流畅自然的动画。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class BlendTreeController : MonoBehaviour
+{
+    private Animator animator;
+    
+    [Header("混合树设置")]
+    public float accelerationTime = 2f;
+    public float decelerationTime = 1f;
+    
+    private float currentBlendX = 0f;
+    private float currentBlendY = 0f;
+    private float targetBlendX = 0f;
+    private float targetBlendY = 0f;
+    
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+        Debug.Log("混合树控制器已初始化");
+    }
+    
+    void Update()
+    {
+        HandleInput();
+        UpdateBlendValues();
+        SetAnimatorParameters();
+    }
+    
+    void HandleInput()
+    {
+        float inputX = Input.GetAxis("Horizontal");
+        float inputY = Input.GetAxis("Vertical");
+        
+        targetBlendX = inputX;
+        targetBlendY = inputY;
+        
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            targetBlendX *= 2f;
+            targetBlendY *= 2f;
+        }
+        
+        targetBlendX = Mathf.Clamp(targetBlendX, -1f, 1f);
+        targetBlendY = Mathf.Clamp(targetBlendY, -1f, 1f);
+    }
+    
+    void UpdateBlendValues()
+    {
+        float rate = 1f / accelerationTime;
+        currentBlendX = Mathf.MoveTowards(currentBlendX, targetBlendX, rate * Time.deltaTime);
+        currentBlendY = Mathf.MoveTowards(currentBlendY, targetBlendY, rate * Time.deltaTime);
+    }
+    
+    void SetAnimatorParameters()
+    {
+        animator.SetFloat("BlendX", currentBlendX);
+        animator.SetFloat("BlendY", currentBlendY);
+        
+        float magnitude = new Vector2(currentBlendX, currentBlendY).magnitude;
+        animator.SetFloat("Speed", magnitude);
+        animator.SetBool("IsMoving", magnitude > 0.1f);
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="animation-events" class="tab-content">
+                <div class="example">
+                    <h3>动画事件</h3>
+                    <p>使用动画事件将效果与动画同步。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AnimationEventHandler : MonoBehaviour
+{
+    [Header("音频组件")]
+    public AudioSource audioSource;
+    public AudioClip footstepSound;
+    public AudioClip jumpSound;
+    
+    [Header("视觉效果")]
+    public ParticleSystem dustEffect;
+    
+    void Start()
+    {
+        if (audioSource == null)
+            audioSource = GetComponent&lt;AudioSource&gt;();
+            
+        Debug.Log("动画事件处理器已初始化");
+    }
+    
+    // 由动画事件调用的脚步方法
+    public void OnFootstep()
+    {
+        Debug.Log("检测到脚步事件");
+        
+        if (audioSource && footstepSound)
+        {
+            audioSource.PlayOneShot(footstepSound);
+        }
+        
+        if (dustEffect)
+        {
+            dustEffect.Play();
+        }
+    }
+    
+    // 跳跃开始方法
+    public void OnJumpStart()
+    {
+        Debug.Log("跳跃开始");
+        
+        if (audioSource && jumpSound)
+        {
+            audioSource.PlayOneShot(jumpSound);
+        }
+    }
+    
+    // 着陆方法
+    public void OnLanding()
+    {
+        Debug.Log("通过事件检测到着陆");
+        
+        if (dustEffect)
+        {
+            dustEffect.Play();
+        }
+        
+        CameraShake();
+    }
+    
+    // 攻击事件方法
+    public void OnAttackHit()
+    {
+        Debug.Log("攻击命中时刻");
+        
+        Collider[] enemies = Physics.OverlapSphere(transform.position, 2f);
+        
+        foreach (Collider enemy in enemies)
+        {
+            if (enemy.CompareTag("Enemy"))
+            {
+                Debug.Log("击中敌人: " + enemy.name);
+            }
+        }
+    }
+    
+    void CameraShake()
+    {
+        Camera mainCamera = Camera.main;
+        if (mainCamera)
+        {
+            StartCoroutine(ShakeCoroutine(mainCamera));
+        }
+    }
+    
+    System.Collections.IEnumerator ShakeCoroutine(Camera camera)
+    {
+        Vector3 originalPosition = camera.transform.position;
+        float duration = 0.2f;
+        float magnitude = 0.1f;
+        
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+            
+            camera.transform.position = originalPosition + new Vector3(x, y, 0);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        camera.transform.position = originalPosition;
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="advanced-animation" class="tab-content">
+                <div class="example">
+                    <h3>高级动画脚本</h3>
+                    <p>高级动画技术，包括IK和程序化控制。</p>
+                    <div class="code-block">using UnityEngine;
+
+public class AdvancedAnimationController : MonoBehaviour
+{
+    private Animator animator;
+    
+    [Header("IK设置")]
+    public Transform leftHandTarget;
+    public Transform rightHandTarget;
+    public Transform lookAtTarget;
+    
+    [Range(0f, 1f)]
+    public float leftHandWeight = 1f;
+    [Range(0f, 1f)]
+    public float rightHandWeight = 1f;
+    [Range(0f, 1f)]
+    public float lookAtWeight = 1f;
+    
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+        Debug.Log("高级动画控制器已初始化");
+    }
+    
+    void Update()
+    {
+        HandleAdvancedControls();
+    }
+    
+    void HandleAdvancedControls()
+    {
+        if (Input.GetKey(KeyCode.Plus))
+        {
+            animator.speed = Mathf.Min(animator.speed + Time.deltaTime, 3f);
+            Debug.Log("动画速度: " + animator.speed);
+        }
+        
+        if (Input.GetKey(KeyCode.Minus))
+        {
+            animator.speed = Mathf.Max(animator.speed - Time.deltaTime, 0.1f);
+            Debug.Log("动画速度: " + animator.speed);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            animator.speed = 1f;
+            Debug.Log("动画速度已重置");
+        }
+    }
+    
+    // IK回调 - 由Unity自动调用
+    void OnAnimatorIK(int layerIndex)
+    {
+        if (animator)
+        {
+            // 设置左手的位置和旋转
+            if (leftHandTarget)
+            {
+                animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, leftHandWeight);
+                animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, leftHandWeight);
+                animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
+                animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
+            }
+            
+            // 设置右手的位置和旋转
+            if (rightHandTarget)
+            {
+                animator.SetIKPositionWeight(AvatarIKGoal.RightHand, rightHandWeight);
+                animator.SetIKRotationWeight(AvatarIKGoal.RightHand, rightHandWeight);
+                animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
+                animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
+            }
+            
+            // 设置注视目标
+            if (lookAtTarget)
+            {
+                animator.SetLookAtWeight(lookAtWeight);
+                animator.SetLookAtPosition(lookAtTarget.position);
+            }
+        }
+    }
+    
+    public void SetLayerWeight(int layerIndex, float weight)
+    {
+        animator.SetLayerWeight(layerIndex, weight);
+        Debug.Log($"层 {layerIndex} 权重设置为 {weight}");
+    }
+    
+    public void PlayAnimationAtTime(string stateName, float normalizedTime)
+    {
+        animator.Play(stateName, 0, normalizedTime);
+        Debug.Log($"动画 {stateName} 在时间 {normalizedTime} 播放");
+    }
+}</div>
+                </div>
+            </div>
+
+            <a href="../../cn/index.html" class="back-link">← 返回课程</a>
+        </section>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>

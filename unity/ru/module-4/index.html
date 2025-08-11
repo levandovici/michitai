@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Модуль 4: Анимация Unity и Animator - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, анимация, animator, состояния, переходы, blend tree">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 4: Анимация Unity и Animator - Примеры кода</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Модуль 4: Анимация Unity и Animator</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="../index.html">Курс</a></li>
+                    <li><a href="#examples">Примеры</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Анимация Unity и Animator</h1>
+            <p>Изучите систему анимации Unity и работу с Animator Controller</p>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>Примеры кода</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('animator')">Animator</button>
+                    <button class="tab" onclick="showTab('states')">Состояния</button>
+                    <button class="tab" onclick="showTab('blendtree')">Blend Tree</button>
+                    <button class="tab" onclick="showTab('events')">События</button>
+                    <button class="tab" onclick="showTab('scripting')">Скрипты</button>
+                </div>
+
+                <div id="animator" class="tab-content active">
+                    <h3>Пример 1: Основы Animator</h3>
+                    <p>Работа с компонентом Animator и его параметрами:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class AnimatorExample : MonoBehaviour
+{
+    [Header("Animator")]
+    public Animator animator;
+    
+    [Header("Parameters")]
+    public string walkParam = "IsWalking";
+    public string speedParam = "Speed";
+    public string jumpTrigger = "Jump";
+
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+        ShowAnimatorInfo();
+    }
+
+    void Update()
+    {
+        HandleInput();
+        UpdateParameters();
+    }
+
+    void HandleInput()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            SetWalking(true);
+        }
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            SetWalking(false);
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TriggerJump();
+        }
+    }
+
+    void UpdateParameters()
+    {
+        float speed = Input.GetAxis("Vertical");
+        animator.SetFloat(speedParam, Mathf.Abs(speed));
+        
+        bool isMoving = Mathf.Abs(speed) > 0.1f;
+        animator.SetBool(walkParam, isMoving);
+    }
+
+    void SetWalking(bool walking)
+    {
+        animator.SetBool(walkParam, walking);
+        Debug.Log($"Ходьба: {walking}");
+    }
+
+    void TriggerJump()
+    {
+        animator.SetTrigger(jumpTrigger);
+        Debug.Log("Прыжок!");
+    }
+
+    void ShowAnimatorInfo()
+    {
+        Debug.Log($"Controller: {animator.runtimeAnimatorController?.name}");
+        Debug.Log($"Слоев: {animator.layerCount}");
+        Debug.Log($"Параметров: {animator.parameterCount}");
+    }
+
+    bool IsAnimationFinished(string animName)
+    {
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        return state.IsName(animName) && 
+               state.normalizedTime >= 1.0f && 
+               !animator.IsInTransition(0);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="states" class="tab-content">
+                    <h3>Пример 2: Управление состояниями</h3>
+                    <p>Работа с состояниями анимации:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class AnimationStates : MonoBehaviour
+{
+    [Header("States")]
+    public Animator animator;
+    public string currentState = "Idle";
+    
+    private float stateTimer;
+
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+    }
+
+    void Update()
+    {
+        HandleStateInput();
+        UpdateTimer();
+        CheckStateCompletion();
+    }
+
+    void HandleStateInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            ChangeState("Idle");
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            ChangeState("Walk");
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            ChangeState("Run");
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            ChangeState("Jump");
+    }
+
+    void ChangeState(string newState)
+    {
+        if (currentState == newState) return;
+
+        OnStateExit(currentState);
+        string oldState = currentState;
+        currentState = newState;
+        stateTimer = 0f;
+        OnStateEnter(newState);
+        
+        Debug.Log($"Переход: {oldState} → {newState}");
+    }
+
+    void OnStateEnter(string state)
+    {
+        switch (state)
+        {
+            case "Idle":
+                animator.SetBool("IsWalking", false);
+                animator.SetBool("IsRunning", false);
+                break;
+            case "Walk":
+                animator.SetBool("IsWalking", true);
+                animator.SetFloat("Speed", 1f);
+                break;
+            case "Run":
+                animator.SetBool("IsRunning", true);
+                animator.SetFloat("Speed", 2f);
+                break;
+            case "Jump":
+                animator.SetTrigger("Jump");
+                break;
+        }
+    }
+
+    void OnStateExit(string state)
+    {
+        // Очистка при выходе из состояния
+    }
+
+    void UpdateTimer()
+    {
+        stateTimer += Time.deltaTime;
+    }
+
+    void CheckStateCompletion()
+    {
+        if (currentState == "Jump")
+        {
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            if (state.normalizedTime >= 1.0f && !animator.IsInTransition(0))
+            {
+                ChangeState("Idle");
+            }
+        }
+    }
+
+    void OnGUI()
+    {
+        GUI.Box(new Rect(10, 10, 200, 100), "Состояния");
+        GUI.Label(new Rect(20, 30, 180, 20), $"Текущее: {currentState}");
+        GUI.Label(new Rect(20, 50, 180, 20), $"Время: {stateTimer:F1}с");
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="blendtree" class="tab-content">
+                    <h3>Пример 3: Blend Tree</h3>
+                    <p>Работа с Blend Tree для плавных переходов:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class BlendTreeController : MonoBehaviour
+{
+    [Header("Blend Tree")]
+    public Animator animator;
+    public float moveSpeed = 5f;
+    
+    private Vector2 inputVector;
+    private Vector2 smoothInput;
+
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+    }
+
+    void Update()
+    {
+        HandleInput();
+        UpdateBlendTree();
+        HandleMovement();
+    }
+
+    void HandleInput()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        
+        inputVector = new Vector2(horizontal, vertical);
+        
+        // Сглаживание
+        smoothInput = Vector2.Lerp(smoothInput, inputVector, Time.deltaTime * 5f);
+    }
+
+    void UpdateBlendTree()
+    {
+        // 2D Blend Tree параметры
+        animator.SetFloat("Horizontal", smoothInput.x);
+        animator.SetFloat("Vertical", smoothInput.y);
+        
+        // Общая скорость
+        float speed = smoothInput.magnitude;
+        animator.SetFloat("Speed", speed);
+        
+        // Направление
+        if (inputVector.magnitude > 0.1f)
+        {
+            float direction = Mathf.Atan2(inputVector.x, inputVector.y) * Mathf.Rad2Deg;
+            animator.SetFloat("Direction", direction);
+        }
+    }
+
+    void HandleMovement()
+    {
+        if (inputVector.magnitude > 0.1f)
+        {
+            Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
+            transform.Translate(moveDir * moveSpeed * Time.deltaTime, Space.World);
+            
+            // Поворот
+            Quaternion targetRotation = Quaternion.LookRotation(moveDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }
+
+    // 1D Blend Tree пример
+    void Update1DBlendTree()
+    {
+        float speed = 0f;
+        
+        if (Input.GetKey(KeyCode.W))
+        {
+            speed = Input.GetKey(KeyCode.LeftShift) ? 2f : 1f;
+        }
+        
+        animator.SetFloat("MovementSpeed", speed);
+    }
+
+    void OnGUI()
+    {
+        GUI.Box(new Rect(10, 10, 200, 80), "Blend Tree");
+        GUI.Label(new Rect(20, 30, 180, 20), $"Input: ({inputVector.x:F2}, {inputVector.y:F2})");
+        GUI.Label(new Rect(20, 50, 180, 20), $"Speed: {smoothInput.magnitude:F2}");
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="events" class="tab-content">
+                    <h3>Пример 4: События анимации</h3>
+                    <p>Работа с Animation Events:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class AnimationEvents : MonoBehaviour
+{
+    [Header("Events")]
+    public AudioSource audioSource;
+    public AudioClip footstepSound;
+    public AudioClip attackSound;
+    
+    [Header("Effects")]
+    public GameObject dustEffect;
+    public Transform effectPoint;
+
+    void Start()
+    {
+        audioSource = GetComponent&lt;AudioSource&gt;();
+    }
+
+    // Animation Event: Шаг
+    public void OnFootstep()
+    {
+        Debug.Log("Шаг!");
+        
+        if (audioSource && footstepSound)
+        {
+            audioSource.PlayOneShot(footstepSound);
+        }
+        
+        if (dustEffect && effectPoint)
+        {
+            GameObject effect = Instantiate(dustEffect, effectPoint.position, effectPoint.rotation);
+            Destroy(effect, 2f);
+        }
+    }
+
+    // Animation Event: Атака
+    public void OnAttackHit()
+    {
+        Debug.Log("Удар!");
+        
+        if (audioSource && attackSound)
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
+        
+        CheckAttackHit();
+    }
+
+    // Animation Event: Приземление
+    public void OnLanding()
+    {
+        Debug.Log("Приземление!");
+        
+        if (dustEffect)
+        {
+            Vector3 groundPos = transform.position;
+            groundPos.y = 0f;
+            
+            GameObject effect = Instantiate(dustEffect, groundPos, Quaternion.identity);
+            Destroy(effect, 2f);
+        }
+    }
+
+    // Animation Event с параметрами
+    public void OnEventWithParameter(string message)
+    {
+        Debug.Log($"Событие: {message}");
+    }
+
+    public void OnEventWithFloat(float value)
+    {
+        Debug.Log($"Значение: {value}");
+    }
+
+    void CheckAttackHit()
+    {
+        Vector3 attackDir = transform.forward;
+        float attackRange = 2f;
+        
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, attackDir, out hit, attackRange))
+        {
+            Debug.Log($"Попадание: {hit.collider.name}");
+            
+            Rigidbody rb = hit.collider.GetComponent&lt;Rigidbody&gt;();
+            if (rb)
+            {
+                rb.AddForce(attackDir * 10f, ForceMode.Impulse);
+            }
+        }
+    }
+
+    void Update()
+    {
+        // Тест событий
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            OnFootstep();
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="scripting" class="tab-content">
+                    <h3>Пример 5: Продвинутые скрипты</h3>
+                    <p>Продвинутые техники анимации:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class AdvancedAnimation : MonoBehaviour
+{
+    [Header("Animation")]
+    public Animator animator;
+    
+    [Header("IK")]
+    public Transform leftHandTarget;
+    public Transform rightHandTarget;
+    public Transform lookTarget;
+    
+    private bool ikActive = false;
+
+    void Start()
+    {
+        animator = GetComponent&lt;Animator&gt;();
+    }
+
+    void Update()
+    {
+        HandleControls();
+    }
+
+    void HandleControls()
+    {
+        // IK переключение
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ikActive = !ikActive;
+            Debug.Log($"IK: {ikActive}");
+        }
+
+        // Скорость анимации
+        if (Input.GetKey(KeyCode.Q))
+        {
+            animator.speed = 0.5f;
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            animator.speed = 2f;
+        }
+        else
+        {
+            animator.speed = 1f;
+        }
+
+        // Вес слоя
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            float weight = animator.GetLayerWeight(1);
+            animator.SetLayerWeight(1, weight > 0 ? 0 : 1);
+        }
+    }
+
+    void OnAnimatorIK(int layerIndex)
+    {
+        if (!ikActive) return;
+
+        // IK рук
+        if (leftHandTarget)
+        {
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
+        }
+
+        if (rightHandTarget)
+        {
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
+        }
+
+        // Look At
+        if (lookTarget)
+        {
+            animator.SetLookAtWeight(1f);
+            animator.SetLookAtPosition(lookTarget.position);
+        }
+    }
+
+    // Кроссфейд между анимациями
+    void CrossfadeToAnimation(string animationName, float duration = 0.3f)
+    {
+        animator.CrossFade(animationName, duration);
+        Debug.Log($"Кроссфейд к: {animationName}");
+    }
+
+    // Воспроизведение анимации в определенном слое
+    void PlayInLayer(string animationName, int layer)
+    {
+        animator.Play(animationName, layer);
+    }
+
+    // Получение информации о состоянии
+    void GetStateInfo()
+    {
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        Debug.Log($"Состояние: {state.shortNameHash}");
+        Debug.Log($"Время: {state.normalizedTime}");
+        Debug.Log($"Длительность: {state.length}");
+    }
+
+    void OnGUI()
+    {
+        GUI.Box(new Rect(10, 10, 200, 120), "Продвинутая анимация");
+        GUI.Label(new Rect(20, 30, 180, 20), $"IK: {ikActive}");
+        GUI.Label(new Rect(20, 50, 180, 20), $"Скорость: {animator.speed:F1}");
+        GUI.Label(new Rect(20, 70, 180, 20), "I - IK, Q/E - скорость");
+        GUI.Label(new Rect(20, 90, 180, 20), "L - вес слоя");
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Никита Левандович. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
