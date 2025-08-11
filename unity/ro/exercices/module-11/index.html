@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Modulul 11: Blockchain și Web3 în jocuri - Exerciții și exemple de cod pentru dezvoltatorii Unity">
+    <meta name="keywords" content="blockchain, web3, unity, ethereum, nft, contracte smart, criptomonede, jocuri">
+    <meta name="author" content="Nichita Levandovici">
+    <title>Modulul 11: Blockchain și Web3 în jocuri - Exerciții</title>
+    <link rel="icon" href="../../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #1a202c;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            padding: 16px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #48bb78;
+        }
+        .header-spacer {
+            height: 80px;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .breadcrumb {
+            background: #e2e8f0;
+            padding: 15px 0;
+        }
+        .breadcrumb a {
+            color: #4a5568;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .breadcrumb a:hover {
+            color: #2d3748;
+        }
+        .main-content {
+            padding: 60px 0;
+        }
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .exercise-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #48bb78;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 15px;
+        }
+        .exercise-card .difficulty {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .difficulty.beginner {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .difficulty.intermediate {
+            background: #feebc8;
+            color: #c05621;
+        }
+        .difficulty.advanced {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        .exercise-card p {
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .exercise-card ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        .exercise-card ul li {
+            padding: 5px 0;
+            color: #2d3748;
+        }
+        .exercise-card ul li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .btn {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #38a169;
+        }
+        .btn-secondary {
+            background: #4299e1;
+        }
+        .btn-secondary:hover {
+            background: #3182ce;
+        }
+        .code-example {
+            background: #1a202c;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .code-example pre {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .example-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .example-section h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #48bb78;
+            padding-bottom: 10px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .tab.active {
+            color: #48bb78;
+            border-bottom: 2px solid #48bb78;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        footer {
+            background: #1a202c;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 80px;
+        }
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.4rem;
+            }
+            nav ul {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Modulul 11: Blockchain și Web3</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../../index.html">Acasă</a></li>
+                    <li><a href="../../../ro/index.html">Curs</a></li>
+                    <li><a href="#exercises">Exerciții</a></li>
+                    <li><a href="#examples">Exemple</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Blockchain și Web3 în jocuri</h1>
+            <p>Învață integrarea tehnologiilor blockchain în jocurile Unity</p>
+        </div>
+    </section>
+
+    <section class="breadcrumb">
+        <div class="container">
+            <a href="../../../index.html">Acasă</a> > 
+            <a href="../../../ro/index.html">Curs Unity</a> > 
+            <span>Modulul 11: Blockchain și Web3</span>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="exercises">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px; color: #1a202c;">Exerciții interactive</h2>
+                
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <span class="difficulty beginner">Începător</span>
+                        <h3>Exercițiul 1: Conectarea portofelului</h3>
+                        <p>Implementează un sistem de bază pentru conectarea portofelului MetaMask, afișarea soldului și gestionarea stărilor de conectare.</p>
+                        <ul>
+                            <li>Conectarea la MetaMask</li>
+                            <li>Obținerea și afișarea soldului ETH</li>
+                            <li>Gestionarea erorilor de conectare</li>
+                            <li>Integrarea cu Unity UI</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(1)">Începe exercițiul</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty intermediate">Intermediar</span>
+                        <h3>Exercițiul 2: Sistemul de afișare NFT</h3>
+                        <p>Creează un sistem UI pentru afișarea colecției NFT a jucătorului cu filtrare și sortare.</p>
+                        <ul>
+                            <li>Încărcarea NFT-urilor din blockchain</li>
+                            <li>Afișarea metadatelor NFT</li>
+                            <li>Filtrarea după raritate</li>
+                            <li>Sortarea colecției</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(2)">Începe exercițiul</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty intermediate">Intermediar</span>
+                        <h3>Exercițiul 3: Tranzacții cu tokeni</h3>
+                        <p>Construiește un sistem pentru procesarea achizițiilor din joc folosind tokeni de criptomonede.</p>
+                        <ul>
+                            <li>Trimiterea tranzacțiilor cu tokeni</li>
+                            <li>Confirmarea tranzacțiilor</li>
+                            <li>Actualizarea stării jocului</li>
+                            <li>Gestionarea erorilor de rețea</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(3)">Începe exercițiul</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty advanced">Avansat</span>
+                        <h3>Exercițiul 4: Interacțiunea cu contractul smart</h3>
+                        <p>Implementează interacțiunea completă cu contractul smart pentru un marketplace de joc.</p>
+                        <ul>
+                            <li>Apelarea funcțiilor contractului smart</li>
+                            <li>Gestionarea evenimentelor contractului</li>
+                            <li>Gestionarea gazului pentru tranzacții</li>
+                            <li>Securitatea tranzacțiilor</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(4)">Începe exercițiul</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty advanced">Avansat</span>
+                        <h3>Exercițiul 5: Mecanici Play-to-Earn</h3>
+                        <p>Proiectează și implementează un sistem play-to-earn cu recompense în tokeni.</p>
+                        <ul>
+                            <li>Sistemul de recompense pentru realizări</li>
+                            <li>Tokenomics pentru joc</li>
+                            <li>Echilibrarea economiei</li>
+                            <li>Protecția anti-fraudă</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(5)">Începe exercițiul</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="examples" class="example-section">
+                <h2>Exemple de cod</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('wallet')">Conectarea portofelului</button>
+                    <button class="tab" onclick="showTab('nft')">Gestionarea NFT</button>
+                    <button class="tab" onclick="showTab('contract')">Contract smart</button>
+                </div>
+
+                <div id="wallet" class="tab-content active">
+                    <h3>Exemplu: Conectarea portofelului Web3</h3>
+                    <p>Acest exemplu arată cum să conectezi un portofel MetaMask la un joc Unity:</p>
+                    <div class="code-example">
+                        <pre><code>using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using Nethereum.Web3;
+
+/// <summary>
+/// Conectarea la portofelul Web3 (MetaMask) din Unity
+/// Demonstrează stabilirea conexiunii cu portofelul blockchain
+/// și executarea operațiunilor de bază
+/// </summary>
+public class WalletConnection : MonoBehaviour
+{
+    [Header("Configurația blockchain")]
+    [SerializeField] private string rpcUrl = "https://mainnet.infura.io/v3/YOUR_PROJECT_ID";
+    
+    private Web3 web3;
+    public string PlayerWalletAddress { get; private set; }
+    
+    // Evenimente pentru actualizarea UI
+    public event Action&lt;string&gt; OnWalletConnected;
+    public event Action&lt;decimal&gt; OnBalanceUpdated;
+
+    void Start()
+    {
+        InitializeWeb3();
+    }
+
+    /// <summary>
+    /// Inițializarea conexiunii Web3
+    /// </summary>
+    private void InitializeWeb3()
+    {
+        try
+        {
+            web3 = new Web3(rpcUrl);
+            Debug.Log("Conexiunea Web3 inițializată cu succes");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Eroare la inițializarea Web3: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Conectarea la portofelul MetaMask
+    /// </summary>
+    public async Task&lt;bool&gt; ConnectWallet()
+    {
+        try
+        {
+            // Solicitarea accesului la cont
+            var accounts = await RequestAccountAccess();
+            
+            if (accounts != null && accounts.Length > 0)
+            {
+                PlayerWalletAddress = accounts[0];
+                Debug.Log($"Portofel conectat: {PlayerWalletAddress}");
+                
+                OnWalletConnected?.Invoke(PlayerWalletAddress);
+                await UpdateBalance();
+                
+                return true;
+            }
+            
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Eroare la conectarea portofelului: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Obținerea soldului curent ETH
+    /// </summary>
+    public async Task UpdateBalance()
+    {
+        if (string.IsNullOrEmpty(PlayerWalletAddress)) return;
+
+        try
+        {
+            var balanceWei = await web3.Eth.GetBalance.SendRequestAsync(PlayerWalletAddress);
+            var balanceEth = Web3.Convert.FromWei(balanceWei.Value);
+            
+            Debug.Log($"Soldul portofelului: {balanceEth} ETH");
+            OnBalanceUpdated?.Invoke(balanceEth);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Eroare la obținerea soldului: {ex.Message}");
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="nft" class="tab-content">
+                    <h3>Exemplu: Gestionarea NFT</h3>
+                    <p>Sistem pentru lucrul cu tokenurile NFT în joc:</p>
+                    <div class="code-example">
+                        <pre><code>using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// Gestionarea NFT în jocul Unity
+/// Încărcarea, afișarea și interacțiunea cu tokenurile NFT
+/// </summary>
+public class NFTManager : MonoBehaviour 
+{
+    [System.Serializable]
+    public class GameNFT
+    {
+        public string tokenId;
+        public string name;
+        public string description;
+        public string imageUrl;
+        public string rarity;
+        public Dictionary&lt;string, object&gt; attributes;
+        
+        public GameNFT(string id, string nftName, string desc, string image, string nftRarity)
+        {
+            tokenId = id;
+            name = nftName;
+            description = desc;
+            imageUrl = image;
+            rarity = nftRarity;
+            attributes = new Dictionary&lt;string, object&gt;();
+        }
+    }
+
+    private List&lt;GameNFT&gt; playerNFTs = new List&lt;GameNFT&gt;();
+    
+    /// <summary>
+    /// Încărcarea NFT-urilor jucătorului din blockchain
+    /// </summary>
+    public async Task LoadPlayerNFTs(string playerAddress)
+    {
+        try
+        {
+            playerNFTs.Clear();
+            
+            // Obținerea numărului de NFT-uri ale jucătorului
+            var balance = await GetNFTBalance(playerAddress);
+            Debug.Log($"Jucătorul deține {balance} NFT-uri");
+            
+            // Încărcarea fiecărui NFT
+            for (int i = 0; i < balance; i++)
+            {
+                var tokenId = await GetTokenByIndex(playerAddress, i);
+                var nft = await LoadNFTMetadata(tokenId);
+                
+                if (nft != null)
+                {
+                    playerNFTs.Add(nft);
+                }
+            }
+            
+            Debug.Log($"Încărcate {playerNFTs.Count} NFT-uri pentru jucător");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Eroare la încărcarea NFT-urilor: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Filtrarea NFT-urilor după raritate
+    /// </summary>
+    public List&lt;GameNFT&gt; GetNFTsByRarity(string rarity)
+    {
+        return playerNFTs.FindAll(nft => 
+            nft.rarity.Equals(rarity, StringComparison.OrdinalIgnoreCase));
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="contract" class="tab-content">
+                    <h3>Exemplu: Contract smart Solidity</h3>
+                    <p>Contract smart de bază pentru tokenurile de joc:</p>
+                    <div class="code-example">
+                        <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+/**
+ * @title GameCoin
+ * @dev Moneda de joc pentru jocul Unity
+ * Include mecanici play-to-earn și achiziții din joc
+ */
+contract GameCoin is ERC20, Ownable {
+    uint256 public constant MAX_SUPPLY = 1000000000 * 10**18; // 1 miliard de tokeni
+    
+    // Mapping pentru urmărirea realizărilor jucătorilor
+    mapping(address => uint256) public playerScore;
+    mapping(address => uint256) public lastRewardClaim;
+    
+    // Evenimente pentru integrarea cu jocul
+    event RewardClaimed(address indexed player, uint256 amount, uint256 score);
+    event ScoreUpdated(address indexed player, uint256 newScore);
+    
+    constructor() ERC20("GameCoin", "GC") {
+        // Emisia inițială pentru proprietarul contractului
+        _mint(msg.sender, 100000000 * 10**18); // 100 milioane tokeni
+    }
+    
+    /**
+     * @dev Actualizarea scorului jucătorului (apelată de serverul de joc)
+     * Doar proprietarul contractului poate actualiza scorurile
+     */
+    function updatePlayerScore(address player, uint256 score) external onlyOwner {
+        playerScore[player] = score;
+        emit ScoreUpdated(player, score);
+    }
+    
+    /**
+     * @dev Revendicarea recompensei zilnice de către jucător
+     * Jucătorii pot revendica recompense o dată pe zi pe baza scorului lor
+     */
+    function claimDailyReward() external {
+        require(block.timestamp >= lastRewardClaim[msg.sender] + 1 days, 
+                "Recompensa deja revendicată astăzi");
+        require(playerScore[msg.sender] > 0, "Niciun scor înregistrat");
+        
+        // Calcularea recompensei pe baza scorului jucătorului (1 token la 100 puncte)
+        uint256 reward = playerScore[msg.sender] / 100;
+        require(reward > 0, "Scor prea mic pentru recompensă");
+        
+        // Verificarea ofertei maxime
+        require(totalSupply() + reward <= MAX_SUPPLY, 
+                "Depășirea ofertei maxime");
+        
+        // Actualizarea timpului ultimei revendicări
+        lastRewardClaim[msg.sender] = block.timestamp;
+        
+        // Emiterea tokenurilor de recompensă către jucător
+        _mint(msg.sender, reward);
+        
+        emit RewardClaimed(msg.sender, reward, playerScore[msg.sender]);
+    }
+    
+    /**
+     * @dev Arderea tokenurilor (pentru achizițiile din joc)
+     */
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Nichita Levandovici. Toate drepturile rezervate.</p>
+            <p>Cursuri Unity și programare | <a href="mailto:contact@michitai.com" style="color: #48bb78;">contact@michitai.com</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        function showTab(tabName) {
+            // Ascunde toate taburile
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Arată tabul selectat
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function startExercise(exerciseNumber) {
+            alert(`Începem exercițiul ${exerciseNumber}! În implementarea reală aici va fi un mediu interactiv de dezvoltare.`);
+            
+            // În implementarea reală aici va fi:
+            // - Redirecționarea către pagina exercițiului
+            // - Încărcarea mediului interactiv
+            // - Inițializarea testelor
+            
+            console.log(`Exercițiul ${exerciseNumber} pornit`);
+        }
+
+        // Animația de apariție a cardurilor la scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Aplicarea animației la cardurile de exerciții
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.exercise-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

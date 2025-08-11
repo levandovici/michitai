@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Module 11: Blockchain and Web3 in Games - Exercises and code examples for Unity developers">
+    <meta name="keywords" content="blockchain, web3, unity, ethereum, nft, smart contracts, cryptocurrency, games">
+    <meta name="author" content="Nichita Levandovici">
+    <title>Module 11: Blockchain and Web3 in Games - Exercises</title>
+    <link rel="icon" href="../../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #1a202c;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a202c, #2d3748);
+            color: white;
+            padding: 16px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #48bb78;
+        }
+        .header-spacer {
+            height: 80px;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .breadcrumb {
+            background: #e2e8f0;
+            padding: 15px 0;
+        }
+        .breadcrumb a {
+            color: #4a5568;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .breadcrumb a:hover {
+            color: #2d3748;
+        }
+        .main-content {
+            padding: 60px 0;
+        }
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .exercise-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #48bb78;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        .exercise-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 15px;
+        }
+        .exercise-card .difficulty {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .difficulty.beginner {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .difficulty.intermediate {
+            background: #feebc8;
+            color: #c05621;
+        }
+        .difficulty.advanced {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        .exercise-card p {
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .exercise-card ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        .exercise-card ul li {
+            padding: 5px 0;
+            color: #2d3748;
+        }
+        .exercise-card ul li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .btn {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #38a169;
+        }
+        .btn-secondary {
+            background: #4299e1;
+        }
+        .btn-secondary:hover {
+            background: #3182ce;
+        }
+        .code-example {
+            background: #1a202c;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .code-example pre {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .example-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .example-section h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #48bb78;
+            padding-bottom: 10px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .tab.active {
+            color: #48bb78;
+            border-bottom: 2px solid #48bb78;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        footer {
+            background: #1a202c;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 80px;
+        }
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.4rem;
+            }
+            nav ul {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Module 11: Blockchain & Web3</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../../index.html">Home</a></li>
+                    <li><a href="../../../en/index.html">Course</a></li>
+                    <li><a href="#exercises">Exercises</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Blockchain and Web3 in Games</h1>
+            <p>Learn to integrate blockchain technologies into Unity games</p>
+        </div>
+    </section>
+
+    <section class="breadcrumb">
+        <div class="container">
+            <a href="../../../index.html">Home</a> > 
+            <a href="../../../en/index.html">Unity Course</a> > 
+            <span>Module 11: Blockchain and Web3</span>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="exercises">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 50px; color: #1a202c;">Interactive Exercises</h2>
+                
+                <div class="exercise-grid">
+                    <div class="exercise-card">
+                        <span class="difficulty beginner">Beginner</span>
+                        <h3>Exercise 1: Wallet Connection</h3>
+                        <p>Implement a basic MetaMask wallet connection system, balance display, and connection state management.</p>
+                        <ul>
+                            <li>Connect to MetaMask</li>
+                            <li>Retrieve and display ETH balance</li>
+                            <li>Handle connection errors</li>
+                            <li>Unity UI integration</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(1)">Start Exercise</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty intermediate">Intermediate</span>
+                        <h3>Exercise 2: NFT Display System</h3>
+                        <p>Create a UI system to display player's NFT collection with filtering and sorting capabilities.</p>
+                        <ul>
+                            <li>Load NFTs from blockchain</li>
+                            <li>Display NFT metadata</li>
+                            <li>Filter by rarity</li>
+                            <li>Sort collection</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(2)">Start Exercise</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty intermediate">Intermediate</span>
+                        <h3>Exercise 3: Token Transactions</h3>
+                        <p>Build a system to handle in-game purchases using cryptocurrency tokens.</p>
+                        <ul>
+                            <li>Send token transactions</li>
+                            <li>Transaction confirmation</li>
+                            <li>Update game state</li>
+                            <li>Network error handling</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(3)">Start Exercise</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty advanced">Advanced</span>
+                        <h3>Exercise 4: Smart Contract Interaction</h3>
+                        <p>Implement complete smart contract interaction for a game marketplace.</p>
+                        <ul>
+                            <li>Call smart contract functions</li>
+                            <li>Handle contract events</li>
+                            <li>Manage transaction gas</li>
+                            <li>Transaction security</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(4)">Start Exercise</button>
+                    </div>
+
+                    <div class="exercise-card">
+                        <span class="difficulty advanced">Advanced</span>
+                        <h3>Exercise 5: Play-to-Earn Mechanics</h3>
+                        <p>Design and implement a play-to-earn system with token rewards.</p>
+                        <ul>
+                            <li>Achievement reward system</li>
+                            <li>Game tokenomics</li>
+                            <li>Economy balancing</li>
+                            <li>Anti-fraud protection</li>
+                        </ul>
+                        <button class="btn" onclick="startExercise(5)">Start Exercise</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="examples" class="example-section">
+                <h2>Code Examples</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('wallet')">Wallet Connection</button>
+                    <button class="tab" onclick="showTab('nft')">NFT Management</button>
+                    <button class="tab" onclick="showTab('contract')">Smart Contract</button>
+                </div>
+
+                <div id="wallet" class="tab-content active">
+                    <h3>Example: Web3 Wallet Connection</h3>
+                    <p>This example shows how to connect a MetaMask wallet to a Unity game:</p>
+                    <div class="code-example">
+                        <pre><code>using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using Nethereum.Web3;
+
+/// <summary>
+/// Connecting to Web3 wallet (MetaMask) from Unity
+/// Demonstrates establishing connection with blockchain wallet
+/// and performing basic operations
+/// </summary>
+public class WalletConnection : MonoBehaviour
+{
+    [Header("Blockchain Configuration")]
+    [SerializeField] private string rpcUrl = "https://mainnet.infura.io/v3/YOUR_PROJECT_ID";
+    
+    private Web3 web3;
+    public string PlayerWalletAddress { get; private set; }
+    
+    // Events for UI updates
+    public event Action&lt;string&gt; OnWalletConnected;
+    public event Action&lt;decimal&gt; OnBalanceUpdated;
+
+    void Start()
+    {
+        InitializeWeb3();
+    }
+
+    /// <summary>
+    /// Initialize Web3 connection
+    /// </summary>
+    private void InitializeWeb3()
+    {
+        try
+        {
+            web3 = new Web3(rpcUrl);
+            Debug.Log("Web3 connection initialized successfully");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to initialize Web3: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Connect to MetaMask wallet
+    /// </summary>
+    public async Task&lt;bool&gt; ConnectWallet()
+    {
+        try
+        {
+            // Request account access
+            var accounts = await RequestAccountAccess();
+            
+            if (accounts != null && accounts.Length > 0)
+            {
+                PlayerWalletAddress = accounts[0];
+                Debug.Log($"Wallet connected: {PlayerWalletAddress}");
+                
+                OnWalletConnected?.Invoke(PlayerWalletAddress);
+                await UpdateBalance();
+                
+                return true;
+            }
+            
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Wallet connection failed: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Get current ETH balance
+    /// </summary>
+    public async Task UpdateBalance()
+    {
+        if (string.IsNullOrEmpty(PlayerWalletAddress)) return;
+
+        try
+        {
+            var balanceWei = await web3.Eth.GetBalance.SendRequestAsync(PlayerWalletAddress);
+            var balanceEth = Web3.Convert.FromWei(balanceWei.Value);
+            
+            Debug.Log($"Wallet balance: {balanceEth} ETH");
+            OnBalanceUpdated?.Invoke(balanceEth);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to get balance: {ex.Message}");
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="nft" class="tab-content">
+                    <h3>Example: NFT Management</h3>
+                    <p>System for working with NFT tokens in games:</p>
+                    <div class="code-example">
+                        <pre><code>using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// Managing NFTs in Unity games
+/// Loading, displaying and interacting with NFT tokens
+/// </summary>
+public class NFTManager : MonoBehaviour 
+{
+    [System.Serializable]
+    public class GameNFT
+    {
+        public string tokenId;
+        public string name;
+        public string description;
+        public string imageUrl;
+        public string rarity;
+        public Dictionary&lt;string, object&gt; attributes;
+        
+        public GameNFT(string id, string nftName, string desc, string image, string nftRarity)
+        {
+            tokenId = id;
+            name = nftName;
+            description = desc;
+            imageUrl = image;
+            rarity = nftRarity;
+            attributes = new Dictionary&lt;string, object&gt;();
+        }
+    }
+
+    private List&lt;GameNFT&gt; playerNFTs = new List&lt;GameNFT&gt;();
+    
+    /// <summary>
+    /// Load player's NFTs from blockchain
+    /// </summary>
+    public async Task LoadPlayerNFTs(string playerAddress)
+    {
+        try
+        {
+            playerNFTs.Clear();
+            
+            // Get number of NFTs owned by player
+            var balance = await GetNFTBalance(playerAddress);
+            Debug.Log($"Player owns {balance} NFTs");
+            
+            // Load each NFT
+            for (int i = 0; i < balance; i++)
+            {
+                var tokenId = await GetTokenByIndex(playerAddress, i);
+                var nft = await LoadNFTMetadata(tokenId);
+                
+                if (nft != null)
+                {
+                    playerNFTs.Add(nft);
+                }
+            }
+            
+            Debug.Log($"Loaded {playerNFTs.Count} NFTs for player");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to load NFTs: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Filter NFTs by rarity
+    /// </summary>
+    public List&lt;GameNFT&gt; GetNFTsByRarity(string rarity)
+    {
+        return playerNFTs.FindAll(nft => 
+            nft.rarity.Equals(rarity, StringComparison.OrdinalIgnoreCase));
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="contract" class="tab-content">
+                    <h3>Example: Solidity Smart Contract</h3>
+                    <p>Basic smart contract for game tokens:</p>
+                    <div class="code-example">
+                        <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+/**
+ * @title GameCoin
+ * @dev Game currency for Unity game
+ * Includes play-to-earn mechanics and in-game purchases
+ */
+contract GameCoin is ERC20, Ownable {
+    uint256 public constant MAX_SUPPLY = 1000000000 * 10**18; // 1 billion tokens
+    
+    // Mapping to track player achievements
+    mapping(address => uint256) public playerScore;
+    mapping(address => uint256) public lastRewardClaim;
+    
+    // Events for game integration
+    event RewardClaimed(address indexed player, uint256 amount, uint256 score);
+    event ScoreUpdated(address indexed player, uint256 newScore);
+    
+    constructor() ERC20("GameCoin", "GC") {
+        // Initial mint to contract owner
+        _mint(msg.sender, 100000000 * 10**18); // 100 million tokens
+    }
+    
+    /**
+     * @dev Update player score (called by game server)
+     * Only contract owner can update scores
+     */
+    function updatePlayerScore(address player, uint256 score) external onlyOwner {
+        playerScore[player] = score;
+        emit ScoreUpdated(player, score);
+    }
+    
+    /**
+     * @dev Allow players to claim daily rewards
+     * Players can claim once per day based on their score
+     */
+    function claimDailyReward() external {
+        require(block.timestamp >= lastRewardClaim[msg.sender] + 1 days, 
+                "Already claimed today");
+        require(playerScore[msg.sender] > 0, "No score recorded");
+        
+        // Calculate reward based on player score (1 token per 100 score points)
+        uint256 reward = playerScore[msg.sender] / 100;
+        require(reward > 0, "Score too low for reward");
+        
+        // Check max supply
+        require(totalSupply() + reward <= MAX_SUPPLY, 
+                "Would exceed max supply");
+        
+        // Update last claim time
+        lastRewardClaim[msg.sender] = block.timestamp;
+        
+        // Mint reward tokens to player
+        _mint(msg.sender, reward);
+        
+        emit RewardClaimed(msg.sender, reward, playerScore[msg.sender]);
+    }
+    
+    /**
+     * @dev Burn tokens (for in-game purchases)
+     */
+    function burn(uint256 amount) external {
+        _burn(msg.sender, amount);
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Nichita Levandovici. All rights reserved.</p>
+            <p>Unity and Programming Courses | <a href="mailto:contact@michitai.com" style="color: #48bb78;">contact@michitai.com</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function startExercise(exerciseNumber) {
+            alert(`Starting exercise ${exerciseNumber}! In real implementation this will be an interactive development environment.`);
+            
+            // In real implementation this would:
+            // - Navigate to exercise page
+            // - Load interactive environment
+            // - Initialize tests
+            
+            console.log(`Exercise ${exerciseNumber} started`);
+        }
+
+        // Card animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Apply animation to exercise cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.exercise-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
