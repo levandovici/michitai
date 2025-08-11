@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Module 11: Blockchain and Web3 in Games - Code examples for Unity developers">
+    <meta name="keywords" content="blockchain, web3, unity, ethereum, nft, smart contracts, cryptocurrency">
+    <meta name="author" content="Nichita Levandovici">
+    <title>Module 11: Blockchain and Web3 - Code Examples</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Module 11: Blockchain & Web3</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../index.html">Course</a></li>
+                    <li><a href="#examples">Examples</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Blockchain and Web3 in Games</h1>
+            <p>Learn to integrate blockchain technologies into Unity games</p>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>Code Examples</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('wallet')">Wallet Connection</button>
+                    <button class="tab" onclick="showTab('nft')">NFT Management</button>
+                    <button class="tab" onclick="showTab('contract')">Smart Contract</button>
+                    <button class="tab" onclick="showTab('marketplace')">Marketplace</button>
+                    <button class="tab" onclick="showTab('tokens')">Tokens</button>
+                </div>
+
+                <div id="wallet" class="tab-content active">
+                    <h3>Example 1: Web3 Wallet Connection</h3>
+                    <p>Basic system for connecting MetaMask wallet to Unity game:</p>
+                    <div class="code-example">
+                        <pre><code>using System;
+using System.Threading.Tasks;
+using UnityEngine;
+using Nethereum.Web3;
+
+/// <summary>
+/// Connecting to Web3 wallet (MetaMask) from Unity
+/// </summary>
+public class WalletConnection : MonoBehaviour
+{
+    [SerializeField] private string rpcUrl = "https://mainnet.infura.io/v3/YOUR_PROJECT_ID";
+    private Web3 web3;
+    public string PlayerWalletAddress { get; private set; }
+    
+    public event Action&lt;string&gt; OnWalletConnected;
+    public event Action&lt;decimal&gt; OnBalanceUpdated;
+
+    void Start() => InitializeWeb3();
+
+    private void InitializeWeb3()
+    {
+        try
+        {
+            web3 = new Web3(rpcUrl);
+            Debug.Log("Web3 connection initialized");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Web3 error: {ex.Message}");
+        }
+    }
+
+    public async Task&lt;bool&gt; ConnectWallet()
+    {
+        try
+        {
+            var accounts = await RequestAccountAccess();
+            if (accounts?.Length > 0)
+            {
+                PlayerWalletAddress = accounts[0];
+                OnWalletConnected?.Invoke(PlayerWalletAddress);
+                await UpdateBalance();
+                return true;
+            }
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Connection error: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task UpdateBalance()
+    {
+        if (string.IsNullOrEmpty(PlayerWalletAddress)) return;
+        
+        var balanceWei = await web3.Eth.GetBalance.SendRequestAsync(PlayerWalletAddress);
+        var balanceEth = Web3.Convert.FromWei(balanceWei.Value);
+        OnBalanceUpdated?.Invoke(balanceEth);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="nft" class="tab-content">
+                    <h3>Example 2: NFT Management System</h3>
+                    <p>Loading and displaying player's NFT collection:</p>
+                    <div class="code-example">
+                        <pre><code>using System.Collections.Generic;
+using UnityEngine;
+
+public class NFTManager : MonoBehaviour 
+{
+    [System.Serializable]
+    public class GameNFT
+    {
+        public string tokenId;
+        public string name;
+        public string rarity;
+        public Dictionary&lt;string, object&gt; attributes;
+    }
+
+    private List&lt;GameNFT&gt; playerNFTs = new List&lt;GameNFT&gt;();
+    
+    public async Task LoadPlayerNFTs(string playerAddress)
+    {
+        try
+        {
+            playerNFTs.Clear();
+            var balance = await GetNFTBalance(playerAddress);
+            
+            for (int i = 0; i < balance; i++)
+            {
+                var tokenId = await GetTokenByIndex(playerAddress, i);
+                var nft = await LoadNFTMetadata(tokenId);
+                if (nft != null) playerNFTs.Add(nft);
+            }
+            
+            Debug.Log($"Loaded {playerNFTs.Count} NFTs");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"NFT loading error: {ex.Message}");
+        }
+    }
+
+    public List&lt;GameNFT&gt; GetNFTsByRarity(string rarity)
+    {
+        return playerNFTs.FindAll(nft => 
+            nft.rarity.Equals(rarity, StringComparison.OrdinalIgnoreCase));
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="contract" class="tab-content">
+                    <h3>Example 3: Game Token Smart Contract</h3>
+                    <p>Solidity contract for game currency with play-to-earn mechanics:</p>
+                    <div class="code-example">
+                        <pre><code>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract GameCoin is ERC20, Ownable {
+    uint256 public constant MAX_SUPPLY = 1000000000 * 10**18;
+    
+    mapping(address => uint256) public playerScore;
+    mapping(address => uint256) public lastRewardClaim;
+    
+    event RewardClaimed(address indexed player, uint256 amount);
+    
+    constructor() ERC20("GameCoin", "GC") {
+        _mint(msg.sender, 100000000 * 10**18);
+    }
+    
+    function updatePlayerScore(address player, uint256 score) external onlyOwner {
+        playerScore[player] = score;
+    }
+    
+    function claimDailyReward() external {
+        require(block.timestamp >= lastRewardClaim[msg.sender] + 1 days, 
+                "Already claimed today");
+        require(playerScore[msg.sender] > 0, "No score");
+        
+        uint256 reward = playerScore[msg.sender] / 100;
+        require(reward > 0, "Score too low");
+        require(totalSupply() + reward <= MAX_SUPPLY, "Exceeds limit");
+        
+        lastRewardClaim[msg.sender] = block.timestamp;
+        _mint(msg.sender, reward);
+        
+        emit RewardClaimed(msg.sender, reward);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="marketplace" class="tab-content">
+                    <h3>Example 4: Game Marketplace</h3>
+                    <p>System for trading in-game items:</p>
+                    <div class="code-example">
+                        <pre><code>public class GameMarketplace : MonoBehaviour
+{
+    [System.Serializable]
+    public class MarketItem
+    {
+        public string itemId;
+        public string seller;
+        public uint256 price;
+        public bool isActive;
+    }
+
+    private List&lt;MarketItem&gt; marketItems = new List&lt;MarketItem&gt;();
+    
+    public async Task ListItemForSale(string itemId, uint256 price)
+    {
+        try
+        {
+            var listFunction = contract.GetFunction("listItem");
+            var receipt = await listFunction.SendTransactionAndWaitForReceiptAsync(
+                playerAddress, itemId, price);
+                
+            marketItems.Add(new MarketItem 
+            { 
+                itemId = itemId, 
+                seller = playerAddress, 
+                price = price, 
+                isActive = true 
+            });
+            
+            Debug.Log($"Item {itemId} listed for {price} tokens");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Listing error: {ex.Message}");
+        }
+    }
+
+    public async Task BuyItem(string itemId)
+    {
+        var item = marketItems.Find(x => x.itemId == itemId && x.isActive);
+        if (item == null) return;
+        
+        try
+        {
+            var buyFunction = contract.GetFunction("buyItem");
+            await buyFunction.SendTransactionAndWaitForReceiptAsync(
+                playerAddress, itemId);
+                
+            item.isActive = false;
+            Debug.Log($"Item {itemId} purchased!");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Purchase error: {ex.Message}");
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="tokens" class="tab-content">
+                    <h3>Example 5: Game Token System</h3>
+                    <p>Managing game tokens and transactions:</p>
+                    <div class="code-example">
+                        <pre><code>public class TokenManager : MonoBehaviour
+{
+    private Contract tokenContract;
+    
+    public async Task&lt;uint256&gt; GetPlayerTokenBalance(string playerAddress)
+    {
+        try
+        {
+            var balanceFunction = tokenContract.GetFunction("balanceOf");
+            var balance = await balanceFunction.CallAsync&lt;uint256&gt;(playerAddress);
+            return balance;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Balance error: {ex.Message}");
+            return 0;
+        }
+    }
+
+    public async Task&lt;bool&gt; TransferTokens(string toAddress, uint256 amount)
+    {
+        try
+        {
+            var transferFunction = tokenContract.GetFunction("transfer");
+            var receipt = await transferFunction.SendTransactionAndWaitForReceiptAsync(
+                playerAddress, toAddress, amount);
+                
+            Debug.Log($"Transferred {amount} tokens to {toAddress}");
+            return receipt.Status == 1;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Transfer error: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task&lt;bool&gt; BurnTokensForUpgrade(uint256 amount)
+    {
+        try
+        {
+            var burnFunction = tokenContract.GetFunction("burn");
+            await burnFunction.SendTransactionAndWaitForReceiptAsync(
+                playerAddress, amount);
+                
+            Debug.Log($"Burned {amount} tokens for upgrade");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Burn error: {ex.Message}");
+            return false;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Nichita Levandovici. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
