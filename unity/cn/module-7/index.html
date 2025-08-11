@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模块7：多线程编程 - 示例</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 120px 2rem 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .examples-section {
+            background: white;
+            margin: -40px auto 40px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: #f8f9ff;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .tab:hover {
+            background: #f5f5f5;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .example {
+            margin-bottom: 30px;
+        }
+
+        .example h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .example p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                padding: 0 1rem;
+            }
+
+            .examples-section {
+                margin: -20px 1rem 20px;
+                padding: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">Michitai Unity</div>
+            <ul class="nav-links">
+                <li><a href="../../cn/index.html">首页</a></li>
+                <li><a href="#examples">示例</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>模块7：多线程编程</h1>
+            <p>Unity中多线程和并行编程的全面示例</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="examples-section" id="examples">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab(event, 'threading-basics')">线程基础</button>
+                <button class="tab" onclick="openTab(event, 'task-parallel')">任务并行库</button>
+                <button class="tab" onclick="openTab(event, 'synchronization')">同步机制</button>
+                <button class="tab" onclick="openTab(event, 'unity-threading')">Unity线程</button>
+                <button class="tab" onclick="openTab(event, 'advanced-threading')">高级技术</button>
+            </div>
+
+            <div id="threading-basics" class="tab-content active">
+                <div class="example">
+                    <h3>线程基础知识</h3>
+                    <p>线程介绍和Thread类的基本操作。</p>
+                    <div class="code-block">using System;
+using System.Threading;
+using UnityEngine;
+
+public class ThreadingBasics : MonoBehaviour
+{
+    [Header("线程设置")]
+    public int numberOfThreads = 4;
+    public bool useBackgroundThreads = true;
+    
+    private Thread[] workerThreads;
+    private bool isRunning = false;
+    
+    void Start()
+    {
+        InitializeThreads();
+        Debug.Log("线程系统已初始化");
+    }
+    
+    void InitializeThreads()
+    {
+        workerThreads = new Thread[numberOfThreads];
+        
+        for (int i = 0; i < numberOfThreads; i++)
+        {
+            int threadId = i;
+            workerThreads[i] = new Thread(() => WorkerThreadMethod(threadId));
+            workerThreads[i].IsBackground = useBackgroundThreads;
+            workerThreads[i].Name = $"工作线程 {threadId}";
+        }
+    }
+    
+    void WorkerThreadMethod(int threadId)
+    {
+        Debug.Log($"线程 {threadId} 在核心 {Thread.CurrentThread.ManagedThreadId} 上启动");
+        
+        while (isRunning)
+        {
+            PerformWork(threadId);
+            Thread.Sleep(1000);
+        }
+        
+        Debug.Log($"线程 {threadId} 已完成");
+    }
+    
+    void PerformWork(int threadId)
+    {
+        int result = 0;
+        for (int i = 0; i < 1000000; i++)
+        {
+            result += i % (threadId + 1);
+        }
+        
+        Debug.Log($"线程 {threadId} 完成工作。结果: {result}");
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            StartThreads();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            StopThreads();
+        }
+    }
+    
+    public void StartThreads()
+    {
+        if (!isRunning)
+        {
+            isRunning = true;
+            
+            for (int i = 0; i < workerThreads.Length; i++)
+            {
+                if (workerThreads[i].ThreadState == ThreadState.Unstarted)
+                {
+                    workerThreads[i].Start();
+                }
+            }
+            
+            Debug.Log("所有线程已启动");
+        }
+    }
+    
+    public void StopThreads()
+    {
+        if (isRunning)
+        {
+            isRunning = false;
+            Debug.Log("正在停止线程...");
+        }
+    }
+    
+    void OnDestroy()
+    {
+        StopThreads();
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="task-parallel" class="tab-content">
+                <div class="example">
+                    <h3>任务并行库</h3>
+                    <p>使用现代API进行并行编程。</p>
+                    <div class="code-block">using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
+
+public class TaskParallelController : MonoBehaviour
+{
+    [Header("任务设置")]
+    public int dataSize = 1000000;
+    
+    private List&lt;int&gt; largeDataSet;
+    private CancellationTokenSource cancellationTokenSource;
+    
+    void Start()
+    {
+        InitializeData();
+        Debug.Log("任务并行库控制器已初始化");
+    }
+    
+    void InitializeData()
+    {
+        largeDataSet = new List&lt;int&gt;(dataSize);
+        for (int i = 0; i < dataSize; i++)
+        {
+            largeDataSet.Add(UnityEngine.Random.Range(1, 1000));
+        }
+        
+        Debug.Log($"已创建包含 {dataSize} 个元素的数据集");
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ProcessDataParallel();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            ProcessDataSequential();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            ProcessDataAsync();
+        }
+    }
+    
+    public void ProcessDataParallel()
+    {
+        Debug.Log("开始并行处理...");
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
+        long sum = 0;
+        object lockObject = new object();
+        
+        Parallel.ForEach(largeDataSet, (number) =>
+        {
+            long result = ComputeExpensiveOperation(number);
+            
+            lock (lockObject)
+            {
+                sum += result;
+            }
+        });
+        
+        stopwatch.Stop();
+        Debug.Log($"并行处理在 {stopwatch.ElapsedMilliseconds} 毫秒内完成。总和: {sum}");
+    }
+    
+    public void ProcessDataSequential()
+    {
+        Debug.Log("开始顺序处理...");
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
+        long sum = 0;
+        
+        foreach (int number in largeDataSet)
+        {
+            sum += ComputeExpensiveOperation(number);
+        }
+        
+        stopwatch.Stop();
+        Debug.Log($"顺序处理在 {stopwatch.ElapsedMilliseconds} 毫秒内完成。总和: {sum}");
+    }
+    
+    public async void ProcessDataAsync()
+    {
+        Debug.Log("开始异步处理...");
+        cancellationTokenSource = new CancellationTokenSource();
+        
+        try
+        {
+            var result = await ProcessDataAsyncInternal(cancellationTokenSource.Token);
+            Debug.Log($"异步处理完成。结果: {result}");
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("异步操作已取消");
+        }
+    }
+    
+    private async Task&lt;long&gt; ProcessDataAsyncInternal(CancellationToken cancellationToken)
+    {
+        return await Task.Run(() =>
+        {
+            long sum = 0;
+            
+            for (int i = 0; i < largeDataSet.Count; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                sum += ComputeExpensiveOperation(largeDataSet[i]);
+            }
+            
+            return sum;
+        }, cancellationToken);
+    }
+    
+    private long ComputeExpensiveOperation(int input)
+    {
+        long result = 0;
+        for (int i = 0; i < input % 1000; i++)
+        {
+            result += (long)Math.Sqrt(i * input);
+        }
+        return result;
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="synchronization" class="tab-content">
+                <div class="example">
+                    <h3>线程同步</h3>
+                    <p>使用lock、Monitor和其他同步原语。</p>
+                    <div class="code-block">using System;
+using System.Threading;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ThreadSynchronization : MonoBehaviour
+{
+    [Header("同步设置")]
+    public int bufferSize = 10;
+    
+    private Queue&lt;int&gt; sharedBuffer;
+    private readonly object bufferLock = new object();
+    
+    private volatile bool isRunning = false;
+    private int itemsProduced = 0;
+    private int itemsConsumed = 0;
+    
+    void Start()
+    {
+        InitializeSynchronization();
+        Debug.Log("线程同步系统已初始化");
+    }
+    
+    void InitializeSynchronization()
+    {
+        sharedBuffer = new Queue&lt;int&gt;(bufferSize);
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            StartProducerConsumer();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            StopProducerConsumer();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShowSyncInfo();
+        }
+    }
+    
+    public void StartProducerConsumer()
+    {
+        if (!isRunning)
+        {
+            isRunning = true;
+            itemsProduced = 0;
+            itemsConsumed = 0;
+            
+            Thread producer = new Thread(ProducerMethod);
+            Thread consumer = new Thread(ConsumerMethod);
+            
+            producer.IsBackground = true;
+            consumer.IsBackground = true;
+            
+            producer.Start();
+            consumer.Start();
+            
+            Debug.Log("生产者和消费者已启动");
+        }
+    }
+    
+    void ProducerMethod()
+    {
+        while (isRunning)
+        {
+            lock (bufferLock)
+            {
+                if (sharedBuffer.Count < bufferSize)
+                {
+                    int item = UnityEngine.Random.Range(1, 1000);
+                    sharedBuffer.Enqueue(item);
+                    Interlocked.Increment(ref itemsProduced);
+                    
+                    Debug.Log($"生产项目 {item}。缓冲区: {sharedBuffer.Count}");
+                    Monitor.PulseAll(bufferLock);
+                }
+                else
+                {
+                    Monitor.Wait(bufferLock);
+                }
+            }
+            
+            Thread.Sleep(UnityEngine.Random.Range(100, 500));
+        }
+    }
+    
+    void ConsumerMethod()
+    {
+        while (isRunning)
+        {
+            lock (bufferLock)
+            {
+                while (sharedBuffer.Count == 0 && isRunning)
+                {
+                    Monitor.Wait(bufferLock);
+                }
+                
+                if (sharedBuffer.Count > 0)
+                {
+                    int item = sharedBuffer.Dequeue();
+                    Interlocked.Increment(ref itemsConsumed);
+                    
+                    Debug.Log($"消费项目 {item}。缓冲区: {sharedBuffer.Count}");
+                    Monitor.PulseAll(bufferLock);
+                }
+            }
+            
+            Thread.Sleep(UnityEngine.Random.Range(200, 800));
+        }
+    }
+    
+    public void StopProducerConsumer()
+    {
+        if (isRunning)
+        {
+            isRunning = false;
+            
+            lock (bufferLock)
+            {
+                Monitor.PulseAll(bufferLock);
+            }
+            
+            Debug.Log("正在停止生产者和消费者...");
+        }
+    }
+    
+    public void ShowSyncInfo()
+    {
+        lock (bufferLock)
+        {
+            Debug.Log($"缓冲区: {sharedBuffer.Count}/{bufferSize}");
+            Debug.Log($"已生产: {itemsProduced}，已消费: {itemsConsumed}");
+        }
+    }
+    
+    void OnDestroy()
+    {
+        StopProducerConsumer();
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="unity-threading" class="tab-content">
+                <div class="example">
+                    <h3>Unity多线程</h3>
+                    <p>在Unity中安全使用线程和主线程交互。</p>
+                    <div class="code-block">using System;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using UnityEngine;
+
+public class UnityThreadingManager : MonoBehaviour
+{
+    [Header("Unity线程设置")]
+    public Transform[] objectsToMove;
+    
+    private ConcurrentQueue&lt;Action&gt; mainThreadActions = new ConcurrentQueue&lt;Action&gt;();
+    private bool isProcessing = false;
+    
+    void Start()
+    {
+        Debug.Log("Unity线程管理器已初始化");
+    }
+    
+    void Update()
+    {
+        ProcessMainThreadActions();
+        
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            StartPathfindingJobs();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            StartBackgroundCalculations();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            StartLongRunningTask();
+        }
+    }
+    
+    void ProcessMainThreadActions()
+    {
+        while (mainThreadActions.TryDequeue(out Action action))
+        {
+            try
+            {
+                action?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"执行操作时出错: {e.Message}");
+            }
+        }
+    }
+    
+    public void StartPathfindingJobs()
+    {
+        if (isProcessing) return;
+        
+        isProcessing = true;
+        Debug.Log("启动后台寻路任务...");
+        
+        Task.Run(() =>
+        {
+            Vector3 calculatedPath = CalculatePathInBackground();
+            
+            mainThreadActions.Enqueue(() =>
+            {
+                ApplyPathResult(calculatedPath);
+            });
+        });
+    }
+    
+    Vector3 CalculatePathInBackground()
+    {
+        System.Threading.Thread.Sleep(2000);
+        
+        Vector3 result = new Vector3(
+            UnityEngine.Random.Range(-10f, 10f),
+            0f,
+            UnityEngine.Random.Range(-10f, 10f)
+        );
+        
+        Debug.Log($"后台任务在线程 {System.Threading.Thread.CurrentThread.ManagedThreadId} 上完成");
+        return result;
+    }
+    
+    void ApplyPathResult(Vector3 newPath)
+    {
+        if (objectsToMove.Length > 0 && objectsToMove[0] != null)
+        {
+            StartCoroutine(MoveObjectToPosition(objectsToMove[0], newPath));
+            Debug.Log($"路径结果已应用: {newPath}");
+        }
+        
+        isProcessing = false;
+    }
+    
+    IEnumerator MoveObjectToPosition(Transform obj, Vector3 targetPos)
+    {
+        Vector3 startPos = obj.position;
+        float duration = 2f;
+        float elapsed = 0f;
+        
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            obj.position = Vector3.Lerp(startPos, targetPos, t);
+            yield return null;
+        }
+        
+        obj.position = targetPos;
+    }
+    
+    public void StartBackgroundCalculations()
+    {
+        Debug.Log("启动后台计算...");
+        
+        Task.Run(async () =>
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                await Task.Delay(500);
+                
+                int progress = (i + 1) * 10;
+                
+                mainThreadActions.Enqueue(() =>
+                {
+                    Debug.Log($"进度: {progress}%");
+                });
+            }
+            
+            mainThreadActions.Enqueue(() =>
+            {
+                Debug.Log("后台计算完成！");
+            });
+        });
+    }
+    
+    public async void StartLongRunningTask()
+    {
+        Debug.Log("启动长时间运行的任务...");
+        
+        try
+        {
+            var result = await PerformLongRunningOperation();
+            Debug.Log($"长时间运行的任务完成: {result}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"长时间运行的任务出错: {e.Message}");
+        }
+    }
+    
+    private async Task&lt;string&gt; PerformLongRunningOperation()
+    {
+        return await Task.Run(() =>
+        {
+            System.Threading.Thread.Sleep(3000);
+            return $"操作在线程 {System.Threading.Thread.CurrentThread.ManagedThreadId} 上完成";
+        });
+    }
+    
+    void OnDestroy()
+    {
+        isProcessing = false;
+    }
+}</div>
+                </div>
+            </div>
+
+            <div id="advanced-threading" class="tab-content">
+                <div class="example">
+                    <h3>高级线程技术</h3>
+                    <p>线程池、CancellationToken和性能优化。</p>
+                    <div class="code-block">using System;
+using System.Threading;
+using System.Threading.Tasks;
+using UnityEngine;
+
+public class AdvancedThreadingController : MonoBehaviour
+{
+    [Header("高级设置")]
+    public int maxConcurrentTasks = 4;
+    
+    private SemaphoreSlim semaphore;
+    private CancellationTokenSource cancellationTokenSource;
+    
+    void Start()
+    {
+        InitializeAdvancedThreading();
+        Debug.Log("高级线程控制器已初始化");
+    }
+    
+    void InitializeAdvancedThreading()
+    {
+        semaphore = new SemaphoreSlim(maxConcurrentTasks, maxConcurrentTasks);
+        cancellationTokenSource = new CancellationTokenSource();
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            StartTaskPool();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            CancelAllTasks();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            StartReaderWriterExample();
+        }
+    }
+    
+    public async void StartTaskPool()
+    {
+        Debug.Log("启动任务池...");
+        
+        var tasks = new Task[10];
+        
+        for (int i = 0; i < tasks.Length; i++)
+        {
+            int taskId = i;
+            tasks[i] = ProcessTaskWithSemaphore(taskId, cancellationTokenSource.Token);
+        }
+        
+        try
+        {
+            await Task.WhenAll(tasks);
+            Debug.Log("任务池中的所有任务已完成");
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("任务已被取消");
+        }
+    }
+    
+    private async Task ProcessTaskWithSemaphore(int taskId, CancellationToken cancellationToken)
+    {
+        await semaphore.WaitAsync(cancellationToken);
+        
+        try
+        {
+            Debug.Log($"任务 {taskId} 已开始");
+            
+            await Task.Delay(UnityEngine.Random.Range(1000, 3000), cancellationToken);
+            
+            Debug.Log($"任务 {taskId} 已完成");
+        }
+        finally
+        {
+            semaphore.Release();
+        }
+    }
+    
+    public void CancelAllTasks()
+    {
+        cancellationTokenSource.Cancel();
+        Debug.Log("正在取消所有任务...");
+        
+        cancellationTokenSource = new CancellationTokenSource();
+    }
+    
+    private readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();
+    private int sharedResource = 0;
+    
+    public void StartReaderWriterExample()
+    {
+        Debug.Log("启动读写锁示例...");
+        
+        // 启动读取器
+        for (int i = 0; i < 3; i++)
+        {
+            int readerId = i;
+            Task.Run(() => ReaderTask(readerId));
+        }
+        
+        // 启动写入器
+        Task.Run(() => WriterTask());
+    }
+    
+    void ReaderTask(int readerId)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            readerWriterLock.EnterReadLock();
+            try
+            {
+                Debug.Log($"读取器 {readerId} 读取值: {sharedResource}");
+                Thread.Sleep(500);
+            }
+            finally
+            {
+                readerWriterLock.ExitReadLock();
+            }
+            
+            Thread.Sleep(200);
+        }
+    }
+    
+    void WriterTask()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            readerWriterLock.EnterWriteLock();
+            try
+            {
+                sharedResource++;
+                Debug.Log($"写入器更新值为: {sharedResource}");
+                Thread.Sleep(1000);
+            }
+            finally
+            {
+                readerWriterLock.ExitWriteLock();
+            }
+            
+            Thread.Sleep(500);
+        }
+    }
+    
+    void OnDestroy()
+    {
+        cancellationTokenSource?.Cancel();
+        semaphore?.Dispose();
+        readerWriterLock?.Dispose();
+    }
+}</div>
+                </div>
+            </div>
+
+            <a href="../../cn/index.html" class="back-link">← 返回课程</a>
+        </section>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabs;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabs = document.getElementsByClassName("tab");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+</html>
