@@ -244,9 +244,9 @@
                     <h3>Пример 1: Основы Audio System</h3>
                     <p>Базовое управление аудио и настройка звуковой системы Unity:</p>
                     <div class="code-example">
-                        <pre><code>using UnityEngine;
+                        <pre>using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class SpatialAudio : MonoBehaviour
 {
     [Header("Аудио Клипы")]
     public AudioClip backgroundMusic;
@@ -330,15 +330,16 @@ public class AudioManager : MonoBehaviour
         }
         Debug.Log("Громкость музыки: " + musicVolume);
     }
-}</div>
+}</pre>
                 </div>
             </div>
 
-            <div id="audio-source" class="tab-content">
-                <div class="example">
-                    <h3>Управление AudioSource</h3>
-                    <p>Детальная работа с компонентом AudioSource и его параметрами.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="audio-source" class="tab-content">
+                    <div class="example">
+                        <h3>Управление AudioSource</h3>
+                        <p>Детальная работа с компонентом AudioSource и его параметрами.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
 
 public class AudioSourceController : MonoBehaviour
 {
@@ -470,9 +471,10 @@ public class AudioSourceController : MonoBehaviour
 
             <div id="audio-mixer" class="tab-content">
                 <div class="example">
-                    <h3>Audio Mixer и Группы</h3>
-                    <p>Работа с Audio Mixer для профессионального микширования звука.</p>
-                    <div class="code-block">using UnityEngine;
+                    <h3>Audio Mixer и группы</h3>
+                    <p>Использование Audio Mixer для профессионального управления звуком.</p>
+                    <div class="code-example">
+                        <pre>using UnityEngine;
 using UnityEngine.Audio;
 
 public class AudioMixerController : MonoBehaviour
@@ -502,7 +504,7 @@ public class AudioMixerController : MonoBehaviour
             SetMusicVolume(musicVolume);
             SetSFXVolume(sfxVolume);
             
-            Debug.Log("Audio Mixer настроен");
+            Debug.Log("AudioSource настроен");
         }
     }
     
@@ -590,9 +592,10 @@ public class AudioMixerController : MonoBehaviour
 
             <div id="spatial-audio" class="tab-content">
                 <div class="example">
-                    <h3>3D Пространственный Звук</h3>
-                    <p>Реализация 3D аудио с пространственным позиционированием.</p>
-                    <div class="code-block">using UnityEngine;
+                    <h3>3D Пространственный звук</h3>
+                    <p>Настройка пространственного звука и 3D аудио эффектов.</p>
+                    <div class="code-example">
+                        <pre>using UnityEngine;
 
 public class SpatialAudioController : MonoBehaviour
 {
@@ -632,7 +635,7 @@ public class SpatialAudioController : MonoBehaviour
             spatialSource.minDistance = minDistance;
             spatialSource.maxDistance = maxDistance;
             
-            Debug.Log("3D Audio настроен");
+            Debug.Log("3D звук настроен");
         }
     }
     
@@ -702,12 +705,13 @@ public class SpatialAudioController : MonoBehaviour
 
             <div id="advanced-audio" class="tab-content">
                 <div class="example">
-                    <h3>Продвинутые Audio Техники</h3>
-                    <p>Динамическая музыка, аудио эффекты и оптимизация производительности.</p>
-                    <div class="code-block">using UnityEngine;
+                    <h3>Продвинутые аудио техники</h3>
+                    <p>Продвинутые методы работы с аудио и динамическое управление звуком.</p>
+                    <div class="code-example">
+                        <pre>using UnityEngine;
 using System.Collections;
 
-public class AdvancedAudioController : MonoBehaviour
+public class AdvancedAudio : MonoBehaviour
 {
     [Header("Dynamic Music")]
     public AudioSource[] musicLayers;
