@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Modulul 3: Fizica Unity și Rigidbody - Exemple de cod pentru dezvoltatorii Unity">
+    <meta name="keywords" content="unity, fizică, rigidbody, coliziuni, forțe, articulații">
+    <meta name="author" content="Nichita Levandovici">
+    <title>Modulul 3: Fizica Unity și Rigidbody - Exemple de cod</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f7fa; color: #1a202c; line-height: 1.7; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.8rem; font-weight: 700; }
+        nav ul { list-style: none; display: flex; gap: 30px; }
+        nav a { color: white; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        nav a:hover { color: #48bb78; }
+        .header-spacer { height: 80px; }
+        .hero-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 80px 0; text-align: center; }
+        .hero-section h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; }
+        .hero-section p { font-size: 1.3rem; margin-bottom: 30px; opacity: 0.9; }
+        .main-content { padding: 60px 0; }
+        .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+        .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
+        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
+        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
+        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 80px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Modulul 3: Fizica Unity și Rigidbody</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Acasă</a></li>
+                    <li><a href="../index.html">Curs</a></li>
+                    <li><a href="#examples">Exemple</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Fizica Unity și Rigidbody</h1>
+            <p>Învață simularea fizică și lucrul cu Rigidbody în Unity</p>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <section id="examples" class="example-section">
+                <h2>Exemple de cod</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('rigidbody')">Rigidbody</button>
+                    <button class="tab" onclick="showTab('forces')">Forțe</button>
+                    <button class="tab" onclick="showTab('joints')">Articulații</button>
+                    <button class="tab" onclick="showTab('collisions')">Coliziuni</button>
+                    <button class="tab" onclick="showTab('physics')">Fizică</button>
+                </div>
+
+                <div id="rigidbody" class="tab-content active">
+                    <h3>Exemplul 1: Bazele Rigidbody</h3>
+                    <p>Lucrul cu componenta Rigidbody și proprietățile sale:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class RigidbodyExample : MonoBehaviour
+{
+    [Header("Setări Rigidbody")]
+    public float mass = 1f;
+    public float drag = 0.5f;
+    public float angularDrag = 0.05f;
+    
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent&lt;Rigidbody&gt;();
+        
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent&lt;Rigidbody&gt;();
+        }
+
+        SetupRigidbody();
+    }
+
+    void SetupRigidbody()
+    {
+        rb.mass = mass;
+        rb.drag = drag;
+        rb.angularDrag = angularDrag;
+        rb.useGravity = true;
+        
+        Debug.Log($"Rigidbody configurat: masă={mass}");
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            rb.useGravity = !rb.useGravity;
+            Debug.Log($"Gravitație: {rb.useGravity}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            rb.isKinematic = !rb.isKinematic;
+            Debug.Log($"Kinematic: {rb.isKinematic}");
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetRigidbody();
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShowInfo();
+        }
+    }
+
+    void ResetRigidbody()
+    {
+        rb.position = Vector3.zero;
+        rb.rotation = Quaternion.identity;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        Debug.Log("Rigidbody resetat");
+    }
+
+    void ShowInfo()
+    {
+        Debug.Log($"Viteză: {rb.velocity}");
+        Debug.Log($"Poziție: {rb.position}");
+        Debug.Log($"Doarme: {rb.IsSleeping()}");
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="forces" class="tab-content">
+                    <h3>Exemplul 2: Aplicarea forțelor</h3>
+                    <p>Diferite moduri de aplicare a forțelor la Rigidbody:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class ForcesExample : MonoBehaviour
+{
+    [Header("Forțe")]
+    public float forceAmount = 10f;
+    public float jumpForce = 300f;
+    public float moveSpeed = 5f;
+    
+    private Rigidbody rb;
+    private bool isGrounded = false;
+
+    void Start()
+    {
+        rb = GetComponent&lt;Rigidbody&gt;();
+    }
+
+    void Update()
+    {
+        HandleMovement();
+        HandleForces();
+    }
+
+    void HandleMovement()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 moveDirection = new Vector3(horizontal, 0, vertical);
+        rb.AddForce(moveDirection * moveSpeed);
+
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce);
+            Debug.Log("Săritură!");
+        }
+    }
+
+    void HandleForces()
+    {
+        // Impuls (F)
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Vector3 impulse = transform.forward * forceAmount;
+            rb.AddForce(impulse, ForceMode.Impulse);
+            Debug.Log("Impuls!");
+        }
+
+        // Explozie (E)
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Vector3 explosion = Vector3.up + Random.insideUnitSphere;
+            rb.AddForce(explosion * forceAmount, ForceMode.VelocityChange);
+            Debug.Log("Explozie!");
+        }
+
+        // Rotație (T)
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            rb.AddTorque(Vector3.up * forceAmount);
+            Debug.Log("Rotație!");
+        }
+
+        // Forță în punct (P)
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Vector3 position = transform.position + Vector3.right;
+            rb.AddForceAtPosition(Vector3.forward * forceAmount, position);
+            Debug.Log("Forță în punct!");
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="joints" class="tab-content">
+                    <h3>Exemplul 3: Articulații fizice</h3>
+                    <p>Lucrul cu diferite tipuri de articulații:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class JointsExample : MonoBehaviour
+{
+    [Header("Articulații")]
+    public GameObject connectedObject;
+    public float springForce = 50f;
+    public float damperForce = 5f;
+    
+    private Joint currentJoint;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CreateFixedJoint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            CreateHingeJoint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CreateSpringJoint();
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            RemoveJoint();
+        }
+    }
+
+    void CreateFixedJoint()
+    {
+        RemoveJoint();
+        
+        FixedJoint joint = gameObject.AddComponent&lt;FixedJoint&gt;();
+        if (connectedObject != null)
+        {
+            joint.connectedBody = connectedObject.GetComponent&lt;Rigidbody&gt;();
+        }
+        joint.breakForce = 1000f;
+        
+        currentJoint = joint;
+        Debug.Log("Fixed Joint creat");
+    }
+
+    void CreateHingeJoint()
+    {
+        RemoveJoint();
+        
+        HingeJoint joint = gameObject.AddComponent&lt;HingeJoint&gt;();
+        if (connectedObject != null)
+        {
+            joint.connectedBody = connectedObject.GetComponent&lt;Rigidbody&gt;();
+        }
+        
+        joint.axis = Vector3.right;
+        joint.useLimits = true;
+        
+        JointLimits limits = joint.limits;
+        limits.min = -90f;
+        limits.max = 90f;
+        joint.limits = limits;
+        
+        currentJoint = joint;
+        Debug.Log("Hinge Joint creat");
+    }
+
+    void CreateSpringJoint()
+    {
+        RemoveJoint();
+        
+        SpringJoint joint = gameObject.AddComponent&lt;SpringJoint&gt;();
+        if (connectedObject != null)
+        {
+            joint.connectedBody = connectedObject.GetComponent&lt;Rigidbody&gt;();
+        }
+        
+        joint.spring = springForce;
+        joint.damper = damperForce;
+        joint.minDistance = 1f;
+        joint.maxDistance = 5f;
+        
+        currentJoint = joint;
+        Debug.Log("Spring Joint creat");
+    }
+
+    void RemoveJoint()
+    {
+        if (currentJoint != null)
+        {
+            DestroyImmediate(currentJoint);
+            currentJoint = null;
+            Debug.Log("Articulație eliminată");
+        }
+    }
+
+    void OnJointBreak(float breakForce)
+    {
+        Debug.Log($"Articulația s-a rupt! Forță: {breakForce}");
+        currentJoint = null;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="collisions" class="tab-content">
+                    <h3>Exemplul 4: Coliziuni avansate</h3>
+                    <p>Lucrul cu coliziuni și materiale fizice:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class CollisionsExample : MonoBehaviour
+{
+    [Header("Coliziuni")]
+    public PhysicMaterial bouncyMaterial;
+    public float damageThreshold = 5f;
+    
+    private Rigidbody rb;
+    private Collider col;
+    private int collisionCount = 0;
+
+    void Start()
+    {
+        rb = GetComponent&lt;Rigidbody&gt;();
+        col = GetComponent&lt;Collider&gt;();
+        
+        CreateBouncyMaterial();
+    }
+
+    void CreateBouncyMaterial()
+    {
+        if (bouncyMaterial == null)
+        {
+            bouncyMaterial = new PhysicMaterial("Bouncy");
+            bouncyMaterial.bounciness = 0.9f;
+            bouncyMaterial.dynamicFriction = 0.1f;
+            bouncyMaterial.staticFriction = 0.1f;
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            col.material = bouncyMaterial;
+            Debug.Log("Material elastic");
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            PerformRaycast();
+        }
+    }
+
+    void PerformRaycast()
+    {
+        Vector3 direction = transform.forward;
+        float distance = 10f;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, direction, out hit, distance))
+        {
+            Debug.Log($"Raycast a lovit: {hit.collider.name}");
+            Debug.Log($"Distanță: {hit.distance}");
+            
+            // Aplicarea forței
+            Rigidbody hitRb = hit.collider.GetComponent&lt;Rigidbody&gt;();
+            if (hitRb != null)
+            {
+                hitRb.AddForce(direction * 10f, ForceMode.Impulse);
+            }
+        }
+        
+        Debug.DrawRay(transform.position, direction * distance, Color.blue, 2f);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        collisionCount++;
+        Debug.Log($"Coliziune #{collisionCount} cu: {collision.gameObject.name}");
+        
+        float impactForce = collision.relativeVelocity.magnitude;
+        Debug.Log($"Forța impactului: {impactForce}");
+
+        if (impactForce > damageThreshold)
+        {
+            Debug.Log("Damage primit din impact puternic!");
+        }
+
+        // Analiza punctelor de contact
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            Debug.Log($"Punct de contact: {contact.point}");
+            Debug.Log($"Normală: {contact.normal}");
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Intrat în trigger: {other.name}");
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        Debug.Log($"Ieșit din trigger: {other.name}");
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="physics" class="tab-content">
+                    <h3>Exemplul 5: Setări de fizică</h3>
+                    <p>Lucrul cu setările globale de fizică:</p>
+                    <div class="code-example">
+                        <pre><code>using UnityEngine;
+
+public class PhysicsSettings : MonoBehaviour
+{
+    [Header("Setări fizică")]
+    public Vector3 customGravity = new Vector3(0, -9.81f, 0);
+    public float timeScale = 1f;
+    
+    private Vector3 originalGravity;
+
+    void Start()
+    {
+        originalGravity = Physics.gravity;
+        ShowPhysicsInfo();
+    }
+
+    void Update()
+    {
+        HandlePhysicsControls();
+    }
+
+    void HandlePhysicsControls()
+    {
+        // Schimbarea gravitației (G)
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            ToggleGravity();
+        }
+
+        // Gravitație personalizată (C)
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            SetCustomGravity();
+        }
+
+        // Resetare gravitație (N)
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            ResetGravity();
+        }
+
+        // Încetinirea timpului (T)
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ToggleSlowMotion();
+        }
+
+        // Informații fizică (I)
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShowPhysicsInfo();
+        }
+    }
+
+    void ToggleGravity()
+    {
+        if (Physics.gravity.magnitude > 0)
+        {
+            Physics.gravity = Vector3.zero;
+            Debug.Log("Gravitație dezactivată");
+        }
+        else
+        {
+            Physics.gravity = originalGravity;
+            Debug.Log("Gravitație activată");
+        }
+    }
+
+    void SetCustomGravity()
+    {
+        Physics.gravity = customGravity;
+        Debug.Log($"Gravitație setată: {customGravity}");
+    }
+
+    void ResetGravity()
+    {
+        Physics.gravity = originalGravity;
+        Debug.Log("Gravitație resetată");
+    }
+
+    void ToggleSlowMotion()
+    {
+        if (Time.timeScale == 1f)
+        {
+            Time.timeScale = 0.3f;
+            Debug.Log("Timp încetinit");
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            Debug.Log("Timp normal");
+        }
+    }
+
+    void ShowPhysicsInfo()
+    {
+        Debug.Log("=== Setări fizică ===");
+        Debug.Log($"Gravitație: {Physics.gravity}");
+        Debug.Log($"Scară timp: {Time.timeScale}");
+        Debug.Log($"Pas timp fix: {Time.fixedDeltaTime}");
+        Debug.Log($"Viteză angulară max: {Physics.defaultMaxAngularSpeed}");
+    }
+
+    // Exemplu crearea obiect fizic
+    void CreatePhysicsObject()
+    {
+        GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        obj.transform.position = transform.position + Vector3.up * 3f;
+        
+        Rigidbody rb = obj.AddComponent&lt;Rigidbody&gt;();
+        rb.mass = Random.Range(0.5f, 2f);
+        
+        // Material aleatoriu
+        Collider col = obj.GetComponent&lt;Collider&gt;();
+        PhysicMaterial mat = new PhysicMaterial();
+        mat.bounciness = Random.Range(0f, 1f);
+        mat.dynamicFriction = Random.Range(0f, 1f);
+        col.material = mat;
+        
+        Debug.Log($"Obiect creat cu masa: {rb.mass}");
+    }
+
+    void OnDrawGizmos()
+    {
+        // Vizualizarea direcției gravitației
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, Physics.gravity.normalized * 3f);
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Nichita Levandovici. Toate drepturile rezervate.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
