@@ -89,8 +89,8 @@
                     <div class="example">
                         <h3>Основы Entity Component System (ECS)</h3>
                         <p>Создание сущностей, компонентов и систем для высокопроизводительной архитектуры.</p>
-                        <div class="code-example">using Unity.Entities;
-                    <div class="code-example">using Unity.Entities;
+                        <div class="code-example">
+                            <pre>using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -159,7 +159,8 @@ public class EntitySpawner : MonoBehaviour
         
         Debug.Log("ECS сущности созданы успешно");
     }
-}</div>
+}
+                            </pre></div>
                 </div>
             </div>
 
@@ -167,7 +168,8 @@ public class EntitySpawner : MonoBehaviour
                 <div class="example">
                     <h3>Jobs System для параллельных вычислений</h3>
                     <p>Использование Jobs System для эффективной обработки больших объемов данных.</p>
-                    <div class="code-example">using Unity.Collections;
+                    <div class="code-example">
+                        <pre>using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
@@ -271,7 +273,8 @@ public class ParticleSystemManager : MonoBehaviour
         if (positions.IsCreated) positions.Dispose();
         if (velocities.IsCreated) velocities.Dispose();
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -279,7 +282,8 @@ public class ParticleSystemManager : MonoBehaviour
                 <div class="example">
                     <h3>Burst Compiler для максимальной производительности</h3>
                     <p>Использование Burst Compiler для компиляции высокопроизводительного кода.</p>
-                    <div class="code-example">using Unity.Burst;
+                    <div class="code-example">
+                        <pre>using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -380,7 +384,8 @@ public class BurstOptimizedManager : MonoBehaviour
         if (originalPositions.IsCreated) originalPositions.Dispose();
         if (currentPositions.IsCreated) currentPositions.Dispose();
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -388,7 +393,8 @@ public class BurstOptimizedManager : MonoBehaviour
                 <div class="example">
                     <h3>Оптимизация производительности</h3>
                     <p>Продвинутые техники оптимизации для максимальной производительности.</p>
-                    <div class="code-example">using Unity.Entities;
+                    <div class="code-example">
+                        <pre>using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -475,7 +481,8 @@ public class PerformanceManager : MonoBehaviour
         cullingDistance = math.min(200f, cullingDistance * 1.05f);
         Debug.Log("Качество повышено");
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -483,7 +490,8 @@ public class PerformanceManager : MonoBehaviour
                 <div class="example">
                     <h3>Массовая симуляция с тысячами объектов</h3>
                     <p>Создание масштабируемых симуляций с большим количеством объектов.</p>
-                    <div class="code-example">using Unity.Entities;
+                    <div class="code-example">
+                        <pre>using Unity.Entities;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -588,7 +596,8 @@ public class MassiveSimulation : MonoBehaviour
                 swarm.target = newTarget;
             }).Run();
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
