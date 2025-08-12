@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Модуль 10: Продвинутая оптимизация и выпуск - Примеры кода для Unity разработчиков">
-    <meta name="keywords" content="unity, оптимизация, выпуск, продвинутые техники, производительность">
+    <meta name="description" content="Модуль 10: Публикация и продвинутые возможности - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, публикация, addressables, аналитика, монетизация">
     <meta name="author" content="Никита Левандович">
-    <title>Модуль 10: Продвинутая оптимизация и выпуск - Примеры кода</title>
+    <title>Модуль 10: Публикация и продвинутые возможности - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -31,6 +31,9 @@
         .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        .example { margin-bottom: 30px; }
+        .example h3 { color: #1a202c; margin-bottom: 15px; font-size: 1.3rem; }
+        .example p { color: #4a5568; margin-bottom: 15px; line-height: 1.6; }
         .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
         .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
         .module-navigation { background: #f8f9fa; padding: 30px 0; margin-top: 40px; border-top: 1px solid #e2e8f0; }
@@ -40,184 +43,20 @@
         .prev-btn { margin-right: auto; }
         .next-btn { margin-left: auto; }
         footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 0; }
-
-        .nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #667eea;
-        }
-
-        .hero {
-            padding: 120px 2rem 80px;
-            text-align: center;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .examples-section {
-            background: white;
-            margin: -40px auto 40px;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #f0f0f0;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .tab {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            color: #666;
-            border-radius: 8px 8px 0 0;
-            transition: all 0.3s ease;
-        }
-
-        .tab.active {
-            color: #667eea;
-            background: #f8f9ff;
-            border-bottom: 2px solid #667eea;
-        }
-
-        .tab:hover {
-            background: #f5f5f5;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .example {
-            margin-bottom: 30px;
-        }
-
-        .example h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .example p {
-            color: #666;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .code-block {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            color: #333;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background 0.3s ease;
-        }
-
-        .back-link:hover {
-            background: #5a6fd8;
-        }
-
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .nav {
-                padding: 0 1rem;
-            }
-
-            .examples-section {
-                margin: -20px 1rem 20px;
-                padding: 20px;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab {
-                text-align: center;
-            }
+            .hero-section h1 { font-size: 2.5rem; }
+            .hero-section p { font-size: 1.1rem; }
+            .container { padding: 0 1rem; }
+            .example-section { margin: -20px 1rem 20px; padding: 20px; }
+            .tabs { flex-direction: column; }
+            .tab { text-align: center; }
         }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>Модуль 10: Продвинутые техники Unity</h1>
+            <h1>Модуль 10: Публикация и продвинутые возможности</h1>
             <nav>
                 <ul>
                     <li><a href="../../index.html">Главная</a></li>
@@ -231,8 +70,8 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>Продвинутые техники Unity</h1>
-            <p>Изучите продвинутые техники разработки в Unity</p>
+            <h1>Публикация и продвинутые возможности</h1>
+            <p>Изучите Addressables, аналитику, монетизацию и подготовку игры к релизу</p>
         </div>
     </section>
 
@@ -240,19 +79,18 @@
         <div class="container">
             <section id="examples" class="example-section">
                 <h2>Примеры кода</h2>
-                
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('advanced-scripting')">Продвинутое скриптинг</button>
-                    <button class="tab" onclick="showTab('custom-editors')">Пользовательские редакторы</button>
-                    <button class="tab" onclick="showTab('asset-management')">Управление ассетами</button>
-                    <button class="tab" onclick="showTab('build-automation')">Автоматизация сборки</button>
-                    <button class="tab" onclick="showTab('platform-specific')">Платформо-специфичные решения</button>
+                    <button class="tab active" onclick="showTab('addressables')">Addressables</button>
+                    <button class="tab" onclick="showTab('cross-platform')">Кроссплатформенность</button>
+                    <button class="tab" onclick="showTab('analytics')">Аналитика</button>
+                    <button class="tab" onclick="showTab('monetization')">Монетизация</button>
+                    <button class="tab" onclick="showTab('publishing')">Публикация</button>
                 </div>
 
-                <div id="advanced-scripting" class="tab-content active">
+                <div id="addressables" class="tab-content active">
                     <div class="example">
-                        <h3>Управление памятью с Addressables</h3>
-                        <p>Эффективная загрузка и выгрузка ресурсов для оптимизации памяти.</p>
+                        <h3>Система Addressables</h3>
+                        <p>Загрузка и управление ресурсами через Addressables для оптимизации памяти.</p>
                         <div class="code-example">
                             <pre>using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -261,20 +99,21 @@ using System.Collections.Generic;
 
 public class AddressableManager : MonoBehaviour
 {
+    [Header("Addressable References")]
     public AssetReference playerPrefab;
     public AssetReference audioClip;
     
-    private Dictionary&lt;string, AsyncOperationHandle&gt; loadedAssets = 
-        new Dictionary&lt;string, AsyncOperationHandle&gt;();
+    private Dictionary&lt;string, AsyncOperationHandle&gt; loadedAssets = new Dictionary&lt;string, AsyncOperationHandle&gt;();
     
     void Start()
     {
-        LoadAssets();
-        Debug.Log("Addressable Manager инициализирован");
+        LoadAddressableAssets();
     }
     
-    async void LoadAssets()
+    async void LoadAddressableAssets()
     {
+        Debug.Log("Начинаем загрузку Addressable ресурсов");
+        
         // Загрузка префаба игрока
         var playerHandle = playerPrefab.LoadAssetAsync&lt;GameObject&gt;();
         await playerHandle.Task;
@@ -293,210 +132,6 @@ public class AddressableManager : MonoBehaviour
         if (audioHandle.Status == AsyncOperationStatus.Succeeded)
         {
             loadedAssets["audio"] = audioHandle;
-            Debug.Log("Аудио загружено");
-        }
-    }
-}</pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="custom-editors" class="tab-content">
-                    <div class="example">
-                        <h3>Пользовательские редакторы</h3>
-                        <p>Создание инструментов для упрощения разработки.</p>
-                        <div class="code-example">
-                            <pre>using UnityEngine;
-using UnityEditor;
-
-[CustomEditor(typeof(PlayerController))]
-public class PlayerControllerEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        
-        PlayerController player = (PlayerController)target;
-        
-        GUILayout.Space(10);
-        
-        if (GUILayout.Button("Reset Position"))
-        {
-            player.transform.position = Vector3.zero;
-        }
-        
-        if (GUILayout.Button("Add Health"))
-        {
-            player.AddHealth(10);
-        }
-    }
-}</pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="asset-management" class="tab-content">
-                    <div class="example">
-                        <h3>Управление ассетами</h3>
-                        <p>Автоматизация работы с ресурсами проекта.</p>
-                        <div class="code-example">
-                            <pre>using UnityEngine;
-using UnityEditor;
-using System.IO;
-
-public class AssetProcessor : AssetPostprocessor
-{
-    void OnPreprocessTexture()
-    {
-        TextureImporter importer = (TextureImporter)assetImporter;
-        
-        if (assetPath.Contains("UI/"))
-        {
-            importer.textureType = TextureImporterType.Sprite;
-            importer.spriteImportMode = SpriteImportMode.Single;
-        }
-        else if (assetPath.Contains("Textures/"))
-        {
-            importer.textureType = TextureImporterType.Default;
-            importer.maxTextureSize = 1024;
-        }
-    }
-}</pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="build-automation" class="tab-content">
-                    <div class="example">
-                        <h3>Автоматизация сборки</h3>
-                        <p>Скрипты для автоматической сборки проекта.</p>
-                        <div class="code-example">
-                            <pre>using UnityEditor;
-using UnityEngine;
-
-public class BuildScript
-{
-    [MenuItem("Build/Build All Platforms")]
-    public static void BuildAllPlatforms()
-    {
-        BuildWindows();
-        BuildAndroid();
-        BuildWebGL();
-    }
-    
-    static void BuildWindows()
-    {
-        BuildPlayerOptions options = new BuildPlayerOptions();
-        options.scenes = GetScenePaths();
-        options.locationPathName = "Builds/Windows/Game.exe";
-        options.target = BuildTarget.StandaloneWindows64;
-        options.options = BuildOptions.None;
-        
-        BuildPipeline.BuildPlayer(options);
-    }
-    
-    static string[] GetScenePaths()
-    {
-        return new string[] { "Assets/Scenes/MainMenu.unity", "Assets/Scenes/Game.unity" };
-    }
-}</pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="platform-specific" class="tab-content">
-                    <div class="example">
-                        <h3>Платформо-специфичные решения</h3>
-                        <p>Код для разных платформ и устройств.</p>
-                        <div class="code-example">
-                            <pre>using UnityEngine;
-
-public class PlatformManager : MonoBehaviour
-{
-    void Start()
-    {
-        ConfigureForPlatform();
-    }
-    
-    void ConfigureForPlatform()
-    {
-#if UNITY_ANDROID
-        ConfigureAndroid();
-#elif UNITY_IOS
-        ConfigureiOS();
-#elif UNITY_WEBGL
-        ConfigureWebGL();
-#else
-        ConfigureDesktop();
-#endif
-    }
-    
-    void ConfigureAndroid()
-    {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        Application.targetFrameRate = 60;
-    }
-    
-    void ConfigureiOS()
-    {
-        Application.targetFrameRate = 60;
-    }
-    
-    void ConfigureWebGL()
-    {
-        Application.targetFrameRate = 30;
-    }
-    
-    void ConfigureDesktop()
-    {
-        Application.targetFrameRate = -1;
-    }
-}</pre>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <div class="module-navigation">
-        <div class="container">
-            <a href="../module-9/index.html" class="nav-btn prev-btn">← Модуль 9</a>
-            <a href="../module-11/index.html" class="nav-btn next-btn">Модуль 11 →</a>
-        </div>
-    </div>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Никита Левандович. Все права защищены.</p>
-        </div>
-    </footer>
-
-    <script>
-        function showTab(tabName) {
-            // Скрыть все вкладки
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Убрать активный класс с кнопок
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Показать выбранную вкладку
-            document.getElementById(tabName).classList.add('active');
-            
-            // Добавить активный класс к нажатой кнопке
-            event.target.classList.add('active');
-        }
-    </script>
-</body>
-</html>
-        {
-            loadedAssets["audio"] = audioHandle;
             PlayAudio(audioHandle.Result);
         }
     }
@@ -506,7 +141,7 @@ public class PlatformManager : MonoBehaviour
         var audioSource = GetComponent&lt;AudioSource&gt;();
         if (audioSource == null)
             audioSource = gameObject.AddComponent&lt;AudioSource&gt;();
-        
+            
         audioSource.clip = clip;
         audioSource.Play();
         Debug.Log("Аудио воспроизводится");
@@ -530,15 +165,17 @@ public class PlatformManager : MonoBehaviour
         }
         Debug.Log("Все Addressable ресурсы освобождены");
     }
-}</div>
+}</pre>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div id="cross-platform" class="tab-content">
-                <div class="example">
-                    <h3>Кроссплатформенная разработка</h3>
-                    <p>Адаптация игры для разных платформ: Android, WebGL, PC.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="cross-platform" class="tab-content">
+                    <div class="example">
+                        <h3>Кроссплатформенная разработка</h3>
+                        <p>Адаптация игры для разных платформ: Android, WebGL, PC.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
 
 public class PlatformManager : MonoBehaviour
 {
@@ -578,13 +215,6 @@ public class PlatformManager : MonoBehaviour
         SetUIScale(mobileUIScale);
         QualitySettings.SetQualityLevel(1); // Низкое качество
         
-        // Включение сенсорных элементов
-        var touchControls = GameObject.FindGameObjectsWithTag("TouchControl");
-        foreach (var control in touchControls)
-        {
-            control.SetActive(true);
-        }
-        
         Debug.Log("Мобильная конфигурация применена");
     }
     
@@ -603,13 +233,6 @@ public class PlatformManager : MonoBehaviour
         SetUIScale(desktopUIScale);
         QualitySettings.SetQualityLevel(4); // Высокое качество
         
-        // Отключение сенсорных элементов
-        var touchControls = GameObject.FindGameObjectsWithTag("TouchControl");
-        foreach (var control in touchControls)
-        {
-            control.SetActive(false);
-        }
-        
         Debug.Log("Десктопная конфигурация применена");
     }
     
@@ -625,15 +248,17 @@ public class PlatformManager : MonoBehaviour
             }
         }
     }
-}</div>
+}</pre>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div id="analytics" class="tab-content">
-                <div class="example">
-                    <h3>Аналитика и отслеживание</h3>
-                    <p>Сбор данных о поведении игроков и производительности игры.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="analytics" class="tab-content">
+                    <div class="example">
+                        <h3>Аналитика и отслеживание</h3>
+                        <p>Сбор данных о поведении игроков и производительности игры.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
 using System.Collections.Generic;
 
 public class AnalyticsManager : MonoBehaviour
@@ -696,15 +321,6 @@ public class AnalyticsManager : MonoBehaviour
         TrackEvent("level_complete", data);
     }
     
-    public void TrackPurchase(string item, float price)
-    {
-        var data = new Dictionary&lt;string, object&gt;();
-        data["item"] = item;
-        data["price"] = price;
-        
-        TrackEvent("purchase", data);
-    }
-    
     void LogEvent(Dictionary&lt;string, object&gt; data)
     {
         string log = "Аналитика:\n";
@@ -714,25 +330,17 @@ public class AnalyticsManager : MonoBehaviour
         }
         Debug.Log(log);
     }
-    
-    void OnDestroy()
-    {
-        var sessionTime = Time.time - sessionStartTime;
-        var data = new Dictionary&lt;string, object&gt;();
-        data["duration"] = sessionTime;
-        data["completions"] = levelCompletions;
-        
-        TrackEvent("session_end", data);
-    }
-}</div>
+}</pre>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div id="monetization" class="tab-content">
-                <div class="example">
-                    <h3>Монетизация с Unity Ads</h3>
-                    <p>Интеграция рекламы и внутриигровых покупок для монетизации.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="monetization" class="tab-content">
+                    <div class="example">
+                        <h3>Монетизация с Unity Ads</h3>
+                        <p>Интеграция рекламы и внутриигровых покупок для монетизации.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
 using UnityEngine.UI;
 
 public class MonetizationManager : MonoBehaviour
@@ -808,37 +416,6 @@ public class MonetizationManager : MonoBehaviour
         Invoke("SetAdReady", 30f);
     }
     
-    public void PurchaseCoins(int amount, float price)
-    {
-        playerCoins += amount;
-        SavePlayerData();
-        UpdateUI();
-        
-        // Отправка события в аналитику
-        var analytics = FindObjectOfType&lt;AnalyticsManager&gt;();
-        if (analytics != null)
-        {
-            analytics.TrackPurchase($"coins_{amount}", price);
-        }
-        
-        Debug.Log($"Куплено {amount} монет за ${price}");
-    }
-    
-    public bool SpendCoins(int amount)
-    {
-        if (playerCoins >= amount)
-        {
-            playerCoins -= amount;
-            SavePlayerData();
-            UpdateUI();
-            Debug.Log($"Потрачено {amount} монет");
-            return true;
-        }
-        
-        Debug.Log("Недостаточно монет");
-        return false;
-    }
-    
     void UpdateUI()
     {
         if (coinsText != null)
@@ -851,15 +428,17 @@ public class MonetizationManager : MonoBehaviour
             watchAdButton.interactable = adReady;
         }
     }
-}</div>
+}</pre>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div id="publishing" class="tab-content">
-                <div class="example">
-                    <h3>Подготовка к публикации</h3>
-                    <p>Автоматизация процесса сборки и подготовки игры к релизу.</p>
-                    <div class="code-block">using UnityEngine;
+                <div id="publishing" class="tab-content">
+                    <div class="example">
+                        <h3>Подготовка к публикации</h3>
+                        <p>Автоматизация процесса сборки и подготовки игры к релизу.</p>
+                        <div class="code-example">
+                            <pre>using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Build.Reporting;
@@ -896,26 +475,6 @@ public class BuildManager : MonoBehaviour
         }
     }
     
-    [ContextMenu("Build Windows")]
-    public void BuildWindows()
-    {
-        SetupBuildSettings();
-        
-        var buildOptions = new BuildPlayerOptions();
-        buildOptions.scenes = GetScenePaths();
-        buildOptions.locationPathName = $"Builds/Windows/{productName}.exe";
-        buildOptions.target = BuildTarget.StandaloneWindows64;
-        buildOptions.options = BuildOptions.None;
-        
-        Debug.Log("Начало сборки для Windows...");
-        var report = BuildPipeline.BuildPlayer(buildOptions);
-        
-        if (report.summary.result == BuildResult.Succeeded)
-        {
-            Debug.Log("Сборка Windows завершена успешно!");
-        }
-    }
-    
     void SetupBuildSettings()
     {
         PlayerSettings.productName = productName;
@@ -937,27 +496,29 @@ public class BuildManager : MonoBehaviour
         }
         return scenes;
     }
-    
-    [ContextMenu("Prepare for Store")]
-    public void PrepareForStore()
-    {
-        // Установка настроек для магазина
-        PlayerSettings.Android.useAPKExpansionFiles = false;
-        PlayerSettings.Android.keystoreName = "user.keystore";
-        
-        Debug.Log("Игра подготовлена для публикации в магазине");
-    }
 #endif
-}</div>
+}</pre>
+                        </div>
+                    </div>
                 </div>
+            </section>
+        </div>
+    </main>
+        <div class="module-navigation">
+            <div class="container">
+                <a href="../module-9/index.html" class="nav-btn prev-btn">← Модуль 9</a>
+                <a href="../module-11/index.html" class="nav-btn next-btn">Модуль 11 →</a>
             </div>
-
-            <a href="../../ru/index.html" class="back-link">← Назад к курсам</a>
-        </section>
-    </div>
+        </div>
+    
+        <footer>
+            <div class="container">
+                <p>© 2024 Никита Левандович. Все права защищены.</p>
+            </div>
+        </footer>
 
     <script>
-        function openTab(evt, tabName) {
+        function showTab(tabName) {
             var i, tabcontent, tabs;
             
             tabcontent = document.getElementsByClassName("tab-content");
@@ -971,7 +532,7 @@ public class BuildManager : MonoBehaviour
             }
             
             document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add("active");
         }
     </script>
 </body>
