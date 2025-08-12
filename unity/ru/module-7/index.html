@@ -199,7 +199,8 @@ public class ThreadingBasics : MonoBehaviour
                 <div class="example">
                     <h3>Task Parallel Library</h3>
                     <p>Использование современного API для параллельного программирования.</p>
-                    <div class="code-example">using System;
+                    <div class="code-example">
+                        <pre>using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -255,7 +256,7 @@ public class TaskParallelController : MonoBehaviour
         long sum = 0;
         object lockObject = new object();
         
-        Parallel.ForEach(largeDataSet, (number) =>
+        Parallel.ForEach(largeDataSet, (number) =&gt;
         {
             long result = ComputeExpensiveOperation(number);
             
@@ -324,10 +325,10 @@ public class TaskParallelController : MonoBehaviour
         {
             result += (long)Math.Sqrt(i * input);
         }
-        Debug.Log("Все потоки остановлены");
         return result;
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -335,7 +336,8 @@ public class TaskParallelController : MonoBehaviour
                 <div class="example">
                     <h3>Синхронизация потоков</h3>
                     <p>Использование lock, Monitor и других примитивов синхронизации.</p>
-                    <div class="code-example">using System;
+                    <div class="code-example">
+                        <pre>using System;
 using System.Threading;
 using System.Collections.Generic;
 using UnityEngine;
@@ -480,7 +482,8 @@ public class ThreadSynchronization : MonoBehaviour
     {
         StopProducerConsumer();
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -488,7 +491,8 @@ public class ThreadSynchronization : MonoBehaviour
                 <div class="example">
                     <h3>Многопоточность в Unity</h3>
                     <p>Безопасная работа с потоками в Unity и взаимодействие с основным потоком.</p>
-                    <div class="code-example">using System;
+                    <div class="code-example">
+                        <pre>using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
@@ -655,7 +659,8 @@ public class UnityThreadingManager : MonoBehaviour
     {
         isProcessing = false;
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -663,7 +668,8 @@ public class UnityThreadingManager : MonoBehaviour
                 <div class="example">
                     <h3>Продвинутые техники многопоточности</h3>
                     <p>Пулы потоков, CancellationToken и оптимизация производительности.</p>
-                    <div class="code-example">using System;
+                    <div class="code-example">
+                        <pre>using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -818,7 +824,8 @@ public class AdvancedThreadingController : MonoBehaviour
         semaphore?.Dispose();
         readerWriterLock?.Dispose();
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
