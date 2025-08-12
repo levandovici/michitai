@@ -89,8 +89,8 @@
                     <div class="example">
                         <h3>Основы Netcode for GameObjects</h3>
                         <p>Настройка базовой сетевой архитектуры и подключение клиентов.</p>
-                        <div class="code-example">using Unity.Netcode;
-                    <div class="code-example">using Unity.Netcode;
+                        <div class="code-example">
+                            <pre>using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -145,7 +145,8 @@ public class NetworkManagerUI : MonoBehaviour
             statusText.text = "Подключен как клиент";
         }
     }
-}</div>
+}
+                            </pre></div>
                 </div>
             </div>
 
@@ -153,7 +154,8 @@ public class NetworkManagerUI : MonoBehaviour
                 <div class="example">
                     <h3>NetworkObjects и синхронизация</h3>
                     <p>Работа с сетевыми объектами и их синхронизация между клиентами.</p>
-                    <div class="code-example">using Unity.Netcode;
+                    <div class="code-example">
+                        <pre>using Unity.Netcode;
 using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
@@ -223,7 +225,8 @@ public class NetworkPlayer : NetworkBehaviour
             Debug.Log($"Позиция обновлена: {newPos}");
         }
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -231,7 +234,8 @@ public class NetworkPlayer : NetworkBehaviour
                 <div class="example">
                     <h3>RPC и сетевая связь</h3>
                     <p>Удаленные вызовы процедур для мгновенной связи между клиентами.</p>
-                    <div class="code-example">using Unity.Netcode;
+                    <div class="code-example">
+                        <pre>using Unity.Netcode;
 using UnityEngine;
 
 public class NetworkCommunication : NetworkBehaviour
@@ -289,7 +293,8 @@ public class NetworkCommunication : NetworkBehaviour
     {
         Debug.Log($"Игрок {playerId} {action}");
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -297,7 +302,8 @@ public class NetworkCommunication : NetworkBehaviour
                 <div class="example">
                     <h3>NetworkVariables и состояние</h3>
                     <p>Синхронизация состояния игры через NetworkVariables.</p>
-                    <div class="code-example">using Unity.Netcode;
+                    <div class="code-example">
+                        <pre>using Unity.Netcode;
 using UnityEngine;
 
 public class GameStateManager : NetworkBehaviour
@@ -382,7 +388,8 @@ public class GameStateManager : NetworkBehaviour
     {
         Debug.Log($"Игроков подключено: {newCount}");
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
@@ -390,7 +397,8 @@ public class GameStateManager : NetworkBehaviour
                 <div class="example">
                     <h3>Простая мультиплеерная игра</h3>
                     <p>Пример базовой мультиплеерной игры с очками и взаимодействием.</p>
-                    <div class="code-example">using Unity.Netcode;
+                    <div class="code-example">
+                        <pre>using Unity.Netcode;
 using UnityEngine;
 
 public class MultiplayerGame : NetworkBehaviour
@@ -499,7 +507,8 @@ public class MultiplayerGame : NetworkBehaviour
         
         Debug.Log("Игра сброшена");
     }
-}</div>
+}
+                        </pre></div>
                 </div>
             </div>
 
