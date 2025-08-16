@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Модуль 14: Блокчейн и Web3 игры - Примеры кода для Unity разработчиков">
-    <meta name="keywords" content="unity, блокчейн, web3, nft, криптовалюта, смарт-контракты">
+    <meta name="description" content="Модуль 14: Итоговый проект - Создание полноценной игры с опциональной интеграцией блокчейн технологий">
+    <meta name="keywords" content="unity, финальный проект, игра, блокчейн, web3, nft, смарт-контракты, разработка игр">
     <meta name="author" content="Никита Левандович">
-    <title>Модуль 14: Блокчейн и Web3 игры - Примеры кода</title>
+    <title>Модуль 14: Итоговый проект - Создание игры с Unity</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -56,11 +56,13 @@
 <body>
     <header>
         <div class="container">
-            <h1>Модуль 14: Блокчейн и Web3 игры</h1>
+            <h1>Модуль 14: Итоговый проект</h1>
             <nav>
                 <ul>
                     <li><a href="../../index.html">Главная</a></li>
-                    <li><a href="#examples">Примеры</a></li>
+                    <li><a href="#project-steps">Этапы</a></li>
+                    <li><a href="#blockchain-optional">Блокчейн (опционально)</a></li>
+                    <li><a href="#submission">Сдача проекта</a></li>
                 </ul>
             </nav>
         </div>
@@ -70,15 +72,212 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>Блокчейн и Web3 игры</h1>
-            <p>Комплексные примеры создания игр с NFT, криптовалютами и смарт-контрактами</p>
+            <h1>Итоговый проект</h1>
+            <p>Создай свою полноценную игру, используя все изученные технологии, с опциональной интеграцией блокчейна</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
-            <section id="examples" class="example-section">
-                <h2>Примеры кода</h2>
+            <section id="project-steps" class="example-section">
+                <h2>Этапы работы над проектом</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('planning')">1. Планирование</button>
+                    <button class="tab" onclick="showTab('development')">2. Разработка</button>
+                    <button class="tab" onclick="showTab('testing')">3. Тестирование</button>
+                    <button class="tab" onclick="showTab('documentation')">4. Документация</button>
+                </div>
+
+                <div id="planning" class="tab-content active">
+                    <h3>1. Планирование проекта</h3>
+                    <p>Прежде чем приступать к кодингу, важно тщательно спланировать ваш проект:</p>
+                    <ul style="margin: 15px 0 15px 30px;">
+                        <li>Определите жанр и целевую аудиторию</li>
+                        <li>Создайте концепт-документ (GDD)</li>
+                        <li>Спланируйте архитектуру проекта</li>
+                        <li>Определите ключевые механики и фичи</li>
+                        <li>Создайте дорожную карту разработки</li>
+                    </ul>
+                    <div class="code-example">
+                        <pre><code>// Пример структуры проекта в Unity
+Assets/
+├── _Scripts/
+│   ├── Core/         # Основные системы
+│   ├── Gameplay/     # Игровые механики
+│   ├── UI/           # Пользовательский интерфейс
+│   └── Utils/        # Вспомогательные утилиты
+├── Art/              # Графика
+├── Audio/            # Звуки и музыка
+└── Scenes/           # Игровые сцены</code></pre>
+                    </div>
+                </div>
+
+                <div id="development" class="tab-content">
+                    <h3>2. Разработка</h3>
+                    <p>Основной этап реализации вашей игры:</p>
+                    <ul style="margin: 15px 0 15px 30px;">
+                        <li>Настройте базовую сцену и камеру</li>
+                        <li>Реализуйте основные игровые механики</li>
+                        <li>Добавьте систему сохранений</li>
+                        <li>Создайте пользовательский интерфейс</li>
+                        <li>Добавьте звуки и визуальные эффекты</li>
+                    </ul>
+                    <div class="code-example">
+                        <pre><code>// Пример базового контроллера игрока
+public class PlayerController : MonoBehaviour
+{
+    [Header("Movement")]
+    public float moveSpeed = 5f;
+    public float jumpForce = 10f;
+    
+    private Rigidbody rb;
+    private bool isGrounded;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        // Обработка ввода и передвижение
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+        
+        Vector3 movement = new Vector3(moveX, 0f, moveZ);
+        rb.velocity = new Vector3(movement.x * moveSpeed, rb.velocity.y, movement.z * moveSpeed);
+
+        // Прыжок
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Проверка на землю
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="testing" class="tab-content">
+                    <h3>3. Тестирование и отладка</h3>
+                    <p>Важные аспекты тестирования вашей игры:</p>
+                    <ul style="margin: 15px 0 15px 30px;">
+                        <li>Модульное тестирование отдельных компонентов</li>
+                        <li>Интеграционное тестирование</li>
+                        <li>Балансировка игрового процесса</li>
+                        <li>Оптимизация производительности</li>
+                        <li>Сбор и анализ отзывов</li>
+                    </ul>
+                    <div class="code-example">
+                        <pre><code>// Пример теста для игрового менеджера
+using NUnit.Framework;
+using UnityEngine;
+
+public class GameManagerTests
+{
+    [Test]
+    public void GameManager_AddScore_ScoreIncreases()
+    {
+        // Arrange
+        var gameManager = new GameObject().AddComponent<GameManager>();
+        int initialScore = gameManager.Score;
+        int pointsToAdd = 100;
+
+        // Act
+        gameManager.AddScore(pointsToAdd);
+
+        // Assert
+        Assert.AreEqual(initialScore + pointsToAdd, gameManager.Score);
+    }
+
+    [Test]
+    public void GameManager_GameOver_StateChangesToGameOver()
+    {
+        // Arrange
+        var gameManager = new GameObject().AddComponent<GameManager>();
+        
+        // Act
+        gameManager.GameOver();
+
+        // Assert
+        Assert.IsTrue(gameManager.IsGameOver);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div id="documentation" class="tab-content">
+                    <h3>4. Документация</h3>
+                    <p>Подготовка проекта к сдаче:</p>
+                    <ul style="margin: 15px 0 15px 30px;">
+                        <li>Напишите README с инструкцией по запуску</li>
+                        <li>Документируйте ключевые классы и методы</li>
+                        <li>Подготовьте презентацию проекта</li>
+                        <li>Создайте демо-видео</li>
+                        <li>Опишите известные проблемы и планы по доработке</li>
+                    </ul>
+                    <div class="code-example">
+                        <pre><code>/// <summary>
+/// Управляет основным игровым процессом, включая счет, состояние игры и события.
+/// </summary>
+public class GameManager : MonoBehaviour
+{
+    /// <summary>
+    /// Текущий счет игрока.
+    /// </summary>
+    public int Score { get; private set; }
+
+    /// <summary>
+    /// Возвращает true, если игра завершена.
+    /// </summary>
+    public bool IsGameOver { get; private set; }
+
+    /// <summary>
+    /// Добавляет очки к текущему счету.
+    /// </summary>
+    /// <param name="points">Количество очков для добавления.</param>
+    public void AddScore(int points)
+    {
+        if (!IsGameOver)
+        {
+            Score += points;
+            OnScoreUpdated?.Invoke(Score);
+        }
+    }
+
+    /// <summary>
+    /// Завершает игру.
+    /// </summary>
+    public void GameOver()
+    {
+        if (!IsGameOver)
+        {
+            IsGameOver = true;
+            OnGameOver?.Invoke();
+        }
+    }
+
+    // События
+    public event System.Action<int> OnScoreUpdated;
+    public event System.Action OnGameOver;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="blockchain-optional" class="example-section">
+                <h2>Дополнительно: Интеграция с блокчейном</h2>
+                <p>Для проектов с блокчейн-компонентами:</p>
                 
                 <div class="tabs">
                     <button class="tab active" onclick="showTab('wallet-integration')">Кошелек</button>
@@ -374,15 +573,37 @@ public class MarketplaceManager : MonoBehaviour
                     </div>
                 </div>
             </section>
+
+            <section id="submission" style="background: #f5f7fa; padding: 60px 0; margin: 60px -20px; width: calc(100% + 40px);">
+                <div class="container">
+                    <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                        <h2 style="color: #1a202c; margin-bottom: 20px;">Сдача проекта</h2>
+                        <p style="color: #4a5568; font-size: 1.1rem; margin-bottom: 20px;">Для сдачи итогового проекта подготовьте:</p>
+                        <ol style="margin: 15px 0 25px 30px; color: #4a5568; font-size: 1.1rem; line-height: 1.8;">
+                            <li>Исходный код проекта (архив или ссылка на репозиторий)</li>
+                            <li>Собранную версию игры (WebGL, Windows, Android и т.д.)</li>
+                            <li>Краткое описание проекта (1-2 абзаца)</li>
+                            <li>Инструкцию по установке и запуску</li>
+                            <li>Презентацию или демо-видео (по желанию)</li>
+                        </ol>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 6px; border-left: 4px solid #4299e1; margin-top: 20px;">
+                            <p style="margin: 0; color: #4a5568; font-size: 1.1rem;">
+                                <strong style="color: #2d3748;">Срок сдачи:</strong> до 31 декабря 2025 года<br>
+                                <strong style="color: #2d3748;">Формат сдачи:</strong> архив с проектом и документацией на Google Диске или в облачном хранилище
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 
     <div class="module-navigation">
         <div class="container">
             <a href="../module-13/index.html" class="nav-btn prev-btn">← Модуль 13</a>
-            <a href="../../index.html" class="nav-btn next-btn">Главная →</a>
+            <a href="../../index.html" class="nav-btn next-btn" style="opacity: 0.5; cursor: default;">Завершено! 🎉</a>
         </div>
-    </div>3
+    </div>
 
     <footer>
         <div class="container">
