@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Модуль 11: Блокчейн и Web3 в играх - Примеры кода для Unity разработчиков">
-    <meta name="keywords" content="блокчейн, web3, unity, ethereum, nft, смарт контракты, криптовалюта">
+    <meta name="description" content="Модуль 11: Паттерны проектирования в C# - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, c#, паттерны проектирования, solid, singleton, factory, observer">
     <meta name="author" content="Никита Левандович">
-    <title>Модуль 11: Блокчейн и Web3 - Примеры кода</title>
+    <title>Модуль 11: Паттерны проектирования в C# - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -26,11 +26,14 @@
         .main-content { padding: 60px 0; }
         .example-section { background: white; border-radius: 12px; padding: 40px; margin: 40px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
         .example-section h2 { font-size: 2rem; font-weight: 600; color: #1a202c; margin-bottom: 20px; border-bottom: 3px solid #48bb78; padding-bottom: 10px; }
-        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; }
+        .tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; }
         .tab { padding: 12px 24px; background: none; border: none; font-size: 1rem; font-weight: 600; color: #4a5568; cursor: pointer; transition: color 0.3s ease; }
         .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        .example { margin-bottom: 30px; }
+        .example h3 { color: #1a202c; margin-bottom: 15px; font-size: 1.3rem; }
+        .example p { color: #4a5568; margin-bottom: 15px; line-height: 1.6; }
         .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
         .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
         .module-navigation { background: #f8f9fa; padding: 30px 0; margin-top: 40px; border-top: 1px solid #e2e8f0; }
@@ -40,16 +43,23 @@
         .prev-btn { margin-right: auto; }
         .next-btn { margin-left: auto; }
         footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 0; }
+        @media (max-width: 768px) {
+            .hero-section h1 { font-size: 2.5rem; }
+            .hero-section p { font-size: 1.1rem; }
+            .container { padding: 0 1rem; }
+            .example-section { margin: -20px 1rem 20px; padding: 20px; }
+            .tabs { flex-direction: column; }
+            .tab { text-align: center; }
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>Модуль 11: Блокчейн и Web3</h1>
+            <h1>Модуль 11: Паттерны проектирования в C#</h1>
             <nav>
                 <ul>
                     <li><a href="../../index.html">Главная</a></li>
-
                     <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
@@ -60,8 +70,8 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>Блокчейн и Web3 в играх</h1>
-            <p>Изучите интеграцию блокчейн технологий в Unity игры</p>
+            <h1>Паттерны проектирования в C#</h1>
+            <p>Изучите ключевые паттерны проектирования для создания чистого и поддерживаемого кода</p>
         </div>
     </section>
 
@@ -69,302 +79,265 @@
         <div class="container">
             <section id="examples" class="example-section">
                 <h2>Примеры кода</h2>
-                
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('wallet')">Подключение кошелька</button>
-                    <button class="tab" onclick="showTab('nft')">Управление NFT</button>
-                    <button class="tab" onclick="showTab('contract')">Смарт-контракт</button>
-                    <button class="tab" onclick="showTab('marketplace')">Маркетплейс</button>
-                    <button class="tab" onclick="showTab('tokens')">Токены</button>
+                    <button class="tab active" onclick="showTab('solid')">Принципы SOLID</button>
+                    <button class="tab" onclick="showTab('creational')">Порождающие</button>
+                    <button class="tab" onclick="showTab('structural')">Структурные</button>
+                    <button class="tab" onclick="showTab('behavioral')">Поведенческие</button>
+                    <button class="tab" onclick="showTab('architecture')">Архитектурные</button>
                 </div>
 
-                <div id="wallet" class="tab-content active">
-                    <h3>Пример 1: Подключение Web3 кошелька</h3>
-                    <p>Базовая система подключения MetaMask кошелька к Unity игре:</p>
-                    <div class="code-example">
-                        <pre><code>using System;
-using System.Threading.Tasks;
-using UnityEngine;
-using Nethereum.Web3;
-
-/// <summary>
-/// Подключение к Web3 кошельку (MetaMask) из Unity
-/// </summary>
-public class WalletConnection : MonoBehaviour
+                <div id="solid" class="tab-content active">
+                    <div class="example">
+                        <h3>Принцип единственной ответственности (SRP)</h3>
+                        <p>Каждый класс должен иметь только одну причину для изменения.</p>
+                        <div class="code-example">
+                            <pre>// Плохо: Класс с несколькими обязанностями
+public class UserManager
 {
-    [SerializeField] private string rpcUrl = "https://mainnet.infura.io/v3/YOUR_PROJECT_ID";
-    private Web3 web3;
-    public string PlayerWalletAddress { get; private set; }
+    public void AddUser(User user) { /* ... */ }
+    public void SendEmail(User user, string message) { /* ... */ }
+    public void LogError(string error) { /* ... */ }
+}
+
+// Хорошо: Разделение на отдельные классы
+public class UserManager
+{
+    public void AddUser(User user) { /* ... */ }
+}
+
+public class EmailService
+{
+    public void SendEmail(User user, string message) { /* ... */ }
+}
+
+public class Logger
+{
+    public void LogError(string error) { /* ... */ }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="creational" class="tab-content">
+                    <div class="example">
+                        <h3>Singleton (Одиночка)</h3>
+                        <p>Гарантирует, что у класса есть только один экземпляр.</p>
+                        <div class="code-example">
+                            <pre>public class GameManager
+{
+    private static GameManager _instance;
     
-    public event Action&lt;string&gt; OnWalletConnected;
-    public event Action&lt;decimal&gt; OnBalanceUpdated;
-
-    void Start() => InitializeWeb3();
-
-    private void InitializeWeb3()
+    // Приватный конструктор
+    private GameManager() { }
+    
+    // Потокобезопасная реализация
+    private static readonly object _lock = new object();
+    
+    public static GameManager Instance
     {
-        try
+        get
         {
-            web3 = new Web3(rpcUrl);
-            Debug.Log("Web3 соединение инициализировано");
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка Web3: {ex.Message}");
-        }
-    }
-
-    public async Task&lt;bool&gt; ConnectWallet()
-    {
-        try
-        {
-            var accounts = await RequestAccountAccess();
-            if (accounts?.Length > 0)
+            if (_instance == null)
             {
-                PlayerWalletAddress = accounts[0];
-                OnWalletConnected?.Invoke(PlayerWalletAddress);
-                await UpdateBalance();
-                return true;
+                lock (_lock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new GameManager();
+                    }
+                }
             }
-            return false;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка подключения: {ex.Message}");
-            return false;
+            return _instance;
         }
     }
-
-    public async Task UpdateBalance()
-    {
-        if (string.IsNullOrEmpty(PlayerWalletAddress)) return;
-        
-        var balanceWei = await web3.Eth.GetBalance.SendRequestAsync(PlayerWalletAddress);
-        var balanceEth = Web3.Convert.FromWei(balanceWei.Value);
-        OnBalanceUpdated?.Invoke(balanceEth);
-    }
-}</code></pre>
+    
+    // Методы класса
+    public void StartGame() { /* ... */ }
+    public void EndGame() { /* ... */ }
+}</pre>
+                        </div>
                     </div>
                 </div>
 
-                <div id="nft" class="tab-content">
-                    <h3>Пример 2: Система управления NFT</h3>
-                    <p>Загрузка и отображение NFT коллекции игрока:</p>
-                    <div class="code-example">
-                        <pre><code>using System.Collections.Generic;
-using UnityEngine;
-
-public class NFTManager : MonoBehaviour 
+                <div id="structural" class="tab-content">
+                    <div class="example">
+                        <h3>Adapter (Адаптер)</h3>
+                        <p>Позволяет объектам с несовместимыми интерфейсами работать вместе.</p>
+                        <div class="code-example">
+                            <pre>// Целевой интерфейс, который ожидает клиент
+public interface IEnemy
 {
-    [System.Serializable]
-    public class GameNFT
-    {
-        public string tokenId;
-        public string name;
-        public string rarity;
-        public Dictionary&lt;string, object&gt; attributes;
-    }
+    void Attack();
+    void Move();
+}
 
-    private List&lt;GameNFT&gt; playerNFTs = new List&lt;GameNFT&gt;();
-    
-    public async Task LoadPlayerNFTs(string playerAddress)
-    {
-        try
-        {
-            playerNFTs.Clear();
-            var balance = await GetNFTBalance(playerAddress);
-            
-            for (int i = 0; i < balance; i++)
-            {
-                var tokenId = await GetTokenByIndex(playerAddress, i);
-                var nft = await LoadNFTMetadata(tokenId);
-                if (nft != null) playerNFTs.Add(nft);
-            }
-            
-            Debug.Log($"Загружено {playerNFTs.Count} NFT");
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка загрузки NFT: {ex.Message}");
-        }
-    }
-
-    public List&lt;GameNFT&gt; GetNFTsByRarity(string rarity)
-    {
-        return playerNFTs.FindAll(nft => 
-            nft.rarity.Equals(rarity, StringComparison.OrdinalIgnoreCase));
-    }
-}</code></pre>
-                    </div>
-                </div>
-
-                <div id="contract" class="tab-content">
-                    <h3>Пример 3: Смарт-контракт игровых токенов</h3>
-                    <p>Solidity контракт для игровой валюты с play-to-earn механиками:</p>
-                    <div class="code-example">
-                        <pre><code>// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-
-contract GameCoin is ERC20, Ownable {
-    uint256 public constant MAX_SUPPLY = 1000000000 * 10**18;
-    
-    mapping(address => uint256) public playerScore;
-    mapping(address => uint256) public lastRewardClaim;
-    
-    event RewardClaimed(address indexed player, uint256 amount);
-    
-    constructor() ERC20("GameCoin", "GC") {
-        _mint(msg.sender, 100000000 * 10**18);
-    }
-    
-    function updatePlayerScore(address player, uint256 score) external onlyOwner {
-        playerScore[player] = score;
-    }
-    
-    function claimDailyReward() external {
-        require(block.timestamp >= lastRewardClaim[msg.sender] + 1 days, 
-                "Уже получено сегодня");
-        require(playerScore[msg.sender] > 0, "Нет очков");
-        
-        uint256 reward = playerScore[msg.sender] / 100;
-        require(reward > 0, "Мало очков");
-        require(totalSupply() + reward <= MAX_SUPPLY, "Превышен лимит");
-        
-        lastRewardClaim[msg.sender] = block.timestamp;
-        _mint(msg.sender, reward);
-        
-        emit RewardClaimed(msg.sender, reward);
-    }
-}</code></pre>
-                    </div>
-                </div>
-
-                <div id="marketplace" class="tab-content">
-                    <h3>Пример 4: Игровой маркетплейс</h3>
-                    <p>Система торговли внутриигровыми предметами:</p>
-                    <div class="code-example">
-                        <pre><code>public class GameMarketplace : MonoBehaviour
+// Адаптируемый класс
+public class OldEnemy
 {
-    [System.Serializable]
-    public class MarketItem
-    {
-        public string itemId;
-        public string seller;
-        public uint256 price;
-        public bool isActive;
-    }
+    public void OldAttack() { /* ... */ }
+    public void OldMove() { /* ... */ }
+}
 
-    private List&lt;MarketItem&gt; marketItems = new List&lt;MarketItem&gt;();
+// Адаптер
+public class EnemyAdapter : IEnemy
+{
+    private readonly OldEnemy _oldEnemy;
     
-    public async Task ListItemForSale(string itemId, uint256 price)
+    public EnemyAdapter(OldEnemy oldEnemy)
     {
-        try
-        {
-            var listFunction = contract.GetFunction("listItem");
-            var receipt = await listFunction.SendTransactionAndWaitForReceiptAsync(
-                playerAddress, itemId, price);
-                
-            marketItems.Add(new MarketItem 
-            { 
-                itemId = itemId, 
-                seller = playerAddress, 
-                price = price, 
-                isActive = true 
-            });
-            
-            Debug.Log($"Предмет {itemId} выставлен за {price} токенов");
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка выставления: {ex.Message}");
-        }
+        _oldEnemy = oldEnemy;
     }
-
-    public async Task BuyItem(string itemId)
+    
+    public void Attack()
     {
-        var item = marketItems.Find(x => x.itemId == itemId && x.isActive);
-        if (item == null) return;
-        
-        try
-        {
-            var buyFunction = contract.GetFunction("buyItem");
-            await buyFunction.SendTransactionAndWaitForReceiptAsync(
-                playerAddress, itemId);
-                
-            item.isActive = false;
-            Debug.Log($"Предмет {itemId} куплен!");
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка покупки: {ex.Message}");
-        }
+        _oldEnemy.OldAttack();
     }
-}</code></pre>
+    
+    public void Move()
+    {
+        _oldEnemy.OldMove();
+    }
+}</pre>
+                        </div>
                     </div>
                 </div>
 
-                <div id="tokens" class="tab-content">
-                    <h3>Пример 5: Система игровых токенов</h3>
-                    <p>Управление игровыми токенами и транзакциями:</p>
-                    <div class="code-example">
-                        <pre><code>public class TokenManager : MonoBehaviour
+                <div id="behavioral" class="tab-content">
+                    <div class="example">
+                        <h3>Observer (Наблюдатель)</h3>
+                        <p>Определяет зависимость «один ко многим» между объектами.</p>
+                        <div class="code-example">
+                            <pre>// Интерфейс наблюдателя
+public interface IObserver
 {
-    private Contract tokenContract;
+    void Update(string message);
+}
+
+// Интерфейс субъекта
+public interface ISubject
+{
+    void RegisterObserver(IObserver observer);
+    void RemoveObserver(IObserver observer);
+    void NotifyObservers();
+}
+
+// Конкретный субъект
+public class GameEventSystem : ISubject
+{
+    private readonly List<IObserver> _observers = new List<IObserver>();
+    private string _gameState;
     
-    public async Task&lt;uint256&gt; GetPlayerTokenBalance(string playerAddress)
+    public void RegisterObserver(IObserver observer)
     {
-        try
+        _observers.Add(observer);
+    }
+    
+    public void RemoveObserver(IObserver observer)
+    {
+        _observers.Remove(observer);
+    }
+    
+    public void NotifyObservers()
+    {
+        foreach (var observer in _observers)
         {
-            var balanceFunction = tokenContract.GetFunction("balanceOf");
-            var balance = await balanceFunction.CallAsync&lt;uint256&gt;(playerAddress);
-            return balance;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка получения баланса: {ex.Message}");
-            return 0;
+            observer.Update(_gameState);
         }
     }
+    
+    public void SetGameState(string state)
+    {
+        _gameState = state;
+        NotifyObservers();
+    }
+}
 
-    public async Task&lt;bool&gt; TransferTokens(string toAddress, uint256 amount)
+// Конкретный наблюдатель
+public class UIManager : IObserver
+{
+    public void Update(string message)
     {
-        try
-        {
-            var transferFunction = tokenContract.GetFunction("transfer");
-            var receipt = await transferFunction.SendTransactionAndWaitForReceiptAsync(
-                playerAddress, toAddress, amount);
-                
-            Debug.Log($"Переведено {amount} токенов на {toAddress}");
-            return receipt.Status == 1;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка перевода: {ex.Message}");
-            return false;
-        }
+        Debug.Log($"UI обновлен: {message}");
+        // Обновление пользовательского интерфейса
     }
+}</pre>
+                        </div>
+                    </div>
+                </div>
 
-    public async Task&lt;bool&gt; BurnTokensForUpgrade(uint256 amount)
+                <div id="architecture" class="tab-content">
+                    <div class="example">
+                        <h3>MVC (Model-View-Controller)</h3>
+                        <p>Разделение приложения на три основных компонента.</p>
+                        <div class="code-example">
+                            <pre>// Модель
+public class PlayerModel
+{
+    public int Health { get; private set; } = 100;
+    public int Score { get; private set; }
+    
+    public event Action OnHealthChanged;
+    public event Action OnScoreChanged;
+    
+    public void TakeDamage(int damage)
     {
-        try
-        {
-            var burnFunction = tokenContract.GetFunction("burn");
-            await burnFunction.SendTransactionAndWaitForReceiptAsync(
-                playerAddress, amount);
-                
-            Debug.Log($"Сожжено {amount} токенов для улучшения");
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Ошибка сжигания: {ex.Message}");
-            return false;
-        }
+        Health = Math.Max(0, Health - damage);
+        OnHealthChanged?.Invoke();
     }
-}</code></pre>
+    
+    public void AddScore(int points)
+    {
+        Score += points;
+        OnScoreChanged?.Invoke();
+    }
+}
+
+// Представление
+public class PlayerView : MonoBehaviour
+{
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    
+    public void UpdateHealth(int health)
+    {
+        healthText.text = $"Здоровье: {health}";
+    }
+    
+    public void UpdateScore(int score)
+    {
+        scoreText.text = $"Очки: {score}";
+    }
+}
+
+// Контроллер
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] private PlayerView view;
+    private PlayerModel _model;
+    
+    private void Start()
+    {
+        _model = new PlayerModel();
+        _model.OnHealthChanged += () => view.UpdateHealth(_model.Health);
+        _model.OnScoreChanged += () => view.UpdateScore(_model.Score);
+        
+        // Инициализация начальных значений
+        view.UpdateHealth(_model.Health);
+        view.UpdateScore(_model.Score);
+    }
+    
+    public void TakeDamage(int damage)
+    {
+        _model.TakeDamage(damage);
+    }
+    
+    public void AddScore(int points)
+    {
+        _model.AddScore(points);
+    }
+}</pre>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -373,23 +346,34 @@ contract GameCoin is ERC20, Ownable {
 
     <div class="module-navigation">
         <div class="container">
-            <a href="../module-10/index.html" class="nav-btn prev-btn">← Модуль 10</a>
-            <a href="../module-12/index.html" class="nav-btn next-btn">Модуль 12 →</a>
+            <a href="../module-10/" class="nav-btn prev-btn">← Модуль 10</a>
+            <a href="../module-12/" class="nav-btn next-btn">Модуль 12 →</a>
         </div>
     </div>
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
+            <p>© 2024 Никита Левандович. Все права защищены.</p>
         </div>
     </footer>
 
     <script>
         function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            // Скрыть все вкладки
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Сбросить активное состояние всех кнопок
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Показать выбранную вкладку и активировать кнопку
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            event.currentTarget.classList.add('active');
         }
     </script>
 </body>
