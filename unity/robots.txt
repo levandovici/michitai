@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+Disallow: /bot/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*?*
+Disallow: /*.php$
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Sitemap location
+Sitemap: https://michitai.com/sitemap.xml
+
+# Crawl-delay: 10  # Uncomment if needed to reduce server load
+
+# Additional rules for specific bots
+User-agent: Googlebot
+Allow: /
+Disallow: /bot/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /bot/
