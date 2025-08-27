@@ -1,23 +1,59 @@
+# Default rules for all crawlers
 User-agent: *
 Allow: /
+
+# Disallow access to private and system directories
 Disallow: /bot/
 Disallow: /admin/
 Disallow: /private/
+Disallow: /includes/
+Disallow: /config/
+Disallow: /vendor/
+
+# Disallow URL parameters and file types
 Disallow: /*?*
 Disallow: /*.php$
 Disallow: /*.json$
 Disallow: /*.xml$
 Disallow: /*.js$
 Disallow: /*.css$
+Disallow: /*.pdf$
+Disallow: /*.zip$
 
-# Sitemap location
+# Allow specific file types in root
+Allow: /*.css$ 
+Allow: /*.js$
+
+# Sitemap location - must be a full URL including https://
 Sitemap: https://michitai.com/sitemap.xml
+Sitemap: https://michitai.com/sitemap-pages.xml
+Sitemap: https://michitai.com/sitemap-modules.xml
 
 # Crawl-delay: 10  # Uncomment if needed to reduce server load
 
-# Additional rules for specific bots
+# Google-specific directives
 User-agent: Googlebot
 Allow: /
+Allow: /*.css$
+Allow: /*.js$
+
+# Image search optimization
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Mediapartners-Google (AdSense)
+User-agent: Mediapartners-Google
+Allow: /
+
+# Bing-specific directives
+User-agent: bingbot
+Allow: /
+Crawl-delay: 10
+
+# Yandex-specific directives
+User-agent: Yandex
+Allow: /
+Clean-param: ref /
 Disallow: /bot/
 
 User-agent: Bingbot

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" itemscope itemtype="https://schema.org/WebPage">
+<html lang="ru" itemscope itemtype="https://schema.org/WebPage" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,10 +32,53 @@
     <link rel="canonical" href="https://michitai.com/" />
     
     <title>Онлайн Курсы Программирования и Unity | Никита Левандович</title>
+    <!-- PWA Support -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2d3748">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Michitai">
+    <link rel="apple-touch-icon" href="images/icon-192x192.png">
+    <meta name="msapplication-TileImage" content="images/icon-192x192.png">
+    <meta name="msapplication-TileColor" content="#2d3748">
     <link rel="icon" href="images/levandovici_logo.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <!-- Fonts and Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"></noscript>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <style>
+        /* Skip link styles */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #2d3748;
+            color: white;
+            padding: 8px 16px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* Focus styles for better keyboard navigation */
+        a:focus, button:focus, input:focus, select:focus, textarea:focus {
+            outline: 3px solid #4299e1;
+            outline-offset: 2px;
+        }
+        
+        /* Ensure focus is visible for keyboard users */
+        [tabindex="-1"]:focus {
+            outline: none !important;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -556,18 +599,20 @@
         }
     </style>
 </head>
-<body>
-    <header itemscope itemtype="https://schema.org/WPHeader">
+<body itemscope itemtype="https://schema.org/WebPage">
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Перейти к основному содержанию</a>
+    <header itemscope itemtype="https://schema.org/WPHeader" role="banner">
         <div class="container">
             <h1>Никита Левандович</h1>
-            <nav>
+            <nav aria-label="Основная навигация">
                 <ul>
-                    <li><a href="#course">Курс</a></li>
-                    <li><a href="#about">Обо мне</a></li>
-                    <li><a href="#games">Игры</a></li>
-                    <li><a href="#contact">Контакты</a></li>
+                    <li role="none"><a href="#course" role="menuitem">Курс</a></li>
+                    <li role="none"><a href="#about" role="menuitem">Обо мне</a></li>
+                    <li role="none"><a href="#games" role="menuitem">Игры</a></li>
+                    <li role="none"><a href="#contact" role="menuitem">Контакты</a></li>
                 </ul>
-                <div class="language-selector">
+                <div class="language-selector" aria-label="Выбор языка">
                     <a href="https://michitai.com/en/" title="English"><img src="flags/en.png" alt="Флаг английского языка" class="flag"></a>
                     <a href="https://michitai.com/ru/" title="Русский"><img src="flags/ru.png" alt="Флаг русского языка" class="flag"></a>
                 </div>
@@ -575,21 +620,36 @@
         </div>
     </header>
     <div class="header-spacer"></div>
-    <section id="hero">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="images/nichita.jpg" as="image">
+    <link rel="preload" href="images/en.png" as="image">
+    <link rel="preload" href="images/ru.png" as="image">
+    <link rel="preload" href="images/anniversary.png" as="image">
+    <link rel="preload" href="images/zombie_frenzy_force_logo.png" as="image">
+    <link rel="preload" href="images/monsters_rushing_logo.png" as="image">
+    <link rel="preload" href="images/car_driving_multiplayer_logo.png" as="image">
+    <link rel="preload" href="images/scale_it_logo.png" as="image">
+    <link rel="preload" href="images/hit_of_cube_logo.png" as="image">
+    <link rel="preload" href="images/monsters_vs_bombs_logo.png" as="image">
+    <link rel="preload" href="images/space_flash_logo.png" as="image">
+    <link rel="preload" href="images/blooming_garden_logo.jpg" as="image">
+    <section id="hero" role="region" aria-labelledby="hero-heading">
         <div class="container">
-            <h2>Онлайн курсы программирования и Unity</h2>
+            <h2 id="hero-heading">Онлайн курсы программирования и Unity</h2>
             <p>Присоединяйся к моим онлайн курсам по разработке игр на Unity и стань профессиональным гейм-девелопером! Первый урок — бесплатно!</p>
             <p class="free-lesson-message">Попробуй бесплатно! Первое занятие — без оплаты!</p>
-            <a href="#contact" class="btn free-lesson-btn">Записаться на бесплатный урок</a>
-            <a href="#course" class="btn secondary-btn">Узнать больше</a>
+            <a href="#contact" class="btn free-lesson-btn" aria-label="Записаться на бесплатный урок (откроется форма контактов)">Записаться на бесплатный урок</a>
+            <a href="#course" class="btn secondary-btn" aria-label="Узнать больше о курсе">Узнать больше</a>
         </div>
     </section>
-    <section id="course" itemscope itemtype="https://schema.org/Course">
+    <section id="course" itemscope itemtype="https://schema.org/Course" role="region" aria-labelledby="course-heading">
         <meta itemprop="name" content="Курс по разработке игр на Unity">
         <meta itemprop="description" content="Комплексный курс по изучению C# и разработке игр на Unity с нуля до профессионального уровня.">
         <meta itemprop="provider" content="Никита Левандович">
         <div class="container">
-            <h2>Онлайн курсы по разработке игр на Unity</h2>
+            <h2 id="course-heading">Онлайн курсы по разработке игр на Unity</h2>
             <p>Погрузись в мир геймдева с нуля до профессионального уровня! Этот курс сочетает теорию, практику и интерактивные задания, используя <strong>Monaco Editor</strong> для кодирования и встроенные тесты для проверки знаний. Освой <strong>C#</strong>, <strong>Unity</strong>, сетевые технологии, многопоточность и <strong>DOTS</strong>. Создай 2D, 3D и мультиплеерные игры, завершив курс портфолио-готовой игрой. Первый урок бесплатно!</p>
             <div class="chart-container">
                 <canvas id="courseProgressChart"></canvas>
@@ -820,7 +880,7 @@
             </div>
         </div>
     </section>
-    <section id="anniversary-banner" style="background: #f5f7fa; padding: 60px 0; width: 100%;" itemscope itemtype="https://schema.org/Event">
+    <section id="anniversary-banner" role="region" aria-label="10-я годовщина пути с Unity" style="background: #f5f7fa; padding: 60px 0; width: 100%;" itemscope itemtype="https://schema.org/Event">
         <meta itemprop="name" content="10-я годовщина пути с Unity">
         <meta itemprop="startDate" content="2025-08-09">
         <meta itemprop="endDate" content="2025-08-09">
@@ -828,14 +888,14 @@
         <div class="container">
             <h2 style="color: #1a202c; margin-bottom: 20px;">9 августа 2025 — 10-я годовщина моего пути с Unity и разработкой игр!</h2>
             <p style="color: #4a5568; font-size: 1.2rem; margin-bottom: 20px;">Празднуем десятилетие создания игр и преподавания программирования! Спасибо за вашу поддержку!</p>
-            <img src="images/anniversary.png" alt="Баннер к 10-й годовщине" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); display: block; margin: 0 auto;">
+            <img src="images/anniversary.png" alt="10 лет с Unity - Никита Левандович" width="1200" height="630" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); display: block; margin: 0 auto;" loading="lazy">
         </div>
     </section>
-    <section id="about">
+    <section id="about" role="region" aria-labelledby="about-heading">
         <div class="container">
-            <h2>Обо мне</h2>
+            <h2 id="about-heading">Обо мне</h2>
             <div class="about-content">
-                <img src="images/nichita.jpg" alt="Никита Левандович, преподаватель онлайн курсов программирования" class="about-img">
+                <img src="images/nichita.jpg" alt="Никита Левандович" class="profile-img" width="300" height="300" loading="lazy" fetchpriority="high">
                 <div class="about-text">
                     <p>Привет! Я Никита Левандович, мне 23 года, и я увлеченный разработчик видеоигр с более чем <strong>5-летним опытом</strong>. Программирование и создание игр — это моя страсть. Я верю, что с помощью воображения и упорного труда можно создать целый мир!</p>
                     <p>Я работал в <strong>Success Games</strong> (холдинг Midnight Works) над проектами для <strong>Steam</strong> и <strong>PlayStation</strong>. Мой самый масштабный проект включал <strong>40 000+ строк кода</strong>, оптимизацию и интеграцию сторонних ассетов. Я быстро учусь, нахожу новые решения и всегда довожу задачи до конца.</p>
@@ -853,15 +913,15 @@
             </div>
         </div>
     </section>
-    <section id="games" itemscope itemtype="https://schema.org/ItemList">
+    <section id="games" itemscope itemtype="https://schema.org/ItemList" role="region" aria-labelledby="games-heading">
         <meta itemprop="name" content="Мои игры">
         <div class="container">
-            <h2>Мои игры</h2>
+            <h2 id="games-heading">Мои игры</h2>
             <p>Ознакомьтесь с моими проектами, доступными в Google Play и в веб-версиях. От зомби-шутеров до симуляторов — испытайте их прямо сейчас!</p>
             <div class="games-grid">
                 <div class="game-card">
                     <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
-                        <img src="images/zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force" class="game-img">
+                        <img src="images/zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force - Игра про зомби" class="game-img" width="300" height="169" loading="lazy">
                     </a>
                     <h3 class="game-title">Zombie Frenzy Force</h3>
                     <div class="game-info">
@@ -958,9 +1018,9 @@
             </div>
         </div>
     </section>
-    <section id="contact" itemscope itemtype="https://schema.org/ContactPage">
+    <section id="contact" itemscope itemtype="https://schema.org/ContactPage" role="region" aria-labelledby="contact-heading">
         <div class="container">
-            <h2>Связаться со мной</h2>
+            <h2 id="contact-heading">Связаться со мной</h2>
             <p>Хочешь записаться на бесплатный первый урок онлайн или обсудить курс? Пиши или звони!</p>
             <ul class="contact-info">
                 <li><strong>Email:</strong> <a href="mailto:support@michitai.com">support@michitai.com</a></li>
@@ -969,9 +1029,9 @@
             </ul>
         </div>
     </section>
-    <footer style="background: #1a202c; color: white; padding: 30px 0; width: 100%;">
+    <footer role="contentinfo" style="background: #1a202c; color: white; padding: 30px 0; width: 100%;">
         <div class="container" style="text-align: center;">
-            <p style="margin: 0; color: #e2e8f0;">© 2025 Nichita Levandovici. Все права защищены.</p>
+            <p style="margin: 0; color: #e2e8f0;"> 2025 Nichita Levandovici. </p>
         </div>
     </footer>
     <script type="application/ld+json">

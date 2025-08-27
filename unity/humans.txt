@@ -1,0 +1,18 @@
+/* TEAM */
+/* Developer */
+Name: Nichita Levandovici
+Site: https://michitai.com/
+Location: Chisinau, Moldova
+Twitter: @michitai
+GitHub: NikitaLnc
+
+/* SITE */
+Last update: 2025/08/27
+Language: Russian, English
+Doctype: HTML5
+IDE: Visual Studio Code
+Components: HTML5, CSS3, JavaScript, PHP
+Software: Adobe Photoshop, Unity, Blender
+
+/* THANKS */
+Thanks to: Google Fonts, Chart.js, CDNJS
