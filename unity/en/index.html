@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Hreflang Tags -->
+    <link rel="alternate" hreflang="en" href="https://michitai.com/en/" />
+    <link rel="alternate" hreflang="ru" href="https://michitai.com/ru/" />
+    <link rel="alternate" hreflang="x-default" href="https://michitai.com/en/" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://michitai.com/en/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://michitai.com/en/" />
+    <meta property="og:title" content="Nikita Levandovici - Unity Game Development Courses" />
+    <meta property="og:description" content="Learn game development with Unity. Professional courses in C#, 2D/3D game development, multiplayer, and more. First lesson free!" />
+    <meta property="og:image" content="https://michitai.com/images/hero-bg.jpg" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://michitai.com/en/" />
+    <meta property="twitter:title" content="Nikita Levandovici - Unity Game Development Courses" />
+    <meta property="twitter:description" content="Learn game development with Unity. Professional courses in C#, 2D/3D game development, multiplayer, and more. First lesson free!" />
+    <meta property="twitter:image" content="https://michitai.com/images/hero-bg.jpg" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Online programming and Unity courses with Nikita Levandovici. First lesson free! Master C#, Unity, and game development online.">
@@ -547,8 +568,8 @@
         }
     </style>
 </head>
-<body>
-    <header>
+<body itemscope itemtype="https://schema.org/WebPage">
+    <header itemscope itemtype="https://schema.org/WPHeader">
         <div class="container">
             <h1>Nikita Levandovici</h1>
             <nav>
@@ -815,10 +836,10 @@
             <img src="../images/anniversary.png" alt="10th Anniversary Banner" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); display: block; margin: 0 auto;">
         </div>
     </section>
-    <section id="about">
+    <section id="about" itemscope itemtype="https://schema.org/Person">
         <div class="container">
             <h2>About Me</h2>
-            <div class="about-content">
+            <div class="about-content" itemprop="description">
                 <img src="../images/nichita.jpg" alt="Nikita Levandovici, Online Programming Course Instructor" class="about-img">
                 <div class="about-text">
                     <p>Hello! I'm Nikita Levandovici, a 23-year-old passionate video game developer with over <strong>5 years of experience</strong>. Programming and game creation are my passions. I believe that with imagination and hard work, you can create an entire world!</p>
@@ -837,12 +858,12 @@
             </div>
         </div>
     </section>
-    <section id="games">
+    <section id="games" itemscope itemtype="https://schema.org/ItemList">
         <div class="container">
             <h2>My Games</h2>
             <p>Explore my projects available on Google Play and web versions. From zombie shooters to simulators, try them now!</p>
             <div class="games-grid">
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
                         <img src="../images/zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force" class="game-img">
                     </a>
@@ -854,7 +875,7 @@
                     </div>
                     <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank" class="btn game-btn">Download on Google Play</a>
                 </div>
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank">
                         <img src="../images/monsters_rushing_logo.png" alt="Monsters Rushing" class="game-img">
                     </a>
@@ -866,7 +887,7 @@
                     </div>
                     <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank" class="btn game-btn">Download on Google Play</a>
                 </div>
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank">
                         <img src="../images/car_driving_multiplayer_logo.png" alt="Car Driving Multiplayer" class="game-img">
                     </a>
@@ -878,7 +899,7 @@
                     </div>
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank" class="btn game-btn">Download on Google Play</a>
                 </div>
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank">
                         <img src="../images/scale_it_logo.png" alt="Scale It" class="game-img">
                     </a>
@@ -890,7 +911,7 @@
                     </div>
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank" class="btn game-btn">Download on Google Play</a>
                 </div>
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank">
                         <img src="../images/hit_of_cube_logo.png" alt="Hit of Cube" class="game-img">
                     </a>
@@ -902,7 +923,7 @@
                     </div>
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank" class="btn game-btn">Download on Google Play</a>
                 </div>
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank">
                         <img src="../images/monsters_vs_bombs_logo.png" alt="Monsters vs Bombs" class="game-img">
                     </a>
@@ -914,7 +935,7 @@
                     </div>
                     <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank" class="btn game-btn">Download on Google Play</a>
                 </div>
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank">
                         <img src="../images/space_flash_logo.png" alt="Space Flash" class="game-img">
                     </a>
@@ -926,7 +947,7 @@
                     </div>
                     <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank" class="btn game-btn">Download on Google Play</a>
                 </div>
-                <div class="game-card">
+                <div class="game-card" itemscope itemtype="https://schema.org/VideoGame">
                     <a href="https://games.michitai.com/web/blooming-garden" target="_blank">
                         <img src="../images/blooming_garden_logo.jpg" alt="Blooming Garden" class="game-img">
                     </a>
@@ -941,7 +962,7 @@
             </div>
         </div>
     </section>
-    <section id="contact">
+    <section id="contact" itemscope itemtype="https://schema.org/ContactPage">
         <div class="container">
             <h2>Contact Me</h2>
             <p>Want to sign up for a free first lesson online or discuss the course? Write or call me!</p>
