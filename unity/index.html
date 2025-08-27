@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" itemscope itemtype="https://schema.org/WebPage">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,20 +8,30 @@
     <meta name="author" content="Никита Левандович">
     <meta name="robots" content="index, follow">
     <meta http-equiv="Content-Language" content="ru">
-    <meta property="og:title" content="Онлайн Курсы Программирования и Unity | Первый Урок Бесплатно">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://michitai.com/">
+    <meta property="og:title" content="Онлайн Курсы Программирования и Unity | Никита Левандович">
     <meta property="og:description" content="Изучите программирование, Unity и геймдев онлайн с Никитой Левандовичем. Первый урок бесплатно! Создавайте игры для Google Play и Steam.">
     <meta property="og:image" content="https://michitai.com/images/nichita.jpg">
-    <meta property="og:url" content="https://michitai.com/ru/">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Онлайн Курсы Программирования и Unity | Первый Урок Бесплатно">
-    <meta name="twitter:description" content="Изучите программирование, Unity и геймдев онлайн с Никитой Левандовичем. Первый урок бесплатно! Создавайте игры для Google Play и Steam.">
-    <meta name="twitter:image" content="https://michitai.com/images/nichita.jpg">
-    <link rel="alternate" hreflang="ro-MD" href="https://michitai.com/ro/">
-    <link rel="alternate" hreflang="ru-MD" href="https://michitai.com/ru/">
-    <link rel="alternate" hreflang="x-default" href="https://michitai.com/">
-    <link rel="canonical" href="https://michitai.com/ru/">
-    <title>Онлайн Курсы Программирования и Unity | Первый Урок Бесплатно</title>
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://michitai.com/">
+    <meta property="twitter:title" content="Онлайн Курсы Программирования и Unity | Никита Левандович">
+    <meta property="twitter:description" content="Изучите программирование, Unity и геймдев онлайн с Никитой Левандовичем. Первый урок бесплатно! Создавайте игры для Google Play и Steam.">
+    <meta property="twitter:image" content="https://michitai.com/images/nichita.jpg">
+    
+    <!-- Hreflang Tags -->
+    <link rel="alternate" hreflang="ru" href="https://michitai.com/ru/" />
+    <link rel="alternate" hreflang="en" href="https://michitai.com/en/" />
+    <link rel="alternate" hreflang="x-default" href="https://michitai.com/" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://michitai.com/" />
+    
+    <title>Онлайн Курсы Программирования и Unity | Никита Левандович</title>
     <link rel="icon" href="images/levandovici_logo.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -547,7 +557,7 @@
     </style>
 </head>
 <body>
-    <header>
+    <header itemscope itemtype="https://schema.org/WPHeader">
         <div class="container">
             <h1>Никита Левандович</h1>
             <nav>
@@ -574,7 +584,10 @@
             <a href="#course" class="btn secondary-btn">Узнать больше</a>
         </div>
     </section>
-    <section id="course">
+    <section id="course" itemscope itemtype="https://schema.org/Course">
+        <meta itemprop="name" content="Курс по разработке игр на Unity">
+        <meta itemprop="description" content="Комплексный курс по изучению C# и разработке игр на Unity с нуля до профессионального уровня.">
+        <meta itemprop="provider" content="Никита Левандович">
         <div class="container">
             <h2>Онлайн курсы по разработке игр на Unity</h2>
             <p>Погрузись в мир геймдева с нуля до профессионального уровня! Этот курс сочетает теорию, практику и интерактивные задания, используя <strong>Monaco Editor</strong> для кодирования и встроенные тесты для проверки знаний. Освой <strong>C#</strong>, <strong>Unity</strong>, сетевые технологии, многопоточность и <strong>DOTS</strong>. Создай 2D, 3D и мультиплеерные игры, завершив курс портфолио-готовой игрой. Первый урок бесплатно!</p>
@@ -807,7 +820,11 @@
             </div>
         </div>
     </section>
-    <section id="anniversary-banner" style="background: #f5f7fa; padding: 60px 0; width: 100%;">
+    <section id="anniversary-banner" style="background: #f5f7fa; padding: 60px 0; width: 100%;" itemscope itemtype="https://schema.org/Event">
+        <meta itemprop="name" content="10-я годовщина пути с Unity">
+        <meta itemprop="startDate" content="2025-08-09">
+        <meta itemprop="endDate" content="2025-08-09">
+        <meta itemprop="description" content="Празднуем десятилетие создания игр и преподавания программирования!">
         <div class="container">
             <h2 style="color: #1a202c; margin-bottom: 20px;">9 августа 2025 — 10-я годовщина моего пути с Unity и разработкой игр!</h2>
             <p style="color: #4a5568; font-size: 1.2rem; margin-bottom: 20px;">Празднуем десятилетие создания игр и преподавания программирования! Спасибо за вашу поддержку!</p>
@@ -836,7 +853,8 @@
             </div>
         </div>
     </section>
-    <section id="games">
+    <section id="games" itemscope itemtype="https://schema.org/ItemList">
+        <meta itemprop="name" content="Мои игры">
         <div class="container">
             <h2>Мои игры</h2>
             <p>Ознакомьтесь с моими проектами, доступными в Google Play и в веб-версиях. От зомби-шутеров до симуляторов — испытайте их прямо сейчас!</p>
@@ -940,7 +958,7 @@
             </div>
         </div>
     </section>
-    <section id="contact">
+    <section id="contact" itemscope itemtype="https://schema.org/ContactPage">
         <div class="container">
             <h2>Связаться со мной</h2>
             <p>Хочешь записаться на бесплатный первый урок онлайн или обсудить курс? Пиши или звони!</p>
@@ -1081,6 +1099,38 @@
                 console.error('Script error:', error.message, error.stack);
             }
         });
+    </script>
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Никита Левандович - Unity разработчик и преподаватель",
+        "url": "https://michitai.com/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://michitai.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Никита Левандович",
+        "url": "https://michitai.com",
+        "sameAs": [
+            "https://www.linkedin.com/in/nichita-levandovici/",
+            "https://github.com/NikitaLnc"
+        ],
+        "jobTitle": "Unity Developer & Instructor",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Freelance"
+        }
+    }
     </script>
 </body>
 </html>
