@@ -568,17 +568,12 @@ public class ExpensiveCalculation
         <div class="container">
             <a href="../module-11/" class="nav-btn prev-btn">← Модуль 11</a>
             <a href="../module-13/" class="nav-btn next-btn">Модуль 13 →</a>
+            <div class="copyright">&copy; 2025 Nichita Levandovici. Все права защищены.</div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>© 2024 Никита Левандович. Все права защищены.</p>
-        </div>
-    </footer>
-
     <script>
-        function showTab(tabName) {
+        function showTab(tabName, event) {
             // Скрыть все вкладки
             const tabContents = document.getElementsByClassName('tab-content');
             for (let i = 0; i < tabContents.length; i++) {
