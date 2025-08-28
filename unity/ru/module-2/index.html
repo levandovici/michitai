@@ -8,25 +8,14 @@
     <meta name="author" content="Никита Левандович">
     <title>Модуль 2: Основы программирования C# - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
-    
-    
-        .tab.active { color: #48bb78; border-bottom: 2px solid #48bb78; }
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .code-example { background: #1a202c; border-radius: 8px; padding: 20px; margin: 20px 0; overflow-x: auto; }
-        .code-example pre { color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.5; }
-        .module-navigation { background: #f8f9fa; padding: 30px 0; margin-top: 40px; border-top: 1px solid #e2e8f0; }
-        .module-navigation .container { display: flex; justify-content: space-between; align-items: center; }
-        .nav-btn { display: inline-flex; align-items: center; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; }
-        .nav-btn:hover { background: #5a67d8; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
-        .prev-btn { margin-right: auto; }
-        .next-btn { margin-left: auto; }
-        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 0; }
+        .code-example { margin: var(--spacing-md) 0; }
+        .module-navigation { margin-top: var(--spacing-xl); }
+        .nav-btn { text-decoration: none; }
     </style>
-
-    
-
-    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
     <header>
@@ -526,29 +515,33 @@ public class ConditionsExample : MonoBehaviour
                     </div>
                 </div>
             </section>
-        </div>
-    </main>
-
-    <div class="module-navigation">
-        <div class="container">
-            <a href="../module-1/index.html" class="nav-btn prev-btn">← Модуль 1</a>
-            <a href="../module-3/index.html" class="nav-btn next-btn">Модуль 3 →</a>
-        </div>
     </div>
+</main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
-        </div>
-    </footer>
+<div class="module-navigation">
+    <div class="container">
+        <a href="../module-1/" class="btn btn-primary prev-btn">
+            <span>← Предыдущий модуль</span>
+        </a>
+        <a href="../module-3/" class="btn btn-primary next-btn">
+            <span>Следующий модуль →</span>
+        </a>
+    </div>
+</div>
 
-    <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-    </script>
+<footer class="site-footer">
+    <div class="container">
+        <p>&copy; 2024 Никита Левандович. Все права защищены.</p>
+    </div>
+</footer>
+
+<script>
+    function showTab(tabName, event) {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+    }
+</script>
 </body>
 </html>
