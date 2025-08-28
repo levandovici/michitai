@@ -8,15 +8,10 @@
     <meta name="author" content="Никита Левандович">
     <title>Модуль 3: Физика Unity и Rigidbody - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
-    
-    
-        .next-btn { margin-left: auto; }
-        footer { background: #1a202c; color: white; text-align: center; padding: 40px 0; margin-top: 0; }
-    </style>
-
-    
-
     <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        /* Module-specific styles can go here if needed */
+    </style>
 </head>
 <body>
     <header>
@@ -590,21 +585,32 @@ public class PhysicsSettings : MonoBehaviour
         <div class="container">
             <a href="../module-2/index.html" class="nav-btn prev-btn">← Модуль 2</a>
             <a href="../module-4/index.html" class="nav-btn next-btn">Модуль 4 →</a>
+            <div class="copyright">&copy; 2025 Nichita Levandovici. Все права защищены.</div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
-        </div>
-    </footer>
-
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+        function showTab(tabName, event) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Mark the clicked tab as active
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
         }
     </script>
 </body>

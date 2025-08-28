@@ -567,21 +567,25 @@ public class AdvancedAnimation : MonoBehaviour
         <div class="container">
             <a href="../module-3/index.html" class="nav-btn prev-btn">← Модуль 3</a>
             <a href="../module-5/index.html" class="nav-btn next-btn">Модуль 5 →</a>
+            <div class="copyright">&copy; 2025 Nichita Levandovici. Все права защищены.</div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Никита Левандович. Все права защищены.</p>
-        </div>
-    </footer>
-
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        function showTab(tabName, event) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Reset active state for all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab and activate button
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            event.currentTarget.classList.add('active');
         }
     </script>
 </body>

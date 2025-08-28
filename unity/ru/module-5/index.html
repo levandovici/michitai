@@ -283,44 +283,32 @@ public class AdvancedUI : MonoBehaviour
         <div class="container">
             <a href="../module-4/index.html" class="nav-btn prev-btn">← Модуль 4</a>
             <a href="../module-6/index.html" class="nav-btn next-btn">Модуль 6 →</a>
+            <div class="copyright">&copy; 2025 Nichita Levandovici. Все права защищены.</div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
-        </div>
-    </footer>
-
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-    </script>
-</body>
-</html>
-        </section>
-    </div>
-
-    <script>
-        function showTab(tabName) {
-            var i, tabcontent, tabs;
+        function showTab(tabName, event) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
             
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active");
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
             }
             
-            tabs = document.getElementsByClassName("tab");
-            for (i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove("active");
+            // Mark the clicked tab as active
+            if (event && event.target) {
+                event.target.classList.add('active');
             }
-            
-            document.getElementById(tabName).classList.add("active");
-            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add("active");
         }
     </script>
 </body>

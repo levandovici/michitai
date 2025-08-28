@@ -393,21 +393,32 @@ public class CollisionExample : MonoBehaviour
         <div class="container">
             <a href="../index.html" class="nav-btn prev-btn">← Главная</a>
             <a href="../module-2/index.html" class="nav-btn next-btn">Модуль 2 →</a>
+            <div class="copyright">&copy; 2025 Nichita Levandovici. Все права защищены.</div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
-        </div>
-    </footer>
-
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+        function showTab(tabName, event) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Mark the clicked tab as active
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
         }
     </script>
 </body>

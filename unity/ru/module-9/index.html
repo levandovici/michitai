@@ -573,31 +573,27 @@ public class MassiveSimulation : MonoBehaviour
         <div class="container">
             <a href="../module-8/index.html" class="nav-btn prev-btn">← Модуль 8</a>
             <a href="../module-10/index.html" class="nav-btn next-btn">Модуль 10 →</a>
+            <div class="copyright">&copy; 2025 Nichita Levandovici. Все права защищены.</div>
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 Nichita Levandovici. Все права защищены.</p>
-        </div>
-    </footer>
-
     <script>
-        function showTab(tabName) {
-            var i, tabcontent, tabs;
-            
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active");
+        function showTab(tabName, event) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
             }
             
-            tabs = document.getElementsByClassName("tab");
-            for (i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove("active");
+            // Reset active state for all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
             }
             
-            document.getElementById(tabName).classList.add("active");
-            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add("active");
+            // Show selected tab and activate button
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
     </script>
 </body>
