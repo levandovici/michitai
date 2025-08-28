@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -518,13 +518,20 @@ public class ConditionsExample : MonoBehaviour
     </div>
 </main>
 
-<div class="module-navigation">
-    <div class="container">
-        <a href="../module-1/index.html" class="nav-btn prev-btn">← Модуль 1</a>
-        <a href="../module-3/index.html" class="nav-btn next-btn">Модуль 3 →</a>
-        <div class="copyright">&copy; 2025 Nichita Levandovici. Все права защищены.</div>
+    <div class="module-navigation">
+        <div class="container">
+            <div class="nav-buttons">
+                <a href="../module-1/index.html" class="nav-btn prev-btn">← Модуль 1</a>
+                <a href="../module-3/index.html" class="nav-btn next-btn">Модуль 3 →</a>
+            </div>
+        </div>
     </div>
-</div>
+
+    <footer class="module-footer">
+        <div class="container">
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
+        </div>
+    </footer>
 
 <script>
     function showTab(tabName, event) {
