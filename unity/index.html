@@ -48,6 +48,8 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
     <!-- Fonts and Libraries -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"></noscript>
@@ -58,11 +60,11 @@
             position: absolute;
             top: -40px;
             left: 0;
-            background: #2d3748;
-            color: white;
+            background: var(--primary-color);
+            color: var(--light-text);
             padding: 8px 16px;
             z-index: 100;
-            transition: top 0.3s;
+            transition: var(--transition);
         }
         
         .skip-link:focus {
@@ -71,30 +73,13 @@
         
         /* Focus styles for better keyboard navigation */
         a:focus, button:focus, input:focus, select:focus, textarea:focus {
-            outline: 3px solid #4299e1;
+            outline: 3px solid var(--accent-color);
             outline-offset: 2px;
         }
         
         /* Ensure focus is visible for keyboard users */
         [tabindex="-1"]:focus {
             outline: none !important;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f7fa;
-            color: #1a202c;
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
         }
         header {
             background: linear-gradient(135deg, #1a202c, #2d3748);
@@ -233,21 +218,6 @@
         }
         #course > p {
             text-align: center;
-            font-size: 1.25rem;
-            margin-bottom: 48px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .module {
-            background: #f7fafc;
-            padding: 32px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .module:hover {
             transform: translateY(-6px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
@@ -323,13 +293,15 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
         #anniversary-banner {
-            background: linear-gradient(135deg, #1a202c, #2d3748);
-            color: white;
+            background: #f7fafc;
+            color: var(--text-color);
             text-align: center;
             padding: 40px 20px;
             margin: 20px 0;
             position: relative;
             overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         #anniversary-banner h2 {
             font-size: 2.5rem;
@@ -412,10 +384,11 @@
             gap: 24px;
         }
         .game-card {
-            background: #f7fafc;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             text-align: center;
             display: flex;
@@ -500,11 +473,17 @@
         }
         .contact-info {
             list-style: none;
-            margin-bottom: 40px;
+            margin: 0 auto 40px;
+            padding: 0;
+            text-align: center;
+            max-width: 600px;
         }
         .contact-info li {
             font-size: 1.2rem;
             margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .contact-info a {
             color: #48bb78;
@@ -558,10 +537,32 @@
                 width: 300px;
             }
         }
+        /* Anniversary Banner Styles */
+        .anniversary-banner {
+            background: var(--bg-color);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+        
+        .anniversary-banner h2 {
+            color: var(--text-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .anniversary-banner p {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto var(--spacing-md);
+        }
+        
         @media (max-width: 768px) {
-            header .container {
+            .about-content {
                 flex-direction: column;
-                gap: 16px;
+                text-align: center;
+            }
+            
+            .profile-img {
+                margin: 0 auto;
             }
             header h1 {
                 font-size: 1.75rem;
@@ -880,13 +881,13 @@
             </div>
         </div>
     </section>
-    <section id="anniversary-banner" role="region" aria-label="10-я годовщина пути с Unity" style="background: #f5f7fa; padding: 60px 0; width: 100%;" itemscope itemtype="https://schema.org/Event">
+    <section id="anniversary-banner" class="anniversary-banner" role="region" aria-label="10-я годовщина пути с Unity" itemscope itemtype="https://schema.org/Event">
         <meta itemprop="name" content="10-я годовщина пути с Unity">
         <meta itemprop="startDate" content="2025-08-09">
         <meta itemprop="endDate" content="2025-08-09">
         <meta itemprop="description" content="Празднуем десятилетие создания игр и преподавания программирования!">
         <div class="container">
-            <h2 style="color: #1a202c; margin-bottom: 20px;">9 августа 2025 — 10-я годовщина моего пути с Unity и разработкой игр!</h2>
+            <h2 style="color: var(--text-color); margin-bottom: 20px; text-align: center;">9 августа 2025 — 10-я годовщина моего пути с Unity и разработкой игр!</h2>
             <p style="color: #4a5568; font-size: 1.2rem; margin-bottom: 20px;">Празднуем десятилетие создания игр и преподавания программирования! Спасибо за вашу поддержку!</p>
             <img src="images/anniversary.png" alt="10 лет с Unity - Никита Левандович" width="1200" height="630" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); display: block; margin: 0 auto;" loading="lazy">
         </div>
@@ -894,7 +895,7 @@
     <section id="about" role="region" aria-labelledby="about-heading">
         <div class="container">
             <h2 id="about-heading">Обо мне</h2>
-            <div class="about-content">
+<div class="about-content">
                 <img src="images/nichita.jpg" alt="Никита Левандович" class="profile-img" width="300" height="300" loading="lazy" fetchpriority="high">
                 <div class="about-text">
                     <p>Привет! Я Никита Левандович, мне 23 года, и я увлеченный разработчик видеоигр с более чем <strong>5-летним опытом</strong>. Программирование и создание игр — это моя страсть. Я верю, что с помощью воображения и упорного труда можно создать целый мир!</p>
@@ -902,8 +903,8 @@
                     <p>Я окончил <strong>Step IT Academy</strong> с дипломом по разработке игр и свободно владею <strong>английским языком</strong>. Мое хобби — изобретать и создавать игры с нуля, воплощая идеи в удивительные виртуальные миры.</p>
                     <p>Ознакомьтесь с моими проектами на <a href="https://github.com/levandovici?tab=repositories" target="_blank">GitHub</a> или посетите раздел игр <a href="#games">Игры</a>.</p>
                     <p>Хотите учиться разработке игр? Мой Telegram-бот <a href="https://t.me/michitai_bot" target="_blank">@MICHITAI_BOT</a> предлагает <strong>бесплатные обучающие карточки</strong> по Unity и геймдеву, чтобы вы могли начать свой путь в создании игр!</p>
-                    <h3 style="font-size: 1.5rem; margin-top: 24px; margin-bottom: 16px;">Мои проекты:</h3>
-                    <ul style="list-style: disc; padding-left: 24px; font-size: 1.15rem;">
+                    <h3>Мои проекты:</h3>
+                    <ul>
                         <li>🎮 <a href="https://api.michitai.com" target="_blank">api.michitai.com</a> — Платформа для создания мультиплеерных игр с визуальным конструктором логики и REST API, поддерживающая до 100K игроков.</li>
                         <li>🚗 <a href="https://road.michitai.com" target="_blank">road.michitai.com</a> — Образовательный ресурс по дорожным знакам и правилам дорожного движения в Молдове.</li>
                         <li>📚 <a href="https://library.michitai.com" target="_blank">library.michitai.com</a> — Цифровая библиотека книг по геймдизайну, программированию и технологиям с предпросмотрами и ссылками на покупку.</li>
@@ -1029,11 +1030,11 @@
             </ul>
         </div>
     </section>
-    <footer role="contentinfo" style="background: #1a202c; color: white; padding: 30px 0; width: 100%;">
-        <div class="container" style="text-align: center;">
-            <p style="margin: 0; color: #e2e8f0;"> 2025 Nichita Levandovici. </p>
+    <footer role="contentinfo" style="background: #1a202c; color: white; padding: 30px 0; width: 100%; text-align: center;">
+        <div class="container">
+            <p style="margin: 0; color: #e2e8f0;">© 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
-    </footer>
+   </footer>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
