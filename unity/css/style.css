@@ -1,3 +1,33 @@
+/* Theme Variables */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #4f46e5;
+    --accent-hover: #4338ca;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
 /* Base Styles */
 * {
     margin: 0;
@@ -49,11 +79,15 @@
 
 /* Typography */
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: var(--bg-color);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
     color: var(--text-color);
-    line-height: 1.7;
-    font-size: 16px;
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -87,14 +121,15 @@ a:hover {
 
 /* Header */
 header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--light-text);
+    background: var(--header-bg);
+    color: white;
     padding: 16px 0;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s;
 }
 
 header .container {
@@ -132,8 +167,8 @@ nav a:hover {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: var(--light-text);
+    background: var(--hero-gradient);
+    color: white;
     padding: 100px 0;
     text-align: center;
     margin-bottom: 40px;
@@ -151,6 +186,11 @@ nav a:hover {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.her.module p, .module li {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
 }
 
 /* Main Content */
@@ -216,20 +256,33 @@ nav a:hover {
 }
 
 /* Code Examples */
-.code-example {
-    background: #1a202c;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px 0;
-    overflow-x: auto;
+.code-exa.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s;
+    color: var(--text-color);
 }
 
 .code-example pre {
-    color: #e2e8f0;
+    color: var(--text-color);
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
     line-height: 1.5;
     margin: 0;
+}
+
+.code-example code {
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+    color: var(--code-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* Navigation Buttons */
@@ -279,12 +332,19 @@ nav a:hover {
 }
 
 /* Footer */
-.site-footer {
-    background: var(--primary-color);
-    color: var(--light-text);
+.site-fo.module {
+    background: var(--footer-bg);
+    color: var(--footer-text);
     text-align: center;
     padding: var(--spacing-lg) 0;
     margin-top: var(--spacing-xl);
+}
+
+.site-fo.module h3 {
+    color: var(--text-color);
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
 }
 
 .site-footer p {
@@ -701,58 +761,3 @@ nav a:hover {
     }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary-color: #1a202c;
-        --secondary-color: #2d3748;
-        --text-color: #e2e8f0;
-        --text-secondary: #a0aec0;
-        --bg-color: #1a202c;
-        --card-bg: #2d3748;
-        --light-text: #f8f9fa;
-        --border-color: #4a5568;
-    }
-    
-    body {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-    }
-    
-    .example-section,
-    .module-card,
-    .game-card,
-    .contact-section {
-        background: var(--card-bg);
-        color: var(--text-color);
-    }
-    
-    .tab,
-    .module-card h3,
-    .game-info h3 {
-        color: var(--text-color);
-    }
-    
-    .module-card p,
-    .module-meta,
-    .game-meta {
-        color: var(--text-secondary);
-    }
-    
-    .tab:hover,
-    .module-navigation {
-        background-color: rgba(255, 255, 255, 0.05);
-    }
-    
-    .module-navigation {
-        border-top-color: var(--border-color);
-    }
-    
-    .tabs {
-        border-bottom-color: var(--border-color);
-    }
-    
-    .code-example {
-        background: #1a202c;
-    }
-}
