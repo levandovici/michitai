@@ -8,31 +8,42 @@
     <meta name="author" content="Никита Левандович">
     <title>Видеоуроки по Unity</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link rel="stylesheet" href="../../css/style.css">
     <style>
-        /* Ensure the player container has a defined aspect ratio */
-        .plyr {
+        /* Video container styles */
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
             border-radius: 8px;
             overflow: hidden;
             margin-bottom: 1rem;
         }
         
-        /* Style for the video container */
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            background: #000;
+        /* Video element styles */
+        .video-container video {
+            width: 100%;
+            display: block;
+            border: none;
         }
         
-        .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* Custom controls styling */
+        .video-container video::-webkit-media-controls {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .video-container video::-webkit-media-controls-play-button,
+        .video-container video::-webkit-media-controls-mute-button {
+            background-color: #4CAF50;
+            border-radius: 50%;
+            padding: 10px;
+        }
+        
+        .video-container video::-webkit-media-controls-current-time-display,
+        .video-container video::-webkit-media-controls-time-remaining-display {
+            color: #fff;
+            font-family: Arial, sans-serif;
         }
     </style>
     <style>
@@ -144,8 +155,9 @@
                     <!-- Урок 1.1 -->
                     <article class="lesson-card" id="lesson-1">
                         <div class="video-container">
-                            <video class="lesson-video" controls>
-                                <source data-src="module-1-lesson-1.mp4" type="video/mp4">
+                            <video class="lesson-video" controls preload="metadata" poster="">
+                                <source src="module-1-lesson-1.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -1032,35 +1044,36 @@
         </div>
     </footer>
 
-    <!-- Подключаем Plyr JS -->
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize all video players with secure source
-            const videoContainers = document.querySelectorAll('.video-container');
+            // Pause other videos when one starts playing
+            const videos = document.querySelectorAll('video');
             
-            videoContainers.forEach(container => {
-                const video = container.querySelector('video');
-                if (video) {
-                    const source = video.querySelector('source');
-                    if (source) {
-                        // Update the source to use the secure video.php handler
-                        const originalSrc = source.getAttribute('data-src');
-                        if (originalSrc) {
-                            source.src = `video.php?v=${encodeURIComponent(originalSrc)}`;
-                            // Initialize Plyr after updating the source
-                            const player = new Plyr(video, {
-                                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
-                                settings: ['quality', 'speed', 'loop'],
-                                ratio: '16:9',
-                                autoplay: false
-                            });
+            videos.forEach(video => {
+                video.addEventListener('play', function() {
+                    // Pause all other videos
+                    videos.forEach(otherVideo => {
+                        if (otherVideo !== video) {
+                            otherVideo.pause();
                         }
-                    }
-                }
+                    });
+                });
+                
+                // Add error handling
+                video.addEventListener('error', function(e) {
+                    console.error('Video error:', e);
+                    const errorMsg = document.createElement('div');
+                    errorMsg.style.padding = '10px';
+                    errorMsg.style.color = '#fff';
+                    errorMsg.style.backgroundColor = '#ff4444';
+                    errorMsg.style.borderRadius = '4px';
+                    errorMsg.style.margin = '10px 0';
+                    errorMsg.textContent = 'Ошибка загрузки видео. Пожалуйста, попробуйте позже.';
+                    video.parentNode.insertBefore(errorMsg, video.nextSibling);
+                });
             });
             
-            // Function to handle hash changes
+            // Handle hash changes for deep linking
             function handleHashChange() {
                 const hash = window.location.hash;
                 const match = hash.match(/^#lesson-(\d+)$/);
@@ -1070,55 +1083,25 @@
                     const targetSection = document.getElementById(`module-${moduleNumber}`);
                     
                     if (targetSection) {
-                        // Pause all videos
-                        document.querySelectorAll('video').forEach(video => video.pause());
+                        // Smooth scroll to the section
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
                         
-                        // Calculate scroll position
-                        const headerHeight = document.querySelector('header').offsetHeight + 40; // Added extra padding
-                        const sectionPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                        
-                        // Scroll to the section
-                        window.scrollTo({
-                            top: sectionPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        // Add highlight class to the section
+                        // Highlight the section briefly
                         targetSection.classList.add('highlight-section');
                         setTimeout(() => {
                             targetSection.classList.remove('highlight-section');
                         }, 2000);
-                        
-                        // Try to play the first video in the section if it exists
-                        const firstVideo = targetSection.querySelector('video');
-                        if (firstVideo) {
-                            firstVideo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                            firstVideo.play().catch(e => console.log('Auto-play was prevented:', e));
-                        }
                     }
                 }
             }
             
-            // Handle initial hash with a small delay to ensure everything is loaded
+            // Initial hash check
             if (window.location.hash) {
-                setTimeout(() => {
-                    handleHashChange();
-                }, 100);
+                setTimeout(handleHashChange, 100);
             }
             
-            // Handle hash changes
+            // Listen for hash changes
             window.addEventListener('hashchange', handleHashChange);
-            
-            // Автоматическая пауза при переключении между видео
-            let currentPlayer = null;
-            players.forEach(player => {
-                player.on('play', () => {
-                    if (currentPlayer && currentPlayer !== player) {
-                        currentPlayer.pause();
-                    }
-                    currentPlayer = player;
-                });
-            });
         });
     </script>
 </body>
