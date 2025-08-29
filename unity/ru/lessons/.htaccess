@@ -1,0 +1,16 @@
+<FilesMatch "\.(mp4|webm|ogg)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Allow access from specific pages
+<FilesMatch "^module-\d+-lesson-\d+\.(mp4|webm|ogg)$">
+    Order Deny,Allow
+    Deny from all
+    # Allow access from your domain
+    <IfModule mod_headers.c>
+        SetEnvIfNoCase Referer "^https?://(www\.)?yourdomain\.com" local_ref=1
+        Order Allow,Deny
+        Allow from env=local_ref
+    </IfModule>
+</FilesMatch>

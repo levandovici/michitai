@@ -1,6 +1,25 @@
 # Enable URL rewriting
 <IfModule mod_rewrite.c>
-  RewriteEngine On
+  # Security Headers
+<IfModule mod_headers.c>
+    # Prevent content type sniffing
+    Header set X-Content-Type-Options: "nosniff"
+    
+    # Enable XSS protection
+    Header set X-XSS-Protection: "1; mode=block"
+    
+    # Prevent iframe embedding
+    Header always append X-Frame-Options SAMEORIGIN
+    
+    # Enable HSTS
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Content Security Policy
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data:;"
+</IfModule>
+
+# Enable Rewrite Engine
+RewriteEngine On
 
   # Redirect "www" to non-www (optional)
   # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]

@@ -11,6 +11,31 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link rel="stylesheet" href="../../css/style.css">
     <style>
+        /* Ensure the player container has a defined aspect ratio */
+        .plyr {
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        /* Style for the video container */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <style>
         .lessons-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -120,8 +145,7 @@
                     <article class="lesson-card" id="lesson-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module1-gameobject.mp4" type="video/mp4">
-                                Ваш браузер не поддерживает видео тег.
+                                <source data-src="module-1-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -135,7 +159,7 @@
                     <article class="lesson-card" id="lesson-2">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module1-components.mp4" type="video/mp4">
+                                <source data-src="module-1-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -149,7 +173,7 @@
                     <article class="lesson-card" id="lesson-3">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module1-movement.mp4" type="video/mp4">
+                                <source data-src="module-1-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -163,7 +187,7 @@
                     <article class="lesson-card" id="lesson-4">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module1-input.mp4" type="video/mp4">
+                                <source data-src="module-1-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -177,7 +201,7 @@
                     <article class="lesson-card" id="lesson-5">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module1-collisions.mp4" type="video/mp4">
+                                <source data-src="module-1-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -196,7 +220,7 @@
                     <article class="lesson-card" id="lesson-6">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module2-variables.mp4" type="video/mp4">
+                                <source data-src="module-2-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -209,7 +233,7 @@
                     <article class="lesson-card" id="lesson-7">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module2-functions.mp4" type="video/mp4">
+                                <source data-src="module-2-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -222,7 +246,7 @@
                     <article class="lesson-card" id="lesson-8">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module2-classes.mp4" type="video/mp4">
+                                <source data-src="module-2-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -235,7 +259,7 @@
                     <article class="lesson-card" id="lesson-9">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module2-arrays.mp4" type="video/mp4">
+                                <source data-src="module-2-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -248,7 +272,7 @@
                     <article class="lesson-card" id="lesson-10">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module2-conditions.mp4" type="video/mp4">
+                                <source data-src="module-2-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -267,7 +291,7 @@
                     <article class="lesson-card" id="lesson-11">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module3-rigidbody.mp4" type="video/mp4">
+                                <source data-src="module-3-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -280,7 +304,7 @@
                     <article class="lesson-card" id="lesson-12">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module3-forces.mp4" type="video/mp4">
+                                <source data-src="module-3-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -293,7 +317,7 @@
                     <article class="lesson-card" id="lesson-13">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module3-joints.mp4" type="video/mp4">
+                                <source data-src="module-3-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -306,7 +330,7 @@
                     <article class="lesson-card" id="lesson-14">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module3-collisions.mp4" type="video/mp4">
+                                <source data-src="module-3-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -319,7 +343,7 @@
                     <article class="lesson-card" id="lesson-15">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module3-physics.mp4" type="video/mp4">
+                                <source data-src="module-3-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -338,7 +362,7 @@
                     <article class="lesson-card" id="lesson-16">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module4-animator.mp4" type="video/mp4">
+                                <source data-src="module-4-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -351,7 +375,7 @@
                     <article class="lesson-card" id="lesson-17">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module4-states.mp4" type="video/mp4">
+                                <source data-src="module-4-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -364,7 +388,7 @@
                     <article class="lesson-card" id="lesson-18">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module4-blendtree.mp4" type="video/mp4">
+                                <source data-src="module-4-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -377,7 +401,7 @@
                     <article class="lesson-card" id="lesson-19">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module4-events.mp4" type="video/mp4">
+                                <source data-src="module-4-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -390,7 +414,7 @@
                     <article class="lesson-card" id="lesson-20">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module4-scripts.mp4" type="video/mp4">
+                                <source data-src="module-4-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -409,7 +433,7 @@
                     <article class="lesson-card" id="lesson-21">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module5-canvas-basics.mp4" type="video/mp4">
+                                <source data-src="module-5-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -422,7 +446,7 @@
                     <article class="lesson-card" id="lesson-22">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module5-ui-elements.mp4" type="video/mp4">
+                                <source data-src="module-5-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -435,7 +459,7 @@
                     <article class="lesson-card" id="lesson-23">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module5-interactions.mp4" type="video/mp4">
+                                <source data-src="module-5-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -448,7 +472,7 @@
                     <article class="lesson-card" id="lesson-24">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module5-layout-groups.mp4" type="video/mp4">
+                                <source data-src="module-5-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -461,7 +485,7 @@
                     <article class="lesson-card" id="lesson-25">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module5-advanced-ui.mp4" type="video/mp4">
+                                <source data-src="module-5-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -479,7 +503,7 @@
                     <article class="lesson-card" id="lesson-26">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module6-audio-basics.mp4" type="video/mp4">
+                                <source data-src="module-6-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -492,7 +516,7 @@
                     <article class="lesson-card" id="lesson-27">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module6-audiosource.mp4" type="video/mp4">
+                                <source data-src="module-6-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -505,7 +529,7 @@
                     <article class="lesson-card" id="lesson-28">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module6-audiomixer.mp4" type="video/mp4">
+                                <source data-src="module-6-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -518,7 +542,7 @@
                     <article class="lesson-card" id="lesson-29">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module6-3daudio.mp4" type="video/mp4">
+                                <source data-src="module-6-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -531,7 +555,7 @@
                     <article class="lesson-card" id="lesson-30">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module6-advanced-audio.mp4" type="video/mp4">
+                                <source data-src="module-6-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -549,7 +573,7 @@
                     <article class="lesson-card" id="lesson-31">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module7-threads-basics.mp4" type="video/mp4">
+                                <source data-src="module-7-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -562,7 +586,7 @@
                     <article class="lesson-card" id="lesson-32">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module7-tpl.mp4" type="video/mp4">
+                                <source data-src="module-7-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -575,7 +599,7 @@
                     <article class="lesson-card" id="lesson-33">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module7-sync.mp4" type="video/mp4">
+                                <source data-src="module-7-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -588,7 +612,7 @@
                     <article class="lesson-card" id="lesson-34">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module7-unity-threads.mp4" type="video/mp4">
+                                <source data-src="module-7-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -601,7 +625,7 @@
                     <article class="lesson-card" id="lesson-35">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module7-advanced.mp4" type="video/mp4">
+                                <source data-src="module-7-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -619,7 +643,7 @@
                     <article class="lesson-card" id="lesson-36">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module8-netcode-basics.mp4" type="video/mp4">
+                                <source data-src="module-8-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -632,7 +656,7 @@
                     <article class="lesson-card" id="lesson-37">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module8-network-objects.mp4" type="video/mp4">
+                                <source data-src="module-8-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -645,7 +669,7 @@
                     <article class="lesson-card" id="lesson-38">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module8-rpc.mp4" type="video/mp4">
+                                <source data-src="module-8-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -658,7 +682,7 @@
                     <article class="lesson-card" id="lesson-39">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module8-multiplayer-game.mp4" type="video/mp4">
+                                <source data-src="module-8-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -677,7 +701,7 @@
                     <article class="lesson-card" id="lesson-40">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module9-ecs-basics.mp4" type="video/mp4">
+                                <source data-src="module-9-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -690,7 +714,7 @@
                     <article class="lesson-card" id="lesson-41">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module9-jobs-system.mp4" type="video/mp4">
+                                <source data-src="module-9-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -703,7 +727,7 @@
                     <article class="lesson-card" id="lesson-42">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module9-burst-compiler.mp4" type="video/mp4">
+                                <source data-src="module-9-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -716,7 +740,7 @@
                     <article class="lesson-card" id="lesson-43">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module9-mass-simulation.mp4" type="video/mp4">
+                                <source data-src="module-9-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -734,7 +758,7 @@
                     <article class="lesson-card" id="lesson-44">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module10-addressables.mp4" type="video/mp4">
+                                <source data-src="module-10-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -747,7 +771,7 @@
                     <article class="lesson-card" id="lesson-45">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module10-crossplatform.mp4" type="video/mp4">
+                                <source data-src="module-10-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -760,7 +784,7 @@
                     <article class="lesson-card" id="lesson-46">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module10-analytics.mp4" type="video/mp4">
+                                <source data-src="module-10-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -773,7 +797,7 @@
                     <article class="lesson-card" id="lesson-47">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module10-monetization.mp4" type="video/mp4">
+                                <source data-src="module-10-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -786,7 +810,7 @@
                     <article class="lesson-card" id="lesson-48">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module10-publishing.mp4" type="video/mp4">
+                                <source data-src="module-10-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -804,7 +828,7 @@
                     <article class="lesson-card" id="lesson-49">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module11-singleton.mp4" type="video/mp4">
+                                <source data-src="module-11-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -817,7 +841,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module11-observer.mp4" type="video/mp4">
+                                <source data-src="module-11-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -830,7 +854,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module11-state.mp4" type="video/mp4">
+                                <source data-src="module-11-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -843,7 +867,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module11-command.mp4" type="video/mp4">
+                                <source data-src="module-11-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -856,7 +880,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module11-factory.mp4" type="video/mp4">
+                                <source data-src="module-11-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -874,7 +898,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module12-arrays.mp4" type="video/mp4">
+                                <source data-src="module-12-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -887,7 +911,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module12-sorting.mp4" type="video/mp4">
+                                <source data-src="module-12-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -900,7 +924,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module12-search.mp4" type="video/mp4">
+                                <source data-src="module-12-lesson-3.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -913,7 +937,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module12-graphs.mp4" type="video/mp4">
+                                <source data-src="module-12-lesson-4.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -926,7 +950,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module12-optimization.mp4" type="video/mp4">
+                                <source data-src="module-12-lesson-5.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -945,7 +969,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module13-ecs1.mp4" type="video/mp4">
+                                <source data-src="module-13-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -957,7 +981,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module13-urp.mp4" type="video/mp4">
+                                <source data-src="module-13-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -975,7 +999,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module14-planning.mp4" type="video/mp4">
+                                <source data-src="module-14-lesson-1.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -987,7 +1011,7 @@
                     <article class="lesson-card" id="lesson-1-1">
                         <div class="video-container">
                             <video class="lesson-video" controls>
-                                <source src="https://example.com/videos/unity-module14-development.mp4" type="video/mp4">
+                                <source data-src="module-14-lesson-2.mp4" type="video/mp4">
                             </video>
                         </div>
                         <div class="lesson-info">
@@ -1012,8 +1036,29 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize all video players
-            const players = Array.from(document.querySelectorAll('.js-player')).map(plyr.setup);
+            // Initialize all video players with secure source
+            const videoContainers = document.querySelectorAll('.video-container');
+            
+            videoContainers.forEach(container => {
+                const video = container.querySelector('video');
+                if (video) {
+                    const source = video.querySelector('source');
+                    if (source) {
+                        // Update the source to use the secure video.php handler
+                        const originalSrc = source.getAttribute('data-src');
+                        if (originalSrc) {
+                            source.src = `video.php?v=${encodeURIComponent(originalSrc)}`;
+                            // Initialize Plyr after updating the source
+                            const player = new Plyr(video, {
+                                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
+                                settings: ['quality', 'speed', 'loop'],
+                                ratio: '16:9',
+                                autoplay: false
+                            });
+                        }
+                    }
+                }
+            });
             
             // Function to handle hash changes
             function handleHashChange() {
