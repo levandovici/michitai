@@ -22,6 +22,12 @@
     --tab-active-bg: #4f46e5;
     --tab-text: #4a5568;
     --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
     
     /* Spacing */
     --spacing-xs: 0.5rem;
@@ -734,6 +740,73 @@ nav a:hover {
 .contact-info a:hover {
     color: var(--accent-hover);
     text-decoration: underline;
+}
+
+/* Module Buttons */
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .module-buttons {
+        flex-direction: column;
+    }
+    
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
 }
 
 /* Buttons */
