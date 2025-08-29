@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Видеоуроки по Unity - Изучайте Unity с нуля">
+    <meta name="keywords" content="unity, уроки, видео, геймдев, обучение">
+    <meta name="author" content="Никита Левандович">
+    <title>Видеоуроки по Unity</title>
+    <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .lessons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+        
+        .lesson-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .lesson-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .lesson-video {
+            width: 100%;
+            background: #000;
+        }
+        
+        .lesson-info {
+            padding: 1.5rem;
+        }
+        
+        .lesson-title {
+            font-size: 1.25rem;
+            margin: 0 0 0.5rem;
+            color: #333;
+        }
+        
+        .lesson-module {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .lesson-description {
+            color: #666;
+            margin: 0.5rem 0 0;
+            line-height: 1.5;
+        }
+        
+        .module-section {
+            margin: 3rem 0 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .module-title {
+            font-size: 1.75rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .lessons-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Видеоуроки по Unity</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../index.html">Главная</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Онлайн обучение Unity</h1>
+            <p>Профессиональные видеоуроки для начинающих и продвинутых разработчиков</p>
+        </div>
+    </section>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Модуль 1 -->
+            <section class="module-section">
+                <h2 class="module-title">Модуль 1: Введение в Unity</h2>
+                <div class="lessons-container">
+                    <!-- Урок 1.1 -->
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module1-gameobject.mp4" type="video/mp4">
+                                Ваш браузер не поддерживает видео тег.
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 1.1</span>
+                            <h3 class="lesson-title">GameObject</h3>
+                            <p class="lesson-description">Работа с игровыми объектами в Unity.</p>
+                        </div>
+                    </article>
+
+                    <!-- Урок 1.2 -->
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module1-components.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 1.2</span>
+                            <h3 class="lesson-title">Компоненты</h3>
+                            <p class="lesson-description">Работа с компонентами в Unity.</p>
+                        </div>
+                    </article>
+
+                    <!-- Урок 1.3 -->
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module1-movement.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 1.3</span>
+                            <h3 class="lesson-title">Движение</h3>
+                            <p class="lesson-description">Основы перемещения объектов.</p>
+                        </div>
+                    </article>
+
+                    <!-- Урок 1.4 -->
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module1-input.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 1.4</span>
+                            <h3 class="lesson-title">Ввод</h3>
+                            <p class="lesson-description">Обработка пользовательского ввода.</p>
+                        </div>
+                    </article>
+
+                    <!-- Урок 1.5 -->
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module1-collisions.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 1.5</span>
+                            <h3 class="lesson-title">Коллизии</h3>
+                            <p class="lesson-description">Настройка и обработка коллизий.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Модуль 2 -->
+            <section class="module-section">
+                <h2 class="module-title">Модуль 2: Основы программирования C#</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module2-variables.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 2.1</span>
+                            <h3 class="lesson-title">Переменные</h3>
+                            <p class="lesson-description">Основы работы с переменными в C#.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module2-functions.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 2.2</span>
+                            <h3 class="lesson-title">Функции</h3>
+                            <p class="lesson-description">Создание и использование функций в C#.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module2-classes.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 2.3</span>
+                            <h3 class="lesson-title">Классы</h3>
+                            <p class="lesson-description">Основы объектно-ориентированного программирования в C#.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module2-arrays.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 2.4</span>
+                            <h3 class="lesson-title">Массивы</h3>
+                            <p class="lesson-description">Работа с массивами и коллекциями в C#.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module2-conditions.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 2.5</span>
+                            <h3 class="lesson-title">Условия</h3>
+                            <p class="lesson-description">Условные операторы и ветвление в C#.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Модуль 3 -->
+            <section class="module-section">
+                <h2 class="module-title">Модуль 3: Физика Unity и Rigidbody</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module3-rigidbody.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 3.1</span>
+                            <h3 class="lesson-title">Rigidbody</h3>
+                            <p class="lesson-description">Основы работы с физическими телами.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module3-forces.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 3.2</span>
+                            <h3 class="lesson-title">Силы</h3>
+                            <p class="lesson-description">Применение сил к объектам.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module3-joints.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 3.3</span>
+                            <h3 class="lesson-title">Суставы</h3>
+                            <p class="lesson-description">Создание соединений между объектами.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module3-collisions.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 3.4</span>
+                            <h3 class="lesson-title">Коллизии</h3>
+                            <p class="lesson-description">Обработка столкновений.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module3-physics.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 3.5</span>
+                            <h3 class="lesson-title">Физика</h3>
+                            <p class="lesson-description">Продвинутые аспекты физического движка.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Модуль 4 -->
+            <section class="module-section">
+                <h2 class="module-title">Модуль 4: Анимация Unity и Animator</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module4-animator.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 4.1</span>
+                            <h3 class="lesson-title">Animator</h3>
+                            <p class="lesson-description">Основы работы с аниматором в Unity.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module4-states.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 4.2</span>
+                            <h3 class="lesson-title">Состояния</h3>
+                            <p class="lesson-description">Создание и управление состояниями анимации.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module4-blendtree.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 4.3</span>
+                            <h3 class="lesson-title">Blend Tree</h3>
+                            <p class="lesson-description">Создание и настройка деревьев смешивания анимаций.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module4-events.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 4.4</span>
+                            <h3 class="lesson-title">События</h3>
+                            <p class="lesson-description">Использование событий в анимациях.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module4-scripts.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 4.5</span>
+                            <h3 class="lesson-title">Скрипты</h3>
+                            <p class="lesson-description">Программирование анимаций в Unity.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Модуль 5 -->
+            <section class="module-section">
+                <h2 class="module-title">Модуль 5: Unity UI и Canvas</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module5-canvas-basics.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 5.1</span>
+                            <h3 class="lesson-title">Основы Canvas</h3>
+                            <p class="lesson-description">Введение в систему Canvas в Unity.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module5-ui-elements.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 5.2</span>
+                            <h3 class="lesson-title">UI Элементы</h3>
+                            <p class="lesson-description">Работа с основными элементами интерфейса.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module5-interactions.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 5.3</span>
+                            <h3 class="lesson-title">Взаимодействия</h3>
+                            <p class="lesson-description">Обработка пользовательского ввода в UI.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module5-layout-groups.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 5.4</span>
+                            <h3 class="lesson-title">Layout Groups</h3>
+                            <p class="lesson-description">Создание адаптивных интерфейсов.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module5-advanced-ui.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 5.5</span>
+                            <h3 class="lesson-title">Продвинутый UI</h3>
+                            <p class="lesson-description">Сложные техники работы с интерфейсом.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2 class="module-title">Модуль 6: Unity Audio и Звуковая Система</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module6-audio-basics.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 6.1</span>
+                            <h3 class="lesson-title">Основы Audio</h3>
+                            <p class="lesson-description">Введение в звуковую систему Unity.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module6-audiosource.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 6.2</span>
+                            <h3 class="lesson-title">AudioSource</h3>
+                            <p class="lesson-description">Работа с источниками звука.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module6-audiomixer.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 6.3</span>
+                            <h3 class="lesson-title">Audio Mixer</h3>
+                            <p class="lesson-description">Настройка микшера звука.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module6-3daudio.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 6.4</span>
+                            <h3 class="lesson-title">3D Звук</h3>
+                            <p class="lesson-description">Пространственное позиционирование звука.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module6-advanced-audio.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 6.5</span>
+                            <h3 class="lesson-title">Продвинутый Audio</h3>
+                            <p class="lesson-description">Сложные техники работы со звуком.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2 class="module-title">Модуль 7: Многопоточное программирование</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module7-threads-basics.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 7.1</span>
+                            <h3 class="lesson-title">Основы потоков</h3>
+                            <p class="lesson-description">Введение в многопоточность в C#.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module7-tpl.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 7.2</span>
+                            <h3 class="lesson-title">Task Parallel Library</h3>
+                            <p class="lesson-description">Параллельное выполнение задач.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module7-sync.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 7.3</span>
+                            <h3 class="lesson-title">Синхронизация</h3>
+                            <p class="lesson-description">Механизмы синхронизации потоков.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module7-unity-threads.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 7.4</span>
+                            <h3 class="lesson-title">Потоки в Unity</h3>
+                            <p class="lesson-description">Особенности работы с потоками в Unity.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module7-advanced.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 7.5</span>
+                            <h3 class="lesson-title">Продвинутые техники</h3>
+                            <p class="lesson-description">Сложные паттерны многопоточности.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2 class="module-title">Модуль 8: Мультиплеер в Unity</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module8-netcode-basics.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 8.1</span>
+                            <h3 class="lesson-title">Основы Netcode</h3>
+                            <p class="lesson-description">Введение в сетевое программирование.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module8-network-objects.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 8.2</span>
+                            <h3 class="lesson-title">Network Objects</h3>
+                            <p class="lesson-description">Работа с сетевыми объектами.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module8-rpc.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 8.3</span>
+                            <h3 class="lesson-title">RPC Система</h3>
+                            <p class="lesson-description">Удаленные вызовы процедур.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module8-multiplayer-game.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 8.4</span>
+                            <h3 class="lesson-title">Мультиплеер Игра</h3>
+                            <p class="lesson-description">Создание многопользовательской игры.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Модуль 9 -->
+            <section class="module-section">
+                <h2 class="module-title">Модуль 9: Оптимизация и Производительность</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module9-ecs-basics.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 9.1</span>
+                            <h3 class="lesson-title">ECS Основы</h3>
+                            <p class="lesson-description">Введение в Entity Component System.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module9-jobs-system.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 9.2</span>
+                            <h3 class="lesson-title">Jobs System</h3>
+                            <p class="lesson-description">Параллельное выполнение задач.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module9-burst-compiler.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 9.3</span>
+                            <h3 class="lesson-title">Burst Compiler</h3>
+                            <p class="lesson-description">Оптимизация производительности кода.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module9-mass-simulation.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 9.4</span>
+                            <h3 class="lesson-title">Массовая симуляция</h3>
+                            <p class="lesson-description">Оптимизация массовых симуляций.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2 class="module-title">Модуль 10: Публикация и продвинутые возможности</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module10-addressables.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 10.1</span>
+                            <h3 class="lesson-title">Addressables</h3>
+                            <p class="lesson-description">Управление ассетами и загрузкой контента.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module10-crossplatform.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 10.2</span>
+                            <h3 class="lesson-title">Кроссплатформенность</h3>
+                            <p class="lesson-description">Разработка под разные платформы.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module10-analytics.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 10.3</span>
+                            <h3 class="lesson-title">Аналитика</h3>
+                            <p class="lesson-description">Интеграция аналитики в игру.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module10-monetization.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 10.4</span>
+                            <h3 class="lesson-title">Монетизация</h3>
+                            <p class="lesson-description">Способы монетизации игр.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module10-publishing.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 10.5</span>
+                            <h3 class="lesson-title">Публикация</h3>
+                            <p class="lesson-description">Подготовка и публикация игры.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2 class="module-title">Модуль 11: Паттерны проектирования в C#</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module11-singleton.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 11.1</span>
+                            <h3 class="lesson-title">Singleton</h3>
+                            <p class="lesson-description">Паттерн Одиночка в Unity.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module11-observer.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 11.2</span>
+                            <h3 class="lesson-title">Observer</h3>
+                            <p class="lesson-description">Паттерн Наблюдатель.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module11-state.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 11.3</span>
+                            <h3 class="lesson-title">State</h3>
+                            <p class="lesson-description">Паттерн Состояние.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module11-command.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 11.4</span>
+                            <h3 class="lesson-title">Command</h3>
+                            <p class="lesson-description">Паттерн Команда.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module11-factory.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 11.5</span>
+                            <h3 class="lesson-title">Factory</h3>
+                            <p class="lesson-description">Паттерн Фабрика.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2 class="module-title">Модуль 12: Алгоритмы и структуры данных в C#</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module12-arrays.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 12.1</span>
+                            <h3 class="lesson-title">Массивы и Списки</h3>
+                            <p class="lesson-description">Работа с коллекциями данных.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module12-sorting.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 12.2</span>
+                            <h3 class="lesson-title">Алгоритмы сортировки</h3>
+                            <p class="lesson-description">Быстрая сортировка, пузырьковая, слиянием.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module12-search.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 12.3</span>
+                            <h3 class="lesson-title">Алгоритмы поиска</h3>
+                            <p class="lesson-description">Бинарный поиск, хеширование.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module12-graphs.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 12.4</span>
+                            <h3 class="lesson-title">Графы и алгоритмы</h3>
+                            <p class="lesson-description">Обход графов, поиск пути.</p>
+                        </div>
+                    </article>
+
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module12-optimization.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 12.5</span>
+                            <h3 class="lesson-title">Оптимизация алгоритмов</h3>
+                            <p class="lesson-description">Оценка сложности, Big O нотация.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- Модуль 13 -->
+            <section class="module-section">
+                <h2 class="module-title">Модуль 13: Блокчейн и Web3</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module13-ecs1.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 13.1</span>
+                            <h3 class="lesson-title">ECS и DOTS</h3>
+                            <p class="lesson-description">Entity Component System для продвинутой оптимизации.</p>
+                        </div>
+                    </article>
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module13-urp.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 13.2</span>
+                            <h3 class="lesson-title">Universal Render Pipeline</h3>
+                            <p class="lesson-description">Настройка и кастомизация URP.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2 class="module-title">Модуль 14: Итоговый проект</h2>
+                <div class="lessons-container">
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module14-planning.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 14.1</span>
+                            <h3 class="lesson-title">Планирование проекта</h3>
+                            <p class="lesson-description">Создание технического задания и планирование разработки.</p>
+                        </div>
+                    </article>
+                    <article class="lesson-card">
+                        <div class="video-container">
+                            <video class="lesson-video" controls>
+                                <source src="https://example.com/videos/unity-module14-development.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="lesson-info">
+                            <span class="lesson-module">Модуль 14.2</span>
+                            <h3 class="lesson-title">Разработка и тестирование</h3>
+                            <p class="lesson-description">Полный цикл разработки игры от идеи до релиза.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Уроки по Unity. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Подключаем Plyr JS -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script>
+        // Инициализация видеоплееров
+        document.addEventListener('DOMContentLoaded', () => {
+            // Инициализация всех видео на странице
+            const players = Array.from(document.querySelectorAll('.lesson-video')).map(player => new Plyr(player, {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+                ratio: '16:9',
+                autoplay: false,
+                clickToPlay: true,
+                keyboard: { focused: true, global: true },
+                tooltips: { controls: true, seek: true },
+                settings: ['quality', 'speed'],
+                quality: {
+                    default: 720,
+                    options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240]
+                },
+                previewThumbnails: {
+                    enabled: true,
+                    src: '' // Укажите путь к превью, если нужно
+                }
+            }));
+
+            // Автоматическая пауза при переключении между видео
+            let currentPlayer = null;
+            players.forEach(player => {
+                player.on('play', () => {
+                    if (currentPlayer && currentPlayer !== player) {
+                        currentPlayer.pause();
+                    }
+                    currentPlayer = player;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
