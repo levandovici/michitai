@@ -15,9 +15,16 @@
             position: relative;
             width: 100%;
             background: #000;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .video-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
         }
         
         /* Video element styles */
@@ -25,12 +32,20 @@
             width: 100%;
             display: block;
             border: none;
+            cursor: pointer;
+            aspect-ratio: 16/9;
         }
         
         /* Custom controls styling */
         .video-container video::-webkit-media-controls {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 0 0 8px 8px;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+            padding-top: 20px;
+            height: 80px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .video-container video::-webkit-media-controls-panel {
+            background: transparent;
         }
         
         .video-container video::-webkit-media-controls-play-button,
@@ -38,12 +53,50 @@
             background-color: #4CAF50;
             border-radius: 50%;
             padding: 10px;
+            margin-right: 10px;
+            transition: all 0.2s ease;
+        }
+        
+        .video-container video::-webkit-media-controls-play-button:hover,
+        .video-container video::-webkit-media-controls-mute-button:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
         }
         
         .video-container video::-webkit-media-controls-current-time-display,
-        .video-container video::-webkit-media-controls-time-remaining-display {
+        .video-container video::-webkit-media-controls-time-remaining-display,
+        .video-container video::-webkit-media-controls-timeline,
+        .video-container video::-webkit-media-controls-volume-slider {
             color: #fff;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .video-container video::-webkit-media-controls-timeline {
+            margin: 0 10px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+        
+        .video-container video::-webkit-media-controls-timeline:hover {
+            height: 6px;
+        }
+        
+        /* Loading state */
+        .video-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            z-index: 10;
         }
     </style>
     <style>
@@ -1046,31 +1099,95 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Pause other videos when one starts playing
             const videos = document.querySelectorAll('video');
+            let currentPlaying = null;
             
+            // Add loading state to videos
             videos.forEach(video => {
-                video.addEventListener('play', function() {
-                    // Pause all other videos
-                    videos.forEach(otherVideo => {
-                        if (otherVideo !== video) {
-                            otherVideo.pause();
-                        }
-                    });
+                const container = video.parentElement;
+                const loadingEl = document.createElement('div');
+                loadingEl.className = 'video-loading';
+                loadingEl.style.display = 'none';
+                loadingEl.textContent = 'Загрузка...';
+                container.insertBefore(loadingEl, video);
+                
+                // Show loading when video starts loading
+                video.addEventListener('waiting', () => {
+                    loadingEl.style.display = 'flex';
                 });
                 
-                // Add error handling
+                // Hide loading when video can play
+                video.addEventListener('canplay', () => {
+                    loadingEl.style.display = 'none';
+                });
+                
+                // Handle play/pause for all videos
+                video.addEventListener('play', function() {
+                    // Pause currently playing video if different
+                    if (currentPlaying && currentPlaying !== this) {
+                        currentPlaying.pause();
+                    }
+                    currentPlaying = this;
+                    
+                    // Show controls when playing
+                    this.controls = true;
+                });
+                
+                // Click to play/pause
+                video.addEventListener('click', function(e) {
+                    if (this.paused) {
+                        this.play();
+                    } else {
+                        this.pause();
+                    }
+                });
+                
+                // Keyboard controls
+                video.addEventListener('keydown', function(e) {
+                    if (e.code === 'Space' || e.code === 'Enter') {
+                        e.preventDefault();
+                        if (this.paused) {
+                            this.play();
+                        } else {
+                            this.pause();
+                        }
+                    }
+                });
+                
+                // Error handling
                 video.addEventListener('error', function(e) {
                     console.error('Video error:', e);
-                    const errorMsg = document.createElement('div');
-                    errorMsg.style.padding = '10px';
-                    errorMsg.style.color = '#fff';
-                    errorMsg.style.backgroundColor = '#ff4444';
-                    errorMsg.style.borderRadius = '4px';
-                    errorMsg.style.margin = '10px 0';
-                    errorMsg.textContent = 'Ошибка загрузки видео. Пожалуйста, попробуйте позже.';
-                    video.parentNode.insertBefore(errorMsg, video.nextSibling);
+                    loadingEl.textContent = 'Ошибка загрузки видео';
+                    loadingEl.style.display = 'flex';
+                    loadingEl.style.backgroundColor = '#ff4444';
+                    
+                    // Add retry button
+                    const retryBtn = document.createElement('button');
+                    retryBtn.textContent = 'Повторить';
+                    retryBtn.style.marginTop = '10px';
+                    retryBtn.style.padding = '5px 15px';
+                    retryBtn.style.border = 'none';
+                    retryBtn.style.borderRadius = '4px';
+                    retryBtn.style.cursor = 'pointer';
+                    retryBtn.style.backgroundColor = '#fff';
+                    retryBtn.style.color = '#333';
+                    
+                    retryBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        loadingEl.textContent = 'Загрузка...';
+                        loadingEl.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                        video.load();
+                        video.play().catch(e => console.log('Playback failed:', e));
+                    });
+                    
+                    loadingEl.innerHTML = '';
+                    loadingEl.style.flexDirection = 'column';
+                    loadingEl.innerHTML = 'Ошибка загрузки видео<br>';
+                    loadingEl.appendChild(retryBtn);
                 });
+                
+                // Make video focusable for keyboard navigation
+                video.setAttribute('tabindex', '0');
             });
             
             // Handle hash changes for deep linking
@@ -1083,14 +1200,30 @@
                     const targetSection = document.getElementById(`module-${moduleNumber}`);
                     
                     if (targetSection) {
-                        // Smooth scroll to the section
-                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                        // Smooth scroll to the section with offset for header
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const sectionPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+                        
+                        window.scrollTo({
+                            top: sectionPosition,
+                            behavior: 'smooth'
+                        });
                         
                         // Highlight the section briefly
                         targetSection.classList.add('highlight-section');
                         setTimeout(() => {
                             targetSection.classList.remove('highlight-section');
                         }, 2000);
+                        
+                        // Try to autoplay the first video in the section
+                        const firstVideo = targetSection.querySelector('video');
+                        if (firstVideo) {
+                            // Small delay to ensure smooth scrolling is complete
+                            setTimeout(() => {
+                                firstVideo.focus();
+                                firstVideo.play().catch(e => console.log('Autoplay prevented:', e));
+                            }, 500);
+                        }
                     }
                 }
             }
@@ -1098,10 +1231,36 @@
             // Initial hash check
             if (window.location.hash) {
                 setTimeout(handleHashChange, 100);
+            } else {
+                // If no hash, focus first video for keyboard navigation
+                const firstVideo = document.querySelector('video');
+                if (firstVideo) firstVideo.focus();
             }
             
             // Listen for hash changes
             window.addEventListener('hashchange', handleHashChange);
+            
+            // Add global keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Space/Enter on focused video will be handled by video's event
+                if (e.target.tagName === 'VIDEO') return;
+                
+                // Space to play/pause current video
+                if (e.code === 'Space' && currentPlaying) {
+                    e.preventDefault();
+                    if (currentPlaying.paused) {
+                        currentPlaying.play();
+                    } else {
+                        currentPlaying.pause();
+                    }
+                }
+                
+                // M to mute/unmute current video
+                if ((e.code === 'KeyM' || e.code === 'М') && currentPlaying) {
+                    e.preventDefault();
+                    currentPlaying.muted = !currentPlaying.muted;
+                }
+            });
         });
     </script>
 </body>
