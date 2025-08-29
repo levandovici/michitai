@@ -1,16 +1,46 @@
-<FilesMatch "\.(mp4|webm|ogg)$">
-    Order Allow,Deny
-    Deny from all
-</FilesMatch>
-
-# Allow access from specific pages
-<FilesMatch "^module-\d+-lesson-\d+\.(mp4|webm|ogg)$">
-    Order Deny,Allow
-    Deny from all
-    # Allow access from your domain
+# Enable rewrite engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Block direct access to video files
+    <FilesMatch "\.(mp4|webm|ogg|m3u8|ts|m4s|mpd)$">
+        # Only allow from your domain
+        <IfModule mod_headers.c>
+            SetEnvIfNoCase Referer "^https?://(www\.)?michitai\.com" local_ref=1
+            Order Allow,Deny
+            Allow from env=local_ref
+            Deny from all
+            
+            # Enable CORS for your domain
+            Header set Access-Control-Allow-Origin "https://michitai.com"
+            Header add Access-Control-Allow-Origin "http://michitai.com"
+            Header set Access-Control-Allow-Methods "GET, OPTIONS"
+            Header set Access-Control-Allow-Headers "Range"
+            Header set Accept-Ranges "bytes"
+        </IfModule>
+    </FilesMatch>
+    
+    # Set proper MIME types
+    AddType video/mp4 .mp4
+    AddType video/webm .webm
+    AddType video/ogg .ogv
+    AddType application/x-mpegURL .m3u8
+    AddType video/MP2T .ts
+    AddType application/dash+xml .mpd
+    
+    # Enable range requests for seeking
     <IfModule mod_headers.c>
-        SetEnvIfNoCase Referer "^https?://(www\.)?yourdomain\.com" local_ref=1
-        Order Allow,Deny
-        Allow from env=local_ref
+        Header set Accept-Ranges bytes
     </IfModule>
-</FilesMatch>
+    
+    # Enable caching for video files (1 month)
+    <FilesMatch "\.(mp4|webm|ogg|m3u8|ts|m4s|mpd)$">
+        <IfModule mod_headers.c>
+            Header set Cache-Control "max-age=2592000, public"
+        </IfModule>
+    </FilesMatch>
+    
+    # Force HTTPS for all requests
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
