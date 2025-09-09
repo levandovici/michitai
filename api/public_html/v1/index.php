@@ -134,7 +134,7 @@ require_once 'php/config.php';
                 <a href="#api-structure" class="btn-primary text-white px-8 py-4 rounded-xl text-lg font-semibold">
                     <i class="fas fa-code mr-2"></i>View API Docs
                 </a>
-                <a href="#get-started" class="glass-effect text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white/20 transition">
+                <a href="#sdk" class="glass-effect text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white/20 transition">
                     <i class="fas fa-rocket mr-2"></i>Get Started
                 </a>
             </div>
@@ -279,7 +279,7 @@ require_once 'php/config.php';
                 <p class="text-xl text-white/70 max-w-3xl mx-auto">Integrate our API into your game with our easy-to-use SDKs</p>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="max-w-3xl mx-auto space-y-8">
                 <!-- C# / Unity SDK -->
                 <div class="glass-effect p-8 rounded-2xl">
                     <div class="flex items-center mb-6">
@@ -327,13 +327,10 @@ public class ApiExample : MonoBehaviour
     }
 }</code></pre>
                     </div>
-                    <a href="https://github.com/levandovici/api/" target="_blank" class="inline-flex items-center text-blue-400 hover:text-blue-300">
-                        <i class="fab fa-github mr-2"></i> View on GitHub
-                    </a>
                 </div>
                 
                 <!-- REST API -->
-                <div class="glass-effect p-8 rounded-2xl">
+                <div class="glass-effect p-8 rounded-2xl mt-8">
                     <div class="flex items-center mb-6">
                         <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-green-600 to-blue-600 flex items-center justify-center mr-4">
                             <i class="fas fa-code text-2xl text-white"></i>
@@ -381,10 +378,12 @@ public class ApiExample : MonoBehaviour
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-white/10 py-8">
-            <div class="mt-8 pt-8 border-t border-white/10 text-center text-white/40 text-sm">
-                <p>© 2025 Nichita Levandovici. All rights reserved.</p>
+    <footer class="glass-effect border-t border-white/10 mt-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8 text-center">
+            <div class="text-white/60 text-sm">
+                &copy; 2025 Nichita Levandovici. All rights reserved.
             </div>
+        </div>
     </footer>
     
     <script>
