@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplayer API - Game Server Constructor</title>
+    <title>Multiplayer API</title>
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
@@ -17,7 +14,6 @@
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
         }
@@ -43,17 +39,6 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
         }
         
-        .btn-secondary {
-            background: var(--secondary-gradient);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-        }
-        
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
-        }
-        
         .animated-bg {
             background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
             background-size: 400% 400%;
@@ -75,77 +60,8 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
-        
-        .feature-icon {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .stats-number {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .plan-card.popular::before {
-            content: 'Most Popular';
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--secondary-gradient);
-            color: white;
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            transform: rotate(45deg) translate(25%, -50%);
-            transform-origin: center;
-            width: 120px;
-            text-align: center;
-        }
-        
-        .feature-check {
-            color: #10b981;
-        }
-        
-        .hero-text {
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        /* Mobile Navigation */
-        .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        
-        .mobile-menu.active {
-            transform: translateX(0);
-        }
-        
-        /* Mobile Optimizations */
-        @media (max-width: 768px) {
-            .hero-text {
-                font-size: 2.5rem;
-                line-height: 1.2;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-            
-            .feature-card {
-                padding: 1.5rem;
-            }
-            
-            .pricing-card {
-                margin-bottom: 2rem;
-            }
-        }
     </style>
 </head>
-
 <body class="min-h-screen animated-bg">
     <!-- Header -->
     <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
@@ -155,586 +71,107 @@
                     <img src="logo.png" alt="Multiplayer API Logo" class="w-10 h-10 rounded-xl object-contain">
                     <div>
                         <h1 class="text-lg font-bold text-white">Multiplayer API</h1>
-                        <p class="text-xs text-white/70">Game Server Constructor</p>
                     </div>
                 </div>
-                
-                <nav class="hidden md:flex items-center space-x-6">
-                    <a href="#features" class="text-white/70 hover:text-white transition-colors">Features</a>
-                    <a href="#pricing" class="text-white/70 hover:text-white transition-colors">Pricing</a>
-                    <a href="#examples" class="text-white/70 hover:text-white transition-colors">Examples</a>
-                    <a href="#api" class="text-white/70 hover:text-white transition-colors">API</a>
-                    <a href="docs.html" class="text-white/70 hover:text-white transition-colors font-medium">Docs</a>
-                </nav>
-                
-                <div class="hidden md:flex items-center space-x-3">
-                    <a href="login.html" class="text-white/70 hover:text-white transition-colors font-medium">Sign In</a>
-                    <a href="register.html" class="btn-primary text-white px-6 py-2 rounded-xl font-semibold border-0">Get Started</a>
-                </div>
-                
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-white p-2">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 z-50 w-64 glass-effect border-l border-white/20 md:hidden">
-        <div class="flex flex-col h-full">
-            <div class="flex items-center justify-between p-6 border-b border-white/20">
-                <div class="flex items-center space-x-3">
-                    <img src="logo.png" alt="Multiplayer API" class="w-8 h-8 rounded-lg object-contain">
-                    <span class="text-white font-bold">Menu</span>
-                </div>
-                <button id="mobile-menu-close" class="text-white p-2">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <nav class="flex-1 p-6">
-                <div class="space-y-4">
-                    <a href="#features" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
-                        <i class="fas fa-puzzle-piece mr-3"></i>Features
-                    </a>
-                    <a href="#pricing" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
-                        <i class="fas fa-dollar-sign mr-3"></i>Pricing
-                    </a>
-                    <a href="#examples" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
-                        <i class="fas fa-code mr-3"></i>Examples
-                    </a>
-                    <a href="#api" class="block text-white/70 hover:text-white transition-colors py-2 mobile-menu-link">
-                        <i class="fas fa-cog mr-3"></i>API
-                    </a>
-                    <hr class="border-white/20 my-4">
-                    <a href="docs.html" class="block text-white/70 hover:text-white transition-colors py-2">
-                        <i class="fas fa-book mr-3"></i>Documentation
-                    </a>
-                    <a href="login.html" class="block text-white/70 hover:text-white transition-colors py-2">
-                        <i class="fas fa-sign-in-alt mr-3"></i>Sign In
-                    </a>
-                    <a href="register.html" class="block btn-primary text-white px-4 py-3 rounded-xl font-semibold border-0 text-center mt-4">
-                        <i class="fas fa-rocket mr-2"></i>Get Started
-                    </a>
-                </div>
-            </nav>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+        <div class="text-center mb-16">
+            <h1 class="text-5xl font-black text-white mb-6">Multiplayer API</h1>
+            <p class="text-xl text-white/70 max-w-3xl mx-auto">Powerful tools for building and managing multiplayer game servers</p>
         </div>
-    </div>
 
-    <!-- Mobile Menu Backdrop -->
-    <div id="mobile-backdrop" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden md:hidden"></div>
-
-    <!-- Hero Section -->
-    <section class="relative py-20 overflow-hidden">
-        <div class="absolute inset-0 bg-black/20"></div>
-        <div class="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            <div class="mb-8">
-                <span class="inline-block bg-white/10 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
-                    <i class="fas fa-rocket mr-2"></i>Professional Multiplayer Platform
-                </span>
-            </div>
-            
-            <h2 class="text-3xl sm:text-4xl lg:text-6xl font-black text-white mb-8 leading-tight hero-text">
-                Build Multiplayer Games<br>
-                <span class="stats-number">With Ease</span>
-            </h2>
-            
-            <p class="text-lg sm:text-xl lg:text-2xl text-white/80 mb-12 max-w-4xl mx-auto leading-relaxed">
-                Professional API constructor for multiplayer game development.
-                <br class="hidden sm:block">Visual logic builder, secure payments, and enterprise-grade infrastructure.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row justify-center gap-6 mb-16">
-                <a href="register.html" class="btn-primary text-white px-10 py-4 rounded-2xl font-bold text-lg border-0">
-                    <i class="fas fa-play mr-3"></i>Start Building
-                </a>
-                <a href="#examples" class="glass-effect border border-white/30 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all">
-                    <i class="fas fa-code mr-3"></i>View Examples
+        <!-- API Versions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <!-- V1 API -->
+            <div class="glass-effect rounded-2xl p-8 floating-card">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center mr-4">
+                        <span class="text-white text-xl font-bold">v1</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">Core Cells</h2>
+                </div>
+                <p class="text-white/80 mb-6">
+                    The original API that powers our game server infrastructure. Provides essential multiplayer functionality with a focus on reliability and performance.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-white/80">
+                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                        <span>Core multiplayer functionality</span>
+                    </li>
+                    <li class="flex items-center text-white/80">
+                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                        <span>Room management</span>
+                    </li>
+                    <li class="flex items-center text-white/80">
+                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                        <span>Basic matchmaking</span>
+                    </li>
+                </ul>
+                <a href="v1/" class="btn-primary text-white px-6 py-3 rounded-xl font-medium w-full text-center block">
+                    Explore v1 API
                 </a>
             </div>
 
-            <!-- Stats -->
-            <div class="stats-grid grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-                <div class="text-center">
-                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">100K</div>
-                    <div class="text-white/70 font-medium text-sm sm:text-base">Max Players</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">2K</div>
-                    <div class="text-white/70 font-medium text-sm sm:text-base">Max Online Players</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">25+</div>
-                    <div class="text-white/70 font-medium text-sm sm:text-base">API Endpoints</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-2xl sm:text-3xl font-black stats-number mb-2">99.9%</div>
-                    <div class="text-white/70 font-medium text-sm sm:text-base">Uptime</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="py-20">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h3 class="text-4xl font-black text-white mb-6">Powerful Features</h3>
-                <p class="text-xl text-white/70 max-w-3xl mx-auto">Everything you need to build, deploy, and scale multiplayer games</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="floating-card glass-effect rounded-2xl p-8">
-                    <div class="feature-icon w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
-                        <i class="fas fa-puzzle-piece text-blue-400 text-2xl"></i>
+            <!-- V2 API -->
+            <div class="glass-effect rounded-2xl p-8 floating-card">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-green-600 to-blue-600 flex items-center justify-center mr-4">
+                        <span class="text-white text-xl font-bold">v2</span>
                     </div>
-                    <h4 class="text-xl font-bold text-white mb-4">Visual Logic Constructor</h4>
-                    <p class="text-white/70 mb-4">Drag-and-drop interface for building game logic without coding</p>
-                    <ul class="space-y-2 text-white/60 text-sm">
-                        <li><i class="fas fa-check feature-check mr-2"></i>If/else conditions</li>
-                        <li><i class="fas fa-check feature-check mr-2"></i>Loops and iterations</li>
-                        <li><i class="fas fa-check feature-check mr-2"></i>Variable management</li>
-                    </ul>
+                    <h2 class="text-2xl font-bold text-white">Game Server Constructor</h2>
                 </div>
-                
-                <div class="floating-card glass-effect rounded-2xl p-8">
-                    <div class="feature-icon w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
-                        <i class="fas fa-shield-alt text-green-400 text-2xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mb-4">Enterprise Security</h4>
-                    <p class="text-white/70 mb-4">Bank-grade security with PCI/GDPR compliance</p>
-                    <ul class="space-y-2 text-white/60 text-sm">
-                        <li><i class="fas fa-check feature-check mr-2"></i>bcrypt encryption</li>
-                        <li><i class="fas fa-check feature-check mr-2"></i>API token authentication</li>
-                        <li><i class="fas fa-check feature-check mr-2"></i>Rate limiting</li>
-                    </ul>
-                </div>
-                
-                <div class="floating-card glass-effect rounded-2xl p-8">
-                    <div class="feature-icon w-16 h-16 rounded-2xl flex items-center justify-center mb-6">
-                        <i class="fas fa-credit-card text-purple-400 text-2xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mb-4">Global Payments</h4>
-                    <p class="text-white/70 mb-4">Multiple payment methods including PayPal and local banks</p>
-                    <ul class="space-y-2 text-white/60 text-sm">
-                        <li><i class="fas fa-check feature-check mr-2"></i>PayPal integration</li>
-                        <li><i class="fas fa-check feature-check mr-2"></i>MAIB bank support</li>
-                        <li><i class="fas fa-check feature-check mr-2"></i>Paynet mobile payments</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-20">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h3 class="text-4xl font-black text-white mb-6">Simple Pricing</h3>
-                <p class="text-xl text-white/70 max-w-3xl mx-auto">Choose the plan that fits your needs</p>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Free Plan -->
-                <div class="floating-card glass-effect rounded-2xl p-8">
-                    <div class="text-center mb-8">
-                        <h4 class="text-2xl font-bold text-white mb-2">Free</h4>
-                        <div class="text-5xl font-black text-white mb-4">$0<span class="text-lg font-normal text-white/60">/month</span></div>
-                        <p class="text-white/70">Perfect for getting started</p>
-                    </div>
-                    
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>250 MB Storage
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>1 Game
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>100 concurrent players
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>1K API Calls/day
-                        </li>
-                    </ul>
-                    
-                    <a href="register.html" class="block w-full text-center py-3 px-6 rounded-xl font-semibold border-2 border-white/20 text-white hover:bg-white/10 transition-colors">
-                        Get Started Free
-                    </a>
-                </div>
-
-                <!-- Standard Plan -->
-                <div class="floating-card glass-effect rounded-2xl p-8 border-2 border-blue-400/50 scale-105 relative overflow-hidden">
-                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                        <span class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-                            Most Popular
-                        </span>
-                    </div>
-                    
-                    <div class="text-center mb-8 mt-4">
-                        <h4 class="text-2xl font-bold text-white mb-2">Standard</h4>
-                        <div class="text-5xl font-black text-white mb-4">$50<span class="text-lg font-normal text-white/60">/month</span></div>
-                        <p class="text-white/70">For growing projects</p>
-                    </div>
-                    
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>1 GB Storage
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>1 Game
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>1K concurrent players
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>10K API Calls/day
-                        </li>
-                    </ul>
-                    
-                    <a href="register.html" class="block w-full text-center btn-primary text-white py-3 px-6 rounded-xl font-semibold border-0">
-                        Start Standard Plan
-                    </a>
-                </div>
-
-                <!-- Pro Plan -->
-                <div class="floating-card glass-effect rounded-2xl p-8">
-                    <div class="text-center mb-8">
-                        <h4 class="text-2xl font-bold text-white mb-2">Pro</h4>
-                        <div class="text-5xl font-black text-white mb-4">$200<span class="text-lg font-normal text-white/60">/month</span></div>
-                        <p class="text-white/70">For enterprise needs</p>
-                    </div>
-                    
-                    <ul class="space-y-3 mb-8">
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>2.5 GB Storage
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>3 Games
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>2K concurrent players
-                        </li>
-                        <li class="flex items-center text-white">
-                            <i class="fas fa-check feature-check mr-3"></i>1M API Calls/day
-                        </li>
-                    </ul>
-                    
-                    <a href="register.html" class="block w-full text-center btn-secondary text-white py-3 px-6 rounded-xl font-semibold border-0">
-                        Start Pro Plan
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Constructor Examples Section -->
-    <section id="examples" class="py-20">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h3 class="text-4xl font-black text-white mb-6">Logic Constructor Examples</h3>
-                <p class="text-xl text-white/70 max-w-3xl mx-auto">See how easy it is to build game logic visually</p>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Example 1: Player Level Check -->
-                <div class="glass-effect rounded-2xl p-8">
-                    <h4 class="text-xl font-bold text-white mb-6">
-                        <i class="fas fa-user-check mr-2 text-blue-400"></i>Player Level Validation
-                    </h4>
-                    <div class="bg-gray-900 rounded-xl p-4 mb-4">
-                        <pre class="text-green-400 text-sm"><code>// Generated Code
-if (player.level >= 10) {
-    player.unlockFeature('advanced_weapons');
-    player.addExperience(100);
-} else {
-    player.showMessage('Reach level 10!');
-}</code></pre>
-                    </div>
-                    <p class="text-white/70 text-sm">
-                        Visual blocks: IF condition → Player level ≥ 10 → Unlock feature + Add XP
-                    </p>
-                </div>
-
-                <!-- Example 2: Game Loop -->
-                <div class="glass-effect rounded-2xl p-8">
-                    <h4 class="text-xl font-bold text-white mb-6">
-                        <i class="fas fa-sync-alt mr-2 text-green-400"></i>Game Timer Loop
-                    </h4>
-                    <div class="bg-gray-900 rounded-xl p-4 mb-4">
-                        <pre class="text-green-400 text-sm"><code>// Generated Code
-for (let round = 1; round <= 5; round++) {
-    game.startRound(round);
-    game.setTimer(60);
-    game.spawnEnemies(round * 2);
-}</code></pre>
-                    </div>
-                    <p class="text-white/70 text-sm">
-                        Visual blocks: FOR loop (1 to 5) → Start round → Set timer → Spawn enemies
-                    </p>
-                </div>
-
-                <!-- Example 3: Data Types -->
-                <div class="glass-effect rounded-2xl p-8">
-                    <h4 class="text-xl font-bold text-white mb-6">
-                        <i class="fas fa-database mr-2 text-orange-400"></i>Cross-Platform Data Types
-                    </h4>
-                    <div class="bg-gray-900 rounded-xl p-4 mb-4">
-                        <pre class="text-green-400 text-sm"><code>// Supported Types (JS, PHP, C#)
-Boolean: true/false
-Integer: 2147483647
-String: "Hello World"
-Array: [1, 2, 3, 4, 5]
-Enum: PlayerState.ACTIVE</code></pre>
-                    </div>
-                    <p class="text-white/70 text-sm">
-                        All data types compatible across JavaScript, PHP, and C# platforms
-                    </p>
-                </div>
-
-                <!-- Example 4: Subscription Check -->
-                <div class="glass-effect rounded-2xl p-8">
-                    <h4 class="text-xl font-bold text-white mb-6">
-                        <i class="fas fa-credit-card mr-2 text-purple-400"></i>Subscription Logic
-                    </h4>
-                    <div class="bg-gray-900 rounded-xl p-4 mb-4">
-                        <pre class="text-green-400 text-sm"><code>// Generated Code
-if (user.subscription === 'pro') {
-    user.allowFeature('unlimited_games');
-} else if (user.subscription === 'standard') {
-    user.setLimit('games', 1);
-}</code></pre>
-                    </div>
-                    <p class="text-white/70 text-sm">
-                        Visual blocks: IF subscription = Pro → Allow unlimited, ELSE IF Standard → Set limits
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- API Documentation Section -->
-    <section id="api" class="py-20">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h3 class="text-4xl font-black text-white mb-6">API</h3>
-                <p class="text-xl text-white/70 max-w-3xl mx-auto">Comprehensive REST API for multiplayer game development</p>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Database Schema -->
-                <div class="glass-effect rounded-2xl p-8">
-                    <h4 class="text-2xl font-bold text-white mb-6">
-                        <i class="fas fa-database mr-2 text-blue-400"></i>Database Schema
-                    </h4>
-                    <div class="space-y-4">
-                        <div class="bg-white/5 rounded-lg p-4">
-                            <h5 class="font-semibold text-white mb-2">Core Tables</h5>
-                            <ul class="text-white/70 text-sm space-y-1">
-                                <li>• <strong>users</strong> - User accounts and authentication</li>
-                                <li>• <strong>subscriptions</strong> - Payment plans and billing</li>
-                                <li>• <strong>games</strong> - Game configurations and settings</li>
-                                <li>• <strong>players</strong> - Player data and statistics</li>
-                                <li>• <strong>rooms</strong> - Game rooms and sessions</li>
-                                <li>• <strong>communities</strong> - Social features and groups</li>
-                            </ul>
-                        </div>
-                        <div class="bg-white/5 rounded-lg p-4">
-                            <h5 class="font-semibold text-white mb-2">System Tables</h5>
-                            <ul class="text-white/70 text-sm space-y-1">
-                                <li>• <strong>api_logs</strong> - API usage tracking</li>
-                                <li>• <strong>notifications</strong> - Email/Slack alerts</li>
-                                <li>• <strong>triggers</strong> - Event-based actions</li>
-                                <li>• <strong>timers</strong> - Scheduled tasks</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- API Endpoints -->
-                <div class="glass-effect rounded-2xl p-8">
-                    <h4 class="text-2xl font-bold text-white mb-6">
-                        <i class="fas fa-code mr-2 text-green-400"></i>API Endpoints
-                    </h4>
-                    <div class="space-y-4">
-                        <div class="bg-white/5 rounded-lg p-4">
-                            <h5 class="font-semibold text-white mb-2">Authentication</h5>
-                            <div class="text-white/70 text-sm space-y-1">
-                                <div><span class="text-blue-400">POST</span> /api/register</div>
-                                <div><span class="text-blue-400">POST</span> /api/login</div>
-                                <div><span class="text-blue-400">POST</span> /api/logout</div>
-                            </div>
-                        </div>
-                        <div class="bg-white/5 rounded-lg p-4">
-                            <h5 class="font-semibold text-white mb-2">Game Management</h5>
-                            <div class="text-white/70 text-sm space-y-1">
-                                <div><span class="text-green-400">GET</span> /api/game/list</div>
-                                <div><span class="text-blue-400">POST</span> /api/game/create</div>
-                                <div><span class="text-yellow-400">PUT</span> /api/game/{id}</div>
-                                <div><span class="text-red-400">DELETE</span> /api/game/{id}</div>
-                            </div>
-                        </div>
-                        <div class="bg-white/5 rounded-lg p-4">
-                            <h5 class="font-semibold text-white mb-2">Monitoring</h5>
-                            <div class="text-white/70 text-sm space-y-1">
-                                <div><span class="text-green-400">GET</span> /api/monitor/user</div>
-                                <div><span class="text-green-400">GET</span> /api/monitor/system</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Documentation Button -->
-            <div class="text-center mb-12">
-                <a href="docs.html" class="btn-primary text-white px-8 py-4 rounded-2xl font-bold text-lg border-0 inline-block">
-                    <i class="fas fa-book mr-3"></i>View Full Documentation
+                <p class="text-white/80 mb-6">
+                    The next evolution of our API with enhanced features, better performance, and more developer-friendly interfaces.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center text-white/80">
+                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                        <span>Advanced matchmaking</span>
+                    </li>
+                    <li class="flex items-center text-white/80">
+                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                        <span>Enhanced security</span>
+                    </li>
+                    <li class="flex items-center text-white/80">
+                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                        <span>Real-time analytics</span>
+                    </li>
+                </ul>
+                <a href="v2/" class="btn-primary text-white px-6 py-3 rounded-xl font-medium w-full text-center block">
+                    Explore v2 API
                 </a>
             </div>
-            
-            <!-- Example API Call -->
-            <div class="mt-12 glass-effect rounded-2xl p-8">
-                <h4 class="text-2xl font-bold text-white mb-6">
-                    <i class="fas fa-terminal mr-2 text-purple-400"></i>Example API Call
-                </h4>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div>
-                        <h5 class="font-semibold text-white mb-3">Request</h5>
-                        <div class="bg-gray-900 rounded-xl p-4">
-                            <pre class="text-green-400 text-sm"><code>curl -X POST /api/game/create \
-  -H "Content-Type: application/json" \
-  -H "X-API-Token: your_token" \
-  -d '{
-    "name": "My Game",
-    "max_players": 100
-  }'</code></pre>
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="font-semibold text-white mb-3">Response</h5>
-                        <div class="bg-gray-900 rounded-xl p-4">
-                            <pre class="text-green-400 text-sm"><code>{
-  "success": true,
-  "game_id": "uuid-1234",
-  "name": "My Game",
-  "status": "active"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="glass-effect border-t border-white/20 py-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                            <img src="logo.png" alt="Multiplayer API" class="w-8 h-8 rounded-xl object-contain">
-                        </div>
-                        <div>
-                            <h5 class="font-bold text-white">Multiplayer API</h5>
-                            <p class="text-xs text-white/70">Game Server Constructor</p>
-                        </div>
-                    </div>
-                    <p class="text-white/70 text-sm">
-                        Professional multiplayer game development platform with visual logic constructor.
-                    </p>
-                </div>
-                
-                <div>
-                    <h6 class="font-semibold text-white mb-4">Product</h6>
-                    <ul class="space-y-2 text-white/70 text-sm">
-                        <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
-                        <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
-                        <li><a href="#examples" class="hover:text-white transition-colors">Examples</a></li>
-                        <li><a href="#api" class="hover:text-white transition-colors">API</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h6 class="font-semibold text-white mb-4">Account</h6>
-                    <ul class="space-y-2 text-white/70 text-sm">
-                        <li><a href="login.html" class="hover:text-white transition-colors">Sign In</a></li>
-                        <li><a href="register.html" class="hover:text-white transition-colors">Register</a></li>
-                        <li><a href="profile.html" class="hover:text-white transition-colors">Dashboard</a></li>
-                        <li><a href="payments.html" class="hover:text-white transition-colors">Billing</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h6 class="font-semibold text-white mb-4">Support</h6>
-                    <ul class="space-y-2 text-white/70 text-sm">
-                        <li><a href="mailto:support@michitai.com" class="hover:text-white transition-colors">Email: support@michitai.com</a></li>
-                        <li><a href="tel:+37378814810" class="hover:text-white transition-colors">Phone: +373 788 14810</a></li>
-                        <li><a href="docs.html" class="hover:text-white transition-colors">Documentation</a></li>
-                        <li><a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
-                        <li><a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="border-t border-white/20 mt-8 pt-8 text-center">
-                <p class="text-white/50 text-sm">
-                    © 2025 Nichita Levandovici. All rights reserved.
-                </p>
+    <footer class="glass-effect border-t border-white/10 mt-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8 text-center">
+            <div class="text-white/60 text-sm">
+                &copy; 2025 Nichita Levandovici. All rights reserved.
             </div>
         </div>
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links
-        $(document).ready(function() {
-            $('a[href^="#"]').on('click', function(event) {
-                var target = $(this.getAttribute('href'));
-                if( target.length ) {
-                    event.preventDefault();
-                    $('html, body').stop().animate({
-                        scrollTop: target.offset().top - 80
-                    }, 1000);
-                }
-            });
-            
-            // Add scroll effect to header
-            $(window).scroll(function() {
-                if ($(window).scrollTop() > 50) {
-                    $('header').addClass('backdrop-blur-xl');
-                } else {
-                    $('header').removeClass('backdrop-blur-xl');
-                }
-            });
-            
-            // Mobile menu functionality
-            $('#mobile-menu-btn').click(function() {
-                $('#mobile-menu').addClass('active');
-                $('#mobile-backdrop').removeClass('hidden');
-                $('body').addClass('overflow-hidden');
-            });
-            
-            $('#mobile-menu-close, #mobile-backdrop').click(function() {
-                $('#mobile-menu').removeClass('active');
-                $('#mobile-backdrop').addClass('hidden');
-                $('body').removeClass('overflow-hidden');
-            });
-            
-            // Close mobile menu when clicking on navigation links
-            $('.mobile-menu-link').click(function() {
-                $('#mobile-menu').removeClass('active');
-                $('#mobile-backdrop').addClass('hidden');
-                $('body').removeClass('overflow-hidden');
-            });
-            
-            // Close mobile menu on escape key
-            $(document).keydown(function(e) {
-                if (e.keyCode === 27) { // ESC key
-                    $('#mobile-menu').removeClass('active');
-                    $('#mobile-backdrop').addClass('hidden');
-                    $('body').removeClass('overflow-hidden');
-                }
+        // Add animation to cards on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.floating-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease ' + (index * 0.1) + 's';
+                
+                // Trigger reflow
+                void card.offsetWidth;
+                
+                // Animate in
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
             });
         });
     </script>
