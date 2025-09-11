@@ -13,8 +13,8 @@ try {
     $stmt->execute(['user_id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Get API keys
-    $stmt = $pdo->prepare("SELECT project_name, api_key, created_at FROM api_keys WHERE user_id = :user_id");
+    // Get API keys - include id field for data-key-id attribute
+    $stmt = $pdo->prepare("SELECT id, project_name, api_key, created_at FROM api_keys WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $_SESSION['user_id']]);
     $api_keys = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
