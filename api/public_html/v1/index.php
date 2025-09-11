@@ -251,19 +251,51 @@ require_once 'php/config.php';
                     </div>
                 </div>
                 
-                <!-- RTS -->
-                <div class="p-4">
-                    <h4 class="text-white/60 text-sm font-semibold mb-3">RTS</h4>
+                <!-- Game Players -->
+                <div class="p-4 border-t border-white/10">
+                    <h4 class="text-white/60 text-sm font-semibold mb-3">Game Players</h4>
                     <div class="space-y-4">
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/rts/start</div>
-                            <div class="col-span-6">Start new RTS match session</div>
+                            <div class="col-span-4 font-mono text-white/90">/api/games/players</div>
+                            <div class="col-span-6">Register new player for a game</div>
+                        </div>
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
+                            <div class="col-span-4 font-mono text-white/90">/api/games/players/login</div>
+                            <div class="col-span-6">Authenticate player with private key</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/rts/active</div>
-                            <div class="col-span-6">List all current RTS matches</div>
+                            <div class="col-span-4 font-mono text-white/90">/api/games/players</div>
+                            <div class="col-span-6">List all players for a game (admin only)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Data -->
+                <div class="p-4 border-t border-white/10">
+                    <h4 class="text-white/60 text-sm font-semibold mb-3">Game Data</h4>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
+                            <div class="col-span-4 font-mono text-white/90">/api/games/data</div>
+                            <div class="col-span-6">Get game data (requires API key)</div>
+                        </div>
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
+                            <div class="col-span-4 font-mono text-white/90">/api/games/data</div>
+                            <div class="col-span-6">Update game data (requires API key)</div>
+                        </div>
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
+                            <div class="col-span-4 font-mono text-white/90">/api/games/players/data</div>
+                            <div class="col-span-6">Get player data (requires private key)</div>
+                        </div>
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
+                            <div class="col-span-4 font-mono text-white/90">/api/games/players/data</div>
+                            <div class="col-span-6">Update player data (requires private key)</div>
                         </div>
                     </div>
                 </div>
