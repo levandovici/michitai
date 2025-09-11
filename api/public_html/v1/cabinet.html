@@ -160,7 +160,7 @@
                             <h2 class="text-2xl font-bold text-white">API Keys</h2>
                             <p class="text-white/70">Manage your project API keys</p>
                         </div>
-                        <button id="new-key-btn" class="btn-primary text-white px-6 py-2.5 rounded-lg font-medium flex items-center justify-center mt-4 sm:mt-0">
+                        <button onclick="openNewKeyModal()" class="btn-primary text-white px-6 py-2.5 rounded-lg font-medium flex items-center justify-center mt-4 sm:mt-0">
                             <i class="fas fa-plus mr-2"></i> New API Key
                         </button>
                     </div>
@@ -258,9 +258,98 @@
         </div>
     </section>
 
+    <!-- New API Key Modal -->
+    <div id="newKeyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="glass-effect rounded-2xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-white">Create New API Key</h3>
+                <button onclick="closeNewKeyModal()" class="text-white/50 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="newKeyForm" class="space-y-4">
+                <div>
+                    <label for="project_name" class="block text-sm font-medium text-white/80 mb-1">Project Name</label>
+                    <input type="text" id="project_name" name="project_name" required
+                           class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                           placeholder="My Awesome Project">
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeNewKeyModal()" class="px-4 py-2 rounded-lg text-white/80 hover:text-white transition">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
+                        Create Key
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        fetch('php/get_user_data.php')
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event to the button (as a fallback to the onclick attribute)
+            const newKeyBtn = document.querySelector('button[onclick*="openNewKeyModal"]');
+            if (newKeyBtn) {
+                console.log('Found New API Key button, adding click event listener');
+                newKeyBtn.addEventListener('click', openNewKeyModal);
+            } else {
+                console.error('Could not find New API Key button');
+            }
+        });
+
+        // Modal functions
+        function openNewKeyModal() {
+            console.log('openNewKeyModal called');
+            const modal = document.getElementById('newKeyModal');
+            console.log('Modal element:', modal);
+            if (modal) {
+                console.log('Removing hidden class');
+                modal.classList.remove('hidden');
+                console.log('Modal classes after removal:', modal.className);
+            } else {
+                console.error('Could not find newKeyModal element');
+            }
+        }
+
+        function closeNewKeyModal() {
+            document.getElementById('newKeyModal').classList.add('hidden');
+        }
+
+        // Handle new key form submission
+        document.getElementById('newKeyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('php/generate_key.php', {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
             .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    closeNewKeyModal();
+                    location.reload(); // Reload to show the new key
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while creating the API key');
+            });
+        });
+
+        // Load user data and API keys
+        fetch('php/get_user_data.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.error) {
                     window.location.href = 'login.html?error=' + encodeURIComponent(data.error);
@@ -284,7 +373,8 @@
                 });
             })
             .catch(error => {
-                window.location.href = 'login.html?error=' + encodeURIComponent('Failed to load user data');
+                console.error('Error loading user data:', error);
+                window.location.href = 'login.html?error=' + encodeURIComponent('Failed to load user data: ' + error.message);
             });
     </script>
   </script>
