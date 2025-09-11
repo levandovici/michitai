@@ -268,41 +268,379 @@ require_once 'php/config.php';
                         Seamlessly integrate the API into your Unity projects with our C# SDK. 
                         Handles authentication, HTTP requests, JSON parsing, and project key management.
                     </p>
+                    <div class="flex justify-end mb-4">
+                        <a href="#" id="downloadSdk" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center">
+                            <i class="fas fa-download mr-2"></i> Download C# SDK
+                        </a>
+                    </div>
                     <div class="bg-black/50 p-4 rounded-lg mb-6 overflow-x-auto">
-                        <pre><code class="language-csharp">using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections;
+                        <pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
-public class ApiExample : MonoBehaviour
+namespace Michitai.SDK
 {
-    string apiUrl = "https://api.limonadoent.com/api/store_data";
-    string apiKey = "YOUR_GAME_API_KEY";
-
-    void Start()
+    /// &lt;summary&gt;
+    /// Client for interacting with the Michitai Game Platform API
+    /// &lt;/summary&gt;
+    public class MichitaiClient
     {
-        StartCoroutine(SendData());
+        private readonly HttpClient _httpClient;
+        private const string API_BASE_URL = "https://api.michitai.com/v1/php";
+        private string _apiToken;
+        private string _sessionToken;
+
+        /// &lt;summary&gt;
+        /// Event triggered when authentication is required
+        /// &lt;/summary&gt;
+        public event Action OnAuthenticationRequired;
+
+        /// &lt;summary&gt;
+        /// Indicates if the client is currently authenticated
+        /// &lt;/summary&gt;
+        public bool IsAuthenticated =&gt; !string.IsNullOrEmpty(_apiToken);
+
+        /// &lt;summary&gt;
+        /// Initialize a new instance of the MichitaiClient
+        /// &lt;/summary&gt;
+        public MichitaiClient()
+        {
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+        }
+
+        #region Authentication
+
+        /// &lt;summary&gt;
+        /// Register a new player
+        /// &lt;/summary&gt;
+        public async Task&lt;PlayerRegistrationResponse&gt; RegisterPlayerAsync(string username, string email, string password)
+        {
+            var request = new { username, email, password };
+            var response = await PostAsync&lt;PlayerRegistrationResponse&gt;("game_players.php?endpoint=register", request);
+            
+            if (response != null && !string.IsNullOrEmpty(response.ApiToken))
+            {
+                _apiToken = response.ApiToken;
+                _sessionToken = response.SessionToken;
+                UpdateAuthorizationHeader();
+            }
+            
+            return response;
+        }
+
+        /// &lt;summary&gt;
+        /// Authenticate a player
+        /// &lt;/summary&gt;
+        public async Task&lt;AuthResponse&gt; LoginAsync(string email, string password)
+        {
+            var request = new { email, password };
+            var response = await PostAsync&lt;AuthResponse&gt;("login.php", request);
+            
+            if (response != null)
+            {
+                _apiToken = response.ApiToken;
+                _sessionToken = response.SessionToken;
+                UpdateAuthorizationHeader();
+            }
+            
+            return response;
+        }
+
+        /// &lt;summary&gt;
+        /// Set authentication tokens (useful for restoring session)
+        /// &lt;/summary&gt;
+        public void SetAuthTokens(string apiToken, string sessionToken)
+        {
+            _apiToken = apiToken;
+            _sessionToken = sessionToken;
+            UpdateAuthorizationHeader();
+        }
+
+        private void UpdateAuthorizationHeader()
+        {
+            if (!string.IsNullOrEmpty(_apiToken))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiToken);
+                _httpClient.DefaultRequestHeaders.Add("X-API-Token", _apiToken);
+            }
+            else
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+                _httpClient.DefaultRequestHeaders.Remove("X-API-Token");
+            }
+        }
+
+        #endregion
+
+        #region Game Data
+
+        /// &lt;summary&gt;
+        /// Get game data
+        /// &lt;/summary&gt;
+        public async Task&lt;GameData&gt; GetGameDataAsync()
+        {
+            return await GetAsync&lt;GameData&gt;("game_data.php");
+        }
+
+        #endregion
+
+        #region Player Data
+
+        /// &lt;summary&gt;
+        /// Get current player's data
+        /// &lt;/summary&gt;
+        public async Task&lt;PlayerData&gt; GetPlayerDataAsync()
+        {
+            return await GetAsync&lt;PlayerData&gt;("get_user_data.php");
+        }
+
+        #endregion
+
+        #region HTTP Methods
+
+        private async Task&lt;T&gt; GetAsync&lt;T&gt;(string endpoint)
+        {
+            try
+            {
+                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
+                var response = await _httpClient.GetAsync(url);
+                await HandleResponse(response);
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize&lt;T&gt;(content);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new MichitaiException("Network error occurred", ex);
+            }
+        }
+
+        private async Task&lt;T&gt; PostAsync&lt;T&gt;(string endpoint, object data)
+        {
+            try
+            {
+                var content = new StringContent(
+                    JsonSerializer.Serialize(data),
+                    Encoding.UTF8,
+                    "application/json"
+                );
+
+                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
+                var response = await _httpClient.PostAsync(url, content);
+                await HandleResponse(response);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize&lt;T&gt;(responseContent);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new MichitaiException("Network error occurred", ex);
+            }
+        }
+
+        private async Task HandleResponse(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    OnAuthenticationRequired?.Invoke();
+                    throw new MichitaiException("Authentication required", response.StatusCode, errorContent);
+                }
+                
+                throw new MichitaiException("API request failed", response.StatusCode, errorContent);
+            }
+        }
+
+        #endregion
     }
 
-    IEnumerator SendData()
+    #region Data Models
+
+    public class PlayerRegistrationResponse
     {
-        string jsonBody = "{\"key\":\"inventory\",\"value\":{\"gold\":200}}";
-
-        UnityWebRequest req = new UnityWebRequest(apiUrl, "POST");
-        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
-        req.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        req.downloadHandler = new DownloadHandlerBuffer();
-        req.SetRequestHeader("Content-Type", "application/json");
-        req.SetRequestHeader("Authorization", "Bearer " + apiKey);
-
-        yield return req.SendWebRequest();
-
-        if (req.result == UnityWebRequest.Result.Success)
-            Debug.Log("✅ Success: " + req.downloadHandler.text);
-        else
-            Debug.LogError("❌ Error: " + req.error);
+        public string PlayerId { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string ApiToken { get; set; }
+        public string SessionToken { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
+
+    public class AuthResponse
+    {
+        public string PlayerId { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string ApiToken { get; set; }
+        public string SessionToken { get; set; }
+        public DateTime LastLogin { get; set; }
+    }
+
+    public class GameData
+    {
+        public string GameId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Version { get; set; }
+        public Dictionary&lt;string, object&gt; Settings { get; set; }
+        public DateTime LastUpdated { get; set; }
+    }
+
+    public class PlayerData
+    {
+        public string PlayerId { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public int Level { get; set; }
+        public int Experience { get; set; }
+        public Dictionary&lt;string, object&gt; Stats { get; set; }
+        public Dictionary&lt;string, object&gt; Inventory { get; set; }
+        public DateTime LastActive { get; set; }
+    }
+
+    public class MichitaiException : Exception
+    {
+        public System.Net.HttpStatusCode StatusCode { get; }
+        public string ResponseContent { get; }
+
+        public MichitaiException(string message) : base(message) { }
+        
+        public MichitaiException(string message, Exception innerException) 
+            : base(message, innerException) { }
+            
+        public MichitaiException(string message, System.Net.HttpStatusCode statusCode, string responseContent) 
+            : base($"{message}. Status: {statusCode}, Response: {responseContent}")
+        {
+            StatusCode = statusCode;
+            ResponseContent = responseContent;
+        }
+    }
+
+    #endregion
 }</code></pre>
                     </div>
+                    <script>
+                    document.getElementById('downloadSdk').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const sdkCode = `using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace Michitai.SDK
+{
+    /// <summary>
+    /// Client for interacting with the Michitai Game Platform API
+    /// </summary>
+    public class MichitaiClient
+    {
+        private readonly HttpClient _httpClient;
+        private const string API_BASE_URL = "https://api.michitai.com/v1/php";
+        private string _apiToken;
+        private string _sessionToken;
+
+        public event Action OnAuthenticationRequired;
+        public bool IsAuthenticated => !string.IsNullOrEmpty(_apiToken);
+
+        public MichitaiClient()
+        {
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+        }
+
+        public async Task<PlayerRegistrationResponse> RegisterPlayerAsync(string username, string email, string password)
+        {
+            var request = new { username, email, password };
+            return await PostAsync<PlayerRegistrationResponse>("game_players.php?endpoint=register", request);
+        }
+
+        public async Task<AuthResponse> LoginAsync(string email, string password)
+        {
+            var request = new { email, password };
+            return await PostAsync<AuthResponse>("login.php", request);
+        }
+
+        public async Task<GameData> GetGameDataAsync() => await GetAsync<GameData>("game_data.php");
+        public async Task<PlayerData> GetPlayerDataAsync() => await GetAsync<PlayerData>("get_user_data.php");
+
+        private async Task<T> GetAsync<T>(string endpoint)
+        {
+            var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(content);
+        }
+
+        private async Task<T> PostAsync<T>(string endpoint, object data)
+        {
+            var content = new StringContent(
+                JsonSerializer.Serialize(data),
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
+            var response = await _httpClient.PostAsync(url, content);
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(responseContent);
+        }
+    }
+
+    public class PlayerRegistrationResponse
+    {
+        public string PlayerId { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string ApiToken { get; set; }
+    }
+
+    public class AuthResponse
+    {
+        public string PlayerId { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string ApiToken { get; set; }
+        public string SessionToken { get; set; }
+    }
+
+    public class GameData
+    {
+        public string GameId { get; set; }
+        public Dictionary<string, object> Data { get; set; }
+    }
+
+    public class PlayerData
+    {
+        public string PlayerId { get; set; }
+        public string Username { get; set; }
+        public Dictionary<string, object> Data { get; set; }
+    }
+}`;
+
+                        const blob = new Blob([sdkCode], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'SDK.cs';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    });
+                    </script>
                 </div>
                 
                 <!-- REST API -->
