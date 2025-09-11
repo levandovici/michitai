@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Michitai API</title>
+    <title>Login - Multiplayer API</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -68,7 +68,7 @@
             <div class="flex justify-between items-center h-16">
                 <a href="index.php" class="text-white text-2xl font-bold flex items-center">
                     <i class="fas fa-gamepad mr-2"></i>
-                    Michitai API
+                    Multiplayer API
                 </a>
                 <div class="flex items-center space-x-4">
                     <a href="index.php" class="text-white hover:text-gray-200 px-4 py-2 rounded-lg transition">
@@ -93,20 +93,6 @@
                     <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
                     <p class="text-white/70">Sign in to your account</p>
                 </div>
-
-                <?php if (isset($_GET['error'])): ?>
-                <div class="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-6 flex items-center">
-                    <i class="fas fa-exclamation-circle mr-2"></i>
-                    <span><?php echo htmlspecialchars($_GET['error']); ?></span>
-                </div>
-                <?php endif; ?>
-                
-                <?php if (isset($_GET['success'])): ?>
-                <div class="bg-green-500/20 border border-green-500/50 text-green-200 px-4 py-3 rounded-lg mb-6 flex items-center">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    <span><?php echo htmlspecialchars($_GET['success']); ?></span>
-                </div>
-                <?php endif; ?>
 
                 <form action="php/login.php" method="POST" class="space-y-6">
                     <div>
@@ -151,18 +137,6 @@
                         <div class="absolute inset-0 flex items-center">
                             <div class="w-full border-t border-white/10"></div>
                         </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-transparent text-white/60">Or continue with</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6 grid grid-cols-2 gap-3">
-                        <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-white/10 rounded-lg shadow-sm bg-white/5 text-sm font-medium text-white hover:bg-white/10">
-                            <i class="fab fa-google text-red-400"></i>
-                        </a>
-                        <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-white/10 rounded-lg shadow-sm bg-white/5 text-sm font-medium text-white hover:bg-white/10">
-                            <i class="fab fa-github text-gray-300"></i>
-                        </a>
                     </div>
                     
                     <p class="mt-6 text-center text-sm text-white/60">

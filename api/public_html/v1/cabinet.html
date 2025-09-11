@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Cabinet - Michitai API</title>
+    <title>User Cabinet - Multiplayer API</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -99,7 +99,7 @@
             <div class="flex justify-between items-center h-16">
                 <a href="index.php" class="text-white text-2xl font-bold flex items-center">
                     <i class="fas fa-gamepad mr-2"></i>
-                    Michitai API
+                    Multiplayer API
                 </a>
                 <div class="flex items-center space-x-4">
                     <a href="index.php" class="text-white hover:text-gray-200 px-4 py-2 rounded-lg transition">
@@ -121,24 +121,6 @@
                 <h1 class="text-4xl font-black text-white mb-4">User Cabinet</h1>
                 <p class="text-xl text-white/70">Manage your account and API keys</p>
             </div>
-            
-            <?php if (isset($_GET['error'])): ?>
-            <div class="glass-effect border-l-4 border-red-500 text-red-100 p-4 mb-8 rounded-r-lg flex items-center">
-                <i class="fas fa-exclamation-circle text-xl mr-3"></i>
-                <div>
-                    <p class="font-medium"><?php echo htmlspecialchars($_GET['error']); ?></p>
-                </div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if (isset($_GET['success'])): ?>
-            <div class="glass-effect border-l-4 border-green-500 text-green-100 p-4 mb-8 rounded-r-lg flex items-center">
-                <i class="fas fa-check-circle text-xl mr-3"></i>
-                <div>
-                    <p class="font-medium"><?php echo htmlspecialchars($_GET['success']); ?></p>
-                </div>
-            </div>
-            <?php endif; ?>
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- User Info Card -->
@@ -168,19 +150,6 @@
                                 <p class="text-green-400 font-medium">Active</p>
                             </div>
                         </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-calendar-alt text-white/50 w-6"></i>
-                            <div class="ml-3">
-                                <p class="text-sm text-white/70">Member Since</p>
-                                <p id="join-date" class="text-white font-medium">-</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6 pt-6 border-t border-white/10">
-                        <a href="#" class="inline-flex items-center text-purple-300 hover:text-white transition">
-                            <i class="fas fa-user-edit mr-2"></i> Edit Profile
-                        </a>
                     </div>
                 </div>
                 
@@ -318,26 +287,6 @@
                 window.location.href = 'login.html?error=' + encodeURIComponent('Failed to load user data');
             });
     </script>
-        if (data.error) {
-          window.location.href = 'login.html?error=' + encodeURIComponent(data.error);
-          return;
-        }
-        document.getElementById('email').textContent = data.user.email;
-        const tbody = document.getElementById('api-keys');
-        data.api_keys.forEach(key => {
-          const row = document.createElement('tr');
-          row.className = 'border-t dark:border-gray-700';
-          row.innerHTML = `
-            <td class="p-3">${key.project_name}</td>
-            <td class="p-3 font-mono">${key.api_key}</td>
-            <td class="p-3">${new Date(key.created_at).toLocaleString()}</td>
-          `;
-          tbody.appendChild(row);
-        });
-      })
-      .catch(error => {
-        window.location.href = 'login.html?error=' + encodeURIComponent('Failed to load user data');
-      });
   </script>
 </body>
 </html>

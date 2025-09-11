@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Michitai API</title>
+    <title>Register - Multiplayer API</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -68,7 +68,7 @@
             <div class="flex justify-between items-center h-16">
                 <a href="index.php" class="text-white text-2xl font-bold flex items-center">
                     <i class="fas fa-gamepad mr-2"></i>
-                    Michitai API
+                    Multiplayer API
                 </a>
                 <div class="flex items-center space-x-4">
                     <a href="index.php" class="text-white hover:text-gray-200 px-4 py-2 rounded-lg transition">
@@ -93,13 +93,6 @@
                     <h2 class="text-3xl font-bold text-white mb-2">Create Account</h2>
                     <p class="text-white/70">Join our platform today</p>
                 </div>
-
-                <?php if (isset($_GET['error'])): ?>
-                <div class="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-6 flex items-center">
-                    <i class="fas fa-exclamation-circle mr-2"></i>
-                    <span><?php echo htmlspecialchars($_GET['error']); ?></span>
-                </div>
-                <?php endif; ?>
 
                 <form action="php/register.php" method="POST" class="space-y-6">
                     <div>
@@ -143,7 +136,7 @@
                             <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600 rounded bg-white/5" required>
                         </div>
                         <label for="terms" class="ml-3 block text-sm text-white/80">
-                            I agree to the <a href="#" class="text-purple-300 hover:text-white font-medium">Terms of Service</a> and <a href="#" class="text-purple-300 hover:text-white font-medium">Privacy Policy</a>
+                            I agree to the <a href="../v2/terms.html" target="_blank" class="text-purple-300 hover:text-white font-medium">Terms of Service</a> and <a href="../v2/privacy.html" target="_blank" class="text-purple-300 hover:text-white font-medium">Privacy Policy</a>
                         </label>
                     </div>
                     
@@ -157,18 +150,6 @@
                         <div class="absolute inset-0 flex items-center">
                             <div class="w-full border-t border-white/10"></div>
                         </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-transparent text-white/60">Or sign up with</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6 grid grid-cols-2 gap-3">
-                        <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-white/10 rounded-lg shadow-sm bg-white/5 text-sm font-medium text-white hover:bg-white/10">
-                            <i class="fab fa-google text-red-400"></i>
-                        </a>
-                        <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-white/10 rounded-lg shadow-sm bg-white/5 text-sm font-medium text-white hover:bg-white/10">
-                            <i class="fab fa-github text-gray-300"></i>
-                        </a>
                     </div>
                     
                     <p class="mt-6 text-center text-sm text-white/60">
