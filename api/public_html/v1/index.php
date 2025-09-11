@@ -195,64 +195,8 @@ require_once 'php/config.php';
                     <div class="col-span-6">Description</div>
                 </div>
                 
-                <!-- Authentication -->
-                <div class="p-4 border-b border-white/10">
-                    <h4 class="text-white/60 text-sm font-semibold mb-3">Authentication</h4>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/register</div>
-                            <div class="col-span-6">Register new user</div>
-                        </div>
-                        <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/login</div>
-                            <div class="col-span-6">Log in & get confirmation</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- User Data -->
-                <div class="p-4 border-b border-white/10">
-                    <h4 class="text-white/60 text-sm font-semibold mb-3">User Data</h4>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/store_data</div>
-                            <div class="col-span-6">Store user data (e.g. stats/inventory)</div>
-                        </div>
-                        <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/get_data?key=inventory</div>
-                            <div class="col-span-6">Get stored JSON user data</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Matchmaking -->
-                <div class="p-4 border-b border-white/10">
-                    <h4 class="text-white/60 text-sm font-semibold mb-3">Matchmaking</h4>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/matchmaking/create</div>
-                            <div class="col-span-6">Create matchmaking session</div>
-                        </div>
-                        <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/matchmaking/join</div>
-                            <div class="col-span-6">Join matchmaking session</div>
-                        </div>
-                        <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/matchmaking/find</div>
-                            <div class="col-span-6">Get all players in sessions</div>
-                        </div>
-                    </div>
-                </div>
-                
                 <!-- Game Players -->
-                <div class="p-4 border-t border-white/10">
+                <div class="p-4">
                     <h4 class="text-white/60 text-sm font-semibold mb-3">Game Players</h4>
                     <div class="space-y-4">
                         <div class="grid grid-cols-12 items-center">
