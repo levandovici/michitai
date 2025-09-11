@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Multiplayer API</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .animated-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen animated-bg">
+    <!-- Header -->
+    <header class="glass-effect border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <img src="logo.png" alt="Multiplayer API" class="w-6 h-6">
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white">Multiplayer API</h1>
+                        <p class="text-xs text-white/70">Terms of Service</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <a href="index.html" class="text-white/70 hover:text-white transition-colors font-medium">Home</a>
+                    <a href="login.html" class="text-white/70 hover:text-white transition-colors font-medium">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-6 lg:px-8 py-12">
+        <div class="glass-effect rounded-2xl p-8 lg:p-12">
+            <h1 class="text-4xl font-bold text-white mb-8">Terms of Service</h1>
+            <p class="text-white/70 mb-8">Last updated: September 11, 2025</p>
+
+            <div class="space-y-8 text-white/80">
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">1. Acceptance of Terms</h2>
+                    <p>By accessing and using Multiplayer API services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">2. Service Description</h2>
+                    <p class="mb-4">Multiplayer API provides:</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>REST API endpoints for multiplayer game development</li>
+                        <li>Visual logic constructor for game mechanics</li>
+                        <li>Player data management and authentication</li>
+                        <li>Real-time game room and community features</li>
+                        <li>Payment processing and subscription management</li>
+                        <li>C# SDK and development tools</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">3. Account Registration</h2>
+                    <div class="space-y-4">
+                        <p>To use our services, you must:</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Provide accurate and complete registration information</li>
+                            <li>Maintain the security of your account credentials</li>
+                            <li>Be at least 13 years old or have parental consent</li>
+                            <li>Use the service in compliance with applicable laws</li>
+                        </ul>
+                        
+                        <div class="bg-white/5 rounded-lg p-4">
+                            <p class="text-white/90"><strong>Account Security:</strong> You are responsible for all activities that occur under your account. Notify us immediately of any unauthorized use.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">4. Subscription Plans and Billing</h2>
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-white mb-2">Plan Types</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-white/5 rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-2">Free Plan</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• 250 MB storage</li>
+                                    <li>• 1 game</li>
+                                    <li>• 100 concurrent players</li>
+                                    <li>• 1K API calls/day</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-2">Standard - $50/month</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• 1 GB storage</li>
+                                    <li>• 1 game</li>
+                                    <li>• 1K concurrent players</li>
+                                    <li>• 10K API calls/day</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-2">Pro - $200/month</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li>• 2.5 GB storage</li>
+                                    <li>• 3 games</li>
+                                    <li>• 2K concurrent players</li>
+                                    <li>• 1M API calls/day</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-lg font-medium text-white mb-2 mt-6">Billing Terms</h3>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Subscriptions are billed monthly in advance</li>
+                            <li>Payments are processed securely through PayPal</li>
+                            <li>Failed payments may result in service suspension</li>
+                            <li>Refunds are provided on a case-by-case basis</li>
+                            <li>You may cancel your subscription at any time</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">5. Usage Limits and Fair Use</h2>
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-white mb-2">Concurrent Usage Limits</h3>
+                        <div class="bg-white/5 rounded-lg p-4">
+                            <p class="text-white/90 mb-3">Each plan has concurrent usage limits to ensure optimal performance for all users:</p>
+                            <ul class="space-y-2">
+                                <li><strong>Free:</strong> Up to 100 concurrent players</li>
+                                <li><strong>Standard:</strong> Up to 1,000 concurrent players</li>
+                                <li><strong>Pro:</strong> Up to 2,000 concurrent players</li>
+                            </ul>
+                            <p class="text-white/70 text-sm mt-3">Storage and infrastructure scale automatically as needed.</p>
+                        </div>
+                        
+                        <h3 class="text-lg font-medium text-white mb-2">Prohibited Uses</h3>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Attempting to exceed plan limits through technical means</li>
+                            <li>Using the service for illegal or harmful activities</li>
+                            <li>Sharing account credentials with unauthorized users</li>
+                            <li>Reverse engineering or attempting to access source code</li>
+                            <li>Interfering with the service or other users' access</li>
+                            <li>Creating excessive load that impacts other users</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">6. Data and Content</h2>
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-white mb-2">Your Content</h3>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>You retain ownership of all content you create</li>
+                            <li>You grant us license to store and process your content</li>
+                            <li>You are responsible for the legality of your content</li>
+                            <li>We may remove content that violates these terms</li>
+                        </ul>
+                        
+                        <h3 class="text-lg font-medium text-white mb-2">Data Backup</h3>
+                        <p>While we maintain regular backups, you are responsible for maintaining your own backups of critical data. We recommend regular exports of your game configurations and player data.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">7. Intellectual Property</h2>
+                    <div class="space-y-4">
+                        <p>Our service and its original content, features, and functionality are and will remain the exclusive property of Multiplayer API and its licensors. The service is protected by copyright, trademark, and other laws of both the Republic of Moldova and foreign countries.</p>
+                        <p>You agree not to reproduce, duplicate, copy, sell, resell or exploit any portion of the service without our express written permission.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">8. Termination</h2>
+                    <p>We may terminate or suspend your account and bar access to the service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms.</p>
+                    <p class="mt-4">Upon termination, your right to use the service will immediately cease. If you wish to terminate your account, you may simply discontinue using the service.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">9. Limitation of Liability</h2>
+                    <div class="space-y-4">
+                        <p>To the maximum extent permitted by law:</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>In no event shall Multiplayer API, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service.</li>
+                            <li>Your use of the service is at your sole risk. The service is provided on an "AS IS" and "AS AVAILABLE" basis.</li>
+                            <li>We do not warrant that the service will function uninterrupted, secure or available at any particular time or location.</li>
+                            <li>We do not warrant that the service is free of viruses or other harmful components.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">10. Governing Law</h2>
+                    <p>These Terms shall be governed and construed in accordance with the laws of the Republic of Moldova, without regard to its conflict of law provisions.</p>
+                    <p class="mt-4">Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">11. Changes to Terms</h2>
+                    <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
+                    <p class="mt-4">By continuing to access or use our service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the service.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-semibold text-white mb-4">12. Contact Information</h2>
+                    <div class="bg-white/5 rounded-lg p-6">
+                        <p class="text-white/90">If you have any questions about these Terms, please contact us:</p>
+                        <ul class="mt-4 space-y-2">
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope text-blue-400 w-5 mr-3"></i>
+                                <a href="mailto:support@michitai.com" class="text-blue-400 hover:text-blue-300">support@michitai.com</a>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone text-blue-400 w-5 mr-3"></i>
+                                <a href="tel:+37378814810" class="text-blue-400 hover:text-blue-300">+373 788 14810</a>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-white/20">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <a href="index.html" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold border-0">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                    </a>
+                    <div class="text-sm text-white/60 text-center sm:text-right">
+                        <p>© 2025 Nichita Levandovici. All rights reserved.</p>
+                        <p class="mt-1">
+                            <a href="terms.html" class="text-blue-400 hover:text-blue-300">Terms of Service</a> • 
+                            <a href="privacy.html" class="text-blue-400 hover:text-blue-300">Privacy Policy</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
