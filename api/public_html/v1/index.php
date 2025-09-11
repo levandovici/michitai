@@ -318,32 +318,111 @@ public class ApiExample : MonoBehaviour
                         All endpoints return JSON responses with consistent error handling.
                     </p>
                     <div class="space-y-4">
+                        <!-- Register Player -->
                         <div class="bg-black/50 p-4 rounded-lg">
                             <div class="flex items-center text-sm text-green-400 mb-2">
                                 <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
-                                <span class="font-mono">/api/store_data</span>
+                                <span class="font-mono">/api/games/players</span>
+                                <span class="ml-2 text-xs text-gray-400">(Requires API Key in header)</span>
                             </div>
+                            <div class="text-xs text-gray-400 mb-2">Request:</div>
+                            <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+  "player_name": "player123",
+  "player_data": {
+    "level": 1,
+    "class": "warrior"
+  }
+}</pre>
+                            <div class="text-xs text-gray-400 mb-2">Response (201 Created):</div>
                             <pre class="text-xs text-gray-300 overflow-x-auto">{
-  "key": "inventory",
-  "value": {
-    "gold": 200,
-    "items": ["sword", "shield"]
+  "success": true,
+  "data": {
+    "player_id": 42,
+    "private_key": "a1b2c3d4e5f6g7h8i9j0",
+    "player_name": "player123",
+    "game_id": 5
   }
 }</pre>
                         </div>
+
+                        <!-- Player Login -->
+                        <div class="bg-black/50 p-4 rounded-lg">
+                            <div class="flex items-center text-sm text-green-400 mb-2">
+                                <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
+                                <span class="font-mono">/api/games/players/login</span>
+                            </div>
+                            <div class="text-xs text-gray-400 mb-2">Request (with X-Private-Key header):</div>
+                            <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{}</pre>
+                            <div class="text-xs text-gray-400 mb-2">Response (200 OK):</div>
+                            <pre class="text-xs text-gray-300 overflow-x-auto">{
+  "success": true,
+  "data": {
+    "player_id": 42,
+    "player_name": "player123",
+    "game_id": 5,
+    "is_active": true,
+    "player_data": {
+      "level": 1,
+      "class": "warrior"
+    },
+    "last_login": "2025-09-11 12:30:45"
+  }
+}</pre>
+                        </div>
+
+                        <!-- Get Game Data -->
                         <div class="bg-black/50 p-4 rounded-lg">
                             <div class="flex items-center text-sm text-blue-400 mb-2">
                                 <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
-                                <span class="font-mono">/api/get_data?key=inventory</span>
+                                <span class="font-mono">/api/games/data</span>
+                                <span class="ml-2 text-xs text-gray-400">(Requires API Key in header)</span>
                             </div>
+                            <div class="text-xs text-gray-400 mb-2">Response (200 OK):</div>
                             <pre class="text-xs text-gray-300 overflow-x-auto">{
-  "status": "success",
+  "success": true,
+  "game_id": 5,
   "data": {
-    "key": "inventory",
-    "value": {
-      "gold": 200,
-      "items": ["sword", "shield"]
+    "name": "Epic Adventure",
+    "version": "1.0.0",
+    "max_players": 100,
+    "game_state": "lobby",
+    "settings": {
+      "difficulty": "normal",
+      "allow_pvp": true
     }
+  }
+}</pre>
+                        </div>
+
+                        <!-- Update Player Data -->
+                        <div class="bg-black/50 p-4 rounded-lg">
+                            <div class="flex items-center text-sm text-purple-400 mb-2">
+                                <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">PUT</span>
+                                <span class="font-mono">/api/games/players/data</span>
+                                <span class="ml-2 text-xs text-gray-400">(Requires Private Key in header)</span>
+                            </div>
+                            <div class="text-xs text-gray-400 mb-2">Request:</div>
+                            <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+  "level": 2,
+  "experience": 150,
+  "inventory": ["sword", "potion"],
+  "position": {"x": 100, "y": 200}
+}</pre>
+                            <div class="text-xs text-gray-400 mb-2">Response (200 OK):</div>
+                            <pre class="text-xs text-gray-300 overflow-x-auto">{
+  "success": true,
+  "message": "Player data updated successfully"
+}</pre>
+                        </div>
+
+                        <!-- Error Response Example -->
+                        <div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
+                            <div class="text-sm text-red-400 mb-2">Error Response (401 Unauthorized):</div>
+                            <pre class="text-xs text-red-300 overflow-x-auto">{
+  "success": false,
+  "error": {
+    "code": "unauthorized",
+    "message": "Invalid or missing API key"
   }
 }</pre>
                         </div>
