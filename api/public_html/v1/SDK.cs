@@ -15,112 +15,25 @@ namespace Michitai.SDK
     {
         private readonly HttpClient _httpClient;
         private const string API_BASE_URL = "https://api.michitai.com/v1/php";
-        private string _apiToken;
-        private string _sessionToken;
+        private readonly string _apiKey;
 
         /// <summary>
-        /// Event triggered when authentication is required
+        /// Initialize a new instance of the MichitaiClient with API key authentication
         /// </summary>
-        public event Action OnAuthenticationRequired;
-
-        /// <summary>
-        /// Indicates if the client is currently authenticated
-        /// </summary>
-        public bool IsAuthenticated => !string.IsNullOrEmpty(_apiToken);
-
-        /// <summary>
-        /// Initialize a new instance of the MichitaiClient
-        /// </summary>
-        public MichitaiClient()
+        /// <param name="apiKey">Your Michitai API key</param>
+        /// <exception cref="ArgumentException">Thrown when API key is null or empty</exception>
+        public MichitaiClient(string apiKey)
         {
+            if (string.IsNullOrEmpty(apiKey))
+                throw new ArgumentException("API key is required", nameof(apiKey));
+
+            _apiKey = apiKey;
             _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
             _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+            _httpClient.DefaultRequestHeaders.Add("X-API-Key", _apiKey);
         }
-
-        #region Authentication
-
-        /// <summary>
-        /// Register a new player
-        /// </summary>
-        /// <param name="username">Player's username</param>
-        /// <param name="email">Player's email</param>
-        /// <param name="password">Player's password</param>
-        /// <returns>Player registration response</returns>
-        public async Task<PlayerRegistrationResponse> RegisterPlayerAsync(string username, string email, string password)
-        {
-            var request = new
-            {
-                username,
-                email,
-                password
-            };
-
-            var response = await PostAsync<PlayerRegistrationResponse>("/games/players", request);
-            
-            if (response != null && !string.IsNullOrEmpty(response.ApiToken))
-            {
-                _apiToken = response.ApiToken;
-                _sessionToken = response.SessionToken;
-                UpdateAuthorizationHeader();
-            }
-            
-            return response;
-        }
-
-        /// <summary>
-        /// Authenticate a player
-        /// </summary>
-        /// <param name="email">Player's email</param>
-        /// <param name="password">Player's password</param>
-        /// <returns>Authentication response</returns>
-        public async Task<AuthResponse> LoginAsync(string email, string password)
-        {
-            var request = new
-            {
-                email,
-                password
-            };
-
-            var response = await PostAsync<AuthResponse>("/games/players/login", request);
-            
-            if (response != null)
-            {
-                _apiToken = response.ApiToken;
-                _sessionToken = response.SessionToken;
-                UpdateAuthorizationHeader();
-            }
-            
-            return response;
-        }
-
-        /// <summary>
-        /// Set authentication tokens (useful for restoring session)
-        /// </summary>
-        /// <param name="apiToken">API token</param>
-        /// <param name="sessionToken">Session token</param>
-        public void SetAuthTokens(string apiToken, string sessionToken)
-        {
-            _apiToken = apiToken;
-            _sessionToken = sessionToken;
-            UpdateAuthorizationHeader();
-        }
-
-        private void UpdateAuthorizationHeader()
-        {
-            if (!string.IsNullOrEmpty(_apiToken))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiToken);
-                _httpClient.DefaultRequestHeaders.Add("X-API-Token", _apiToken);
-            }
-            else
-            {
-                _httpClient.DefaultRequestHeaders.Authorization = null;
-                _httpClient.DefaultRequestHeaders.Remove("X-API-Token");
-            }
-        }
-
-        #endregion
 
         #region Game Data
 
@@ -260,46 +173,23 @@ namespace Michitai.SDK
 
     #region Data Models
 
-    public class PlayerRegistrationResponse
-    {
-        public string PlayerId { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string ApiToken { get; set; }
-        public string SessionToken { get; set; }
-        public DateTime CreatedAt { get; set; }
-    }
-
-    public class AuthResponse
-    {
-        public string PlayerId { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string ApiToken { get; set; }
-        public string SessionToken { get; set; }
-        public DateTime LastLogin { get; set; }
-    }
-
     public class GameData
     {
-        public string GameId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public string Version { get; set; }
-        public Dictionary<string, object> Settings { get; set; }
-        public DateTime LastUpdated { get; set; }
+        public string JsonStructure { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     public class PlayerData
     {
-        public string PlayerId { get; set; }
+        public int Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
-        public int Level { get; set; }
-        public int Experience { get; set; }
-        public Dictionary<string, object> Stats { get; set; }
-        public Dictionary<string, object> Inventory { get; set; }
-        public DateTime LastActive { get; set; }
+        public string JsonData { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? LastLogin { get; set; }
     }
 
     public class PlayerInfo
