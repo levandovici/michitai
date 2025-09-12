@@ -268,9 +268,12 @@ require_once 'php/config.php';
                         Seamlessly integrate the API into your Unity projects with our C# SDK. 
                         Handles authentication, HTTP requests, JSON parsing, and project key management.
                     </p>
-                    <div class="flex justify-end mb-4">
+                    <div class="flex justify-end mb-4 space-x-4">
                         <a href="#" id="downloadSdk" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center">
                             <i class="fas fa-download mr-2"></i> Download C# SDK
+                        </a>
+                        <a href="#" id="downloadExample" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center">
+                            <i class="fas fa-code mr-2"></i> Download Example
                         </a>
                     </div>
                     <div class="bg-black/50 p-4 rounded-lg mb-6 overflow-x-auto">
@@ -750,7 +753,235 @@ namespace Michitai.SDK
                         document.body.removeChild(a);
                         URL.revokeObjectURL(url);
                     });
+
+                    // Add event listener for downloading the example
+                    document.getElementById('downloadExample').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const exampleCode = `using System;
+using System.Threading.Tasks;
+
+namespace Michitai.Example
+{
+    /// <summary>
+    /// Example class demonstrating how to use the Michitai SDK
+    /// </summary>
+    public class Game
+    {
+        private readonly Michitai.SDK.MichitaiClient _apiClient;
+
+        public Game(string apiKey)
+        {
+            // Initialize the API client with your API key
+            _apiClient = new Michitai.SDK.MichitaiClient(apiKey);
+            
+            // Subscribe to authentication events
+            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired;
+        }
+
+        /// <summary>
+        /// Example method to demonstrate game data operations
+        /// </summary>
+        public async Task RunGameExample()
+        {
+            try
+            {
+                Console.WriteLine("Fetching game data...");
+                var gameData = await _apiClient.GetGameDataAsync();
+                Console.WriteLine($"Game: {gameData.Name}, Last Updated: {gameData.UpdatedAt}");
+
+                Console.WriteLine("\nFetching player data...");
+                var playerData = await _apiClient.GetPlayerDataAsync();
+                Console.WriteLine($"Player: {playerData.Username}, Level: {playerData.Level}");
+
+                // Example of updating player data
+                Console.WriteLine("\nUpdating player data...");
+                playerData.Level += 1;
+                playerData.LastLogin = DateTime.UtcNow;
+                
+                var updatedPlayer = await _apiClient.UpdatePlayerDataAsync(playerData);
+                Console.WriteLine($"Player level updated to: {updatedPlayer.Level}");
+
+                // Example of listing all players (admin only)
+                Console.WriteLine("\nFetching all players...");
+                var players = await _apiClient.ListPlayersAsync();
+                foreach (var player in players)
+                {
+                    Console.WriteLine($"- {player.Username} (Last login: {player.LastLogin})");
+                }
+            }
+            catch (Michitai.SDK.MichitaiException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                if (!string.IsNullOrEmpty(ex.ResponseContent))
+                {
+                    Console.WriteLine($"Details: {ex.ResponseContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        private void OnAuthenticationRequired()
+        {
+            Console.WriteLine("Authentication required! Please provide valid API credentials.");
+            // Here you would typically show a login dialog or redirect to login page
+        }
+
+        /// <summary>
+        /// Entry point for the example
+        /// </summary>
+        public static async Task Main(string[] args)
+        {
+            Console.WriteLine("Michitai Game Example");
+            Console.WriteLine("=====================\n");
+
+            // Replace with your actual API key
+            string apiKey = "your-api-key-here";
+            
+            var game = new Game(apiKey);
+            await game.RunGameExample();
+
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}`;
+
+                        const blob = new Blob([exampleCode], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'Game.cs';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    });
                     </script>
+                </div>
+
+                <!-- Example Usage -->
+                <div class="glass-effect p-8 rounded-2xl mt-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-yellow-600 to-orange-600 flex items-center justify-center mr-4">
+                            <i class="fas fa-code-branch text-2xl text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white">Example Usage</h4>
+                    </div>
+                    <p class="text-white/80 mb-6">
+                        Here's a complete example of how to use the Michitai SDK in your C# application.
+                        This example demonstrates common operations like fetching game data, updating player information,
+                        and handling authentication.
+                    </p>
+                    
+                    <div class="bg-black/50 p-4 rounded-lg mb-6 overflow-x-auto">
+                        <pre><code class="language-csharp">using System;
+using System.Threading.Tasks;
+
+namespace Michitai.Example
+{
+    /// &lt;summary&gt;
+    /// Example class demonstrating how to use the Michitai SDK
+    /// &lt;/summary&gt;
+    public class Game
+    {
+        private readonly Michitai.SDK.MichitaiClient _apiClient;
+
+        public Game(string apiKey)
+        {
+            // Initialize the API client with your API key
+            _apiClient = new Michitai.SDK.MichitaiClient(apiKey);
+            
+            // Subscribe to authentication events
+            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired;
+        }
+
+        /// &lt;summary&gt;
+        /// Example method to demonstrate game data operations
+        /// &lt;/summary&gt;
+        public async Task RunGameExample()
+        {
+            try
+            {
+                Console.WriteLine("Fetching game data...");
+                var gameData = await _apiClient.GetGameDataAsync();
+                Console.WriteLine($"Game: {gameData.Name}, Last Updated: {gameData.UpdatedAt}");
+
+                Console.WriteLine("\nFetching player data...");
+                var playerData = await _apiClient.GetPlayerDataAsync();
+                Console.WriteLine($"Player: {playerData.Username}, Level: {playerData.Level}");
+
+                // Example of updating player data
+                Console.WriteLine("\nUpdating player data...");
+                playerData.Level += 1;
+                playerData.LastLogin = DateTime.UtcNow;
+                
+                var updatedPlayer = await _apiClient.UpdatePlayerDataAsync(playerData);
+                Console.WriteLine($"Player level updated to: {updatedPlayer.Level}");
+
+                // Example of listing all players (admin only)
+                Console.WriteLine("\nFetching all players...");
+                var players = await _apiClient.ListPlayersAsync();
+                foreach (var player in players)
+                {
+                    Console.WriteLine($"- {player.Username} (Last login: {player.LastLogin})");
+                }
+            }
+            catch (Michitai.SDK.MichitaiException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                if (!string.IsNullOrEmpty(ex.ResponseContent))
+                {
+                    Console.WriteLine($"Details: {ex.ResponseContent}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+        }
+
+        private void OnAuthenticationRequired()
+        {
+            Console.WriteLine("Authentication required! Please provide valid API credentials.");
+            // Here you would typically show a login dialog or redirect to login page
+        }
+
+        /// &lt;summary&gt;
+        /// Entry point for the example
+        /// &lt;/summary&gt;
+        public static async Task Main(string[] args)
+        {
+            Console.WriteLine("Michitai Game Example");
+            Console.WriteLine("=====================\n");
+
+            // Replace with your actual API key
+            string apiKey = "your-api-key-here";
+            
+            var game = new Game(apiKey);
+            await game.RunGameExample();
+
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}</code></pre>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-800/50">
+                        <h5 class="text-blue-300 font-medium mb-2 flex items-center">
+                            <i class="fas fa-info-circle mr-2"></i> How to use this example
+                        </h5>
+                        <ol class="text-blue-100/80 text-sm space-y-2 list-decimal list-inside">
+                            <li>Create a new C# console application in Visual Studio or your preferred IDE</li>
+                            <li>Add the downloaded <code class="bg-blue-900/50 px-1 py-0.5 rounded">SDK.cs</code> file to your project</li>
+                            <li>Copy this example code into your <code class="bg-blue-900/50 px-1 py-0.5 rounded">Program.cs</code> file</li>
+                            <li>Replace <code class="bg-blue-900/50 px-1.5 py-0.5 rounded">your-api-key-here</code> with your actual API key</li>
+                            <li>Run the application to see the SDK in action</li>
+                        </ol>
+                    </div>
                 </div>
                 
                 <!-- REST API -->
