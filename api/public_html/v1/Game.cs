@@ -1,5 +1,7 @@
+#nullable enable
 using System;
 using System.Threading.Tasks;
+using Michitai.SDK;
 
 namespace Michitai.Example
 {
@@ -8,15 +10,18 @@ namespace Michitai.Example
     /// </summary>
     public class Game
     {
-        private readonly Michitai.SDK.MichitaiClient _apiClient;
+        private readonly MichitaiClient _apiClient;
 
         public Game(string apiKey)
         {
+            if (string.IsNullOrEmpty(apiKey))
+                throw new ArgumentException("API key cannot be null or empty", nameof(apiKey));
+                
             // Initialize the API client with your API key
-            _apiClient = new Michitai.SDK.MichitaiClient(apiKey);
+            _apiClient = new MichitaiClient(apiKey);
             
             // Subscribe to authentication events
-            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired;
+            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired!;
         }
 
         /// <summary>
@@ -50,7 +55,7 @@ namespace Michitai.Example
                     Console.WriteLine($"- {player.Username} (Last login: {player.LastLogin})");
                 }
             }
-            catch (Michitai.SDK.MichitaiException ex)
+            catch (MichitaiException ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
                 if (!string.IsNullOrEmpty(ex.ResponseContent))
@@ -68,6 +73,9 @@ namespace Michitai.Example
         {
             Console.WriteLine("Authentication required! Please provide valid API credentials.");
             // Here you would typically show a login dialog or redirect to login page
+            
+            // You might want to handle retry logic or exit the application
+            // Environment.Exit(1); // Uncomment to exit on authentication failure
         }
 
         /// <summary>
@@ -75,15 +83,27 @@ namespace Michitai.Example
         /// </summary>
         public static async Task Main(string[] args)
         {
-            Console.WriteLine("Michitai Game Example");
-            Console.WriteLine("=====================\n");
+            try
+            {
+                Console.WriteLine("Michitai Game Example");
+                Console.WriteLine("=====================\n");
 
-            // Replace with your actual API key
-            string apiKey = "your-api-key-here";
+                // Get API key from command line arguments or use a default one
+                string apiKey = args.Length > 0 ? args[0] : "your-api-key-here";
+                
+                if (apiKey == "your-api-key-here")
+                {
+                    Console.WriteLine("Warning: Using default API key. Please provide your own API key as a command line argument.");
+                }
+                
+                var game = new Game(apiKey);
+                await game.RunGameExample();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
             
-            var game = new Game(apiKey);
-            await game.RunGameExample();
-
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
         }

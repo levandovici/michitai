@@ -16,6 +16,11 @@ namespace Michitai.SDK
         private readonly HttpClient _httpClient;
         private const string API_BASE_URL = "https://api.michitai.com/v1/php";
         private readonly string _apiKey;
+        
+        /// <summary>
+        /// Event raised when authentication is required
+        /// </summary>
+        public event Action OnAuthenticationRequired;
 
         /// <summary>
         /// Initialize a new instance of the MichitaiClient with API key authentication
@@ -184,11 +189,12 @@ namespace Michitai.SDK
 
     public class PlayerData
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string JsonData { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public int Id { get; set; } = 0;
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string JsonData { get; set; } = string.Empty;
+        public int Level { get; set; } = 1;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? LastLogin { get; set; }
     }
 

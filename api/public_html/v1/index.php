@@ -296,6 +296,11 @@ namespace Michitai.SDK
         private readonly HttpClient _httpClient;
         private const string API_BASE_URL = "https://api.michitai.com/v1/php";
         private readonly string _apiKey;
+        
+        /// <summary>
+        /// Event raised when authentication is required
+        /// </summary>
+        public event Action OnAuthenticationRequired;
 
         /// <summary>
         /// Initialize a new instance of the MichitaiClient with API key authentication
@@ -464,11 +469,12 @@ namespace Michitai.SDK
 
     public class PlayerData
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string JsonData { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public int Id { get; set; } = 0;
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string JsonData { get; set; } = string.Empty;
+        public int Level { get; set; } = 1;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? LastLogin { get; set; }
     }
 
@@ -701,11 +707,12 @@ namespace Michitai.SDK
 
     public class PlayerData
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string JsonData { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public int Id { get; set; } = 0;
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string JsonData { get; set; } = string.Empty;
+        public int Level { get; set; } = 1;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? LastLogin { get; set; }
     }
 
@@ -764,23 +771,15 @@ namespace Michitai.Example
 {
     /// <summary>
     /// Example class demonstrating how to use the Michitai SDK
-    /// </summary>
+    #region Example Usage
     public class Game
     {
         private readonly Michitai.SDK.MichitaiClient _apiClient;
 
         public Game(string apiKey)
         {
-            // Initialize the API client with your API key
-            _apiClient = new Michitai.SDK.MichitaiClient(apiKey);
-            
-            // Subscribe to authentication events
-            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired;
-        }
-
-        /// <summary>
-        /// Example method to demonstrate game data operations
-        /// </summary>
+            if (string.IsNullOrEmpty(apiKey))
+                throw new ArgumentException("API key cannot be null or empty", nameof(apiKey));
         public async Task RunGameExample()
         {
             try
@@ -834,15 +833,27 @@ namespace Michitai.Example
         /// </summary>
         public static async Task Main(string[] args)
         {
-            Console.WriteLine("Michitai Game Example");
-            Console.WriteLine("=====================\n");
+            try
+            {
+                Console.WriteLine("Michitai Game Example");
+                Console.WriteLine("=====================\n");
 
-            // Replace with your actual API key
-            string apiKey = "your-api-key-here";
+                // Get API key from command line arguments or use a default one
+                string apiKey = args.Length > 0 ? args[0] : "your-api-key-here";
+                
+                if (apiKey == "your-api-key-here")
+                {
+                    Console.WriteLine("Warning: Using default API key. Please provide your own API key as a command line argument.");
+                }
+                
+                var game = new Game(apiKey);
+                await game.RunGameExample();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
             
-            var game = new Game(apiKey);
-            await game.RunGameExample();
-
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
         }
@@ -891,11 +902,14 @@ namespace Michitai.Example
 
         public Game(string apiKey)
         {
+            if (string.IsNullOrEmpty(apiKey))
+                throw new ArgumentException("API key cannot be null or empty", nameof(apiKey));
+                
             // Initialize the API client with your API key
             _apiClient = new Michitai.SDK.MichitaiClient(apiKey);
             
             // Subscribe to authentication events
-            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired;
+            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired!;
         }
 
         /// &lt;summary&gt;
@@ -954,15 +968,27 @@ namespace Michitai.Example
         /// &lt;/summary&gt;
         public static async Task Main(string[] args)
         {
-            Console.WriteLine("Michitai Game Example");
-            Console.WriteLine("=====================\n");
+            try
+            {
+                Console.WriteLine("Michitai Game Example");
+                Console.WriteLine("=====================\n");
 
-            // Replace with your actual API key
-            string apiKey = "your-api-key-here";
+                // Get API key from command line arguments or use a default one
+                string apiKey = args.Length > 0 ? args[0] : "your-api-key-here";
+                
+                if (apiKey == "your-api-key-here")
+                {
+                    Console.WriteLine("Warning: Using default API key. Please provide your own API key as a command line argument.");
+                }
+                
+                var game = new Game(apiKey);
+                await game.RunGameExample();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
             
-            var game = new Game(apiKey);
-            await game.RunGameExample();
-
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
         }
