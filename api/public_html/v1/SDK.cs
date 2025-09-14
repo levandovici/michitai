@@ -14,8 +14,9 @@ namespace Michitai.SDK
     public class MichitaiClient
     {
         private readonly HttpClient _httpClient;
-        private const string API_BASE_URL = "https://api.michitai.com/v1/php";
+        private const string API_BASE_URL = "https://api.michitai.com/v1";
         private readonly string _apiKey;
+        private readonly string _projectName;
         
         /// <summary>
         /// Event raised when authentication is required
@@ -27,17 +28,41 @@ namespace Michitai.SDK
         /// </summary>
         /// <param name="apiKey">Your Michitai API key</param>
         /// <exception cref="ArgumentException">Thrown when API key is null or empty</exception>
-        public MichitaiClient(string apiKey)
+        public MichitaiClient(string apiKey, string projectName = "default")
         {
             if (string.IsNullOrEmpty(apiKey))
                 throw new ArgumentException("API key is required", nameof(apiKey));
+            if (string.IsNullOrEmpty(projectName))
+                throw new ArgumentException("Project name is required", nameof(projectName));
 
-            _apiKey = apiKey;
-            _httpClient = new HttpClient();
+            _apiKey = apiKey.Trim();
+            _projectName = projectName.Trim();
+            
+            // Configure HTTP client with handler
+            var handler = new HttpClientHandler
+            {
+                UseDefaultCredentials = true,
+                AllowAutoRedirect = false,
+                UseCookies = false
+            };
+            
+            _httpClient = new HttpClient(handler);
+            
+            // Clear and set default headers
+            _httpClient.DefaultRequestHeaders.Clear();
+            
+            // Set content type and accept headers
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
-            _httpClient.DefaultRequestHeaders.Add("X-API-Key", _apiKey);
+                
+            // Add custom headers - using TryAddWithoutValidation to prevent duplicates
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-API-Key", _apiKey);
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("X-Project-Name", _projectName);
+            
+            // Set base address to avoid URL concatenation issues
+            _httpClient.BaseAddress = new Uri(API_BASE_URL);
         }
 
         #region Game Data
@@ -48,7 +73,84 @@ namespace Michitai.SDK
         /// <returns>Game data</returns>
         public async Task<GameData> GetGameDataAsync()
         {
-            return await GetAsync<GameData>("/games/data");
+            try 
+            {
+                // Log request details
+                var relativeUri = "game_data.php";
+                var requestUri = new Uri(_httpClient.BaseAddress, relativeUri);
+                
+                Console.WriteLine($"[DEBUG] Making GET request to: {requestUri}");
+                Console.WriteLine($"[DEBUG] Base Address: {_httpClient.BaseAddress}");
+                Console.WriteLine($"[DEBUG] Headers:");
+                foreach (var header in _httpClient.DefaultRequestHeaders)
+                {
+                    Console.WriteLine($"  {header.Key}: {string.Join(", ", header.Value)}");
+                }
+
+                // Create request message for more control
+                using var request = new HttpRequestMessage(HttpMethod.Get, relativeUri);
+                
+                // Add headers to the request
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                request.Headers.Add("X-Requested-With", "XMLHttpRequest");
+                
+                // Make the request with a timeout
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+                var response = await _httpClient.SendAsync(request, cts.Token);
+                
+                // Log the actual request that was sent
+                Console.WriteLine($"[DEBUG] Request URI: {request.RequestUri}");
+                Console.WriteLine($"[DEBUG] Request Headers: {string.Join(", ", request.Headers.Select(h => $"{h.Key}={string.Join(",", h.Value)}"))}");
+                
+                // Read response content
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseHeaders = string.Join("\n  ", 
+                    response.Headers.Select(h => $"{h.Key}: {string.Join(", ", h.Value)}"));
+                
+                Console.WriteLine($"[DEBUG] Response Status: {(int)response.StatusCode} {response.StatusCode}");
+                Console.WriteLine($"[DEBUG] Response Headers:\n  {responseHeaders}");
+                Console.WriteLine($"[DEBUG] Response Content (first 1000 chars):\n{responseContent.Substring(0, Math.Min(1000, responseContent.Length))}");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMessage = $"API request failed with status code {response.StatusCode}.";
+                    if (!string.IsNullOrEmpty(responseContent))
+                    {
+                        errorMessage += $"\nResponse: {responseContent}";
+                    }
+                    throw new MichitaiException(errorMessage);
+                }
+                
+                // Try to parse the response
+                try 
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        AllowTrailingCommas = true,
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    };
+                    
+                    var result = JsonSerializer.Deserialize<GameData>(responseContent, options);
+                    if (result == null)
+                    {
+                        throw new MichitaiException("Received null response from server");
+                    }
+                    return result;
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"[ERROR] JSON Deserialization Error: {ex.Message}");
+                    Console.WriteLine($"[ERROR] Response Content Type: {response.Content.Headers.ContentType}");
+                    Console.WriteLine($"[ERROR] Response Content (first 1000 chars):\n{responseContent.Substring(0, Math.Min(1000, responseContent.Length))}");
+                    throw new MichitaiException("Failed to deserialize server response. The server may be returning an error page instead of JSON.", ex);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error in GetGameDataAsync: {ex}");
+                throw;
+            }
         }
 
         /// <summary>
@@ -102,13 +204,34 @@ namespace Michitai.SDK
             try
             {
                 var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
+                Console.WriteLine($"GET Request: {url}");
+                
                 var response = await _httpClient.GetAsync(url);
-                await HandleResponse(response);
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                
+                Console.WriteLine($"Status Code: {(int)response.StatusCode} {response.StatusCode}");
+                Console.WriteLine($"Response Headers: {string.Join(", ", response.Headers.Select(h => $"{h.Key}={string.Join(",", h.Value)}"))}");
+                Console.WriteLine($"Response Content (first 500 chars): {responseContent.Substring(0, Math.Min(500, responseContent.Length))}");
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new MichitaiException($"API request failed with status code {response.StatusCode}. Response: {responseContent}");
+                }
+                
+                try 
+                {
+                    return JsonSerializer.Deserialize<T>(responseContent);
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"JSON Deserialization Error: {ex.Message}");
+                    Console.WriteLine($"Response Content: {responseContent}");
+                    throw new MichitaiException("Failed to deserialize response", ex);
+                }
             }
             catch (HttpRequestException ex)
             {
+                Console.WriteLine($"HTTP Request Error: {ex}");
                 throw new MichitaiException("Network error occurred", ex);
             }
         }

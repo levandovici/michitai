@@ -1,7 +1,25 @@
 <?php
-header('Content-Type: application/json');
-require_once 'config.php';
-require_once 'middleware.php';
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../logs/php_errors.log');
+
+// Create logs directory if it doesn't exist
+if (!is_dir(__DIR__ . '/../logs')) {
+    mkdir(__DIR__ . '/../logs', 0777, true);
+}
+
+// Log the request
+error_log("=== New Request ===");
+error_log("Request URI: " . $_SERVER['REQUEST_URI']);
+error_log("Method: " . $_SERVER['REQUEST_METHOD']);
+error_log("Headers: " . print_r(getallheaders(), true));
+
+try {
+    header('Content-Type: application/json');
+    require_once 'config.php';
+    require_once 'middleware.php';
 
 // Helper function to send JSON response
 function sendResponse($data, $statusCode = 200) {
@@ -28,26 +46,36 @@ try {
     // Route the request
     switch ($method) {
         case 'GET':
-            // Get game data for the authenticated user's project
-            $stmt = $pdo->prepare("
-                SELECT g.* 
-                FROM games g
-                JOIN api_keys ak ON g.user_id = ak.user_id
-                WHERE g.user_id = :user_id 
-                AND ak.project_name = :project_name
-                ORDER BY g.updated_at DESC
-                LIMIT 1
-            ");
-            
-            $stmt->execute([
-                'user_id' => $userId,
-                'project_name' => $projectName
-            ]);
-            
-            $game = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if (!$game) {
-                sendResponse([
+            try {
+                error_log("Preparing database query for user_id: " . $userId . ", project: " . $projectName);
+                
+                // Get game data for the authenticated user's project
+                $query = "
+                    SELECT g.* 
+                    FROM games g
+                    JOIN api_keys ak ON g.user_id = ak.user_id
+                    WHERE g.user_id = :user_id 
+                    AND ak.project_name = :project_name
+                    ORDER BY g.updated_at DESC
+                    LIMIT 1
+                ";
+                
+                error_log("Executing query: " . str_replace(["\n", "\t"], " ", $query));
+                
+                $stmt = $pdo->prepare($query);
+                $params = [
+                    'user_id' => $userId,
+                    'project_name' => $projectName
+                ];
+                
+                error_log("Query parameters: " . print_r($params, true));
+                
+                $stmt->execute($params);
+                $game = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$game) {
+                    error_log("No game found for user_id: " . $userId . " and project: " . $projectName);
+                    sendResponse([
                     'success' => false,
                     'error' => 'No game data found for this project'
                 ], 404);
@@ -161,5 +189,33 @@ try {
         
     default:
         sendResponse(['error' => 'Method not allowed'], 405);
+}
+
+} catch (PDOException $e) {
+    error_log("Database Error: " . $e->getMessage());
+    error_log("SQL State: " . $e->getCode());
+    sendResponse([
+        'success' => false,
+        'error' => 'Database error',
+        'debug' => [
+            'message' => $e->getMessage(),
+            'code' => $e->getCode(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]
+    ], 500);
+} catch (Exception $e) {
+    error_log("Unexpected Error: " . $e->getMessage());
+    error_log("Stack Trace: " . $e->getTraceAsString());
+    sendResponse([
+        'success' => false,
+        'error' => 'An unexpected error occurred',
+        'debug' => [
+            'message' => $e->getMessage(),
+            'code' => $e->getCode(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]
+    ], 500);
 }
 ?>

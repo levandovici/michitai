@@ -12,15 +12,12 @@ namespace Michitai.Example
     {
         private readonly MichitaiClient _apiClient;
 
-        public Game(string apiKey)
+        public Game(string apiKey, string projectName = "default")
         {
             if (string.IsNullOrEmpty(apiKey))
                 throw new ArgumentException("API key cannot be null or empty", nameof(apiKey));
                 
-            // Initialize the API client with your API key
-            _apiClient = new MichitaiClient(apiKey);
-            
-            // Subscribe to authentication events
+            _apiClient = new MichitaiClient(apiKey, projectName);
             _apiClient.OnAuthenticationRequired += OnAuthenticationRequired!;
         }
 
