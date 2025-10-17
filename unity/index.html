@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru" itemscope itemtype="https://schema.org/WebPage" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
@@ -41,7 +41,7 @@
     <link rel="apple-touch-icon" href="images/icon-192x192.png">
     <meta name="msapplication-TileImage" content="images/icon-192x192.png">
     <meta name="msapplication-TileColor" content="#2d3748">
-    <link rel="icon" href="images/levandovici_logo.png" type="image/png">
+    <link rel="icon" href="images/levandovici_logo.png" type="image/png" sizes="1255x1075">
     <!-- Resource Hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,7 +53,6 @@
     <!-- Fonts and Libraries -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"></noscript>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <style>
         /* Skip link styles */
         .skip-link {
@@ -115,19 +114,19 @@
         nav a:hover {
             color: #48bb78;
         }
-        .language-selector {
+        .social-links {
             display: flex;
             gap: 10px;
             align-items: center;
         }
-        .flag {
+        .social-icon, .flag {
             width: 28px;
             height: 20px;
             object-fit: cover;
             border-radius: 3px;
             transition: transform 0.3s ease;
         }
-        .flag:hover {
+        .social-icon:hover, .flag:hover {
             transform: scale(1.2);
         }
         .header-spacer {
@@ -205,6 +204,25 @@
             background: white;
             color: #1a202c;
         }
+        .youtube-btn {
+            background: #ff0000;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 32px;
+        }
+        .youtube-btn:hover {
+            background: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .youtube-btn img {
+            width: 28px;
+            height: 20px;
+            object-fit: cover;
+        }
         #course {
             padding: 120px 20px;
             background: #ffffff;
@@ -237,17 +255,6 @@
             padding-left: 24px;
             margin-bottom: 16px;
             font-size: 1.1rem;
-        }
-        /* Module styles moved to style.css */
-        
-        /* Button styles moved to style.css */
-        .chart-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background: #f7fafc;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
         #anniversary-banner {
             background: #f7fafc;
@@ -385,15 +392,17 @@
             color: #1a202c;
             margin-bottom: 12px;
         }
-        .game-info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-            font-size: 0.95rem;
-            color: #4a5568;
+        /* YouTube Videos Section */
+        #youtube-videos {
+            padding: 60px 0;
+            background-color: #f8f9fa;
         }
-        .game-info span {
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -534,7 +543,7 @@
                 flex-direction: column;
                 align-items: center;
             }
-            .language-selector {
+            .social-links {
                 justify-content: center;
                 margin-top: 12px;
             }
@@ -554,6 +563,10 @@
                 padding: 12px 24px;
                 font-size: 1rem;
             }
+            .youtube-btn img {
+                width: 24px;
+                height: 17px;
+            }
         }
     </style>
 </head>
@@ -571,6 +584,11 @@
                     <li role="none"><a href="#contact" role="menuitem">Контакты</a></li>
                 </ul>
             </nav>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@UnityLesson" target="_blank" aria-label="Посетить YouTube канал Unity Lesson">
+                    <img src="images/youtube.png" alt="YouTube" class="social-icon" width="28" height="20" loading="lazy">
+                </a>
+            </div>
         </div>
     </header>
     <div class="header-spacer"></div>
@@ -580,6 +598,7 @@
     <link rel="preload" href="images/nichita.jpg" as="image">
     <link rel="preload" href="images/en.png" as="image">
     <link rel="preload" href="images/ru.png" as="image">
+    <link rel="preload" href="images/youtube-icon.png" as="image">
     <link rel="preload" href="images/anniversary.png" as="image">
     <link rel="preload" href="images/zombie_frenzy_force_logo.png" as="image">
     <link rel="preload" href="images/monsters_rushing_logo.png" as="image">
@@ -594,10 +613,14 @@
             <h2 id="hero-heading">Онлайн курсы программирования и Unity</h2>
             <p>Присоединяйся к моим онлайн курсам по разработке игр на Unity и стань профессиональным гейм-девелопером! Первый урок — бесплатно!</p>
             <p class="free-lesson-message">Попробуй бесплатно! Первое занятие — без оплаты!</p>
-            <a href="#contact" class="btn free-lesson-btn" aria-label="Записаться на бесплатный урок (откроется форма контактов)">Записаться на бесплатный урок</a>
-            <a href="#course" class="btn secondary-btn" aria-label="Узнать больше о курсе">Узнать больше</a>
+
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 20px;">
+                <a href="#contact" class="btn free-lesson-btn" aria-label="Записаться на бесплатный урок (откроется форма контактов)">Записаться на бесплатный урок</a>
+                <a href="#course" class="btn secondary-btn" aria-label="Узнать больше о курсе">Узнать больше</a>
+            </div>
         </div>
     </section>
+    
     <section id="course" itemscope itemtype="https://schema.org/Course" role="region" aria-labelledby="course-heading">
         <meta itemprop="name" content="Курс по разработке игр на Unity">
         <meta itemprop="description" content="Комплексный курс по изучению C# и разработке игр на Unity с нуля до профессионального уровня.">
@@ -605,9 +628,7 @@
         <div class="container">
             <h2 id="course-heading">Онлайн курсы по разработке игр на Unity</h2>
             <p>Погрузись в мир геймдева с нуля до профессионального уровня! Этот курс сочетает теорию, практику и интерактивные задания, используя <strong>Monaco Editor</strong> для кодирования и встроенные тесты для проверки знаний. Освой <strong>C#</strong>, <strong>Unity</strong>, сетевые технологии, многопоточность и <strong>DOTS</strong>. Создай 2D, 3D и мультиплеерные игры, завершив курс портфолио-готовой игрой. Первый урок бесплатно!</p>
-            <div class="chart-container">
-                <canvas id="courseProgressChart"></canvas>
-            </div>
+            <p>Курс разделен на 12 модулей, которые постепенно вводят в мир разработки игр. Начни с основ C# и Unity, затем перейди к созданию 2D и 3D игр, изучи мультиплеер и оптимизацию, и закончи продвинутыми темами, включая DOTS и шейдеры. Каждый модуль включает практические задания и тесты для закрепления материала.</p>
             <div class="module">
                 <h3>Модуль 1: Основы программирования на C#</h3>
                 <p>Начни с основ C#, языка, лежащего в основе Unity. Изучи синтаксис, переменные, управляющие конструкции и объектно-ориентированное программирование (ООП). Научись работать с коллекциями и обрабатывать ошибки.</p>
@@ -856,24 +877,26 @@
         <div class="container">
             <h2 style="color: var(--text-color); margin-bottom: 20px; text-align: center;">9 августа 2025 — 10-я годовщина моего пути с Unity и разработкой игр!</h2>
             <p style="color: #4a5568; font-size: 1.2rem; margin-bottom: 20px;">Празднуем десятилетие создания игр и преподавания программирования! Спасибо за вашу поддержку!</p>
-            <img src="images/anniversary.png" alt="10 лет с Unity - Никита Левандович" width="1200" height="630" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); display: block; margin: 0 auto;" loading="lazy">
+            <a href="https://www.youtube.com/@UnityLesson" target="_blank" aria-label="Посетить YouTube канал UnityLesson для видео о геймдеве">
+                <img src="images/anniversary.png" alt="YouTube канал UnityLesson" width="1705" height="573" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); display: block; margin: 0 auto;" loading="lazy">
+            </a>
         </div>
     </section>
     <section id="about" role="region" aria-labelledby="about-heading">
         <div class="container">
             <h2 id="about-heading">Обо мне</h2>
-<div class="about-content">
+            <div class="about-content">
                 <img src="images/nichita.jpg" alt="Никита Левандович" class="profile-img" width="300" height="300" loading="lazy" fetchpriority="high">
                 <div class="about-text">
                     <p>Привет! Я Никита Левандович, мне 23 года, и я увлеченный разработчик видеоигр с более чем <strong>5-летним опытом</strong>. Программирование и создание игр — это моя страсть. Я верю, что с помощью воображения и упорного труда можно создать целый мир!</p>
                     <p>Я работал в <strong>Success Games</strong> над проектами для <strong>Steam</strong> и <strong>PlayStation</strong>. Мой самый масштабный проект включал <strong>40 000+ строк кода</strong>, оптимизацию и интеграцию сторонних ассетов. Я быстро учусь, нахожу новые решения и всегда довожу задачи до конца.</p>
                     <p>Я окончил <strong>Step IT Academy</strong> с дипломом по разработке игр и свободно владею <strong>английским языком</strong>. Мое хобби — изобретать и создавать игры с нуля, воплощая идеи в удивительные виртуальные миры.</p>
                     <p>Ознакомьтесь с моими проектами на <a href="https://github.com/levandovici?tab=repositories" target="_blank">GitHub</a> или посетите раздел игр <a href="#games">Игры</a>.</p>
-                    <p>Хотите учиться разработке игр? Мой Telegram-бот <a href="https://t.me/michitai_bot" target="_blank">@MICHITAI_BOT</a> предлагает <strong>бесплатные обучающие карточки</strong> по Unity и геймдеву, чтобы вы могли начать свой путь в создании игр!</p>
+                    <p>Хотите учиться разработке игр? Мой Telegram-бот <a href="https://t.me/michitai_bot" target="_blank">@MICHITAI_BOT</a> предлагает <strong>бесплатные обучающие карточки</strong> по Unity и геймдеву, а мой YouTube-канал <a href="https://www.youtube.com/@UnityLesson" target="_blank">@UnityLesson</a> содержит обучающие видео по созданию игр!</p>
                     <h3>Мои проекты:</h3>
                     <ul>
                         <li>🎮 <a href="https://api.michitai.com" target="_blank">api.michitai.com</a> — Платформа для создания мультиплеерных игр с визуальным конструктором логики и REST API, поддерживающая до 100K игроков.</li>
-                        <li>🚗 <a href="https://road.michitai.com" target="_blank">road.michitai.com</a> — Образовательный ресурс по дорожным знакам и правилам дорожного движения в Молдове.</li>
+                        <li>🚗 <a href="https://road.michitai.com" target="_blank">road.michitai.com</a> — Образовательный ресурс по дорожным знакам и правилам дорожного движения.</li>
                         <li>📚 <a href="https://library.michitai.com" target="_blank">library.michitai.com</a> — Цифровая библиотека книг по геймдизайну, программированию и технологиям с предпросмотрами и ссылками на покупку.</li>
                         <li>❤️ <a href="https://mutualluck.michitai.com" target="_blank">mutualluck.michitai.com</a> — Платформа знакомств для поиска идеальной пары онлайн.</li>
                         <li>✨ <a href="https://cv.michitai.com" target="_blank">cv.michitai.com</a> — Платформа для создания резюме онлайн.</li>
@@ -987,6 +1010,38 @@
             </div>
         </div>
     </section>
+
+    <section id="youtube-videos" itemscope itemtype="https://schema.org/ItemList" role="region" aria-labelledby="youtube-heading">
+        <div class="container" style="text-align: center;">
+            <h2 id="youtube-heading" style="margin-bottom: 20px;">Мои YouTube видео</h2>
+            <p style="max-width: 800px; margin: 0 auto 40px; font-size: 1.1rem;">Посмотрите мои обучающие видео по Unity и разработке игр на моем канале <a href="https://www.youtube.com/@UnityLesson" target="_blank" rel="noopener noreferrer">@UnityLesson</a>!</p>
+            <div class="videos-grid">
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject" style="max-width: 640px; margin: 0 auto;">
+                    <a href="https://youtu.be/w_1Vo__rMEw" target="_blank" rel="noopener noreferrer" class="video-thumbnail" style="display: block; position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                        <img 
+                            src="images/video-1.jpg" 
+                            alt="Как работать в IT GameDev: Секреты создания игр и карьера в геймдеве" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: rgba(255, 0, 0, 0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <div style="padding: 16px;">
+                        <a href="https://www.youtube.com/@UnityLesson" target="_blank" rel="noopener noreferrer" class="btn youtube-btn" aria-label="Перейти на канал UnityLesson" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #ff0000; color: white; padding: 10px 16px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: background-color 0.2s;">
+                            <img src="images/youtube-white.png" alt="YouTube" width="20" height="20" style="width: 20px; height: 20px;">
+                            Перейти на канал
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="contact" itemscope itemtype="https://schema.org/ContactPage" role="region" aria-labelledby="contact-heading">
         <div class="container">
             <h2 id="contact-heading">Связаться со мной</h2>
@@ -995,14 +1050,15 @@
                 <li><strong>Email:</strong> <a href="mailto:support@michitai.com">support@michitai.com</a></li>
                 <li><strong>Phone:</strong> <a href="tel:+37378814810">+37378814810</a></li>
                 <li><strong>Telegram:</strong> <a href="https://t.me/michitai" target="_blank">@michitai</a></li>
+                <li><strong>YouTube:</strong> <a href="https://www.youtube.com/@UnityLesson" target="_blank">@UnityLesson</a></li>
             </ul>
         </div>
     </section>
     <footer role="contentinfo" style="background: #1a202c; color: white; padding: 30px 0; width: 100%; text-align: center;">
         <div class="container">
-            <p style="margin: 0; color: #e2e8f0;">© 2025 Nichita Levandovici. Все права защищены.</p>
+            <p style="margin: 0; color: #e2e8f0;"> 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
-   </footer>
+    </footer>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -1041,7 +1097,8 @@
       },
       "sameAs": [
         "https://t.me/michitai",
-        "https://github.com/levandovici"
+        "https://github.com/levandovici",
+        "https://www.youtube.com/@UnityLesson"
       ]
     }
     </script>
@@ -1077,59 +1134,12 @@
                 window.addEventListener('resize', adjustHeaderSpacer);
                 window.addEventListener('load', adjustHeaderSpacer);
                 adjustHeaderSpacer();
-                // Initialize Chart.js
-                const ctx = document.getElementById('courseProgressChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ["Модуль 1", "Модуль 2", "Модуль 3", "Модуль 4", "Модуль 5", "Модуль 6", "Модуль 7", "Модуль 8", "Модуль 9", "Модуль 10", "Модуль 11", "Модуль 12"],
-                        datasets: [{
-                            label: "Сложность курса",
-                            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                            backgroundColor: ["#4299e1", "#4299e1", "#4299e1", "#4299e1", "#4299e1", "#48bb78", "#48bb78", "#48bb78", "#f6ad55", "#f6ad55", "#f6ad55", "#e53e3e"],
-                            borderColor: ["#3182ce", "#3182ce", "#3182ce", "#3182ce", "#3182ce", "#38a169", "#38a169", "#38a169", "#ed8936", "#ed8936", "#ed8936", "#c53030"],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: "Уровень сложности",
-                                    color: "#1a202c",
-                                    font: { size: 14 }
-                                },
-                                ticks: { color: "#1a202c" }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: "Модули курса",
-                                    color: "#1a202c",
-                                    font: { size: 14 }
-                                },
-                                ticks: { color: "#1a202c" }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: "Прогрессия сложности курса",
-                                color: "#1a202c",
-                                font: { size: 18 }
-                            }
-                        }
-                    }
-                });
             } catch (error) {
                 console.error('Script error:', error.message, error.stack);
             }
         });
     </script>
-    <!-- Structured Data -->
+    
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -1152,7 +1162,8 @@
         "url": "https://michitai.com",
         "sameAs": [
             "https://www.linkedin.com/in/nichita-levandovici/",
-            "https://github.com/NikitaLnc"
+            "https://github.com/NikitaLnc",
+            "https://www.youtube.com/@UnityLesson"
         ],
         "jobTitle": "Unity Developer & Instructor",
         "worksFor": {
