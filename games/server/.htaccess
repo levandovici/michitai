@@ -1,0 +1,62 @@
+# ------------------------------------------------------------
+# Secure time.php endpoint
+# ------------------------------------------------------------
+RewriteEngine On
+
+# ------------------------------------------------------------
+# 1. Allow only GET requests
+# ------------------------------------------------------------
+RewriteCond %{REQUEST_METHOD} !GET [NC]
+RewriteRule ^time\.php$ - [F,L]
+
+# ------------------------------------------------------------
+# 2. Block obvious bots
+# ------------------------------------------------------------
+RewriteCond %{HTTP_USER_AGENT} "(curl|wget|python|java|libwww-perl|bot)" [NC]
+RewriteRule ^time\.php$ - [F,L]
+
+# ------------------------------------------------------------
+# 3. Very simple rate-limit: 1 request per IP per second
+#    Good for shared hosting (no RewriteMap needed)
+# ------------------------------------------------------------
+# Key = client IP + current second
+RewriteCond %{REMOTE_ADDR}%{TIME_SEC} =%{REMOTE_ADDR}%{TIME_SEC}
+# If two requests come from same IP in same second → 429
+RewriteCond %{ENV:LIMIT_%{REMOTE_ADDR}} =1
+RewriteRule ^time\.php$ - [R=429,L]
+
+# Mark first request of this second
+RewriteRule ^time\.php$ - [E=LIMIT_%{REMOTE_ADDR}:1]
+
+# ------------------------------------------------------------
+# 4. Cache response for 15 seconds
+# ------------------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    <Files "time.php">
+        ExpiresDefault "access plus 15 seconds"
+    </Files>
+</IfModule>
+
+Header set Cache-Control "public, max-age=15, stale-while-revalidate=30"
+Header always set Access-Control-Allow-Origin "*"
+
+# ------------------------------------------------------------
+# 5. Block access to all .php except time.php
+# ------------------------------------------------------------
+<FilesMatch "\.php$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+<Files "time.php">
+    Allow from all
+</Files>
+
+# ------------------------------------------------------------
+# 6. Deny hidden files like .time_rate (if exists)
+# ------------------------------------------------------------
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

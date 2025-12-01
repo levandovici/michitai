@@ -3,271 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MICHITAI</title>
+    <title>MICHITAI | War Land TD</title>
     <link rel="icon" href="levandovici_logo.png" type="image/png">
     <style>
         :root {
-            --primary-color: #ff69b4;
-            --accent-color: #ff4500;
-            --bg-color: #fff0f5;
-            --text-color: #2c3e50;
+            --blue: #66c0f4;
+            --pink: #ff69b4;
+            --gold: #ffd700;
+            --dark: #0a0812;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: #fff;
             line-height: 1.6;
+        }
+
+        /* HERO */
+        .hero {
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            flex-grow: 1;
-            display: grid;
-            gap: 2rem;
-            align-content: center;
-            background: linear-gradient(to bottom, #fff0f5, #e6e6fa);
-        }
-
-        .content {
+            background: linear-gradient(135deg, #0a0812, #1a1428);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 1.5rem;
-            background: linear-gradient(45deg, #ffd700, #ff69b4);
-            border-radius: 15px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 15px #00ced1;
+            padding: 40px 20px 60px;
+            gap: 30px;
         }
-
-        .content:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px #00ced1, 0 0 50px #00ced1;
+        .big-title {
+            font-size: clamp(3rem, 10vw, 10rem);
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--gold), #ffffff, var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 100px rgba(102,192,244,0.8);
+            letter-spacing: 5px;
+            line-height: 1;
+            white-space: nowrap;
+            margin: 0;
         }
-
-        .logo, .game-logo {
-            max-width: 200px;
-            height: auto;
-            margin-bottom: 1rem;
-            border: 3px solid #ffffff;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
+        .hero-img {
+            max-width: 720px;
+            width: 94%;
+            border: 8px solid var(--blue);
+            border-radius: 36px;
+            box-shadow: 0 0 120px var(--blue);
         }
-
-        .logo:hover, .game-logo:hover {
-            transform: scale(1.1);
+        .hero-text {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            max-width: 900px;
+            opacity: 0.95;
         }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color);
-            animation: glow 1.2s infinite alternate;
+        
+        .steam-buttons {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 80px;
         }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color);
-            }
-            to {
-                text-shadow: 0 0 25px var(--accent-color), 0 0 40px var(--accent-color);
-            }
-        }
-
-        .game-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px var(--primary-color);
-        }
-
-        p {
-            font-size: 1rem;
-            color: var(--text-color);
-            opacity: 0.9;
-        }
-
-        .download-btn {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.8rem 1.5rem;
-            background: var(--accent-color);
-            color: #ffffff;
+        .btn {
+            padding: 24px 60px;
+            font-size: 1.7rem;
+            font-weight: 800;
+            border-radius: 60px;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.4s;
+        }
+        .get-steam {
+            background: #000;
+            color: white;
+            border: 5px solid var(--blue);
+            box-shadow: 0 0 60px var(--blue);
+        }
+        .get-steam:hover { background: var(--blue); color: #000; transform: translateY(-12px); }
+        .wishlist {
+            background: linear-gradient(45deg, #ff2e96, var(--pink));
+            color: white;
+            box-shadow: 0 0 60px rgba(255,105,180,0.8);
+        }
+        .wishlist:hover { transform: translateY(-12px); }
+
+        /* Mobile fixes for hero */
+        @media (max-width: 640px) {
+            .hero { padding: 60px 15px 80px; gap: 40px; }
+            .big-title { font-size: clamp(2.8rem, 9.5vw, 7rem); letter-spacing: 3px; }
+            .hero-img { width: 96%; margin: 20px auto; }
+        }
+        @media (max-width: 480px) {
+            .big-title { font-size: 3.2rem; }
         }
 
-        .download-btn:hover {
-            background: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px var(--primary-color);
-        }
-
-        @media (min-width: 768px) {
-            .container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            h1 {
-                font-size: 3rem;
-            }
-
-            .game-title {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8rem;
-                white-space: normal;
-                line-height: 1.2;
-            }
-
-            .game-title {
-                font-size: 1.5rem;
-            }
-
-            .content {
-                padding: 1rem;
-            }
-        }
-
-        footer {
-            background: linear-gradient(135deg, #ffd700, #ff69b4);
-            padding: 1.5rem;
+        /* TRAILER SECTION – NEW */
+        .trailer-section {
+            padding: 140px 5% 120px;
+            background: linear-gradient(to bottom, #1a1428, #0f0c18);
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
-            color: var(--text-color);
+        }
+        .trailer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .trailer-title {
+            margin-bottom: 70px;
+            background: linear-gradient(90deg, var(--gold), var(--blue), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: clamp(2.8rem, 8vw, 6rem);
+            font-weight: 900;
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            border: 8px solid var(--blue);
+            border-radius: 36px;
+            box-shadow: 0 0 120px rgba(102,192,244,0.6);
+            margin-bottom: 50px;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 28px;
+        }
+        .trailer-caption {
+            font-size: clamp(1.3rem, 4vw, 1.9rem);
+            opacity: 0.95;
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(90deg, var(--pink), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @media (max-width: 768px) {
+            .trailer-section { padding: 100px 5%; }
+            .video-wrapper { border: 6px solid var(--blue); }
         }
 
-        footer a {
-            color: #ffffff;
-            text-decoration: none;
-            margin: 0 1rem;
-            font-weight: 500;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
+        /* GAMES SECTION */
+        .section-title {
+            text-align: center;
+            font-size: clamp(2.6rem, 8vw, 5.5rem);
+            margin-bottom: 90px;
+            background: linear-gradient(90deg, var(--pink), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            line-height: 1.15;
+        }
+        .games-section {
+            padding: 140px 5% 120px;
+            background: linear-gradient(to bottom, #0f0c18, #1a1526);
+        }
+        .games-grid {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 50px;
+        }
+        .game-card { 
+            background: rgba(255,255,255,0.04); 
+            border-radius: 40px; 
+            overflow: hidden; 
+            transition: 0.5s; 
+            border: 1px solid rgba(102,192,244,0.2); 
+        }
+        .game-card:hover { 
+            transform: translateY(-30px); 
+            box-shadow: 0 40px 100px rgba(255,105,180,0.5); 
+        }
+        .game-card img { 
+            width: 100%; 
+            height: 280px; 
+            object-fit: cover; 
+            border-bottom: 6px solid var(--pink); 
+        }
+        .card-body { 
+            padding: 35px; 
+            text-align: center; 
+        }
+        .card-body h3 { 
+            font-size: 2rem; 
+            margin-bottom: 20px; 
+        }
+        .play-btn, .web-btn { 
+            padding: 18px 50px; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            text-decoration: none; 
+            display: inline-block; 
+            transition: 0.4s; 
+        }
+        .play-btn { 
+            background: #000; 
+            color: white; 
+            border: 3px solid var(--blue); 
+        }
+        .play-btn:hover { 
+            background: var(--blue); 
+            color: #000; 
+            transform: scale(1.1); 
+        }
+        .web-btn { 
+            background: linear-gradient(45deg, #00ffcc, #ff00cc); 
+            color: white; 
+        }
+        .web-btn:hover { 
+            transform: scale(1.1); 
+            box-shadow: 0 0 50px #ff00cc; 
         }
 
-        footer a:hover {
-            color: var(--accent-color);
-            text-shadow: 0 0 10px var(--accent-color);
+        /* FOOTER */
+        footer { 
+            background: #000; 
+            padding: 100px 20px 60px; 
+            text-align: center; 
         }
-
-        footer p {
-            font-size: 0.9rem;
-            margin: 0.5rem 0;
+        footer a { 
+            color: var(--pink); 
+            text-decoration: none; 
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <a href="https://play.google.com/store/apps/dev?id=7538414649250605636" target="_blank">
-                <img src="levandovici_logo.png" alt="MICHITAI" class="logo">
-            </a>
-            <h1>Welcome to MICHITAI</h1>
-            <p>Immerse yourself in the world of our games!</p>
-        </div>
+
+    <section class="hero">
+        <h1 class="big-title">WAR LAND TD</h1>
+        <img src="warland.png" alt="War Land TD" class="hero-img">
+        <p class="hero-text">
+            Epic tower defense · Stunning visuals · Deep strategy · Massive battles<br>
+            My biggest project ever — Coming Soon on Steam!
+        </p>
         
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
-                <img src="zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force" class="game-logo">
+        <div class="steam-buttons">
+            <a href="https://store.steampowered.com/app/4203900/War_Land_TD/" target="_blank" class="btn wishlist">
+                ADD TO WISHLIST
             </a>
-            <p class="game-title">Zombie Frenzy Force</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank" class="download-btn">Download Now on Google Play</a>
         </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank">
-                <img src="monsters_rushing_logo.png" alt="Monsters Rushing" class="game-logo">
-            </a>
-            <p class="game-title">Monsters Rushing</p>
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank" class="download-btn">Download Now on Google Play</a>
+    </section>
+
+    <!-- OFFICIAL TRAILER SECTION -->
+    <section class="trailer-section">
+        <div class="trailer-container">
+            <h2 class="section-title trailer-title">Official Trailer</h2>
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/xPSV9Osmlb4" 
+                    title="War Land TD - Official Trailer" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p class="trailer-caption">
+                Watch the epic official trailer for <strong>War Land TD</strong> – Available NOW on Google Play · Coming Soon on Steam!
+            </p>
         </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank">
-                <img src="car_driving_multiplayer_logo.png" alt="Car Driving Multiplayer" class="game-logo">
-            </a>
-            <p class="game-title">Car Driving Multiplayer</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank" class="download-btn">Download Now on Google Play</a>
+    </section>
+
+    <!-- GAMES ON GOOGLE PLAY -->
+    <section class="games-section">
+        <h2 class="section-title">Games on Google Play</h2>
+        <div class="games-grid">
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.MICHITAI.WarLandTD" target="_blank">
+                    <img src="warland.png" alt="War Land TD">
+                </a>
+                <div class="card-body">
+                    <h3>War Land TD</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.MICHITAI.WarLandTD" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank">
+                    <img src="car_driving_multiplayer_logo.png" alt="Car Driving Multiplayer">
+                </a>
+                <div class="card-body">
+                    <h3>Car Driving Multiplayer</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.CarDrivingMultiplayer" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
+                    <img src="zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force">
+                </a>
+                <div class="card-body">
+                    <h3>Zombie Frenzy Force</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank">
+                    <img src="monsters_rushing_logo.png" alt="Monsters Rushing">
+                </a>
+                <div class="card-body">
+                    <h3>Monsters Rushing</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLncGames.MonstersRush" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank">
+                    <img src="scale_it_logo.png" alt="Scale It">
+                </a>
+                <div class="card-body">
+                    <h3>Scale It</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank">
+                    <img src="hit_of_cube_logo.png" alt="Hit of Cube">
+                </a>
+                <div class="card-body">
+                    <h3>Hit of Cube</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank">
+                    <img src="monsters_vs_bombs_logo.png" alt="Monsters vs Bombs">
+                </a>
+                <div class="card-body">
+                    <h3>Monsters vs Bombs</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank">
+                    <img src="space_flash_logo.png" alt="Space Flash">
+                </a>
+                <div class="card-body">
+                    <h3>Space Flash</h3>
+                    <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank" class="play-btn">Google Play</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://games.michitai.com/web/blooming-garden" target="_blank">
+                    <img src="blooming_garden_logo.jpg" alt="Blooming Garden">
+                </a>
+                <div class="card-body">
+                    <h3>Blooming Garden</h3>
+                    <a href="https://games.michitai.com/web/blooming-garden" target="_blank" class="web-btn">PLAY IN BROWSER</a>
+                </div>
+            </div>
+            <div class="game-card">
+                <a href="https://games.michitai.com/next" target="_blank">
+                    <img src="pirate.png" alt="Pirate’s Bounty Seas">
+                </a>
+                <div class="card-body">
+                    <h3>Pirate’s Bounty Seas</h3>
+                    <a href="https://games.michitai.com/next" target="_blank" class="web-btn">Coming in 2026</a>
+                </div>
+            </div>
         </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank">
-                <img src="scale_it_logo.png" alt="Scale It" class="game-logo">
-            </a>
-            <p class="game-title">Scale It</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.ScaleIt" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank">
-                <img src="hit_of_cube_logo.png" alt="Hit of Cube" class="game-logo">
-            </a>
-            <p class="game-title">Hit of Cube</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.HitofCube" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank">
-                <img src="monsters_vs_bombs_logo.png" alt="Monsters vs Bombs" class="game-logo">
-            </a>
-            <p class="game-title">Monsters vs Bombs</p>
-            <a href="https://play.google.com/store/apps/details?id=com.NikitaLnc.MagicMonstersBombsAttack" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank">
-                <img src="space_flash_logo.png" alt="Space Flash" class="game-logo">
-            </a>
-            <p class="game-title">Space Flash</p>
-            <a href="https://play.google.com/store/apps/details?id=com.LimonadoEntertainment.SpaceFlash" target="_blank" class="download-btn">Download Now on Google Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://games.michitai.com/web/blooming-garden" target="_blank">
-                <img src="blooming_garden_logo.jpg" alt="Blooming Garden" class="game-logo">
-            </a>
-            <p class="game-title">Blooming Garden</p>
-            <a href="https://games.michitai.com/web/blooming-garden" target="_blank" class="download-btn">Play</a>
-        </div>
-        
-        <div class="content">
-            <a href="https://games.michitai.com/next" target="_blank">
-                <img src="next.png" alt="Upcoming Release" class="game-logo">
-            </a>
-            <p class="game-title">Upcoming Pirate Adventure</p>
-            <a href="https://games.michitai.com/next" target="_blank" class="download-btn">View</a>
-        </div>
-    </div>
+    </section>
 
     <footer>
         <p>Contact: <a href="mailto:support@michitai.com">support@michitai.com</a></p>
-        <p>
-            <a href="privacy-policy.html">Privacy Policy</a> | 
-            <a href="terms-and-conditions.html">Terms and Conditions</a>
-        </p>
+        <p><a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-and-conditions.html">Terms & Conditions</a></p>
         <p>© 2025 Nichita Levandovici. All Rights Reserved.</p>
     </footer>
+
 </body>
 </html>
