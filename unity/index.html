@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru" itemscope itemtype="https://schema.org/WebPage" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
@@ -54,6 +54,81 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"></noscript>
     <style>
+        /* Theme Variables */
+        :root {
+            /* Colors */
+            --bg-color: #ffffff;
+            --text-color: #1a202c;
+            --text-secondary: #4a5568;
+            --accent-color: #48bb78;
+            --accent-hover: #38a169;
+            --card-bg: #f7fafc;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-color: #e2e8f0;
+            --module-bg: #ffffff;
+            --module-border: #e2e8f0;
+            --module-hover: #f8fafc;
+            --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+            --footer-bg: #1a202c;
+            --footer-text: #f8f9fa;
+            --code-bg: #f1f5f9;
+            --code-color: #1e293b;
+            --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --tab-bg: #f1f5f9;
+            --tab-active-bg: #4f46e5;
+            --tab-text: #4a5568;
+            --tab-active-text: #ffffff;
+            --video-btn-bg: #9f7aea;
+            --video-btn-hover: #805ad5;
+            --code-btn-bg: #4299e1;
+            --code-btn-hover: #3182ce;
+            --study-btn-bg: #48bb78;
+            --study-btn-hover: #38a169;
+            --primary-color: #1a202c;
+            --secondary-color: #2d3748;
+            --light-text: #f8f9fa;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 3rem;
+            --spacing-xl: 4rem;
+            --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --font-code: 'Fira Code', 'Courier New', monospace;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
         /* Skip link styles */
         .skip-link {
             position: absolute;
@@ -80,8 +155,10 @@
         [tabindex="-1"]:focus {
             outline: none !important;
         }
+
+        /* Header Styles */
         header {
-            background: linear-gradient(135deg, #1a202c, #2d3748);
+            background: var(--header-bg);
             color: white;
             padding: 16px 0;
             position: fixed;
@@ -90,35 +167,43 @@
             z-index: 1000;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
+            margin: 0;
         }
+
         nav ul {
             list-style: none;
             display: flex;
             gap: 30px;
         }
+
         nav a {
-            color: white;
+            color: var(--light-text);
             text-decoration: none;
             font-weight: 600;
             font-size: 1rem;
-            transition: color 0.3s ease;
+            transition: var(--transition);
         }
+
         nav a:hover {
-            color: #48bb78;
+            color: var(--accent-color);
         }
+
         .social-links {
             display: flex;
             gap: 10px;
             align-items: center;
         }
+
         .social-icon, .flag {
             width: 28px;
             height: 20px;
@@ -126,12 +211,16 @@
             border-radius: 3px;
             transition: transform 0.3s ease;
         }
+
         .social-icon:hover, .flag:hover {
             transform: scale(1.2);
         }
+
         .header-spacer {
             height: 80px;
         }
+
+        /* Hero Section */
         #hero {
             background: url('images/hero-bg.jpg') no-repeat center/cover;
             position: relative;
@@ -139,6 +228,7 @@
             text-align: center;
             padding: 140px 20px;
         }
+
         #hero::before {
             content: '';
             position: absolute;
@@ -149,16 +239,19 @@
             background: rgba(0, 0, 0, 0.6);
             z-index: 1;
         }
+
         #hero .container {
             position: relative;
             z-index: 2;
         }
+
         #hero h2 {
             font-size: 3.5rem;
             font-weight: 700;
             margin-bottom: 24px;
             animation: slideInUp 1s ease-out;
         }
+
         #hero p {
             font-size: 1.25rem;
             margin-bottom: 24px;
@@ -166,12 +259,14 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .free-lesson-message {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #48bb78;
+            color: var(--accent-color);
             margin-bottom: 24px;
         }
+
         .btn {
             background: #4299e1;
             color: white;
@@ -180,30 +275,36 @@
             border-radius: 8px;
             font-weight: 600;
             font-size: 1.1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: inline-block;
             margin: 12px;
         }
+
         .btn:hover {
             background: #3182ce;
             transform: translateY(-3px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+
         .free-lesson-btn {
-            background: #48bb78;
-            color: #1a202c;
+            background: var(--study-btn-bg);
+            color: var(--primary-color);
         }
+
         .free-lesson-btn:hover {
-            background: #38a169;
+            background: var(--study-btn-hover);
         }
+
         .secondary-btn {
             background: transparent;
             border: 2px solid white;
         }
+
         .secondary-btn:hover {
             background: white;
-            color: #1a202c;
+            color: var(--primary-color);
         }
+
         .youtube-btn {
             background: #ff0000;
             color: white;
@@ -213,69 +314,157 @@
             gap: 8px;
             padding: 14px 32px;
         }
+
         .youtube-btn:hover {
             background: #cc0000;
             transform: translateY(-3px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+
         .youtube-btn img {
             width: 28px;
             height: 20px;
             object-fit: cover;
         }
+
+        /* Course Section */
         #course {
             padding: 120px 20px;
-            background: #ffffff;
+            background: var(--bg-color);
         }
+
         #course h2 {
             font-size: 3rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 40px;
-            color: #1a202c;
+            color: var(--text-color);
         }
+
         #course > p {
             text-align: center;
-            transform: translateY(-6px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            font-size: 1.15rem;
+            color: var(--text-secondary);
         }
+
+        .module {
+            background: var(--module-bg);
+            border: 1px solid var(--module-border);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .module:hover {
+            background: var(--module-hover);
+            transform: translateY(-5px);
+        }
+
         .module h3 {
             font-size: 1.75rem;
             font-weight: 600;
-            color: #1a202c;
+            color: var(--text-color);
             margin-bottom: 16px;
         }
+
         .module p {
             font-size: 1.15rem;
             margin-bottom: 16px;
-            color: #4a5568;
+            color: var(--text-secondary);
         }
+
         .module ul {
             list-style: disc;
             padding-left: 24px;
             margin-bottom: 16px;
             font-size: 1.1rem;
+            color: var(--text-secondary);
         }
+
+        .module-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .module-buttons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: var(--transition);
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .module .video-btn {
+            background: var(--video-btn-bg);
+            color: white;
+        }
+
+        .module .video-btn:hover {
+            background: var(--video-btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .module .code-btn {
+            background: var(--code-btn-bg);
+            color: white;
+        }
+
+        .module .code-btn:hover {
+            background: var(--code-btn-hover);
+            transform: translateY(-2px);
+        }
+
+        .module .study-btn {
+            background: var(--study-btn-bg);
+            color: white;
+        }
+
+        .module .study-btn:hover {
+            background: var(--study-btn-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Anniversary Banner */
         #anniversary-banner {
-            background: #f7fafc;
+            background: var(--card-bg);
             color: var(--text-color);
             text-align: center;
             padding: 40px 20px;
             margin: 20px 0;
             position: relative;
             overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
         }
+
         #anniversary-banner h2 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 20px;
         }
+
         #anniversary-banner p {
             font-size: 1.2rem;
             margin-bottom: 20px;
+            color: var(--text-secondary);
         }
+
         #anniversary-banner .neon-text {
             font-size: 4rem;
             font-weight: 700;
@@ -283,6 +472,7 @@
             text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
             animation: neonGlow 1.5s ease-in-out infinite alternate;
         }
+
         @keyframes neonGlow {
             from {
                 text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
@@ -291,49 +481,68 @@
                 text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
             }
         }
+
+        /* About Section */
         #about {
             padding: 120px 20px;
-            background: #f5f7fa;
+            background: var(--bg-color);
         }
+
         #about h2 {
             font-size: 3rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 40px;
-            color: #1a202c;
+            color: var(--text-color);
         }
+
         .about-content {
             display: flex;
             gap: 48px;
             align-items: center;
         }
+
         .about-img {
             width: 350px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
         }
+
         .about-img:hover {
             transform: scale(1.05);
         }
+
         .about-text p {
             margin-bottom: 20px;
             font-size: 1.15rem;
+            color: var(--text-secondary);
         }
+
         .about-text strong {
             color: #4299e1;
         }
+
+        .about-text ul {
+            list-style: disc;
+            padding-left: 24px;
+            font-size: 1.15rem;
+        }
+
+        /* Games Section */
         #games {
             padding: 120px 20px;
-            background: #ffffff;
+            background: var(--bg-color);
         }
+
         #games h2 {
             font-size: 3rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 40px;
-            color: #1a202c;
+            color: var(--text-color);
         }
+
         #games > p {
             text-align: center;
             font-size: 1.25rem;
@@ -341,19 +550,21 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            color: var(--text-secondary);
         }
+
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-md);
         }
+
         .game-card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -361,6 +572,7 @@
             opacity: 0;
             animation: fadeInUp 0.6s ease forwards;
         }
+
         .game-card:nth-child(1) { animation-delay: 0.1s; }
         .game-card:nth-child(2) { animation-delay: 0.2s; }
         .game-card:nth-child(3) { animation-delay: 0.3s; }
@@ -369,33 +581,64 @@
         .game-card:nth-child(6) { animation-delay: 0.6s; }
         .game-card:nth-child(7) { animation-delay: 0.7s; }
         .game-card:nth-child(8) { animation-delay: 0.8s; }
-        .game-card:nth-child(9) { animation-delay: 0.9s; }
-        .game-card:nth-child(10) { animation-delay: 1s; }
+
         .game-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
         }
+
         .game-img {
             width: 100%;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 16 / 9;
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 16px;
             transition: transform 0.4s ease;
         }
+
         .game-img:hover {
             transform: scale(1.08);
         }
+
         .game-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1a202c;
+            color: var(--text-color);
             margin-bottom: 12px;
         }
+
+        .game-info {
+            padding: var(--spacing-md);
+        }
+
+        .game-info span {
+            display: block;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .game-info strong {
+            color: var(--text-color);
+        }
+
+        .game-btn {
+            background: #4299e1;
+            color: white;
+            padding: 12px 24px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .game-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
         /* YouTube Videos Section */
         #youtube-videos {
             padding: 60px 0;
-            background-color: #f8f9fa;
+            background-color: var(--bg-color);
         }
 
         .videos-grid {
@@ -403,40 +646,88 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
             margin-top: 30px;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            display: block;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 0, 0, 0.7);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            transition: background 0.3s ease;
         }
-        .game-info strong {
-            color: #2d3748;
+
+        .play-button:hover {
+            background: rgba(255, 0, 0, 0.9);
         }
-        .game-btn {
-            background: #4299e1;
-            color: white;
-            padding: 12px 24px;
+
+        .video-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 16px 16px 8px;
+            text-align: left;
+        }
+
+        .video-description {
             font-size: 1rem;
-            transition: background 0.3s ease, transform 0.3s ease;
+            color: var(--text-secondary);
+            margin: 0 16px 16px;
+            text-align: left;
         }
-        .game-btn:hover {
-            background: #3182ce;
-            transform: translateY(-2px);
-        }
+
+        /* Contact Section */
         #contact {
             padding: 120px 20px;
-            background: linear-gradient(135deg, #1a202c, #2d3748);
+            background: var(--header-bg);
             color: white;
             text-align: center;
         }
+
         #contact h2 {
             font-size: 3rem;
             font-weight: 700;
             margin-bottom: 40px;
         }
+
         #contact p {
             font-size: 1.25rem;
             margin-bottom: 32px;
         }
+
         .contact-info {
             list-style: none;
             margin: 0 auto 40px;
@@ -444,6 +735,7 @@
             text-align: center;
             max-width: 600px;
         }
+
         .contact-info li {
             font-size: 1.2rem;
             margin-bottom: 16px;
@@ -451,23 +743,31 @@
             justify-content: center;
             align-items: center;
         }
+
         .contact-info a {
-            color: #48bb78;
+            color: var(--accent-color);
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: var(--transition);
         }
+
         .contact-info a:hover {
-            color: #38a169;
+            color: var(--accent-hover);
         }
+
+        /* Footer */
         footer {
-            background: #1a202c;
-            color: white;
+            background: var(--footer-bg);
+            color: var(--footer-text);
             text-align: center;
             padding: 32px 0;
         }
+
         footer p {
             font-size: 1rem;
+            margin: 0;
         }
+
+        /* Animations */
         @keyframes slideInUp {
             from {
                 opacity: 0;
@@ -478,6 +778,7 @@
                 transform: translateY(0);
             }
         }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -488,84 +789,118 @@
                 transform: translateY(0);
             }
         }
+
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .games-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             #hero h2 {
                 font-size: 2.5rem;
             }
+
             .about-content {
                 flex-direction: column;
                 text-align: center;
             }
+
             .about-img {
                 width: 300px;
             }
         }
-        /* Anniversary Banner Styles */
-        .anniversary-banner {
-            background: var(--bg-color);
-            padding: var(--spacing-xl) 0;
-            text-align: center;
-        }
-        
-        .anniversary-banner h2 {
-            color: var(--text-color);
-            margin-bottom: var(--spacing-sm);
-        }
-        
-        .anniversary-banner p {
-            color: var(--text-secondary);
-            max-width: 800px;
-            margin: 0 auto var(--spacing-md);
-        }
-        
+
         @media (max-width: 768px) {
             .about-content {
                 flex-direction: column;
                 text-align: center;
             }
-            
-            .profile-img {
+
+            .about-img {
                 margin: 0 auto;
             }
+
             header h1 {
                 font-size: 1.75rem;
             }
+
             nav ul {
                 flex-direction: column;
                 text-align: center;
                 gap: 12px;
             }
+
             nav {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
             }
+
             .social-links {
                 justify-content: center;
                 margin-top: 12px;
             }
+
             #hero {
                 padding: 100px 20px 60px;
             }
+
             #hero h2 {
                 font-size: 2rem;
             }
+
             .free-lesson-message {
                 font-size: 1.2rem;
             }
+
             .games-grid {
                 grid-template-columns: 1fr;
             }
+
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-card {
+                max-width: 100%;
+            }
+
+            .video-title {
+                font-size: 1.1rem;
+            }
+
+            .video-description {
+                font-size: 0.9rem;
+            }
+
             .btn {
                 padding: 12px 24px;
                 font-size: 1rem;
             }
+
             .youtube-btn img {
                 width: 24px;
                 height: 17px;
+            }
+
+            .module-buttons {
+                flex-direction: column;
+            }
+
+            .module-buttons a {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            header, footer {
+                display: none;
+            }
+
+            .header-spacer {
+                height: 0;
             }
         }
     </style>
@@ -581,6 +916,7 @@
                     <li role="none"><a href="#course" role="menuitem">Курс</a></li>
                     <li role="none"><a href="#about" role="menuitem">Обо мне</a></li>
                     <li role="none"><a href="#games" role="menuitem">Игры</a></li>
+                    <li role="none"><a href="#youtube-videos" role="menuitem">Видео</a></li>
                     <li role="none"><a href="#contact" role="menuitem">Контакты</a></li>
                 </ul>
             </nav>
@@ -600,6 +936,7 @@
     <link rel="preload" href="images/ru.png" as="image">
     <link rel="preload" href="images/youtube-icon.png" as="image">
     <link rel="preload" href="images/anniversary.png" as="image">
+    <link rel="preload" href="images/war_land_td_logo.png" as="image">
     <link rel="preload" href="images/zombie_frenzy_force_logo.png" as="image">
     <link rel="preload" href="images/monsters_rushing_logo.png" as="image">
     <link rel="preload" href="images/car_driving_multiplayer_logo.png" as="image">
@@ -613,7 +950,6 @@
             <h2 id="hero-heading">Онлайн курсы программирования и Unity</h2>
             <p>Присоединяйся к моим онлайн курсам по разработке игр на Unity и стань профессиональным гейм-девелопером! Первый урок — бесплатно!</p>
             <p class="free-lesson-message">Попробуй бесплатно! Первое занятие — без оплаты!</p>
-
             <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 20px;">
                 <a href="#contact" class="btn free-lesson-btn" aria-label="Записаться на бесплатный урок (откроется форма контактов)">Записаться на бесплатный урок</a>
                 <a href="#course" class="btn secondary-btn" aria-label="Узнать больше о курсе">Узнать больше</a>
@@ -770,6 +1106,7 @@
                 <h3>Модуль 9: Data-Oriented Technology Stack (DOTS)</h3>
                 <p>Освой DOTS для высокопроизводительных игр. Изучи ECS, Jobs System и Burst Compiler для работы с тысячами объектов.</p>
                 <ul>
+                    <liწ
                     <li>ECS: сущности, компоненты, системы.</li>
                     <li>Jobs System и Burst Compiler для оптимизации.</li>
                     <li>Создание масштабируемых симуляций.</li>
@@ -876,7 +1213,7 @@
         <meta itemprop="description" content="Празднуем десятилетие создания игр и преподавания программирования!">
         <div class="container">
             <h2 style="color: var(--text-color); margin-bottom: 20px; text-align: center;">9 августа 2025 — 10-я годовщина моего пути с Unity и разработкой игр!</h2>
-            <p style="color: #4a5568; font-size: 1.2rem; margin-bottom: 20px;">Празднуем десятилетие создания игр и преподавания программирования! Спасибо за вашу поддержку!</p>
+            <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 20px;">Празднуем десятилетие создания игр и преподавания программирования! Спасибо за вашу поддержку!</p>
             <a href="https://www.youtube.com/@UnityLesson" target="_blank" aria-label="Посетить YouTube канал UnityLesson для видео о геймдеве">
                 <img src="images/anniversary.png" alt="YouTube канал UnityLesson" width="1705" height="573" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); display: block; margin: 0 auto;" loading="lazy">
             </a>
@@ -886,7 +1223,7 @@
         <div class="container">
             <h2 id="about-heading">Обо мне</h2>
             <div class="about-content">
-                <img src="images/nichita.jpg" alt="Никита Левандович" class="profile-img" width="300" height="300" loading="lazy" fetchpriority="high">
+                <img src="images/nichita.jpg" alt="Никита Левандович" class="about-img" width="300" height="300" loading="lazy" fetchpriority="high">
                 <div class="about-text">
                     <p>Привет! Я Никита Левандович, мне 23 года, и я увлеченный разработчик видеоигр с более чем <strong>5-летним опытом</strong>. Программирование и создание игр — это моя страсть. Я верю, что с помощью воображения и упорного труда можно создать целый мир!</p>
                     <p>Я работал в <strong>Success Games</strong> над проектами для <strong>Steam</strong> и <strong>PlayStation</strong>. Мой самый масштабный проект включал <strong>40 000+ строк кода</strong>, оптимизацию и интеграцию сторонних ассетов. Я быстро учусь, нахожу новые решения и всегда довожу задачи до конца.</p>
@@ -911,6 +1248,18 @@
             <h2 id="games-heading">Мои игры</h2>
             <p>Ознакомьтесь с моими проектами, доступными в Google Play и в веб-версиях. От зомби-шутеров до симуляторов — испытайте их прямо сейчас!</p>
             <div class="games-grid">
+                <div class="game-card">
+                    <a href="https://play.google.com/store/apps/details?id=com.MICHITAI.WarLandTD" target="_blank">
+                        <img src="images/war_land_td_logo.png" alt="Zombie Frenzy Force - Игра про зомби" class="game-img" width="300" height="169" loading="lazy">
+                    </a>
+                    <h3 class="game-title">War Land TD</h3>
+                    <div class="game-info">
+                        <span><strong>Жанр:</strong> Защита Башни</span>
+                        <span><strong>Платформа:</strong> Android</span>
+                        <span><strong>Год:</strong> 2025</span>
+                    </div>
+                    <a href="https://play.google.com/store/apps/details?id=com.MICHITAI.WarLandTD" target="_blank" class="btn game-btn">Скачать в Google Play</a>
+                </div>
                 <div class="game-card">
                     <a href="https://play.google.com/store/apps/details?id=com.LevandoviciGames.ZombieFrenzyForce" target="_blank">
                         <img src="images/zombie_frenzy_force_logo.png" alt="Zombie Frenzy Force - Игра про зомби" class="game-img" width="300" height="169" loading="lazy">
@@ -1016,8 +1365,1092 @@
             <h2 id="youtube-heading" style="margin-bottom: 20px;">Мои YouTube видео</h2>
             <p style="max-width: 800px; margin: 0 auto 40px; font-size: 1.1rem;">Посмотрите мои обучающие видео по Unity и разработке игр на моем канале <a href="https://www.youtube.com/@UnityLesson" target="_blank" rel="noopener noreferrer">@UnityLesson</a>!</p>
             <div class="videos-grid">
-                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject" style="max-width: 640px; margin: 0 auto;">
-                    <a href="https://youtu.be/w_1Vo__rMEw" target="_blank" rel="noopener noreferrer" class="video-thumbnail" style="display: block; position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/EC0n6ieQzxk" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-53.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #53" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #53</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/SSh0HQqSXP4" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-52.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #52" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #52</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/KFXEhwkzH9M" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-51.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #51" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #51</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/QH1MLFqqdPg" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-50.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #50" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #50</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/Or4E8VYtZdk" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-49.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #49" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #49</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/apotCCYiFic" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-48.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #48" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #48</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/EU_yEjucufQ" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-47.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #47" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #47</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/fhyP6aIz_ME" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-46.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #46" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #46</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/KxPXsVInRG4" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-45.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #45" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #45</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/HzJV2Ts9xqA" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-44.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #44" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #44</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/g3JyZh1903Y" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-43.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #43" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #43</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/aZZbBY7vQ7s" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-42.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #42" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #42</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/tlk0pEu9mjk" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-41.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #41" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #41</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/O22236eEURE" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-40.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #40" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #40</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/tIVAWUF0Jt8" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-39.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #39" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #39</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/jFGWHp2-Dy0" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-38.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #38" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #38</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/LQJ4jJlFptU" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-37.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #37" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #37</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/ZnfHw-Sde8k" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-36.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #36" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #36</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/iPDnCUn2wiQ" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-35.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #35" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #35</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/LgotbYZC0dY" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-34.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #34" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #34</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/JA6vIFXIkKU" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-33.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #33" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #33</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/yiUhCx00Avk" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-32.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #32" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #32</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/d_SLavdGcJY" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-31.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #31" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #31</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/rHxv55f32X8" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-30.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #30" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #30</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                 <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/U4mSBK9_2l0" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-29.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #29" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #29</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/0MsQVf_WlFE" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-28.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #28" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #28</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/2gUmOkF4XBM" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-27.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #27" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #27</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/_8Pao9tNGxc" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-26.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #26" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #26</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/SyGRFJZlvwo" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-25.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #25" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #25</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/-EkPNFTu3tE" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-24.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #24" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #24</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/x026sfVUyiI" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-23.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #23" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #23</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/QsRDq6VqFKI" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-22.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #22" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #22</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/ZbAuf_eCk1Y" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-21.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #21" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #21</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/pbxFzsBkqT4" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-20.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #20" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #20</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/RMlKQ0odObw" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-19.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #19" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #19</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/WDVRNcLAQWA" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-18.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #18" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #18</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/ahS1VB9923A" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-17.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #17" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #17</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/lzXKdm92vN4" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-16.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #16" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #16</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/_7x0GeibZ8w" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: Car Driving Multiplayer">
+                        <img 
+                            src="images/car-driving-multiplayer-2.jpg" 
+                            alt="Car Driving Multiplayer — большое обновление! 🚗 | Dev Log #2" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">Car Driving Multiplayer | Dev Log #2</h3>
+                    <p class="video-description">Большое обновление!</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/bFuodmWqGUQ" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: Car Driving Multiplayer">
+                        <img 
+                            src="images/car-driving-multiplayer-1.jpg" 
+                            alt="Car Driving Multiplayer — большое обновление! 🚗 | Dev Log #1" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">Car Driving Multiplayer | Dev Log #1</h3>
+                    <p class="video-description">Большое обновление!</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/Fo9IB7lpT68" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-15.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #15" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #15</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/YI0AmxhGltw" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-14.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #14" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #14</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/wLMh9_W6uto" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-13.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #13" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #13</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/AXax4hqUgKg" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-12.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #12" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #12</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/FeEYDYc9ikA" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-11.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #11" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #11</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/CRDfCKM1qMU" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-10.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #10" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #10</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/3xdYJsKGcnM" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-9.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #9" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #9</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/EkCtmZC0uSA" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-8.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #8" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #8</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/ZsrXLGzGRyY" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-7.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #7" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #7</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/J2-pAm63SSY" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-6.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #6" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #6</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/szmR6CiDu2o" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-5.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #5" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #5</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/8zlAN1A9EcA" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-4.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #4" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #4</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/cKYHXzqn1Uc" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-3.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #3" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #3</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/Vi236L7OxVM" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-2.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #2" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #2</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/XW2fcp-zJx8" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: WarLand TD">
+                        <img 
+                            src="images/dev-log-1.jpg" 
+                            alt="WarLand TD: создаю свою игру Tower Defense | Dev Log #1" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">WarLand TD | Dev Log #1</h3>
+                    <p class="video-description">Создаю свою игру Tower Defense</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/x_-DVRwQpnw" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: Создание 2D-персонажа">
+                        <img 
+                            src="images/video-3.jpg" 
+                            alt="Создание 2D-персонажа для игры: Анимация с помощью ИИ за пару шагов!" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">Создание 2D-персонажа</h3>
+                    <p class="video-description">Анимация с помощью ИИ за пару шагов</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/-BQbCXcHsgU" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: День разработчика видеоигр">
+                        <img 
+                            src="images/video-2.jpg" 
+                            alt="Как проходит день разработчика видеоигр: от кофе до кода" 
+                            style="width: 100%; height: auto; display: block; transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='scale(1.02)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            loading="lazy">
+                        <div class="play-button">
+                            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                                <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
+                            </svg>
+                        </div>
+                    </a>
+                    <h3 class="video-title">День разработчика видеоигр</h3>
+                    <p class="video-description">От кофе до кода</p>
+                </div>
+                
+                <div class="video-card" itemprop="itemListElement" itemscope itemtype="https://schema.org/VideoObject">
+                    <a href="https://youtu.be/w_1Vo__rMEw" target="_blank" rel="noopener noreferrer" class="video-thumbnail" aria-label="Watch video: Как работать в IT GameDev">
                         <img 
                             src="images/video-1.jpg" 
                             alt="Как работать в IT GameDev: Секреты создания игр и карьера в геймдеве" 
@@ -1025,19 +2458,22 @@
                             onmouseover="this.style.transform='scale(1.02)'"
                             onmouseout="this.style.transform='scale(1)'"
                             loading="lazy">
-                        <div class="play-button" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: rgba(255, 0, 0, 0.8); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                        <div class="play-button">
                             <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
                                 <path d="M28.5 15.1339C30.5 16.3308 30.5 19.0692 28.5 20.2661L6 34.5167C4 35.7136 1.5 34.1444 1.5 31.7506L1.5 3.64939C1.5 1.2556 4 -0.31362 6 0.883278L28.5 15.1339Z" fill="white"/>
                             </svg>
                         </div>
                     </a>
-                    <div style="padding: 16px;">
-                        <a href="https://www.youtube.com/@UnityLesson" target="_blank" rel="noopener noreferrer" class="btn youtube-btn" aria-label="Перейти на канал UnityLesson" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #ff0000; color: white; padding: 10px 16px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: background-color 0.2s;">
-                            <img src="images/youtube-white.png" alt="YouTube" width="20" height="20" style="width: 20px; height: 20px;">
-                            Перейти на канал
-                        </a>
-                    </div>
+                    <h3 class="video-title">Как работать в IT GameDev</h3>
+                    <p class="video-description">Секреты создания игр и карьера в геймдеве</p>
                 </div>
+
+            </div>
+            <div style="margin-top: 30px;">
+                <a href="https://www.youtube.com/@UnityLesson" target="_blank" rel="noopener noreferrer" class="btn youtube-btn" aria-label="Перейти на канал UnityLesson">
+                    <img src="images/youtube-white.png" alt="YouTube" width="20" height="20">
+                    Перейти на канал
+                </a>
             </div>
         </div>
     </section>
@@ -1054,9 +2490,9 @@
             </ul>
         </div>
     </section>
-    <footer role="contentinfo" style="background: #1a202c; color: white; padding: 30px 0; width: 100%; text-align: center;">
+    <footer role="contentinfo" style="background: var(--footer-bg); color: var(--footer-text); padding: 30px 0; width: 100%; text-align: center;">
         <div class="container">
-            <p style="margin: 0; color: #e2e8f0;"> 2025 Nichita Levandovici. Все права защищены.</p>
+            <p style="margin: 0;">© 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
     <script type="application/ld+json">
@@ -1067,110 +2503,4 @@
       "description": "Освой программирование на C#, Unity и разработку игр онлайн с Никитой Левандовичем. Первый урок бесплатно!",
       "provider": {
         "@type": "Organization",
-        "name": "Limonadoent",
-        "sameAs": "https://michitai.com"
-      },
-      "inLanguage": "ru",
-      "courseMode": "online",
-      "offers": {
-        "@type": "Offer",
-        "name": "Первый урок бесплатно",
-        "price": "0",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock",
-        "validFrom": "2025-01-01"
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Limonadoent",
-      "description": "Международные онлайн курсы программирования и разработки игр на Unity",
-      "url": "https://michitai.com",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+37378814810",
-        "contactType": "customer service",
-        "email": "support@michitai.com"
-      },
-      "sameAs": [
-        "https://t.me/michitai",
-        "https://github.com/levandovici",
-        "https://www.youtube.com/@UnityLesson"
-      ]
-    }
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                const anchors = document.querySelectorAll('a[href^="#"]');
-                if (anchors.length === 0) {
-                    console.warn('No anchor links found for smooth scrolling.');
-                    return;
-                }
-                anchors.forEach(anchor => {
-                    anchor.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const targetId = anchor.getAttribute('href');
-                        const target = document.querySelector(targetId);
-                        if (target) {
-                            target.scrollIntoView({ behavior: 'smooth' });
-                        } else {
-                            console.error(`Target element ${targetId} not found.`);
-                        }
-                    });
-                });
-                const adjustHeaderSpacer = () => {
-                    const header = document.querySelector('header');
-                    const spacer = document.querySelector('.header-spacer');
-                    if (header && spacer) {
-                        spacer.style.height = `${header.offsetHeight}px`;
-                    } else {
-                        console.warn('Header or spacer element not found.');
-                    }
-                };
-                window.addEventListener('resize', adjustHeaderSpacer);
-                window.addEventListener('load', adjustHeaderSpacer);
-                adjustHeaderSpacer();
-            } catch (error) {
-                console.error('Script error:', error.message, error.stack);
-            }
-        });
-    </script>
-    
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Никита Левандович - Unity разработчик и преподаватель",
-        "url": "https://michitai.com/",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://michitai.com/search?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-        }
-    }
-    </script>
-    
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Никита Левандович",
-        "url": "https://michitai.com",
-        "sameAs": [
-            "https://www.linkedin.com/in/nichita-levandovici/",
-            "https://github.com/NikitaLnc",
-            "https://www.youtube.com/@UnityLesson"
-        ],
-        "jobTitle": "Unity Developer & Instructor",
-        "worksFor": {
-            "@type": "Organization",
-            "name": "Freelance"
-        }
-    }
-    </script>
-</body>
-</html>
+        "name": "

@@ -195,8 +195,8 @@ try {
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         <div class="bg-white rounded-xl shadow-md p-6 text-center project-card fade-in">
           <h2 class="text-2xl sm:text-3xl font-semibold text-blue-700">Games</h2>
-          <img src="car_driving_multiplayer_logo.png" alt="Games Logo" class="project-logo mt-4">
-          <p class="mt-3 text-base sm:text-lg text-gray-600">Exciting games for fun and engagement</p>
+          <img src="warland.png" alt="Games Logo" class="project-logo mt-4">
+          <p class="mt-3 text-base sm:text-lg text-gray-600">Available NOW on Google Play · Coming Soon on Steam!</p>
           <a href="https://games.michitai.com" target="_blank" class="mt-4 inline-block bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition text-base sm:text-lg font-medium">Visit Games</a>
         </div>
         <div class="bg-white rounded-xl shadow-md p-6 text-center project-card fade-in" style="animation-delay: 0.1s;">

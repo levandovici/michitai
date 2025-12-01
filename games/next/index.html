@@ -153,15 +153,23 @@
             font-size: 0.9rem;
             margin: 0.5rem 0;
         }
+        .full-span {
+            grid-column: span 2;
+        }
+        @media (max-width: 767px) {
+            .full-span {
+                grid-column: span 1;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
             <a href="../index.html">
-                <img src="../next.png" alt="MICHITAI" class="logo">
+                <img src="../pirate.png" alt="MICHITAI" class="logo">
             </a>
-            <h1>Upcoming Pirate Adventure</h1>
+            <h1>Pirate's Bounty Seas</h1>
             <p>Embark on a thrilling pirate journey! Stay tuned for our next game release.</p>
         </div>
         <div class="content">
@@ -219,6 +227,17 @@
             <p class="asset-title">Emperor Angelfish</p>
             <p>A stunning angelfish model for underwater scenes. Compatible with Unity 2021.3.21 (Built-in Render Pipeline). File size: 3.8 MB.</p>
             <a href="https://assetstore.unity.com/packages/3d/characters/animals/fish/emperor-angelfish-263329" target="_blank" class="asset-link">View on Unity Asset Store</a>
+        </div>
+        <div class="content full-span">
+            <h1><em>Game Design</em></h1>
+            <p><strong>Genre</strong>: 3D open-sea adventure (focus on action/exploration).</p>
+            <p><strong>Core Idea</strong>: Control a 3D stylized pirate ship in real-time, sail vast oceans, fish dynamic sea creatures (e.g., Emperor Angelfish flocks via Simple Boids), and hunt treasures on islands (Mini Pirates Island, Island Assets). Upgrade ship/crew (3D Pirates Pack, Low Poly Animals) with loot.</p>
+            <p><strong>Key Mechanics</strong>:</p>
+            <ol style="text-align: left; max-width: 80%; margin: 0 auto;">
+                <li><strong>Boat Control</strong>: 3D physics-based sailing (Unity's Rigidbody/colliders). Use WASD/arrows for movement, mouse for steering/camera. Wind affects speed; ram enemy ships or avoid obstacles.</li>
+                <li><strong>Fishing</strong>: From boat deck—cast lines/nets at fish schools. Real-time reeling with button inputs; catch rares for rewards.</li>
+                <li><strong>Treasure Hunt</strong>: Sail to islands, dock, explore on foot (third-person view) to dig up chests. Combat rivals with cannons/swords.</li>
+            </ol>
         </div>
     </div>
     <footer>
