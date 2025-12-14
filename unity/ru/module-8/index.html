@@ -1,28 +1,879 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 8: РњСѓР»СЊС‚РёРїР»РµРµСЂ РІ Unity - РџСЂРёРјРµСЂС‹ РєРѕРґР° РґР»СЏ Unity СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ">
-    <meta name="keywords" content="unity, РјСѓР»СЊС‚РёРїР»РµРµСЂ, netcode, СЃРµС‚СЊ, multiplayer">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 8: РњСѓР»СЊС‚РёРїР»РµРµСЂ РІ Unity - РџСЂРёРјРµСЂС‹ РєРѕРґР°</title>
+    <meta name="description" content="Модуль 8: Мультиплеер в Unity - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, мультиплеер, netcode, сеть, multiplayer">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 8: Мультиплеер в Unity - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     
     
 
     
 
-    <link rel="stylesheet" href="../../css/style.css">
+    
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 8: РњСѓР»СЊС‚РёРїР»РµРµСЂ РІ Unity</h1>
+            <h1>Модуль 8: Мультиплеер в Unity</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#examples">РџСЂРёРјРµСЂС‹</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,27 +883,27 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>РњСѓР»СЊС‚РёРїР»РµРµСЂ РІ Unity</h1>
-            <p>РР·СѓС‡РёС‚Рµ СЃРѕР·РґР°РЅРёРµ РјРЅРѕРіРѕРїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… РёРіСЂ СЃ Unity Netcode</p>
+            <h1>Мультиплеер в Unity</h1>
+            <p>Изучите создание многопользовательских игр с Unity Netcode</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="examples" class="example-section">
-                <h2>РџСЂРёРјРµСЂС‹ РєРѕРґР°</h2>
+                <h2>Примеры кода</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('netcode-basics')">РћСЃРЅРѕРІС‹ Netcode</button>
+                    <button class="tab active" onclick="showTab('netcode-basics')">Основы Netcode</button>
                     <button class="tab" onclick="showTab('network-objects')">Network Objects</button>
-                    <button class="tab" onclick="showTab('rpc-communication')">RPC РЎРёСЃС‚РµРјР°</button>
-                    <button class="tab" onclick="showTab('multiplayer-game')">РњСѓР»СЊС‚РёРїР»РµРµСЂ РРіСЂР°</button>
+                    <button class="tab" onclick="showTab('rpc-communication')">RPC Система</button>
+                    <button class="tab" onclick="showTab('multiplayer-game')">Мультиплеер Игра</button>
                 </div>
 
                 <div id="netcode-basics" class="tab-content active">
                     <div class="example">
-                        <h3>РћСЃРЅРѕРІС‹ Netcode for GameObjects</h3>
-                        <p>РќР°СЃС‚СЂРѕР№РєР° Р±Р°Р·РѕРІРѕР№ СЃРµС‚РµРІРѕР№ Р°СЂС…РёС‚РµРєС‚СѓСЂС‹ Рё РїРѕРґРєР»СЋС‡РµРЅРёРµ РєР»РёРµРЅС‚РѕРІ.</p>
+                        <h3>Основы Netcode for GameObjects</h3>
+                        <p>Настройка базовой сетевой архитектуры и подключение клиентов.</p>
                         <div class="code-example">
                             <pre>using Unity.Netcode;
 using UnityEngine;
@@ -60,7 +911,7 @@ using UnityEngine.UI;
 
 public class NetworkManagerUI : MonoBehaviour
 {
-    [Header("UI СЌР»РµРјРµРЅС‚С‹")]
+    [Header("UI элементы")]
     public Button hostButton;
     public Button clientButton;
     public Text statusText;
@@ -69,19 +920,19 @@ public class NetworkManagerUI : MonoBehaviour
     {
         hostButton.onClick.AddListener(StartHost);
         clientButton.onClick.AddListener(StartClient);
-        Debug.Log("Network Manager UI РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Network Manager UI инициализирован");
     }
     
     public void StartHost()
     {
         if (NetworkManager.Singleton.StartHost())
         {
-            statusText.text = "РҐРѕСЃС‚ Р·Р°РїСѓС‰РµРЅ СѓСЃРїРµС€РЅРѕ";
-            Debug.Log("РҐРѕСЃС‚-СЃРµСЂРІРµСЂ Р·Р°РїСѓС‰РµРЅ");
+            statusText.text = "Хост запущен успешно";
+            Debug.Log("Хост-сервер запущен");
         }
         else
         {
-            statusText.text = "РћС€РёР±РєР° Р·Р°РїСѓСЃРєР° С…РѕСЃС‚Р°";
+            statusText.text = "Ошибка запуска хоста";
         }
     }
     
@@ -89,12 +940,12 @@ public class NetworkManagerUI : MonoBehaviour
     {
         if (NetworkManager.Singleton.StartClient())
         {
-            statusText.text = "РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ...";
-            Debug.Log("РљР»РёРµРЅС‚ РїРѕРґРєР»СЋС‡Р°РµС‚СЃСЏ");
+            statusText.text = "Подключение к серверу...";
+            Debug.Log("Клиент подключается");
         }
         else
         {
-            statusText.text = "РћС€РёР±РєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ";
+            statusText.text = "Ошибка подключения";
         }
     }
     
@@ -102,11 +953,11 @@ public class NetworkManagerUI : MonoBehaviour
     {
         if (NetworkManager.Singleton.IsHost)
         {
-            statusText.text = $"РҐРѕСЃС‚ - РљР»РёРµРЅС‚РѕРІ: {NetworkManager.Singleton.ConnectedClients.Count}";
+            statusText.text = $"Хост - Клиентов: {NetworkManager.Singleton.ConnectedClients.Count}";
         }
         else if (NetworkManager.Singleton.IsClient && NetworkManager.Singleton.IsConnectedClient)
         {
-            statusText.text = "РџРѕРґРєР»СЋС‡РµРЅ РєР°Рє РєР»РёРµРЅС‚";
+            statusText.text = "Подключен как клиент";
         }
     }
 }
@@ -116,15 +967,15 @@ public class NetworkManagerUI : MonoBehaviour
 
             <div id="network-objects" class="tab-content">
                 <div class="example">
-                    <h3>NetworkObjects Рё СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ</h3>
-                    <p>Р Р°Р±РѕС‚Р° СЃ СЃРµС‚РµРІС‹РјРё РѕР±СЉРµРєС‚Р°РјРё Рё РёС… СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ РјРµР¶РґСѓ РєР»РёРµРЅС‚Р°РјРё.</p>
+                    <h3>NetworkObjects и синхронизация</h3>
+                    <p>Работа с сетевыми объектами и их синхронизация между клиентами.</p>
                     <div class="code-example">
                         <pre>using Unity.Netcode;
 using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
 {
-    [Header("РќР°СЃС‚СЂРѕР№РєРё РёРіСЂРѕРєР°")]
+    [Header("Настройки игрока")]
     public float moveSpeed = 5f;
     
     private NetworkVariable&lt;Vector3&gt; networkPosition = new NetworkVariable&lt;Vector3&gt;();
@@ -145,7 +996,7 @@ public class NetworkPlayer : NetworkBehaviour
         }
         
         GetComponent&lt;Renderer&gt;().material.color = playerColor.Value;
-        Debug.Log($"РЎРµС‚РµРІРѕР№ РёРіСЂРѕРє СЃРѕР·РґР°РЅ. Р’Р»Р°РґРµР»РµС†: {OwnerClientId}");
+        Debug.Log($"Сетевой игрок создан. Владелец: {OwnerClientId}");
     }
     
     void Update()
@@ -179,14 +1030,14 @@ public class NetworkPlayer : NetworkBehaviour
     void OnColorChanged(Color previousColor, Color newColor)
     {
         GetComponent&lt;Renderer&gt;().material.color = newColor;
-        Debug.Log($"Р¦РІРµС‚ РёРіСЂРѕРєР° РёР·РјРµРЅРµРЅ РЅР°: {newColor}");
+        Debug.Log($"Цвет игрока изменен на: {newColor}");
     }
     
     void OnPositionChanged(Vector3 previousPos, Vector3 newPos)
     {
         if (!IsOwner)
         {
-            Debug.Log($"РџРѕР·РёС†РёСЏ РѕР±РЅРѕРІР»РµРЅР°: {newPos}");
+            Debug.Log($"Позиция обновлена: {newPos}");
         }
     }
 }
@@ -196,8 +1047,8 @@ public class NetworkPlayer : NetworkBehaviour
 
             <div id="rpc-communication" class="tab-content">
                 <div class="example">
-                    <h3>RPC Рё СЃРµС‚РµРІР°СЏ СЃРІСЏР·СЊ</h3>
-                    <p>РЈРґР°Р»РµРЅРЅС‹Рµ РІС‹Р·РѕРІС‹ РїСЂРѕС†РµРґСѓСЂ РґР»СЏ РјРіРЅРѕРІРµРЅРЅРѕР№ СЃРІСЏР·Рё РјРµР¶РґСѓ РєР»РёРµРЅС‚Р°РјРё.</p>
+                    <h3>RPC и сетевая связь</h3>
+                    <p>Удаленные вызовы процедур для мгновенной связи между клиентами.</p>
                     <div class="code-example">
                         <pre>using Unity.Netcode;
 using UnityEngine;
@@ -208,12 +1059,12 @@ public class NetworkCommunication : NetworkBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            SendMessage($"РРіСЂРѕРє {OwnerClientId}: РџСЂРёРІРµС‚!");
+            SendMessage($"Игрок {OwnerClientId}: Привет!");
         }
         
         if (Input.GetKeyDown(KeyCode.F))
         {
-            NotifyAction("РїСЂС‹РіРЅСѓР»");
+            NotifyAction("прыгнул");
         }
     }
     
@@ -228,14 +1079,14 @@ public class NetworkCommunication : NetworkBehaviour
     [ServerRpc]
     void SendMessageServerRpc(string message)
     {
-        Debug.Log($"РЎРµСЂРІРµСЂ РїРѕР»СѓС‡РёР»: {message}");
+        Debug.Log($"Сервер получил: {message}");
         ReceiveMessageClientRpc(message);
     }
     
     [ClientRpc]
     void ReceiveMessageClientRpc(string message)
     {
-        Debug.Log($"РЎРѕРѕР±С‰РµРЅРёРµ: {message}");
+        Debug.Log($"Сообщение: {message}");
     }
     
     public void NotifyAction(string action)
@@ -255,7 +1106,7 @@ public class NetworkCommunication : NetworkBehaviour
     [ClientRpc]
     void NotifyActionClientRpc(ulong playerId, string action)
     {
-        Debug.Log($"РРіСЂРѕРє {playerId} {action}");
+        Debug.Log($"Игрок {playerId} {action}");
     }
 }
                         </pre></div>
@@ -264,8 +1115,8 @@ public class NetworkCommunication : NetworkBehaviour
 
             <div id="network-variables" class="tab-content">
                 <div class="example">
-                    <h3>NetworkVariables Рё СЃРѕСЃС‚РѕСЏРЅРёРµ</h3>
-                    <p>РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ РёРіСЂС‹ С‡РµСЂРµР· NetworkVariables.</p>
+                    <h3>NetworkVariables и состояние</h3>
+                    <p>Синхронизация состояния игры через NetworkVariables.</p>
                     <div class="code-example">
                         <pre>using Unity.Netcode;
 using UnityEngine;
@@ -287,7 +1138,7 @@ public class GameStateManager : NetworkBehaviour
             UpdatePlayerCount();
         }
         
-        Debug.Log("Game State Manager РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Game State Manager инициализирован");
     }
     
     void Update()
@@ -317,7 +1168,7 @@ public class GameStateManager : NetworkBehaviour
         {
             gameActive.Value = true;
             gameTime.Value = 300f;
-            Debug.Log("РРіСЂР° Р·Р°РїСѓС‰РµРЅР°!");
+            Debug.Log("Игра запущена!");
         }
     }
     
@@ -326,7 +1177,7 @@ public class GameStateManager : NetworkBehaviour
         if (IsServer)
         {
             gameActive.Value = false;
-            Debug.Log("РРіСЂР° Р·Р°РІРµСЂС€РµРЅР°!");
+            Debug.Log("Игра завершена!");
         }
     }
     
@@ -340,17 +1191,17 @@ public class GameStateManager : NetworkBehaviour
     
     void OnTimeChanged(float previousTime, float newTime)
     {
-        Debug.Log($"Р’СЂРµРјСЏ РёРіСЂС‹: {newTime:F1} СЃРµРє");
+        Debug.Log($"Время игры: {newTime:F1} сек");
     }
     
     void OnGameStateChanged(bool previousState, bool newState)
     {
-        Debug.Log($"РЎРѕСЃС‚РѕСЏРЅРёРµ РёРіСЂС‹: {(newState ? "РђРєС‚РёРІРЅР°" : "РќРµР°РєС‚РёРІРЅР°")}");
+        Debug.Log($"Состояние игры: {(newState ? "Активна" : "Неактивна")}");
     }
     
     void OnPlayerCountChanged(int previousCount, int newCount)
     {
-        Debug.Log($"РРіСЂРѕРєРѕРІ РїРѕРґРєР»СЋС‡РµРЅРѕ: {newCount}");
+        Debug.Log($"Игроков подключено: {newCount}");
     }
 }
                         </pre></div>
@@ -359,15 +1210,15 @@ public class GameStateManager : NetworkBehaviour
 
             <div id="multiplayer-game" class="tab-content">
                 <div class="example">
-                    <h3>РџСЂРѕСЃС‚Р°СЏ РјСѓР»СЊС‚РёРїР»РµРµСЂРЅР°СЏ РёРіСЂР°</h3>
-                    <p>РџСЂРёРјРµСЂ Р±Р°Р·РѕРІРѕР№ РјСѓР»СЊС‚РёРїР»РµРµСЂРЅРѕР№ РёРіСЂС‹ СЃ РѕС‡РєР°РјРё Рё РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёРµРј.</p>
+                    <h3>Простая мультиплеерная игра</h3>
+                    <p>Пример базовой мультиплеерной игры с очками и взаимодействием.</p>
                     <div class="code-example">
                         <pre>using Unity.Netcode;
 using UnityEngine;
 
 public class MultiplayerGame : NetworkBehaviour
 {
-    [Header("РРіСЂРѕРІС‹Рµ РѕР±СЉРµРєС‚С‹")]
+    [Header("Игровые объекты")]
     public GameObject collectiblePrefab;
     public Transform[] spawnPoints;
     
@@ -383,7 +1234,7 @@ public class MultiplayerGame : NetworkBehaviour
         }
         
         playerScore.OnValueChanged += OnScoreChanged;
-        Debug.Log("РњСѓР»СЊС‚РёРїР»РµРµСЂРЅР°СЏ РёРіСЂР° РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°");
+        Debug.Log("Мультиплеерная игра инициализирована");
     }
     
     void SpawnCollectibles()
@@ -403,7 +1254,7 @@ public class MultiplayerGame : NetworkBehaviour
                 collectiblePositions.Add(randomPos);
             }
             
-            Debug.Log("РџСЂРµРґРјРµС‚С‹ РґР»СЏ СЃР±РѕСЂР° СЃРѕР·РґР°РЅС‹");
+            Debug.Log("Предметы для сбора созданы");
         }
     }
     
@@ -419,9 +1270,9 @@ public class MultiplayerGame : NetworkBehaviour
     void CollectItemServerRpc()
     {
         playerScore.Value += 10;
-        Debug.Log($"РРіСЂРѕРє {OwnerClientId} СЃРѕР±СЂР°Р» РїСЂРµРґРјРµС‚. РЎС‡РµС‚: {playerScore.Value}");
+        Debug.Log($"Игрок {OwnerClientId} собрал предмет. Счет: {playerScore.Value}");
         
-        // РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ РїСЂРµРґРјРµС‚Р°
+        // Создание нового предмета
         Vector3 newPos = new Vector3(
             Random.Range(-10f, 10f),
             1f,
@@ -434,17 +1285,17 @@ public class MultiplayerGame : NetworkBehaviour
     
     void OnScoreChanged(int previousScore, int newScore)
     {
-        Debug.Log($"РЎС‡РµС‚ РѕР±РЅРѕРІР»РµРЅ: {newScore}");
+        Debug.Log($"Счет обновлен: {newScore}");
         UpdateScoreUI(newScore);
     }
     
     void UpdateScoreUI(int score)
     {
-        // РћР±РЅРѕРІР»РµРЅРёРµ UI СЃС‡РµС‚Р°
+        // Обновление UI счета
         var scoreText = GameObject.Find("ScoreText");
         if (scoreText != null)
         {
-            scoreText.GetComponent&lt;UnityEngine.UI.Text&gt;().text = $"РЎС‡РµС‚: {score}";
+            scoreText.GetComponent&lt;UnityEngine.UI.Text&gt;().text = $"Счет: {score}";
         }
     }
     
@@ -459,7 +1310,7 @@ public class MultiplayerGame : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void ResetGameServerRpc()
     {
-        // РЎР±СЂРѕСЃ СЃС‡РµС‚Р° РІСЃРµС… РёРіСЂРѕРєРѕРІ
+        // Сброс счета всех игроков
         foreach (var client in NetworkManager.Singleton.ConnectedClients.Values)
         {
             var playerGame = client.PlayerObject.GetComponent&lt;MultiplayerGame&gt;();
@@ -469,7 +1320,7 @@ public class MultiplayerGame : NetworkBehaviour
             }
         }
         
-        Debug.Log("РРіСЂР° СЃР±СЂРѕС€РµРЅР°");
+        Debug.Log("Игра сброшена");
     }
 }
                         </pre></div>
@@ -483,15 +1334,15 @@ public class MultiplayerGame : NetworkBehaviour
         <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-7/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 7</a>
-                <a href="../module-9/index.html" class="nav-btn next-btn">РњРѕРґСѓР»СЊ 9 в†’</a>
+                <a href="../module-7/index.html" class="nav-btn prev-btn">< Модуль 7</a>
+                <a href="../module-9/index.html" class="nav-btn next-btn">Модуль 9 ></a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 

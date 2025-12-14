@@ -1,30 +1,881 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 14: РС‚РѕРіРѕРІС‹Р№ РїСЂРѕРµРєС‚ - РЎРѕР·РґР°РЅРёРµ РїРѕР»РЅРѕС†РµРЅРЅРѕР№ РёРіСЂС‹ СЃ РѕРїС†РёРѕРЅР°Р»СЊРЅРѕР№ РёРЅС‚РµРіСЂР°С†РёРµР№ Р±Р»РѕРєС‡РµР№РЅ С‚РµС…РЅРѕР»РѕРіРёР№">
-    <meta name="keywords" content="unity, С„РёРЅР°Р»СЊРЅС‹Р№ РїСЂРѕРµРєС‚, РёРіСЂР°, Р±Р»РѕРєС‡РµР№РЅ, web3, nft, СЃРјР°СЂС‚-РєРѕРЅС‚СЂР°РєС‚С‹, СЂР°Р·СЂР°Р±РѕС‚РєР° РёРіСЂ">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 14: РС‚РѕРіРѕРІС‹Р№ РїСЂРѕРµРєС‚ - РЎРѕР·РґР°РЅРёРµ РёРіСЂС‹ СЃ Unity</title>
+    <meta name="description" content="Модуль 14: Итоговый проект - Создание полноценной игры с опциональной интеграцией блокчейн технологий">
+    <meta name="keywords" content="unity, финальный проект, игра, блокчейн, web3, nft, смарт-контракты, разработка игр">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 14: Итоговый проект - Создание игры с Unity</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     
     
 
     
 
-    <link rel="stylesheet" href="../../css/style.css">
+    
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 14: РС‚РѕРіРѕРІС‹Р№ РїСЂРѕРµРєС‚</h1>
+            <h1>Модуль 14: Итоговый проект</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#project-steps">Р­С‚Р°РїС‹</a></li>
-                    <li><a href="#blockchain-optional">Р‘Р»РѕРєС‡РµР№РЅ (РѕРїС†РёРѕРЅР°Р»СЊРЅРѕ)</a></li>
-                    <li><a href="#submission">РЎРґР°С‡Р° РїСЂРѕРµРєС‚Р°</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#project-steps">Этапы</a></li>
+                    <li><a href="#blockchain-optional">Блокчейн (опционально)</a></li>
+                    <li><a href="#submission">Сдача проекта</a></li>
                 </ul>
             </nav>
         </div>
@@ -34,59 +885,59 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>РС‚РѕРіРѕРІС‹Р№ РїСЂРѕРµРєС‚</h1>
-            <p>РЎРѕР·РґР°Р№ СЃРІРѕСЋ РїРѕР»РЅРѕС†РµРЅРЅСѓСЋ РёРіСЂСѓ, РёСЃРїРѕР»СЊР·СѓСЏ РІСЃРµ РёР·СѓС‡РµРЅРЅС‹Рµ С‚РµС…РЅРѕР»РѕРіРёРё, СЃ РѕРїС†РёРѕРЅР°Р»СЊРЅРѕР№ РёРЅС‚РµРіСЂР°С†РёРµР№ Р±Р»РѕРєС‡РµР№РЅР°</p>
+            <h1>Итоговый проект</h1>
+            <p>Создай свою полноценную игру, используя все изученные технологии, с опциональной интеграцией блокчейна</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="project-steps" class="example-section">
-                <h2>Р­С‚Р°РїС‹ СЂР°Р±РѕС‚С‹ РЅР°Рґ РїСЂРѕРµРєС‚РѕРј</h2>
+                <h2>Этапы работы над проектом</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('planning')">1. РџР»Р°РЅРёСЂРѕРІР°РЅРёРµ</button>
-                    <button class="tab" onclick="showTab('development')">2. Р Р°Р·СЂР°Р±РѕС‚РєР°</button>
-                    <button class="tab" onclick="showTab('testing')">3. РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ</button>
-                    <button class="tab" onclick="showTab('documentation')">4. Р”РѕРєСѓРјРµРЅС‚Р°С†РёСЏ</button>
+                    <button class="tab active" onclick="showTab('planning')">1. Планирование</button>
+                    <button class="tab" onclick="showTab('development')">2. Разработка</button>
+                    <button class="tab" onclick="showTab('testing')">3. Тестирование</button>
+                    <button class="tab" onclick="showTab('documentation')">4. Документация</button>
                 </div>
 
                 <div id="planning" class="tab-content active">
-                    <h3>1. РџР»Р°РЅРёСЂРѕРІР°РЅРёРµ РїСЂРѕРµРєС‚Р°</h3>
-                    <p>РџСЂРµР¶РґРµ С‡РµРј РїСЂРёСЃС‚СѓРїР°С‚СЊ Рє РєРѕРґРёРЅРіСѓ, РІР°Р¶РЅРѕ С‚С‰Р°С‚РµР»СЊРЅРѕ СЃРїР»Р°РЅРёСЂРѕРІР°С‚СЊ РІР°С€ РїСЂРѕРµРєС‚:</p>
+                    <h3>1. Планирование проекта</h3>
+                    <p>Прежде чем приступать к кодингу, важно тщательно спланировать ваш проект:</p>
                     <ul style="margin: 15px 0 15px 30px;">
-                        <li>РћРїСЂРµРґРµР»РёС‚Рµ Р¶Р°РЅСЂ Рё С†РµР»РµРІСѓСЋ Р°СѓРґРёС‚РѕСЂРёСЋ</li>
-                        <li>РЎРѕР·РґР°Р№С‚Рµ РєРѕРЅС†РµРїС‚-РґРѕРєСѓРјРµРЅС‚ (GDD)</li>
-                        <li>РЎРїР»Р°РЅРёСЂСѓР№С‚Рµ Р°СЂС…РёС‚РµРєС‚СѓСЂСѓ РїСЂРѕРµРєС‚Р°</li>
-                        <li>РћРїСЂРµРґРµР»РёС‚Рµ РєР»СЋС‡РµРІС‹Рµ РјРµС…Р°РЅРёРєРё Рё С„РёС‡Рё</li>
-                        <li>РЎРѕР·РґР°Р№С‚Рµ РґРѕСЂРѕР¶РЅСѓСЋ РєР°СЂС‚Сѓ СЂР°Р·СЂР°Р±РѕС‚РєРё</li>
+                        <li>Определите жанр и целевую аудиторию</li>
+                        <li>Создайте концепт-документ (GDD)</li>
+                        <li>Спланируйте архитектуру проекта</li>
+                        <li>Определите ключевые механики и фичи</li>
+                        <li>Создайте дорожную карту разработки</li>
                     </ul>
                     <div class="code-example">
-                        <pre><code>// РџСЂРёРјРµСЂ СЃС‚СЂСѓРєС‚СѓСЂС‹ РїСЂРѕРµРєС‚Р° РІ Unity
+                        <pre><code>// Пример структуры проекта в Unity
 Assets/
-в”њв”Ђв”Ђ _Scripts/
-в”‚   в”њв”Ђв”Ђ Core/         # РћСЃРЅРѕРІРЅС‹Рµ СЃРёСЃС‚РµРјС‹
-в”‚   в”њв”Ђв”Ђ Gameplay/     # РРіСЂРѕРІС‹Рµ РјРµС…Р°РЅРёРєРё
-в”‚   в”њв”Ђв”Ђ UI/           # РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ
-в”‚   в””в”Ђв”Ђ Utils/        # Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ СѓС‚РёР»РёС‚С‹
-в”њв”Ђв”Ђ Art/              # Р“СЂР°С„РёРєР°
-в”њв”Ђв”Ђ Audio/            # Р—РІСѓРєРё Рё РјСѓР·С‹РєР°
-в””в”Ђв”Ђ Scenes/           # РРіСЂРѕРІС‹Рµ СЃС†РµРЅС‹</code></pre>
++-- _Scripts/
+¦   +-- Core/         # Основные системы
+¦   +-- Gameplay/     # Игровые механики
+¦   +-- UI/           # Пользовательский интерфейс
+¦   L-- Utils/        # Вспомогательные утилиты
++-- Art/              # Графика
++-- Audio/            # Звуки и музыка
+L-- Scenes/           # Игровые сцены</code></pre>
                     </div>
                 </div>
 
                 <div id="development" class="tab-content">
-                    <h3>2. Р Р°Р·СЂР°Р±РѕС‚РєР°</h3>
-                    <p>РћСЃРЅРѕРІРЅРѕР№ СЌС‚Р°Рї СЂРµР°Р»РёР·Р°С†РёРё РІР°С€РµР№ РёРіСЂС‹:</p>
+                    <h3>2. Разработка</h3>
+                    <p>Основной этап реализации вашей игры:</p>
                     <ul style="margin: 15px 0 15px 30px;">
-                        <li>РќР°СЃС‚СЂРѕР№С‚Рµ Р±Р°Р·РѕРІСѓСЋ СЃС†РµРЅСѓ Рё РєР°РјРµСЂСѓ</li>
-                        <li>Р РµР°Р»РёР·СѓР№С‚Рµ РѕСЃРЅРѕРІРЅС‹Рµ РёРіСЂРѕРІС‹Рµ РјРµС…Р°РЅРёРєРё</li>
-                        <li>Р”РѕР±Р°РІСЊС‚Рµ СЃРёСЃС‚РµРјСѓ СЃРѕС…СЂР°РЅРµРЅРёР№</li>
-                        <li>РЎРѕР·РґР°Р№С‚Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РёРЅС‚РµСЂС„РµР№СЃ</li>
-                        <li>Р”РѕР±Р°РІСЊС‚Рµ Р·РІСѓРєРё Рё РІРёР·СѓР°Р»СЊРЅС‹Рµ СЌС„С„РµРєС‚С‹</li>
+                        <li>Настройте базовую сцену и камеру</li>
+                        <li>Реализуйте основные игровые механики</li>
+                        <li>Добавьте систему сохранений</li>
+                        <li>Создайте пользовательский интерфейс</li>
+                        <li>Добавьте звуки и визуальные эффекты</li>
                     </ul>
                     <div class="code-example">
-                        <pre><code>// РџСЂРёРјРµСЂ Р±Р°Р·РѕРІРѕРіРѕ РєРѕРЅС‚СЂРѕР»Р»РµСЂР° РёРіСЂРѕРєР°
+                        <pre><code>// Пример базового контроллера игрока
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
@@ -103,14 +954,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // РћР±СЂР°Р±РѕС‚РєР° РІРІРѕРґР° Рё РїРµСЂРµРґРІРёР¶РµРЅРёРµ
+        // Обработка ввода и передвижение
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
         
         Vector3 movement = new Vector3(moveX, 0f, moveZ);
         rb.velocity = new Vector3(movement.x * moveSpeed, rb.velocity.y, movement.z * moveSpeed);
 
-        // РџСЂС‹Р¶РѕРє
+        // Прыжок
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -120,7 +971,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // РџСЂРѕРІРµСЂРєР° РЅР° Р·РµРјР»СЋ
+        // Проверка на землю
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
@@ -131,17 +982,17 @@ public class PlayerController : MonoBehaviour
                 </div>
 
                 <div id="testing" class="tab-content">
-                    <h3>3. РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ Рё РѕС‚Р»Р°РґРєР°</h3>
-                    <p>Р’Р°Р¶РЅС‹Рµ Р°СЃРїРµРєС‚С‹ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ РІР°С€РµР№ РёРіСЂС‹:</p>
+                    <h3>3. Тестирование и отладка</h3>
+                    <p>Важные аспекты тестирования вашей игры:</p>
                     <ul style="margin: 15px 0 15px 30px;">
-                        <li>РњРѕРґСѓР»СЊРЅРѕРµ С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ РѕС‚РґРµР»СЊРЅС‹С… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ</li>
-                        <li>РРЅС‚РµРіСЂР°С†РёРѕРЅРЅРѕРµ С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ</li>
-                        <li>Р‘Р°Р»Р°РЅСЃРёСЂРѕРІРєР° РёРіСЂРѕРІРѕРіРѕ РїСЂРѕС†РµСЃСЃР°</li>
-                        <li>РћРїС‚РёРјРёР·Р°С†РёСЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё</li>
-                        <li>РЎР±РѕСЂ Рё Р°РЅР°Р»РёР· РѕС‚Р·С‹РІРѕРІ</li>
+                        <li>Модульное тестирование отдельных компонентов</li>
+                        <li>Интеграционное тестирование</li>
+                        <li>Балансировка игрового процесса</li>
+                        <li>Оптимизация производительности</li>
+                        <li>Сбор и анализ отзывов</li>
                     </ul>
                     <div class="code-example">
-                        <pre><code>// РџСЂРёРјРµСЂ С‚РµСЃС‚Р° РґР»СЏ РёРіСЂРѕРІРѕРіРѕ РјРµРЅРµРґР¶РµСЂР°
+                        <pre><code>// Пример теста для игрового менеджера
 using NUnit.Framework;
 using UnityEngine;
 
@@ -179,35 +1030,35 @@ public class GameManagerTests
                 </div>
 
                 <div id="documentation" class="tab-content">
-                    <h3>4. Р”РѕРєСѓРјРµРЅС‚Р°С†РёСЏ</h3>
-                    <p>РџРѕРґРіРѕС‚РѕРІРєР° РїСЂРѕРµРєС‚Р° Рє СЃРґР°С‡Рµ:</p>
+                    <h3>4. Документация</h3>
+                    <p>Подготовка проекта к сдаче:</p>
                     <ul style="margin: 15px 0 15px 30px;">
-                        <li>РќР°РїРёС€РёС‚Рµ README СЃ РёРЅСЃС‚СЂСѓРєС†РёРµР№ РїРѕ Р·Р°РїСѓСЃРєСѓ</li>
-                        <li>Р”РѕРєСѓРјРµРЅС‚РёСЂСѓР№С‚Рµ РєР»СЋС‡РµРІС‹Рµ РєР»Р°СЃСЃС‹ Рё РјРµС‚РѕРґС‹</li>
-                        <li>РџРѕРґРіРѕС‚РѕРІСЊС‚Рµ РїСЂРµР·РµРЅС‚Р°С†РёСЋ РїСЂРѕРµРєС‚Р°</li>
-                        <li>РЎРѕР·РґР°Р№С‚Рµ РґРµРјРѕ-РІРёРґРµРѕ</li>
-                        <li>РћРїРёС€РёС‚Рµ РёР·РІРµСЃС‚РЅС‹Рµ РїСЂРѕР±Р»РµРјС‹ Рё РїР»Р°РЅС‹ РїРѕ РґРѕСЂР°Р±РѕС‚РєРµ</li>
+                        <li>Напишите README с инструкцией по запуску</li>
+                        <li>Документируйте ключевые классы и методы</li>
+                        <li>Подготовьте презентацию проекта</li>
+                        <li>Создайте демо-видео</li>
+                        <li>Опишите известные проблемы и планы по доработке</li>
                     </ul>
                     <div class="code-example">
                         <pre><code>/// <summary>
-/// РЈРїСЂР°РІР»СЏРµС‚ РѕСЃРЅРѕРІРЅС‹Рј РёРіСЂРѕРІС‹Рј РїСЂРѕС†РµСЃСЃРѕРј, РІРєР»СЋС‡Р°СЏ СЃС‡РµС‚, СЃРѕСЃС‚РѕСЏРЅРёРµ РёРіСЂС‹ Рё СЃРѕР±С‹С‚РёСЏ.
+/// Управляет основным игровым процессом, включая счет, состояние игры и события.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
     /// <summary>
-    /// РўРµРєСѓС‰РёР№ СЃС‡РµС‚ РёРіСЂРѕРєР°.
+    /// Текущий счет игрока.
     /// </summary>
     public int Score { get; private set; }
 
     /// <summary>
-    /// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РёРіСЂР° Р·Р°РІРµСЂС€РµРЅР°.
+    /// Возвращает true, если игра завершена.
     /// </summary>
     public bool IsGameOver { get; private set; }
 
     /// <summary>
-    /// Р”РѕР±Р°РІР»СЏРµС‚ РѕС‡РєРё Рє С‚РµРєСѓС‰РµРјСѓ СЃС‡РµС‚Сѓ.
+    /// Добавляет очки к текущему счету.
     /// </summary>
-    /// <param name="points">РљРѕР»РёС‡РµСЃС‚РІРѕ РѕС‡РєРѕРІ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ.</param>
+    /// <param name="points">Количество очков для добавления.</param>
     public void AddScore(int points)
     {
         if (!IsGameOver)
@@ -218,7 +1069,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Р—Р°РІРµСЂС€Р°РµС‚ РёРіСЂСѓ.
+    /// Завершает игру.
     /// </summary>
     public void GameOver()
     {
@@ -229,7 +1080,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // РЎРѕР±С‹С‚РёСЏ
+    // События
     public event System.Action<int> OnScoreUpdated;
     public event System.Action OnGameOver;
 }</code></pre>
@@ -238,20 +1089,20 @@ public class GameManager : MonoBehaviour
             </section>
 
             <section id="blockchain-optional" class="example-section">
-                <h2>Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ: РРЅС‚РµРіСЂР°С†РёСЏ СЃ Р±Р»РѕРєС‡РµР№РЅРѕРј</h2>
-                <p>Р”Р»СЏ РїСЂРѕРµРєС‚РѕРІ СЃ Р±Р»РѕРєС‡РµР№РЅ-РєРѕРјРїРѕРЅРµРЅС‚Р°РјРё:</p>
+                <h2>Дополнительно: Интеграция с блокчейном</h2>
+                <p>Для проектов с блокчейн-компонентами:</p>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('wallet-integration')">РљРѕС€РµР»РµРє</button>
-                    <button class="tab" onclick="showTab('nft-system')">NFT СЃРёСЃС‚РµРјР°</button>
-                    <button class="tab" onclick="showTab('smart-contracts')">РЎРјР°СЂС‚-РєРѕРЅС‚СЂР°РєС‚С‹</button>
-                    <button class="tab" onclick="showTab('token-economy')">РўРѕРєРµРЅРѕРјРёРєР°</button>
-                    <button class="tab" onclick="showTab('marketplace')">РњР°СЂРєРµС‚РїР»РµР№СЃ</button>
+                    <button class="tab active" onclick="showTab('wallet-integration')">Кошелек</button>
+                    <button class="tab" onclick="showTab('nft-system')">NFT система</button>
+                    <button class="tab" onclick="showTab('smart-contracts')">Смарт-контракты</button>
+                    <button class="tab" onclick="showTab('token-economy')">Токеномика</button>
+                    <button class="tab" onclick="showTab('marketplace')">Маркетплейс</button>
                 </div>
 
                 <div id="wallet-integration" class="tab-content active">
-                    <h3>РџСЂРёРјРµСЂ 1: РРЅС‚РµРіСЂР°С†РёСЏ Web3 РєРѕС€РµР»СЊРєР°</h3>
-                    <p>РџРѕРґРєР»СЋС‡РµРЅРёРµ MetaMask Рё РґСЂСѓРіРёС… Web3 РєРѕС€РµР»СЊРєРѕРІ Рє Unity РёРіСЂРµ:</p>
+                    <h3>Пример 1: Интеграция Web3 кошелька</h3>
+                    <p>Подключение MetaMask и других Web3 кошельков к Unity игре:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 using System.Collections;
@@ -263,27 +1114,27 @@ public class WalletManager : MonoBehaviour
     
     void Start()
     {
-        Debug.Log("Web3 Wallet Manager РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Web3 Wallet Manager инициализирован");
         ConnectWallet();
     }
     
     void ConnectWallet()
     {
-        Debug.Log("РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє Web3 РєРѕС€РµР»СЊРєСѓ...");
+        Debug.Log("Подключение к Web3 кошельку...");
         
         playerWalletAddress = "0x" + System.Guid.NewGuid().ToString("N").Substring(0, 40);
         isWalletConnected = true;
         
-        Debug.Log($"РљРѕС€РµР»РµРє РїРѕРґРєР»СЋС‡РµРЅ: {playerWalletAddress}");
+        Debug.Log($"Кошелек подключен: {playerWalletAddress}");
         GetWalletBalance();
     }
     
     void GetWalletBalance()
     {
-        Debug.Log("РџРѕР»СѓС‡РµРЅРёРµ Р±Р°Р»Р°РЅСЃР° РєРѕС€РµР»СЊРєР°...");
+        Debug.Log("Получение баланса кошелька...");
         
         float balance = Random.Range(0.1f, 5.0f);
-        Debug.Log($"Р‘Р°Р»Р°РЅСЃ РєРѕС€РµР»СЊРєР°: {balance:F4} ETH");
+        Debug.Log($"Баланс кошелька: {balance:F4} ETH");
     }
     
     public bool IsWalletConnected()
@@ -295,8 +1146,8 @@ public class WalletManager : MonoBehaviour
                 </div>
 
                 <div id="nft-system" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 2: NFT СЃРёСЃС‚РµРјР° РІ РёРіСЂРµ</h3>
-                    <p>РЎРѕР·РґР°РЅРёРµ Рё СѓРїСЂР°РІР»РµРЅРёРµ NFT РїСЂРµРґРјРµС‚Р°РјРё РІ Unity:</p>
+                    <h3>Пример 2: NFT система в игре</h3>
+                    <p>Создание и управление NFT предметами в Unity:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 using System.Collections.Generic;
@@ -318,7 +1169,7 @@ public class NFTManager : MonoBehaviour
     void Start()
     {
         CreateSampleNFTs();
-        Debug.Log("NFT Manager РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("NFT Manager инициализирован");
     }
     
     void CreateSampleNFTs()
@@ -326,8 +1177,8 @@ public class NFTManager : MonoBehaviour
         playerNFTs.Add(new NFTData
         {
             tokenId = 1,
-            name = "РћРіРЅРµРЅРЅС‹Р№ РјРµС‡",
-            rarity = "Р РµРґРєРёР№",
+            name = "Огненный меч",
+            rarity = "Редкий",
             attack = 25,
             defense = 5
         });
@@ -335,13 +1186,13 @@ public class NFTManager : MonoBehaviour
         playerNFTs.Add(new NFTData
         {
             tokenId = 2,
-            name = "Р›РµРґСЏРЅРѕР№ С‰РёС‚",
-            rarity = "Р­РїРёС‡РµСЃРєРёР№",
+            name = "Ледяной щит",
+            rarity = "Эпический",
             attack = 5,
             defense = 30
         });
         
-        Debug.Log($"РЎРѕР·РґР°РЅРѕ {playerNFTs.Count} NFT РїСЂРµРґРјРµС‚РѕРІ");
+        Debug.Log($"Создано {playerNFTs.Count} NFT предметов");
     }
     
     public NFTData GetNFTById(int tokenId)
@@ -354,7 +1205,7 @@ public class NFTManager : MonoBehaviour
         var nft = GetNFTById(tokenId);
         if (nft != null)
         {
-            Debug.Log($"NFT {nft.name} РїРµСЂРµРґР°РЅ РЅР° Р°РґСЂРµСЃ: {toAddress}");
+            Debug.Log($"NFT {nft.name} передан на адрес: {toAddress}");
         }
     }
 }</code></pre>
@@ -362,8 +1213,8 @@ public class NFTManager : MonoBehaviour
                 </div>
 
                 <div id="smart-contracts" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 3: Р’Р·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ СЃРѕ СЃРјР°СЂС‚-РєРѕРЅС‚СЂР°РєС‚Р°РјРё</h3>
-                    <p>Р’С‹Р·РѕРІ С„СѓРЅРєС†РёР№ СЃРјР°СЂС‚-РєРѕРЅС‚СЂР°РєС‚РѕРІ РґР»СЏ РёРіСЂРѕРІРѕР№ Р»РѕРіРёРєРё:</p>
+                    <h3>Пример 3: Взаимодействие со смарт-контрактами</h3>
+                    <p>Вызов функций смарт-контрактов для игровой логики:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 using System.Collections;
@@ -376,40 +1227,40 @@ public class SmartContractManager : MonoBehaviour
     void Start()
     {
         playerAddress = FindObjectOfType&lt;WalletManager&gt;()?.playerWalletAddress ?? "0x123...456";
-        Debug.Log("Smart Contract Manager РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Smart Contract Manager инициализирован");
     }
     
     public void CallMintFunction(int tokenId, string tokenURI)
     {
-        Debug.Log($"Р’С‹Р·РѕРІ С„СѓРЅРєС†РёРё mint({tokenId}, {tokenURI})");
-        Debug.Log($"РљРѕРЅС‚СЂР°РєС‚: {contractAddress}");
-        Debug.Log($"РћС‚ Р°РґСЂРµСЃР°: {playerAddress}");
+        Debug.Log($"Вызов функции mint({tokenId}, {tokenURI})");
+        Debug.Log($"Контракт: {contractAddress}");
+        Debug.Log($"От адреса: {playerAddress}");
         
         StartCoroutine(SimulateMintTransaction(tokenId));
     }
     
     IEnumerator SimulateMintTransaction(int tokenId)
     {
-        Debug.Log("РћС‚РїСЂР°РІРєР° С‚СЂР°РЅР·Р°РєС†РёРё...");
+        Debug.Log("Отправка транзакции...");
         yield return new WaitForSeconds(2f);
         
-        Debug.Log($"NFT #{tokenId} СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ!");
-        Debug.Log("РўСЂР°РЅР·Р°РєС†РёСЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅР° РІ Р±Р»РѕРєС‡РµР№РЅРµ");
+        Debug.Log($"NFT #{tokenId} успешно создан!");
+        Debug.Log("Транзакция подтверждена в блокчейне");
     }
     
     public void GetTokenBalance()
     {
-        Debug.Log("Р—Р°РїСЂРѕСЃ Р±Р°Р»Р°РЅСЃР° С‚РѕРєРµРЅРѕРІ...");
+        Debug.Log("Запрос баланса токенов...");
         int balance = Random.Range(100, 1000);
-        Debug.Log($"Р‘Р°Р»Р°РЅСЃ РёРіСЂРѕРІС‹С… С‚РѕРєРµРЅРѕРІ: {balance} GAME");
+        Debug.Log($"Баланс игровых токенов: {balance} GAME");
     }
 }</code></pre>
                     </div>
                 </div>
 
                 <div id="token-economy" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 4: РўРѕРєРµРЅРѕРјРёРєР° РёРіСЂС‹</h3>
-                    <p>РЎРёСЃС‚РµРјР° РёРіСЂРѕРІС‹С… С‚РѕРєРµРЅРѕРІ Рё СЌРєРѕРЅРѕРјРёРєР°:</p>
+                    <h3>Пример 4: Токеномика игры</h3>
+                    <p>Система игровых токенов и экономика:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -423,13 +1274,13 @@ public class TokenManager : MonoBehaviour
     
     void Start()
     {
-        Debug.Log($"Token Manager РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ. Р‘Р°Р»Р°РЅСЃ: {currentBalance} {tokenSymbol}");
+        Debug.Log($"Token Manager инициализирован. Баланс: {currentBalance} {tokenSymbol}");
     }
     
     public void AddTokens(int amount)
     {
         currentBalance += amount;
-        Debug.Log($"Р”РѕР±Р°РІР»РµРЅРѕ {amount} {tokenSymbol}. РќРѕРІС‹Р№ Р±Р°Р»Р°РЅСЃ: {currentBalance}");
+        Debug.Log($"Добавлено {amount} {tokenSymbol}. Новый баланс: {currentBalance}");
     }
     
     public bool SpendTokens(int amount)
@@ -437,11 +1288,11 @@ public class TokenManager : MonoBehaviour
         if (currentBalance >= amount)
         {
             currentBalance -= amount;
-            Debug.Log($"РџРѕС‚СЂР°С‡РµРЅРѕ {amount} {tokenSymbol}. РћСЃС‚Р°С‚РѕРє: {currentBalance}");
+            Debug.Log($"Потрачено {amount} {tokenSymbol}. Остаток: {currentBalance}");
             return true;
         }
         
-        Debug.LogWarning("РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ С‚РѕРєРµРЅРѕРІ");
+        Debug.LogWarning("Недостаточно токенов");
         return false;
     }
     
@@ -451,7 +1302,7 @@ public class TokenManager : MonoBehaviour
         {
             currentBalance -= amount;
             stakedAmount += amount;
-            Debug.Log($"Р—Р°СЃС‚РµР№РєР°РЅРѕ {amount} {tokenSymbol}");
+            Debug.Log($"Застейкано {amount} {tokenSymbol}");
         }
     }
     
@@ -464,8 +1315,8 @@ public class TokenManager : MonoBehaviour
                 </div>
 
                 <div id="marketplace" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 5: NFT РјР°СЂРєРµС‚РїР»РµР№СЃ</h3>
-                    <p>РўРѕСЂРіРѕРІР°СЏ РїР»РѕС‰Р°РґРєР° РґР»СЏ РїРѕРєСѓРїРєРё Рё РїСЂРѕРґР°Р¶Рё NFT РїСЂРµРґРјРµС‚РѕРІ:</p>
+                    <h3>Пример 5: NFT маркетплейс</h3>
+                    <p>Торговая площадка для покупки и продажи NFT предметов:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 using System.Collections.Generic;
@@ -485,7 +1336,7 @@ public class MarketplaceManager : MonoBehaviour
     void Start()
     {
         CreateSampleMarketplaceItems();
-        Debug.Log("NFT Marketplace РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("NFT Marketplace инициализирован");
     }
     
     void CreateSampleMarketplaceItems()
@@ -495,14 +1346,14 @@ public class MarketplaceManager : MonoBehaviour
             nft = new NFTData
             {
                 tokenId = 101,
-                name = "Р›РµРґСЏРЅРѕР№ РїРѕСЃРѕС…",
-                rarity = "Р­РїРёС‡РµСЃРєРёР№"
+                name = "Ледяной посох",
+                rarity = "Эпический"
             },
             price = 500,
             seller = "0x123...456"
         });
         
-        Debug.Log($"РЎРѕР·РґР°РЅРѕ {marketplaceItems.Count} РїСЂРµРґРјРµС‚РѕРІ РЅР° РјР°СЂРєРµС‚РїР»РµР№СЃРµ");
+        Debug.Log($"Создано {marketplaceItems.Count} предметов на маркетплейсе");
     }
     
     public void BuyItem(MarketplaceItem item)
@@ -511,11 +1362,11 @@ public class MarketplaceManager : MonoBehaviour
         
         if (tokenManager != null && tokenManager.SpendTokens(item.price))
         {
-            Debug.Log($"РљСѓРїР»РµРЅ NFT: {item.nft.name} Р·Р° {item.price} С‚РѕРєРµРЅРѕРІ");
+            Debug.Log($"Куплен NFT: {item.nft.name} за {item.price} токенов");
         }
         else
         {
-            Debug.LogWarning("РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ С‚РѕРєРµРЅРѕРІ РґР»СЏ РїРѕРєСѓРїРєРё");
+            Debug.LogWarning("Недостаточно токенов для покупки");
         }
     }
     
@@ -529,7 +1380,7 @@ public class MarketplaceManager : MonoBehaviour
         };
         
         marketplaceItems.Add(marketItem);
-        Debug.Log($"NFT {nft.name} РІС‹СЃС‚Р°РІР»РµРЅ РЅР° РїСЂРѕРґР°Р¶Сѓ Р·Р° {price} С‚РѕРєРµРЅРѕРІ");
+        Debug.Log($"NFT {nft.name} выставлен на продажу за {price} токенов");
     }
 }</code></pre>
                     </div>
@@ -539,19 +1390,19 @@ public class MarketplaceManager : MonoBehaviour
             <section id="submission" style="background: #f5f7fa; padding: 60px 0; margin: 60px -20px; width: calc(100% + 40px);">
                 <div class="container">
                     <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                        <h2 style="color: #1a202c; margin-bottom: 20px;">РЎРґР°С‡Р° РїСЂРѕРµРєС‚Р°</h2>
-                        <p style="color: #4a5568; font-size: 1.1rem; margin-bottom: 20px;">Р”Р»СЏ СЃРґР°С‡Рё РёС‚РѕРіРѕРІРѕРіРѕ РїСЂРѕРµРєС‚Р° РїРѕРґРіРѕС‚РѕРІСЊС‚Рµ:</p>
+                        <h2 style="color: #1a202c; margin-bottom: 20px;">Сдача проекта</h2>
+                        <p style="color: #4a5568; font-size: 1.1rem; margin-bottom: 20px;">Для сдачи итогового проекта подготовьте:</p>
                         <ol style="margin: 15px 0 25px 30px; color: #4a5568; font-size: 1.1rem; line-height: 1.8;">
-                            <li>РСЃС…РѕРґРЅС‹Р№ РєРѕРґ РїСЂРѕРµРєС‚Р° (Р°СЂС…РёРІ РёР»Рё СЃСЃС‹Р»РєР° РЅР° СЂРµРїРѕР·РёС‚РѕСЂРёР№)</li>
-                            <li>РЎРѕР±СЂР°РЅРЅСѓСЋ РІРµСЂСЃРёСЋ РёРіСЂС‹ (WebGL, Windows, Android Рё С‚.Рґ.)</li>
-                            <li>РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ РїСЂРѕРµРєС‚Р° (1-2 Р°Р±Р·Р°С†Р°)</li>
-                            <li>РРЅСЃС‚СЂСѓРєС†РёСЋ РїРѕ СѓСЃС‚Р°РЅРѕРІРєРµ Рё Р·Р°РїСѓСЃРєСѓ</li>
-                            <li>РџСЂРµР·РµРЅС‚Р°С†РёСЋ РёР»Рё РґРµРјРѕ-РІРёРґРµРѕ (РїРѕ Р¶РµР»Р°РЅРёСЋ)</li>
+                            <li>Исходный код проекта (архив или ссылка на репозиторий)</li>
+                            <li>Собранную версию игры (WebGL, Windows, Android и т.д.)</li>
+                            <li>Краткое описание проекта (1-2 абзаца)</li>
+                            <li>Инструкцию по установке и запуску</li>
+                            <li>Презентацию или демо-видео (по желанию)</li>
                         </ol>
                         <div style="background: #f8fafc; padding: 20px; border-radius: 6px; border-left: 4px solid #4299e1; margin-top: 20px;">
                             <p style="margin: 0; color: #4a5568; font-size: 1.1rem;">
-                                <strong style="color: #2d3748;">РЎСЂРѕРє СЃРґР°С‡Рё:</strong> РґРѕ 31 РґРµРєР°Р±СЂСЏ 2025 РіРѕРґР°<br>
-                                <strong style="color: #2d3748;">Р¤РѕСЂРјР°С‚ СЃРґР°С‡Рё:</strong> Р°СЂС…РёРІ СЃ РїСЂРѕРµРєС‚РѕРј Рё РґРѕРєСѓРјРµРЅС‚Р°С†РёРµР№ РЅР° Google Р”РёСЃРєРµ РёР»Рё РІ РѕР±Р»Р°С‡РЅРѕРј С…СЂР°РЅРёР»РёС‰Рµ
+                                <strong style="color: #2d3748;">Срок сдачи:</strong> до 31 декабря 2025 года<br>
+                                <strong style="color: #2d3748;">Формат сдачи:</strong> архив с проектом и документацией на Google Диске или в облачном хранилище
                             </p>
                         </div>
                     </div>
@@ -563,15 +1414,15 @@ public class MarketplaceManager : MonoBehaviour
         <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-13/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 13</a>
-                <a href="../../index.html" class="nav-btn next-btn" style="opacity: 0.5; cursor: default;">Р—Р°РІРµСЂС€РµРЅРѕ! рџЋ‰</a>
+                <a href="../module-13/index.html" class="nav-btn prev-btn">< Модуль 13</a>
+                <a href="../../index.html" class="nav-btn next-btn" style="opacity: 0.5; cursor: default;">Завершено! ??</a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 

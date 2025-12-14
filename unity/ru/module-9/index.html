@@ -1,28 +1,879 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 9: DOTS (Data-Oriented Technology Stack) - РџСЂРёРјРµСЂС‹ РєРѕРґР° РґР»СЏ Unity СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ">
-    <meta name="keywords" content="unity, dots, ecs, entities, components, systems, РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 9: DOTS (Data-Oriented Technology Stack) - РџСЂРёРјРµСЂС‹ РєРѕРґР°</title>
+    <meta name="description" content="Модуль 9: DOTS (Data-Oriented Technology Stack) - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, dots, ecs, entities, components, systems, производительность">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 9: DOTS (Data-Oriented Technology Stack) - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     
     
 
     
 
-    <link rel="stylesheet" href="../../css/style.css">
+    
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 9: РћРїС‚РёРјРёР·Р°С†РёСЏ Рё РџСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ</h1>
+            <h1>Модуль 9: Оптимизация и Производительность</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#examples">РџСЂРёРјРµСЂС‹</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,41 +883,41 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>РћРїС‚РёРјРёР·Р°С†РёСЏ Рё РџСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ</h1>
-            <p>РР·СѓС‡РёС‚Рµ РјРµС‚РѕРґС‹ РѕРїС‚РёРјРёР·Р°С†РёРё Unity РїСЂРѕРµРєС‚РѕРІ Рё РїРѕРІС‹С€РµРЅРёСЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё</p>
+            <h1>Оптимизация и Производительность</h1>
+            <p>Изучите методы оптимизации Unity проектов и повышения производительности</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="examples" class="example-section">
-                <h2>РџСЂРёРјРµСЂС‹ РєРѕРґР°</h2>
+                <h2>Примеры кода</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('ecs-basics')">ECS РћСЃРЅРѕРІС‹</button>
+                    <button class="tab active" onclick="showTab('ecs-basics')">ECS Основы</button>
                     <button class="tab" onclick="showTab('jobs-system')">Jobs System</button>
                     <button class="tab" onclick="showTab('burst-compiler')">Burst Compiler</button>
-                    <button class="tab" onclick="showTab('massive-simulation')">РњР°СЃСЃРѕРІР°СЏ СЃРёРјСѓР»СЏС†РёСЏ</button>
+                    <button class="tab" onclick="showTab('massive-simulation')">Массовая симуляция</button>
                 </div>
 
                 <div id="ecs-basics" class="tab-content active">
                     <div class="example">
-                        <h3>РћСЃРЅРѕРІС‹ Entity Component System (ECS)</h3>
-                        <p>РЎРѕР·РґР°РЅРёРµ СЃСѓС‰РЅРѕСЃС‚РµР№, РєРѕРјРїРѕРЅРµРЅС‚РѕРІ Рё СЃРёСЃС‚РµРј РґР»СЏ РІС‹СЃРѕРєРѕРїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕР№ Р°СЂС…РёС‚РµРєС‚СѓСЂС‹.</p>
+                        <h3>Основы Entity Component System (ECS)</h3>
+                        <p>Создание сущностей, компонентов и систем для высокопроизводительной архитектуры.</p>
                         <div class="code-example">
                             <pre>using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-// РљРѕРјРїРѕРЅРµРЅС‚ РґР»СЏ РґРІРёР¶РµРЅРёСЏ
+// Компонент для движения
 public struct MovementComponent : IComponentData
 {
     public float3 velocity;
     public float speed;
 }
 
-// РЎРёСЃС‚РµРјР° РґРІРёР¶РµРЅРёСЏ
+// Система движения
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial class MovementSystem : SystemBase
 {
@@ -80,7 +931,7 @@ public partial class MovementSystem : SystemBase
             {
                 translation.Value += movement.velocity * movement.speed * deltaTime;
                 
-                // РћРіСЂР°РЅРёС‡РµРЅРёРµ РѕР±Р»Р°СЃС‚Рё РґРІРёР¶РµРЅРёСЏ
+                // Ограничение области движения
                 if (math.abs(translation.Value.x) > 50f)
                     translation.Value.x = -translation.Value.x;
                 if (math.abs(translation.Value.z) > 50f)
@@ -90,7 +941,7 @@ public partial class MovementSystem : SystemBase
     }
 }
 
-// MonoBehaviour РґР»СЏ СЃРѕР·РґР°РЅРёСЏ СЃСѓС‰РЅРѕСЃС‚РµР№
+// MonoBehaviour для создания сущностей
 public class EntitySpawner : MonoBehaviour
 {
     public GameObject prefab;
@@ -104,7 +955,7 @@ public class EntitySpawner : MonoBehaviour
         var prefabEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(
             prefab, settings);
             
-        Debug.Log($"РЎРѕР·РґР°РЅРёРµ {spawnCount} СЃСѓС‰РЅРѕСЃС‚РµР№ СЃ ECS");
+        Debug.Log($"Создание {spawnCount} сущностей с ECS");
         
         for (int i = 0; i < spawnCount; i++)
         {
@@ -121,7 +972,7 @@ public class EntitySpawner : MonoBehaviour
             });
         }
         
-        Debug.Log("ECS СЃСѓС‰РЅРѕСЃС‚Рё СЃРѕР·РґР°РЅС‹ СѓСЃРїРµС€РЅРѕ");
+        Debug.Log("ECS сущности созданы успешно");
     }
 }
                             </pre></div>
@@ -130,15 +981,15 @@ public class EntitySpawner : MonoBehaviour
 
             <div id="jobs-system" class="tab-content">
                 <div class="example">
-                    <h3>Jobs System РґР»СЏ РїР°СЂР°Р»Р»РµР»СЊРЅС‹С… РІС‹С‡РёСЃР»РµРЅРёР№</h3>
-                    <p>РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ Jobs System РґР»СЏ СЌС„С„РµРєС‚РёРІРЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРё Р±РѕР»СЊС€РёС… РѕР±СЉРµРјРѕРІ РґР°РЅРЅС‹С….</p>
+                    <h3>Jobs System для параллельных вычислений</h3>
+                    <p>Использование Jobs System для эффективной обработки больших объемов данных.</p>
                     <div class="code-example">
                         <pre>using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-// Job РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РїРѕР·РёС†РёР№ С‡Р°СЃС‚РёС†
+// Job для обработки позиций частиц
 public struct ParticleUpdateJob : IJobParallelFor
 {
     public NativeArray&lt;float3&gt; positions;
@@ -151,7 +1002,7 @@ public struct ParticleUpdateJob : IJobParallelFor
         velocities[index] += gravity * deltaTime;
         positions[index] += velocities[index] * deltaTime;
         
-        // РћС‚СЃРєРѕРє РѕС‚ Р·РµРјР»Рё
+        // Отскок от земли
         if (positions[index].y < 0)
         {
             positions[index] = new float3(positions[index].x, 0, positions[index].z);
@@ -164,7 +1015,7 @@ public struct ParticleUpdateJob : IJobParallelFor
     }
 }
 
-// РњРµРЅРµРґР¶РµСЂ СЃРёСЃС‚РµРјС‹ С‡Р°СЃС‚РёС†
+// Менеджер системы частиц
 public class ParticleSystemManager : MonoBehaviour
 {
     public int particleCount = 10000;
@@ -178,7 +1029,7 @@ public class ParticleSystemManager : MonoBehaviour
     void Start()
     {
         InitializeParticles();
-        Debug.Log($"РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР° СЃРёСЃС‚РµРјР° С‡Р°СЃС‚РёС† СЃ {particleCount} С‡Р°СЃС‚РёС†Р°РјРё");
+        Debug.Log($"Инициализирована система частиц с {particleCount} частицами");
     }
     
     void InitializeParticles()
@@ -221,7 +1072,7 @@ public class ParticleSystemManager : MonoBehaviour
         jobHandle = particleJob.Schedule(particleCount, 64);
         jobHandle.Complete();
         
-        // РћР±РЅРѕРІР»РµРЅРёРµ Transform РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
+        // Обновление Transform компонентов
         for (int i = 0; i < particleCount; i++)
         {
             if (particleTransforms[i] != null)
@@ -244,8 +1095,8 @@ public class ParticleSystemManager : MonoBehaviour
 
             <div id="burst-compiler" class="tab-content">
                 <div class="example">
-                    <h3>Burst Compiler РґР»СЏ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё</h3>
-                    <p>РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ Burst Compiler РґР»СЏ РєРѕРјРїРёР»СЏС†РёРё РІС‹СЃРѕРєРѕРїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕРіРѕ РєРѕРґР°.</p>
+                    <h3>Burst Compiler для максимальной производительности</h3>
+                    <p>Использование Burst Compiler для компиляции высокопроизводительного кода.</p>
                     <div class="code-example">
                         <pre>using Unity.Burst;
 using Unity.Collections;
@@ -253,7 +1104,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-// Burst-РєРѕРјРїРёР»РёСЂРѕРІР°РЅРЅС‹Р№ job
+// Burst-компилированный job
 [BurstCompile]
 public struct MathIntensiveJob : IJobParallelFor
 {
@@ -267,7 +1118,7 @@ public struct MathIntensiveJob : IJobParallelFor
     {
         float3 pos = inputPositions[index];
         
-        // РЎР»РѕР¶РЅС‹Рµ РјР°С‚РµРјР°С‚РёС‡РµСЃРєРёРµ РІС‹С‡РёСЃР»РµРЅРёСЏ
+        // Сложные математические вычисления
         float wave1 = math.sin(pos.x * frequency + time) * amplitude;
         float wave2 = math.cos(pos.z * frequency + time) * amplitude;
         float height = wave1 + wave2;
@@ -276,7 +1127,7 @@ public struct MathIntensiveJob : IJobParallelFor
     }
 }
 
-// РњРµРЅРµРґР¶РµСЂ СЃ Burst-РѕРїС‚РёРјРёР·Р°С†РёРµР№
+// Менеджер с Burst-оптимизацией
 public class BurstOptimizedManager : MonoBehaviour
 {
     public int objectCount = 50000;
@@ -292,7 +1143,7 @@ public class BurstOptimizedManager : MonoBehaviour
     void Start()
     {
         InitializeSimulation();
-        Debug.Log($"Burst-РѕРїС‚РёРјРёР·РёСЂРѕРІР°РЅРЅР°СЏ СЃРёРјСѓР»СЏС†РёСЏ СЃ {objectCount} РѕР±СЉРµРєС‚Р°РјРё");
+        Debug.Log($"Burst-оптимизированная симуляция с {objectCount} объектами");
     }
     
     void InitializeSimulation()
@@ -332,7 +1183,7 @@ public class BurstOptimizedManager : MonoBehaviour
         jobHandle = mathJob.Schedule(objectCount, 128);
         jobHandle.Complete();
         
-        // РћР±РЅРѕРІР»РµРЅРёРµ Transform РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
+        // Обновление Transform компонентов
         for (int i = 0; i < objectCount; i++)
         {
             if (objectTransforms[i] != null)
@@ -355,15 +1206,15 @@ public class BurstOptimizedManager : MonoBehaviour
 
             <div id="performance-optimization" class="tab-content">
                 <div class="example">
-                    <h3>РћРїС‚РёРјРёР·Р°С†РёСЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё</h3>
-                    <p>РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ С‚РµС…РЅРёРєРё РѕРїС‚РёРјРёР·Р°С†РёРё РґР»СЏ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё.</p>
+                    <h3>Оптимизация производительности</h3>
+                    <p>Продвинутые техники оптимизации для максимальной производительности.</p>
                     <div class="code-example">
                         <pre>using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-// РљРѕРјРїРѕРЅРµРЅС‚ РґР»СЏ LOD СЃРёСЃС‚РµРјС‹
+// Компонент для LOD системы
 public struct LODComponent : IComponentData
 {
     public float distance;
@@ -371,7 +1222,7 @@ public struct LODComponent : IComponentData
     public bool isVisible;
 }
 
-// РЎРёСЃС‚РµРјР° LOD
+// Система LOD
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial class LODSystem : SystemBase
 {
@@ -388,24 +1239,24 @@ public partial class LODSystem : SystemBase
                 
                 if (distance < 10f)
                 {
-                    lod.lodLevel = 0; // Р’С‹СЃРѕРєР°СЏ РґРµС‚Р°Р»РёР·Р°С†РёСЏ
+                    lod.lodLevel = 0; // Высокая детализация
                     lod.isVisible = true;
                 }
                 else if (distance < 50f)
                 {
-                    lod.lodLevel = 1; // РЎСЂРµРґРЅСЏСЏ РґРµС‚Р°Р»РёР·Р°С†РёСЏ
+                    lod.lodLevel = 1; // Средняя детализация
                     lod.isVisible = true;
                 }
                 else
                 {
-                    lod.isVisible = false; // РќРµ РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ
+                    lod.isVisible = false; // Не отображать
                 }
                 
             }).ScheduleParallel();
     }
 }
 
-// РњРµРЅРµРґР¶РµСЂ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё
+// Менеджер производительности
 public class PerformanceManager : MonoBehaviour
 {
     public int targetFPS = 60;
@@ -418,7 +1269,7 @@ public class PerformanceManager : MonoBehaviour
         frameTime = Time.deltaTime;
         float currentFPS = 1f / frameTime;
         
-        // РђРґР°РїС‚РёРІРЅР°СЏ РѕРїС‚РёРјРёР·Р°С†РёСЏ
+        // Адаптивная оптимизация
         if (currentFPS < targetFPS * 0.8f)
         {
             ReduceQuality();
@@ -437,13 +1288,13 @@ public class PerformanceManager : MonoBehaviour
     void ReduceQuality()
     {
         cullingDistance = math.max(50f, cullingDistance * 0.9f);
-        Debug.Log("РљР°С‡РµСЃС‚РІРѕ СЃРЅРёР¶РµРЅРѕ РґР»СЏ СѓР»СѓС‡С€РµРЅРёСЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё");
+        Debug.Log("Качество снижено для улучшения производительности");
     }
     
     void IncreaseQuality()
     {
         cullingDistance = math.min(200f, cullingDistance * 1.05f);
-        Debug.Log("РљР°С‡РµСЃС‚РІРѕ РїРѕРІС‹С€РµРЅРѕ");
+        Debug.Log("Качество повышено");
     }
 }
                         </pre></div>
@@ -452,8 +1303,8 @@ public class PerformanceManager : MonoBehaviour
 
             <div id="massive-simulation" class="tab-content">
                 <div class="example">
-                    <h3>РњР°СЃСЃРѕРІР°СЏ СЃРёРјСѓР»СЏС†РёСЏ СЃ С‚С‹СЃСЏС‡Р°РјРё РѕР±СЉРµРєС‚РѕРІ</h3>
-                    <p>РЎРѕР·РґР°РЅРёРµ РјР°СЃС€С‚Р°Р±РёСЂСѓРµРјС‹С… СЃРёРјСѓР»СЏС†РёР№ СЃ Р±РѕР»СЊС€РёРј РєРѕР»РёС‡РµСЃС‚РІРѕРј РѕР±СЉРµРєС‚РѕРІ.</p>
+                    <h3>Массовая симуляция с тысячами объектов</h3>
+                    <p>Создание масштабируемых симуляций с большим количеством объектов.</p>
                     <div class="code-example">
                         <pre>using Unity.Entities;
 using Unity.Collections;
@@ -461,7 +1312,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-// РљРѕРјРїРѕРЅРµРЅС‚ РґР»СЏ СЂРѕСЏ
+// Компонент для роя
 public struct SwarmComponent : IComponentData
 {
     public float3 target;
@@ -469,7 +1320,7 @@ public struct SwarmComponent : IComponentData
     public float separationRadius;
 }
 
-// РЎРёСЃС‚РµРјР° СЂРѕСЏ (Boids)
+// Система роя (Boids)
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial class SwarmSystem : SystemBase
 {
@@ -480,7 +1331,7 @@ public partial class SwarmSystem : SystemBase
         Entities
             .ForEach((ref Translation translation, in SwarmComponent swarm) =>
             {
-                // Р”РІРёР¶РµРЅРёРµ Рє С†РµР»Рё
+                // Движение к цели
                 float3 toTarget = math.normalize(swarm.target - translation.Value);
                 translation.Value += toTarget * swarm.speed * deltaTime;
                 
@@ -488,7 +1339,7 @@ public partial class SwarmSystem : SystemBase
     }
 }
 
-// РњР°СЃСЃРѕРІС‹Р№ СЃРёРјСѓР»СЏС‚РѕСЂ
+// Массовый симулятор
 public class MassiveSimulation : MonoBehaviour
 {
     public GameObject entityPrefab;
@@ -500,7 +1351,7 @@ public class MassiveSimulation : MonoBehaviour
     void Start()
     {
         InitializeMassiveSimulation();
-        Debug.Log($"РњР°СЃСЃРѕРІР°СЏ СЃРёРјСѓР»СЏС†РёСЏ СЃ {entityCount} РѕР±СЉРµРєС‚Р°РјРё");
+        Debug.Log($"Массовая симуляция с {entityCount} объектами");
     }
     
     void InitializeMassiveSimulation()
@@ -540,7 +1391,7 @@ public class MassiveSimulation : MonoBehaviour
     
     void Update()
     {
-        // РћР±РЅРѕРІР»РµРЅРёРµ С†РµР»Рё РЅР° РѕСЃРЅРѕРІРµ РїРѕР·РёС†РёРё РјС‹С€Рё
+        // Обновление цели на основе позиции мыши
         if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -572,15 +1423,15 @@ public class MassiveSimulation : MonoBehaviour
         <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-8/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 8</a>
-                <a href="../module-10/index.html" class="nav-btn next-btn">РњРѕРґСѓР»СЊ 10 в†’</a>
+                <a href="../module-8/index.html" class="nav-btn prev-btn">< Модуль 8</a>
+                <a href="../module-10/index.html" class="nav-btn next-btn">Модуль 10 ></a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 

@@ -1,14 +1,14 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 2: РћСЃРЅРѕРІС‹ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ C# - РџСЂРёРјРµСЂС‹ РєРѕРґР° РґР»СЏ Unity СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ">
-    <meta name="keywords" content="c#, РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ, РїРµСЂРµРјРµРЅРЅС‹Рµ, С„СѓРЅРєС†РёРё, РєР»Р°СЃСЃС‹, РѕСЃРЅРѕРІС‹">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 2: РћСЃРЅРѕРІС‹ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ C# - РџСЂРёРјРµСЂС‹ РєРѕРґР°</title>
+    <meta name="description" content="Модуль 2: Основы программирования C# - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="c#, программирование, переменные, функции, классы, основы">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 2: Основы программирования C# - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
-    <link rel="stylesheet" href="../../css/style.css">
+    
     <style>
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -16,15 +16,866 @@
         .module-navigation { margin-top: var(--spacing-xl); }
         .nav-btn { text-decoration: none; }
     </style>
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 2: РћСЃРЅРѕРІС‹ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ C#</h1>
+            <h1>Модуль 2: Основы программирования C#</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#examples">РџСЂРёРјРµСЂС‹</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
         </div>
@@ -34,43 +885,43 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>РћСЃРЅРѕРІС‹ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ C#</h1>
-            <p>РР·СѓС‡РёС‚Рµ С„СѓРЅРґР°РјРµРЅС‚Р°Р»СЊРЅС‹Рµ РєРѕРЅС†РµРїС†РёРё РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ РЅР° C#</p>
+            <h1>Основы программирования C#</h1>
+            <p>Изучите фундаментальные концепции программирования на C#</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="examples" class="example-section">
-                <h2>РџСЂРёРјРµСЂС‹ РєРѕРґР°</h2>
+                <h2>Примеры кода</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('variables')">РџРµСЂРµРјРµРЅРЅС‹Рµ</button>
-                    <button class="tab" onclick="showTab('functions')">Р¤СѓРЅРєС†РёРё</button>
-                    <button class="tab" onclick="showTab('classes')">РљР»Р°СЃСЃС‹</button>
-                    <button class="tab" onclick="showTab('arrays')">РњР°СЃСЃРёРІС‹</button>
-                    <button class="tab" onclick="showTab('conditions')">РЈСЃР»РѕРІРёСЏ</button>
+                    <button class="tab active" onclick="showTab('variables')">Переменные</button>
+                    <button class="tab" onclick="showTab('functions')">Функции</button>
+                    <button class="tab" onclick="showTab('classes')">Классы</button>
+                    <button class="tab" onclick="showTab('arrays')">Массивы</button>
+                    <button class="tab" onclick="showTab('conditions')">Условия</button>
                 </div>
 
                 <div id="variables" class="tab-content active">
-                    <h3>РџСЂРёРјРµСЂ 1: РџРµСЂРµРјРµРЅРЅС‹Рµ Рё С‚РёРїС‹ РґР°РЅРЅС‹С…</h3>
-                    <p>РћСЃРЅРѕРІРЅС‹Рµ С‚РёРїС‹ РґР°РЅРЅС‹С… Рё СЂР°Р±РѕС‚Р° СЃ РїРµСЂРµРјРµРЅРЅС‹РјРё РІ C#:</p>
+                    <h3>Пример 1: Переменные и типы данных</h3>
+                    <p>Основные типы данных и работа с переменными в C#:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
 public class VariablesExample : MonoBehaviour
 {
-    // Р§РёСЃР»РѕРІС‹Рµ С‚РёРїС‹
+    // Числовые типы
     public int playerHealth = 100;
     public float moveSpeed = 5.5f;
     public double preciseValue = 3.14159;
 
-    // РўРµРєСЃС‚ Рё Р»РѕРіРёРєР°
-    public string playerName = "РРіСЂРѕРє";
+    // Текст и логика
+    public string playerName = "Игрок";
     public bool isAlive = true;
     public char grade = 'A';
 
-    // Unity С‚РёРїС‹
+    // Unity типы
     public Vector3 position;
     public Color playerColor = Color.red;
 
@@ -82,23 +933,23 @@ public class VariablesExample : MonoBehaviour
 
     void ShowVariableTypes()
     {
-        Debug.Log("Р—РґРѕСЂРѕРІСЊРµ (int): " + playerHealth);
-        Debug.Log("РЎРєРѕСЂРѕСЃС‚СЊ (float): " + moveSpeed);
-        Debug.Log("РРјСЏ (string): " + playerName);
-        Debug.Log("Р–РёРІ (bool): " + isAlive);
+        Debug.Log("Здоровье (int): " + playerHealth);
+        Debug.Log("Скорость (float): " + moveSpeed);
+        Debug.Log("Имя (string): " + playerName);
+        Debug.Log("Жив (bool): " + isAlive);
     }
 
     void PerformCalculations()
     {
         int damage = 25;
         int newHealth = playerHealth - damage;
-        Debug.Log($"Р—РґРѕСЂРѕРІСЊРµ РїРѕСЃР»Рµ СѓСЂРѕРЅР°: {newHealth}");
+        Debug.Log($"Здоровье после урона: {newHealth}");
 
         float distance = moveSpeed * Time.deltaTime;
-        Debug.Log($"Р Р°СЃСЃС‚РѕСЏРЅРёРµ Р·Р° РєР°РґСЂ: {distance}");
+        Debug.Log($"Расстояние за кадр: {distance}");
 
         bool isHealthLow = playerHealth < 30;
-        Debug.Log($"РњР°Р»Рѕ Р·РґРѕСЂРѕРІСЊСЏ? {isHealthLow}");
+        Debug.Log($"Мало здоровья? {isHealthLow}");
     }
 
     void Update()
@@ -106,7 +957,7 @@ public class VariablesExample : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H))
         {
             playerHealth -= 10;
-            Debug.Log("РЈСЂРѕРЅ! Р—РґРѕСЂРѕРІСЊРµ: " + playerHealth);
+            Debug.Log("Урон! Здоровье: " + playerHealth);
         }
     }
 }</code></pre>
@@ -114,8 +965,8 @@ public class VariablesExample : MonoBehaviour
                 </div>
 
                 <div id="functions" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 2: Р¤СѓРЅРєС†РёРё Рё РјРµС‚РѕРґС‹</h3>
-                    <p>РЎРѕР·РґР°РЅРёРµ Рё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ С„СѓРЅРєС†РёР№ РІ C#:</p>
+                    <h3>Пример 2: Функции и методы</h3>
+                    <p>Создание и использование функций в C#:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -130,46 +981,46 @@ public class FunctionsExample : MonoBehaviour
         ShowPlayerInfo();
     }
 
-    // Р¤СѓРЅРєС†РёСЏ Р±РµР· РїР°СЂР°РјРµС‚СЂРѕРІ
+    // Функция без параметров
     void InitializePlayer()
     {
         currentHealth = 100;
         experience = 0;
-        Debug.Log("РРіСЂРѕРє РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Игрок инициализирован");
     }
 
-    // Р¤СѓРЅРєС†РёСЏ СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
+    // Функция с параметрами
     void TakeDamage(int damage)
     {
         currentHealth -= damage;
         currentHealth = Mathf.Max(0, currentHealth);
-        Debug.Log($"РЈСЂРѕРЅ: {damage}. Р—РґРѕСЂРѕРІСЊРµ: {currentHealth}");
+        Debug.Log($"Урон: {damage}. Здоровье: {currentHealth}");
     }
 
-    // Р¤СѓРЅРєС†РёСЏ СЃ РІРѕР·РІСЂР°С‰Р°РµРјС‹Рј Р·РЅР°С‡РµРЅРёРµРј
+    // Функция с возвращаемым значением
     bool IsAlive()
     {
         return currentHealth > 0;
     }
 
-    // Р¤СѓРЅРєС†РёСЏ СЃ РЅРµСЃРєРѕР»СЊРєРёРјРё РїР°СЂР°РјРµС‚СЂР°РјРё
+    // Функция с несколькими параметрами
     float CalculateDamage(float baseDamage, float multiplier)
     {
         return baseDamage * multiplier;
     }
 
-    // Р¤СѓРЅРєС†РёСЏ СЃ РїР°СЂР°РјРµС‚СЂРѕРј РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+    // Функция с параметром по умолчанию
     void Heal(int healAmount = 20)
     {
         currentHealth += healAmount;
-        Debug.Log($"Р›РµС‡РµРЅРёРµ: {healAmount}. Р—РґРѕСЂРѕРІСЊРµ: {currentHealth}");
+        Debug.Log($"Лечение: {healAmount}. Здоровье: {currentHealth}");
     }
 
     public void ShowPlayerInfo()
     {
-        Debug.Log($"Р—РґРѕСЂРѕРІСЊРµ: {currentHealth}");
-        Debug.Log($"РћРїС‹С‚: {experience}");
-        Debug.Log($"Р–РёРІ: {IsAlive()}");
+        Debug.Log($"Здоровье: {currentHealth}");
+        Debug.Log($"Опыт: {experience}");
+        Debug.Log($"Жив: {IsAlive()}");
     }
 
     void Update()
@@ -190,12 +1041,12 @@ public class FunctionsExample : MonoBehaviour
                 </div>
 
                 <div id="classes" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 3: РљР»Р°СЃСЃС‹ Рё РѕР±СЉРµРєС‚С‹</h3>
-                    <p>РЎРѕР·РґР°РЅРёРµ Рё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ РєР»Р°СЃСЃРѕРІ РІ C#:</p>
+                    <h3>Пример 3: Классы и объекты</h3>
+                    <p>Создание и использование классов в C#:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
-// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РїРµСЂСЃРѕРЅР°Р¶Р°
+// Базовый класс персонажа
 public class Character
 {
     protected string characterName;
@@ -217,11 +1068,11 @@ public class Character
     {
         health -= damage;
         health = Mathf.Max(0, health);
-        Debug.Log($"{characterName} РїРѕР»СѓС‡РёР» {damage} СѓСЂРѕРЅР°");
+        Debug.Log($"{characterName} получил {damage} урона");
     }
 }
 
-// РљР»Р°СЃСЃ РёРіСЂРѕРєР°
+// Класс игрока
 public class Player : Character
 {
     private int experience;
@@ -235,17 +1086,17 @@ public class Player : Character
     {
         int reducedDamage = Mathf.Max(1, damage - 5);
         base.TakeDamage(reducedDamage);
-        Debug.Log("Р‘СЂРѕРЅСЏ РїРѕРіР»РѕС‚РёР»Р° СѓСЂРѕРЅ!");
+        Debug.Log("Броня поглотила урон!");
     }
 
     public void AddExperience(int exp)
     {
         experience += exp;
-        Debug.Log($"РџРѕР»СѓС‡РµРЅ РѕРїС‹С‚: {exp}");
+        Debug.Log($"Получен опыт: {exp}");
     }
 }
 
-// РљР»Р°СЃСЃ РІСЂР°РіР°
+// Класс врага
 public class Enemy : Character
 {
     private int attackPower;
@@ -257,7 +1108,7 @@ public class Enemy : Character
 
     public void Attack(Character target)
     {
-        Debug.Log($"{characterName} Р°С‚Р°РєСѓРµС‚!");
+        Debug.Log($"{characterName} атакует!");
         target.TakeDamage(attackPower);
     }
 }
@@ -269,10 +1120,10 @@ public class ClassesExample : MonoBehaviour
 
     void Start()
     {
-        player = new Player("Р“РµСЂРѕР№");
-        enemy = new Enemy("Р“РѕР±Р»РёРЅ", 50, 15);
+        player = new Player("Герой");
+        enemy = new Enemy("Гоблин", 50, 15);
         
-        Debug.Log("РџРµСЂСЃРѕРЅР°Р¶Рё СЃРѕР·РґР°РЅС‹!");
+        Debug.Log("Персонажи созданы!");
     }
 
     void Update()
@@ -292,19 +1143,19 @@ public class ClassesExample : MonoBehaviour
                 </div>
 
                 <div id="arrays" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 4: РњР°СЃСЃРёРІС‹ Рё СЃРїРёСЃРєРё</h3>
-                    <p>Р Р°Р±РѕС‚Р° СЃ РјР°СЃСЃРёРІР°РјРё Рё РєРѕР»Р»РµРєС†РёСЏРјРё РІ C#:</p>
+                    <h3>Пример 4: Массивы и списки</h3>
+                    <p>Работа с массивами и коллекциями в C#:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 using System.Collections.Generic;
 
 public class ArraysExample : MonoBehaviour
 {
-    // РњР°СЃСЃРёРІС‹
-    public string[] playerNames = {"РђР»РµРєСЃРµР№", "РњР°СЂРёСЏ", "РРІР°РЅ"};
+    // Массивы
+    public string[] playerNames = {"Алексей", "Мария", "Иван"};
     public int[] scores = {100, 250, 180};
 
-    // РЎРїРёСЃРєРё
+    // Списки
     public List&lt;string&gt; inventory = new List&lt;string&gt;();
 
     void Start()
@@ -315,59 +1166,59 @@ public class ArraysExample : MonoBehaviour
 
     void DemonstrateArrays()
     {
-        Debug.Log("=== РњР°СЃСЃРёРІС‹ ===");
+        Debug.Log("=== Массивы ===");
         
-        // РЎРѕР·РґР°РЅРёРµ РјР°СЃСЃРёРІР°
+        // Создание массива
         int[] numbers = new int[5];
         for (int i = 0; i < numbers.Length; i++)
         {
             numbers[i] = i * 10;
         }
 
-        // Р’С‹РІРѕРґ РјР°СЃСЃРёРІР°
+        // Вывод массива
         foreach (int number in numbers)
         {
-            Debug.Log("Р§РёСЃР»Рѕ: " + number);
+            Debug.Log("Число: " + number);
         }
 
-        // Р Р°Р±РѕС‚Р° СЃ РёРјРµРЅР°РјРё Рё РѕС‡РєР°РјРё
+        // Работа с именами и очками
         for (int i = 0; i < playerNames.Length; i++)
         {
-            Debug.Log($"{playerNames[i]} - {scores[i]} РѕС‡РєРѕРІ");
+            Debug.Log($"{playerNames[i]} - {scores[i]} очков");
         }
     }
 
     void DemonstrateLists()
     {
-        Debug.Log("=== РЎРїРёСЃРєРё ===");
+        Debug.Log("=== Списки ===");
         
-        // Р”РѕР±Р°РІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ
-        inventory.Add("РњРµС‡");
-        inventory.Add("Р©РёС‚");
-        inventory.Add("Р—РµР»СЊРµ");
+        // Добавление элементов
+        inventory.Add("Меч");
+        inventory.Add("Щит");
+        inventory.Add("Зелье");
 
-        // Р’С‹РІРѕРґ СЃРїРёСЃРєР°
+        // Вывод списка
         for (int i = 0; i < inventory.Count; i++)
         {
             Debug.Log($"{i + 1}. {inventory[i]}");
         }
 
-        // РџРѕРёСЃРє Рё СѓРґР°Р»РµРЅРёРµ
-        bool hasSword = inventory.Contains("РњРµС‡");
-        Debug.Log("Р•СЃС‚СЊ РјРµС‡: " + hasSword);
+        // Поиск и удаление
+        bool hasSword = inventory.Contains("Меч");
+        Debug.Log("Есть меч: " + hasSword);
 
-        inventory.Remove("Р—РµР»СЊРµ");
-        Debug.Log("Р—РµР»СЊРµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ");
+        inventory.Remove("Зелье");
+        Debug.Log("Зелье использовано");
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            string[] items = {"РљРѕР»СЊС†Рѕ", "РђРјСѓР»РµС‚", "РЎРІРёС‚РѕРє"};
+            string[] items = {"Кольцо", "Амулет", "Свиток"};
             string randomItem = items[Random.Range(0, items.Length)];
             inventory.Add(randomItem);
-            Debug.Log("РќР°Р№РґРµРЅ: " + randomItem);
+            Debug.Log("Найден: " + randomItem);
         }
     }
 }</code></pre>
@@ -375,8 +1226,8 @@ public class ArraysExample : MonoBehaviour
                 </div>
 
                 <div id="conditions" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 5: РЈСЃР»РѕРІРЅС‹Рµ РѕРїРµСЂР°С‚РѕСЂС‹</h3>
-                    <p>РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СѓСЃР»РѕРІРёР№ Рё С†РёРєР»РѕРІ РІ C#:</p>
+                    <h3>Пример 5: Условные операторы</h3>
+                    <p>Использование условий и циклов в C#:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -384,7 +1235,7 @@ public class ConditionsExample : MonoBehaviour
 {
     public int playerLevel = 1;
     public int playerHealth = 100;
-    public string playerClass = "Р’РѕРёРЅ";
+    public string playerClass = "Воин";
 
     void Start()
     {
@@ -394,73 +1245,73 @@ public class ConditionsExample : MonoBehaviour
 
     void DemonstrateConditions()
     {
-        Debug.Log("=== РЈСЃР»РѕРІРёСЏ ===");
+        Debug.Log("=== Условия ===");
 
-        // РџСЂРѕСЃС‚РѕРµ СѓСЃР»РѕРІРёРµ if
+        // Простое условие if
         if (playerHealth > 50)
         {
-            Debug.Log("Р—РґРѕСЂРѕРІСЊРµ РІ РЅРѕСЂРјРµ");
+            Debug.Log("Здоровье в норме");
         }
 
         // if-else
         if (playerLevel >= 10)
         {
-            Debug.Log("РћРїС‹С‚РЅС‹Р№ РёРіСЂРѕРє");
+            Debug.Log("Опытный игрок");
         }
         else
         {
-            Debug.Log("РќРѕРІРёС‡РѕРє");
+            Debug.Log("Новичок");
         }
 
         // if-else if-else
         if (playerHealth > 80)
         {
-            Debug.Log("РћС‚Р»РёС‡РЅРѕРµ Р·РґРѕСЂРѕРІСЊРµ");
+            Debug.Log("Отличное здоровье");
         }
         else if (playerHealth > 50)
         {
-            Debug.Log("РҐРѕСЂРѕС€РµРµ Р·РґРѕСЂРѕРІСЊРµ");
+            Debug.Log("Хорошее здоровье");
         }
         else if (playerHealth > 20)
         {
-            Debug.Log("РќРёР·РєРѕРµ Р·РґРѕСЂРѕРІСЊРµ");
+            Debug.Log("Низкое здоровье");
         }
         else
         {
-            Debug.Log("РљСЂРёС‚РёС‡РµСЃРєРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ!");
+            Debug.Log("Критическое состояние!");
         }
 
         // switch
         switch (playerClass)
         {
-            case "Р’РѕРёРЅ":
-                Debug.Log("РЎРёР»СЊРЅС‹Р№ РІ Р±Р»РёР¶РЅРµРј Р±РѕСЋ");
+            case "Воин":
+                Debug.Log("Сильный в ближнем бою");
                 break;
-            case "РњР°Рі":
-                Debug.Log("Р’Р»Р°РґРµРµС‚ РјР°РіРёРµР№");
+            case "Маг":
+                Debug.Log("Владеет магией");
                 break;
-            case "Р›СѓС‡РЅРёРє":
-                Debug.Log("РњР°СЃС‚РµСЂ РґР°Р»СЊРЅРµРіРѕ Р±РѕСЏ");
+            case "Лучник":
+                Debug.Log("Мастер дальнего боя");
                 break;
             default:
-                Debug.Log("РќРµРёР·РІРµСЃС‚РЅС‹Р№ РєР»Р°СЃСЃ");
+                Debug.Log("Неизвестный класс");
                 break;
         }
     }
 
     void DemonstrateLoops()
     {
-        Debug.Log("=== Р¦РёРєР»С‹ ===");
+        Debug.Log("=== Циклы ===");
 
-        // Р¦РёРєР» for
-        Debug.Log("Р¦РёРєР» for:");
+        // Цикл for
+        Debug.Log("Цикл for:");
         for (int i = 1; i <= 5; i++)
         {
-            Debug.Log("РС‚РµСЂР°С†РёСЏ: " + i);
+            Debug.Log("Итерация: " + i);
         }
 
-        // Р¦РёРєР» while
-        Debug.Log("Р¦РёРєР» while:");
+        // Цикл while
+        Debug.Log("Цикл while:");
         int count = 0;
         while (count < 3)
         {
@@ -468,9 +1319,9 @@ public class ConditionsExample : MonoBehaviour
             count++;
         }
 
-        // Р¦РёРєР» foreach СЃ РјР°СЃСЃРёРІРѕРј
-        string[] weapons = {"РњРµС‡", "Р›СѓРє", "РџРѕСЃРѕС…"};
-        Debug.Log("РћСЂСѓР¶РёРµ:");
+        // Цикл foreach с массивом
+        string[] weapons = {"Меч", "Лук", "Посох"};
+        Debug.Log("Оружие:");
         foreach (string weapon in weapons)
         {
             Debug.Log("- " + weapon);
@@ -496,11 +1347,11 @@ public class ConditionsExample : MonoBehaviour
     {
         if (playerHealth <= 0)
         {
-            Debug.Log("РРіСЂРѕРє РїРѕРіРёР±!");
+            Debug.Log("Игрок погиб!");
         }
         else if (playerHealth < 30)
         {
-            Debug.Log("РќСѓР¶РЅРѕ Р»РµС‡РµРЅРёРµ!");
+            Debug.Log("Нужно лечение!");
         }
     }
 
@@ -508,7 +1359,7 @@ public class ConditionsExample : MonoBehaviour
     {
         if (playerLevel % 5 == 0)
         {
-            Debug.Log("РџРѕР»СѓС‡РµРЅР° РЅР°РіСЂР°РґР° Р·Р° СѓСЂРѕРІРµРЅСЊ!");
+            Debug.Log("Получена награда за уровень!");
         }
     }
 }</code></pre>
@@ -521,15 +1372,15 @@ public class ConditionsExample : MonoBehaviour
     <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-1/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 1</a>
-                <a href="../module-3/index.html" class="nav-btn next-btn">РњРѕРґСѓР»СЊ 3 в†’</a>
+                <a href="../module-1/index.html" class="nav-btn prev-btn">< Модуль 1</a>
+                <a href="../module-3/index.html" class="nav-btn next-btn">Модуль 3 ></a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 

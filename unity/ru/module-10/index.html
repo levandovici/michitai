@@ -1,28 +1,879 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 10: РџСѓР±Р»РёРєР°С†РёСЏ Рё РїСЂРѕРґРІРёРЅСѓС‚С‹Рµ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё - РџСЂРёРјРµСЂС‹ РєРѕРґР° РґР»СЏ Unity СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ">
-    <meta name="keywords" content="unity, РїСѓР±Р»РёРєР°С†РёСЏ, addressables, Р°РЅР°Р»РёС‚РёРєР°, РјРѕРЅРµС‚РёР·Р°С†РёСЏ">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 10: РџСѓР±Р»РёРєР°С†РёСЏ Рё РїСЂРѕРґРІРёРЅСѓС‚С‹Рµ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё - РџСЂРёРјРµСЂС‹ РєРѕРґР°</title>
+    <meta name="description" content="Модуль 10: Публикация и продвинутые возможности - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, публикация, addressables, аналитика, монетизация">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 10: Публикация и продвинутые возможности - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     
     
 
     
 
-    <link rel="stylesheet" href="../../css/style.css">
+    
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 10: РџСѓР±Р»РёРєР°С†РёСЏ Рё РїСЂРѕРґРІРёРЅСѓС‚С‹Рµ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё</h1>
+            <h1>Модуль 10: Публикация и продвинутые возможности</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#examples">РџСЂРёРјРµСЂС‹</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,27 +883,27 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>РџСѓР±Р»РёРєР°С†РёСЏ Рё РїСЂРѕРґРІРёРЅСѓС‚С‹Рµ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё</h1>
-            <p>РР·СѓС‡РёС‚Рµ Addressables, Р°РЅР°Р»РёС‚РёРєСѓ, РјРѕРЅРµС‚РёР·Р°С†РёСЋ Рё РїРѕРґРіРѕС‚РѕРІРєСѓ РёРіСЂС‹ Рє СЂРµР»РёР·Сѓ</p>
+            <h1>Публикация и продвинутые возможности</h1>
+            <p>Изучите Addressables, аналитику, монетизацию и подготовку игры к релизу</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="examples" class="example-section">
-                <h2>РџСЂРёРјРµСЂС‹ РєРѕРґР°</h2>
+                <h2>Примеры кода</h2>
                 <div class="tabs">
                     <button class="tab active" onclick="showTab('addressables')">Addressables</button>
-                    <button class="tab" onclick="showTab('cross-platform')">РљСЂРѕСЃСЃРїР»Р°С‚С„РѕСЂРјРµРЅРЅРѕСЃС‚СЊ</button>
-                    <button class="tab" onclick="showTab('analytics')">РђРЅР°Р»РёС‚РёРєР°</button>
-                    <button class="tab" onclick="showTab('monetization')">РњРѕРЅРµС‚РёР·Р°С†РёСЏ</button>
-                    <button class="tab" onclick="showTab('publishing')">РџСѓР±Р»РёРєР°С†РёСЏ</button>
+                    <button class="tab" onclick="showTab('cross-platform')">Кроссплатформенность</button>
+                    <button class="tab" onclick="showTab('analytics')">Аналитика</button>
+                    <button class="tab" onclick="showTab('monetization')">Монетизация</button>
+                    <button class="tab" onclick="showTab('publishing')">Публикация</button>
                 </div>
 
                 <div id="addressables" class="tab-content active">
                     <div class="example">
-                        <h3>РЎРёСЃС‚РµРјР° Addressables</h3>
-                        <p>Р—Р°РіСЂСѓР·РєР° Рё СѓРїСЂР°РІР»РµРЅРёРµ СЂРµСЃСѓСЂСЃР°РјРё С‡РµСЂРµР· Addressables РґР»СЏ РѕРїС‚РёРјРёР·Р°С†РёРё РїР°РјСЏС‚Рё.</p>
+                        <h3>Система Addressables</h3>
+                        <p>Загрузка и управление ресурсами через Addressables для оптимизации памяти.</p>
                         <div class="code-example">
                             <pre>using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -74,9 +925,9 @@ public class AddressableManager : MonoBehaviour
     
     async void LoadAddressableAssets()
     {
-        Debug.Log("РќР°С‡РёРЅР°РµРј Р·Р°РіСЂСѓР·РєСѓ Addressable СЂРµСЃСѓСЂСЃРѕРІ");
+        Debug.Log("Начинаем загрузку Addressable ресурсов");
         
-        // Р—Р°РіСЂСѓР·РєР° РїСЂРµС„Р°Р±Р° РёРіСЂРѕРєР°
+        // Загрузка префаба игрока
         var playerHandle = playerPrefab.LoadAssetAsync&lt;GameObject&gt;();
         await playerHandle.Task;
         
@@ -84,10 +935,10 @@ public class AddressableManager : MonoBehaviour
         {
             loadedAssets["player"] = playerHandle;
             var player = Instantiate(playerHandle.Result);
-            Debug.Log("РРіСЂРѕРє СЃРѕР·РґР°РЅ РёР· Addressable СЂРµСЃСѓСЂСЃР°");
+            Debug.Log("Игрок создан из Addressable ресурса");
         }
         
-        // Р—Р°РіСЂСѓР·РєР° Р°СѓРґРёРѕ
+        // Загрузка аудио
         var audioHandle = audioClip.LoadAssetAsync&lt;AudioClip&gt;();
         await audioHandle.Task;
         
@@ -106,7 +957,7 @@ public class AddressableManager : MonoBehaviour
             
         audioSource.clip = clip;
         audioSource.Play();
-        Debug.Log("РђСѓРґРёРѕ РІРѕСЃРїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ");
+        Debug.Log("Аудио воспроизводится");
     }
     
     public void UnloadAsset(string key)
@@ -115,7 +966,7 @@ public class AddressableManager : MonoBehaviour
         {
             Addressables.Release(loadedAssets[key]);
             loadedAssets.Remove(key);
-            Debug.Log($"Р РµСЃСѓСЂСЃ {key} РІС‹РіСЂСѓР¶РµРЅ");
+            Debug.Log($"Ресурс {key} выгружен");
         }
     }
     
@@ -125,7 +976,7 @@ public class AddressableManager : MonoBehaviour
         {
             Addressables.Release(asset);
         }
-        Debug.Log("Р’СЃРµ Addressable СЂРµСЃСѓСЂСЃС‹ РѕСЃРІРѕР±РѕР¶РґРµРЅС‹");
+        Debug.Log("Все Addressable ресурсы освобождены");
     }
 }</pre>
                         </div>
@@ -134,8 +985,8 @@ public class AddressableManager : MonoBehaviour
 
                 <div id="cross-platform" class="tab-content">
                     <div class="example">
-                        <h3>РљСЂРѕСЃСЃРїР»Р°С‚С„РѕСЂРјРµРЅРЅР°СЏ СЂР°Р·СЂР°Р±РѕС‚РєР°</h3>
-                        <p>РђРґР°РїС‚Р°С†РёСЏ РёРіСЂС‹ РґР»СЏ СЂР°Р·РЅС‹С… РїР»Р°С‚С„РѕСЂРј: Android, WebGL, PC.</p>
+                        <h3>Кроссплатформенная разработка</h3>
+                        <p>Адаптация игры для разных платформ: Android, WebGL, PC.</p>
                         <div class="code-example">
                             <pre>using UnityEngine;
 
@@ -168,34 +1019,34 @@ public class PlatformManager : MonoBehaviour
                 break;
         }
         
-        Debug.Log($"РџР»Р°С‚С„РѕСЂРјР°: {Application.platform}");
+        Debug.Log($"Платформа: {Application.platform}");
     }
     
     void SetupMobile()
     {
         enableTouchControls = true;
         SetUIScale(mobileUIScale);
-        QualitySettings.SetQualityLevel(1); // РќРёР·РєРѕРµ РєР°С‡РµСЃС‚РІРѕ
+        QualitySettings.SetQualityLevel(1); // Низкое качество
         
-        Debug.Log("РњРѕР±РёР»СЊРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ РїСЂРёРјРµРЅРµРЅР°");
+        Debug.Log("Мобильная конфигурация применена");
     }
     
     void SetupWebGL()
     {
         enableTouchControls = SystemInfo.deviceType == DeviceType.Handheld;
         SetUIScale(enableTouchControls ? mobileUIScale : desktopUIScale);
-        QualitySettings.SetQualityLevel(2); // РЎСЂРµРґРЅРµРµ РєР°С‡РµСЃС‚РІРѕ
+        QualitySettings.SetQualityLevel(2); // Среднее качество
         
-        Debug.Log("WebGL РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ РїСЂРёРјРµРЅРµРЅР°");
+        Debug.Log("WebGL конфигурация применена");
     }
     
     void SetupDesktop()
     {
         enableTouchControls = false;
         SetUIScale(desktopUIScale);
-        QualitySettings.SetQualityLevel(4); // Р’С‹СЃРѕРєРѕРµ РєР°С‡РµСЃС‚РІРѕ
+        QualitySettings.SetQualityLevel(4); // Высокое качество
         
-        Debug.Log("Р”РµСЃРєС‚РѕРїРЅР°СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ РїСЂРёРјРµРЅРµРЅР°");
+        Debug.Log("Десктопная конфигурация применена");
     }
     
     void SetUIScale(float scale)
@@ -217,8 +1068,8 @@ public class PlatformManager : MonoBehaviour
 
                 <div id="analytics" class="tab-content">
                     <div class="example">
-                        <h3>РђРЅР°Р»РёС‚РёРєР° Рё РѕС‚СЃР»РµР¶РёРІР°РЅРёРµ</h3>
-                        <p>РЎР±РѕСЂ РґР°РЅРЅС‹С… Рѕ РїРѕРІРµРґРµРЅРёРё РёРіСЂРѕРєРѕРІ Рё РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё РёРіСЂС‹.</p>
+                        <h3>Аналитика и отслеживание</h3>
+                        <p>Сбор данных о поведении игроков и производительности игры.</p>
                         <div class="code-example">
                             <pre>using UnityEngine;
 using System.Collections.Generic;
@@ -239,7 +1090,7 @@ public class AnalyticsManager : MonoBehaviour
     void InitializeAnalytics()
     {
         sessionStartTime = Time.time;
-        Debug.Log("РђРЅР°Р»РёС‚РёРєР° РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°");
+        Debug.Log("Аналитика инициализирована");
     }
     
     void TrackSessionStart()
@@ -268,7 +1119,7 @@ public class AnalyticsManager : MonoBehaviour
             }
         }
         
-        Debug.Log($"РЎРѕР±С‹С‚РёРµ: {eventName}");
+        Debug.Log($"Событие: {eventName}");
         LogEvent(eventData);
     }
     
@@ -285,7 +1136,7 @@ public class AnalyticsManager : MonoBehaviour
     
     void LogEvent(Dictionary&lt;string, object&gt; data)
     {
-        string log = "РђРЅР°Р»РёС‚РёРєР°:\n";
+        string log = "Аналитика:\n";
         foreach (var item in data)
         {
             log += $"  {item.Key}: {item.Value}\n";
@@ -299,8 +1150,8 @@ public class AnalyticsManager : MonoBehaviour
 
                 <div id="monetization" class="tab-content">
                     <div class="example">
-                        <h3>РњРѕРЅРµС‚РёР·Р°С†РёСЏ СЃ Unity Ads</h3>
-                        <p>РРЅС‚РµРіСЂР°С†РёСЏ СЂРµРєР»Р°РјС‹ Рё РІРЅСѓС‚СЂРёРёРіСЂРѕРІС‹С… РїРѕРєСѓРїРѕРє РґР»СЏ РјРѕРЅРµС‚РёР·Р°С†РёРё.</p>
+                        <h3>Монетизация с Unity Ads</h3>
+                        <p>Интеграция рекламы и внутриигровых покупок для монетизации.</p>
                         <div class="code-example">
                             <pre>using UnityEngine;
 using UnityEngine.UI;
@@ -323,7 +1174,7 @@ public class MonetizationManager : MonoBehaviour
     
     void InitializeMonetization()
     {
-        // РЎРёРјСѓР»СЏС†РёСЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Unity Ads
+        // Симуляция инициализации Unity Ads
         Invoke("SetAdReady", 2f);
         
         if (watchAdButton != null)
@@ -331,14 +1182,14 @@ public class MonetizationManager : MonoBehaviour
             watchAdButton.onClick.AddListener(ShowRewardedAd);
         }
         
-        Debug.Log("РњРѕРЅРµС‚РёР·Р°С†РёСЏ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°");
+        Debug.Log("Монетизация инициализирована");
     }
     
     void SetAdReady()
     {
         adReady = true;
         UpdateUI();
-        Debug.Log("Р РµРєР»Р°РјР° РіРѕС‚РѕРІР°");
+        Debug.Log("Реклама готова");
     }
     
     void LoadPlayerData()
@@ -357,11 +1208,11 @@ public class MonetizationManager : MonoBehaviour
     {
         if (!adReady) return;
         
-        Debug.Log("РџРѕРєР°Р· СЂРµРєР»Р°РјС‹...");
+        Debug.Log("Показ рекламы...");
         adReady = false;
         UpdateUI();
         
-        // РЎРёРјСѓР»СЏС†РёСЏ РїСЂРѕСЃРјРѕС‚СЂР° СЂРµРєР»Р°РјС‹
+        // Симуляция просмотра рекламы
         Invoke("OnAdComplete", 3f);
     }
     
@@ -372,9 +1223,9 @@ public class MonetizationManager : MonoBehaviour
         SavePlayerData();
         UpdateUI();
         
-        Debug.Log($"РџРѕР»СѓС‡РµРЅРѕ {reward} РјРѕРЅРµС‚ Р·Р° СЂРµРєР»Р°РјСѓ");
+        Debug.Log($"Получено {reward} монет за рекламу");
         
-        // РЎР»РµРґСѓСЋС‰Р°СЏ СЂРµРєР»Р°РјР° С‡РµСЂРµР· 30 СЃРµРєСѓРЅРґ
+        // Следующая реклама через 30 секунд
         Invoke("SetAdReady", 30f);
     }
     
@@ -382,7 +1233,7 @@ public class MonetizationManager : MonoBehaviour
     {
         if (coinsText != null)
         {
-            coinsText.text = $"РњРѕРЅРµС‚С‹: {playerCoins}";
+            coinsText.text = $"Монеты: {playerCoins}";
         }
         
         if (watchAdButton != null)
@@ -397,8 +1248,8 @@ public class MonetizationManager : MonoBehaviour
 
                 <div id="publishing" class="tab-content">
                     <div class="example">
-                        <h3>РџРѕРґРіРѕС‚РѕРІРєР° Рє РїСѓР±Р»РёРєР°С†РёРё</h3>
-                        <p>РђРІС‚РѕРјР°С‚РёР·Р°С†РёСЏ РїСЂРѕС†РµСЃСЃР° СЃР±РѕСЂРєРё Рё РїРѕРґРіРѕС‚РѕРІРєРё РёРіСЂС‹ Рє СЂРµР»РёР·Сѓ.</p>
+                        <h3>Подготовка к публикации</h3>
+                        <p>Автоматизация процесса сборки и подготовки игры к релизу.</p>
                         <div class="code-example">
                             <pre>using UnityEngine;
 #if UNITY_EDITOR
@@ -424,16 +1275,16 @@ public class BuildManager : MonoBehaviour
         buildOptions.target = BuildTarget.Android;
         buildOptions.options = BuildOptions.None;
         
-        Debug.Log("РќР°С‡Р°Р»Рѕ СЃР±РѕСЂРєРё РґР»СЏ Android...");
+        Debug.Log("Начало сборки для Android...");
         var report = BuildPipeline.BuildPlayer(buildOptions);
         
         if (report.summary.result == BuildResult.Succeeded)
         {
-            Debug.Log("РЎР±РѕСЂРєР° Android Р·Р°РІРµСЂС€РµРЅР° СѓСЃРїРµС€РЅРѕ!");
+            Debug.Log("Сборка Android завершена успешно!");
         }
         else
         {
-            Debug.LogError("РћС€РёР±РєР° СЃР±РѕСЂРєРё Android");
+            Debug.LogError("Ошибка сборки Android");
         }
     }
     
@@ -442,11 +1293,11 @@ public class BuildManager : MonoBehaviour
         PlayerSettings.productName = productName;
         PlayerSettings.bundleVersion = version;
         
-        // Android РЅР°СЃС‚СЂРѕР№РєРё
+        // Android настройки
         PlayerSettings.Android.bundleVersionCode++;
         PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel21;
         
-        Debug.Log($"РќР°СЃС‚СЂРѕР№РєРё СЃР±РѕСЂРєРё: {productName} v{version}");
+        Debug.Log($"Настройки сборки: {productName} v{version}");
     }
     
     string[] GetScenePaths()
@@ -469,15 +1320,15 @@ public class BuildManager : MonoBehaviour
             <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-9/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 9</a>
-                <a href="../module-11/index.html" class="nav-btn next-btn">РњРѕРґСѓР»СЊ 11 в†’</a>
+                <a href="../module-9/index.html" class="nav-btn prev-btn">< Модуль 9</a>
+                <a href="../module-11/index.html" class="nav-btn next-btn">Модуль 11 ></a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 
