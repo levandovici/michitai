@@ -1,28 +1,879 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 7: РњРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРµ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ - РџСЂРёРјРµСЂС‹ РєРѕРґР° РґР»СЏ Unity СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ">
-    <meta name="keywords" content="unity, РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕСЃС‚СЊ, async, await, РєРѕСЂСѓС‚РёРЅС‹, РїР°СЂР°Р»Р»РµР»РёР·Рј">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 7: РњРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРµ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ - РџСЂРёРјРµСЂС‹ РєРѕРґР°</title>
+    <meta name="description" content="Модуль 7: Многопоточное программирование - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, многопоточность, async, await, корутины, параллелизм">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 7: Многопоточное программирование - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     
     
 
     
 
-    <link rel="stylesheet" href="../../css/style.css">
+    
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 7: РњРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРµ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ</h1>
+            <h1>Модуль 7: Многопоточное программирование</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#examples">РџСЂРёРјРµСЂС‹</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,28 +883,28 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>РњРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕРµ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ</h1>
-            <p>РР·СѓС‡РёС‚Рµ РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕСЃС‚СЊ Рё РїР°СЂР°Р»Р»РµР»СЊРЅРѕРµ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ РІ Unity</p>
+            <h1>Многопоточное программирование</h1>
+            <p>Изучите многопоточность и параллельное программирование в Unity</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="examples" class="example-section">
-                <h2>РџСЂРёРјРµСЂС‹ РєРѕРґР°</h2>
+                <h2>Примеры кода</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('threading-basics')">РћСЃРЅРѕРІС‹ РїРѕС‚РѕРєРѕРІ</button>
+                    <button class="tab active" onclick="showTab('threading-basics')">Основы потоков</button>
                     <button class="tab" onclick="showTab('task-parallel')">Task Parallel Library</button>
-                    <button class="tab" onclick="showTab('synchronization')">РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ</button>
-                    <button class="tab" onclick="showTab('unity-threading')">РџРѕС‚РѕРєРё РІ Unity</button>
-                    <button class="tab" onclick="showTab('advanced-threading')">РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ С‚РµС…РЅРёРєРё</button>
+                    <button class="tab" onclick="showTab('synchronization')">Синхронизация</button>
+                    <button class="tab" onclick="showTab('unity-threading')">Потоки в Unity</button>
+                    <button class="tab" onclick="showTab('advanced-threading')">Продвинутые техники</button>
                 </div>
 
                 <div id="threading-basics" class="tab-content active">
                     <div class="example">
-                        <h3>РћСЃРЅРѕРІС‹ СЂР°Р±РѕС‚С‹ СЃ РїРѕС‚РѕРєР°РјРё</h3>
-                        <p>Р’РІРµРґРµРЅРёРµ РІ РїРѕС‚РѕРєРё Рё Р±Р°Р·РѕРІС‹Рµ РѕРїРµСЂР°С†РёРё СЃ Thread РєР»Р°СЃСЃРѕРј.</p>
+                        <h3>Основы работы с потоками</h3>
+                        <p>Введение в потоки и базовые операции с Thread классом.</p>
                         <div class="code-example">
                             <pre>using System;
 using System.Threading;
@@ -61,7 +912,7 @@ using UnityEngine;
 
 public class ThreadingBasics : MonoBehaviour
 {
-    [Header("РќР°СЃС‚СЂРѕР№РєРё РїРѕС‚РѕРєРѕРІ")]
+    [Header("Настройки потоков")]
     public int numberOfThreads = 4;
     public bool useBackgroundThreads = true;
     
@@ -71,7 +922,7 @@ public class ThreadingBasics : MonoBehaviour
     void Start()
     {
         InitializeThreads();
-        Debug.Log("РЎРёСЃС‚РµРјР° РїРѕС‚РѕРєРѕРІ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°");
+        Debug.Log("Система потоков инициализирована");
     }
     
     void InitializeThreads()
@@ -83,13 +934,13 @@ public class ThreadingBasics : MonoBehaviour
             int threadId = i;
             workerThreads[i] = new Thread(() => WorkerThreadMethod(threadId));
             workerThreads[i].IsBackground = useBackgroundThreads;
-            workerThreads[i].Name = $"Р Р°Р±РѕС‡РёР№ РїРѕС‚РѕРє {threadId}";
+            workerThreads[i].Name = $"Рабочий поток {threadId}";
         }
     }
     
     void WorkerThreadMethod(int threadId)
     {
-        Debug.Log($"РџРѕС‚РѕРє {threadId} Р·Р°РїСѓС‰РµРЅ РЅР° СЏРґСЂРµ {Thread.CurrentThread.ManagedThreadId}");
+        Debug.Log($"Поток {threadId} запущен на ядре {Thread.CurrentThread.ManagedThreadId}");
         
         while (isRunning)
         {
@@ -97,7 +948,7 @@ public class ThreadingBasics : MonoBehaviour
             Thread.Sleep(1000);
         }
         
-        Debug.Log($"РџРѕС‚РѕРє {threadId} Р·Р°РІРµСЂС€РµРЅ");
+        Debug.Log($"Поток {threadId} завершен");
     }
     
     void PerformWork(int threadId)
@@ -108,7 +959,7 @@ public class ThreadingBasics : MonoBehaviour
             result += i % (threadId + 1);
         }
         
-        Debug.Log($"РџРѕС‚РѕРє {threadId} Р·Р°РІРµСЂС€РёР» СЂР°Р±РѕС‚Сѓ. Р РµР·СѓР»СЊС‚Р°С‚: {result}");
+        Debug.Log($"Поток {threadId} завершил работу. Результат: {result}");
     }
     
     void Update()
@@ -138,7 +989,7 @@ public class ThreadingBasics : MonoBehaviour
                 }
             }
             
-            Debug.Log("Р’СЃРµ РїРѕС‚РѕРєРё Р·Р°РїСѓС‰РµРЅС‹");
+            Debug.Log("Все потоки запущены");
         }
     }
     
@@ -147,7 +998,7 @@ public class ThreadingBasics : MonoBehaviour
         if (isRunning)
         {
             isRunning = false;
-            Debug.Log("РћСЃС‚Р°РЅРѕРІРєР° РїРѕС‚РѕРєРѕРІ...");
+            Debug.Log("Остановка потоков...");
         }
     }
     
@@ -162,7 +1013,7 @@ public class ThreadingBasics : MonoBehaviour
             <div id="task-parallel" class="tab-content">
                 <div class="example">
                     <h3>Task Parallel Library</h3>
-                    <p>РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЃРѕРІСЂРµРјРµРЅРЅРѕРіРѕ API РґР»СЏ РїР°СЂР°Р»Р»РµР»СЊРЅРѕРіРѕ РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёСЏ.</p>
+                    <p>Использование современного API для параллельного программирования.</p>
                     <div class="code-example">
                         <pre>using System;
 using System.Collections.Generic;
@@ -171,7 +1022,7 @@ using UnityEngine;
 
 public class TaskParallelController : MonoBehaviour
 {
-    [Header("РќР°СЃС‚СЂРѕР№РєРё Р·Р°РґР°С‡")]
+    [Header("Настройки задач")]
     public int dataSize = 1000000;
     
     private List&lt;int&gt; largeDataSet;
@@ -180,7 +1031,7 @@ public class TaskParallelController : MonoBehaviour
     void Start()
     {
         InitializeData();
-        Debug.Log("Task Parallel Library Controller РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Task Parallel Library Controller инициализирован");
     }
     
     void InitializeData()
@@ -191,7 +1042,7 @@ public class TaskParallelController : MonoBehaviour
             largeDataSet.Add(UnityEngine.Random.Range(1, 1000));
         }
         
-        Debug.Log($"РЎРѕР·РґР°РЅ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… СЂР°Р·РјРµСЂРѕРј {dataSize} СЌР»РµРјРµРЅС‚РѕРІ");
+        Debug.Log($"Создан набор данных размером {dataSize} элементов");
     }
     
     void Update()
@@ -214,7 +1065,7 @@ public class TaskParallelController : MonoBehaviour
     
     public void ProcessDataParallel()
     {
-        Debug.Log("РќР°С‡Р°Р»Рѕ РїР°СЂР°Р»Р»РµР»СЊРЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРё...");
+        Debug.Log("Начало параллельной обработки...");
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         
         long sum = 0;
@@ -231,12 +1082,12 @@ public class TaskParallelController : MonoBehaviour
         });
         
         stopwatch.Stop();
-        Debug.Log($"РџР°СЂР°Р»Р»РµР»СЊРЅР°СЏ РѕР±СЂР°Р±РѕС‚РєР° Р·Р°РІРµСЂС€РµРЅР° Р·Р° {stopwatch.ElapsedMilliseconds} РјСЃ. РЎСѓРјРјР°: {sum}");
+        Debug.Log($"Параллельная обработка завершена за {stopwatch.ElapsedMilliseconds} мс. Сумма: {sum}");
     }
     
     public void ProcessDataSequential()
     {
-        Debug.Log("РќР°С‡Р°Р»Рѕ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРё...");
+        Debug.Log("Начало последовательной обработки...");
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         
         long sum = 0;
@@ -247,22 +1098,22 @@ public class TaskParallelController : MonoBehaviour
         }
         
         stopwatch.Stop();
-        Debug.Log($"РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅР°СЏ РѕР±СЂР°Р±РѕС‚РєР° Р·Р°РІРµСЂС€РµРЅР° Р·Р° {stopwatch.ElapsedMilliseconds} РјСЃ. РЎСѓРјРјР°: {sum}");
+        Debug.Log($"Последовательная обработка завершена за {stopwatch.ElapsedMilliseconds} мс. Сумма: {sum}");
     }
     
     public async void ProcessDataAsync()
     {
-        Debug.Log("РќР°С‡Р°Р»Рѕ Р°СЃРёРЅС…СЂРѕРЅРЅРѕР№ РѕР±СЂР°Р±РѕС‚РєРё...");
+        Debug.Log("Начало асинхронной обработки...");
         cancellationTokenSource = new CancellationTokenSource();
         
         try
         {
             var result = await ProcessDataAsyncInternal(cancellationTokenSource.Token);
-            Debug.Log($"РђСЃРёРЅС…СЂРѕРЅРЅР°СЏ РѕР±СЂР°Р±РѕС‚РєР° Р·Р°РІРµСЂС€РµРЅР°. Р РµР·СѓР»СЊС‚Р°С‚: {result}");
+            Debug.Log($"Асинхронная обработка завершена. Результат: {result}");
         }
         catch (OperationCanceledException)
         {
-            Debug.Log("РђСЃРёРЅС…СЂРѕРЅРЅР°СЏ РѕРїРµСЂР°С†РёСЏ Р±С‹Р»Р° РѕС‚РјРµРЅРµРЅР°");
+            Debug.Log("Асинхронная операция была отменена");
         }
     }
     
@@ -298,8 +1149,8 @@ public class TaskParallelController : MonoBehaviour
 
             <div id="synchronization" class="tab-content">
                 <div class="example">
-                    <h3>РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ РїРѕС‚РѕРєРѕРІ</h3>
-                    <p>РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ lock, Monitor Рё РґСЂСѓРіРёС… РїСЂРёРјРёС‚РёРІРѕРІ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё.</p>
+                    <h3>Синхронизация потоков</h3>
+                    <p>Использование lock, Monitor и других примитивов синхронизации.</p>
                     <div class="code-example">
                         <pre>using System;
 using System.Threading;
@@ -308,7 +1159,7 @@ using UnityEngine;
 
 public class ThreadSynchronization : MonoBehaviour
 {
-    [Header("РќР°СЃС‚СЂРѕР№РєРё СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё")]
+    [Header("Настройки синхронизации")]
     public int bufferSize = 10;
     
     private Queue&lt;int&gt; sharedBuffer;
@@ -321,7 +1172,7 @@ public class ThreadSynchronization : MonoBehaviour
     void Start()
     {
         InitializeSynchronization();
-        Debug.Log("РЎРёСЃС‚РµРјР° СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РїРѕС‚РѕРєРѕРІ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°");
+        Debug.Log("Система синхронизации потоков инициализирована");
     }
     
     void InitializeSynchronization()
@@ -364,7 +1215,7 @@ public class ThreadSynchronization : MonoBehaviour
             producer.Start();
             consumer.Start();
             
-            Debug.Log("РџСЂРѕРёР·РІРѕРґРёС‚РµР»СЊ Рё РїРѕС‚СЂРµР±РёС‚РµР»СЊ Р·Р°РїСѓС‰РµРЅС‹");
+            Debug.Log("Производитель и потребитель запущены");
         }
     }
     
@@ -380,7 +1231,7 @@ public class ThreadSynchronization : MonoBehaviour
                     sharedBuffer.Enqueue(item);
                     Interlocked.Increment(ref itemsProduced);
                     
-                    Debug.Log($"РџСЂРѕРёР·РІРµРґРµРЅ СЌР»РµРјРµРЅС‚ {item}. Р‘СѓС„РµСЂ: {sharedBuffer.Count}");
+                    Debug.Log($"Произведен элемент {item}. Буфер: {sharedBuffer.Count}");
                     Monitor.PulseAll(bufferLock);
                 }
                 else
@@ -409,7 +1260,7 @@ public class ThreadSynchronization : MonoBehaviour
                     int item = sharedBuffer.Dequeue();
                     Interlocked.Increment(ref itemsConsumed);
                     
-                    Debug.Log($"РћР±СЂР°Р±РѕС‚Р°РЅ СЌР»РµРјРµРЅС‚ {item}. Р‘СѓС„РµСЂ: {sharedBuffer.Count}");
+                    Debug.Log($"Обработан элемент {item}. Буфер: {sharedBuffer.Count}");
                     Monitor.PulseAll(bufferLock);
                 }
             }
@@ -429,7 +1280,7 @@ public class ThreadSynchronization : MonoBehaviour
                 Monitor.PulseAll(bufferLock);
             }
             
-            Debug.Log("РћСЃС‚Р°РЅРѕРІРєР° РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЏ Рё РїРѕС‚СЂРµР±РёС‚РµР»СЏ...");
+            Debug.Log("Остановка производителя и потребителя...");
         }
     }
     
@@ -437,8 +1288,8 @@ public class ThreadSynchronization : MonoBehaviour
     {
         lock (bufferLock)
         {
-            Debug.Log($"Р‘СѓС„РµСЂ: {sharedBuffer.Count}/{bufferSize}");
-            Debug.Log($"РџСЂРѕРёР·РІРµРґРµРЅРѕ: {itemsProduced}, РџРѕС‚СЂРµР±Р»РµРЅРѕ: {itemsConsumed}");
+            Debug.Log($"Буфер: {sharedBuffer.Count}/{bufferSize}");
+            Debug.Log($"Произведено: {itemsProduced}, Потреблено: {itemsConsumed}");
         }
     }
     
@@ -453,8 +1304,8 @@ public class ThreadSynchronization : MonoBehaviour
 
             <div id="unity-threading" class="tab-content">
                 <div class="example">
-                    <h3>РњРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕСЃС‚СЊ РІ Unity</h3>
-                    <p>Р‘РµР·РѕРїР°СЃРЅР°СЏ СЂР°Р±РѕС‚Р° СЃ РїРѕС‚РѕРєР°РјРё РІ Unity Рё РІР·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ СЃ РѕСЃРЅРѕРІРЅС‹Рј РїРѕС‚РѕРєРѕРј.</p>
+                    <h3>Многопоточность в Unity</h3>
+                    <p>Безопасная работа с потоками в Unity и взаимодействие с основным потоком.</p>
                     <div class="code-example">
                         <pre>using System;
 using System.Collections;
@@ -464,7 +1315,7 @@ using UnityEngine;
 
 public class UnityThreadingManager : MonoBehaviour
 {
-    [Header("РќР°СЃС‚СЂРѕР№РєРё Unity Threading")]
+    [Header("Настройки Unity Threading")]
     public Transform[] objectsToMove;
     
     private ConcurrentQueue&lt;Action&gt; mainThreadActions = new ConcurrentQueue&lt;Action&gt;();
@@ -472,7 +1323,7 @@ public class UnityThreadingManager : MonoBehaviour
     
     void Start()
     {
-        Debug.Log("Unity Threading Manager РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Unity Threading Manager инициализирован");
     }
     
     void Update()
@@ -505,7 +1356,7 @@ public class UnityThreadingManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogError($"РћС€РёР±РєР° РІС‹РїРѕР»РЅРµРЅРёСЏ РґРµР№СЃС‚РІРёСЏ: {e.Message}");
+                Debug.LogError($"Ошибка выполнения действия: {e.Message}");
             }
         }
     }
@@ -515,7 +1366,7 @@ public class UnityThreadingManager : MonoBehaviour
         if (isProcessing) return;
         
         isProcessing = true;
-        Debug.Log("Р—Р°РїСѓСЃРє С„РѕРЅРѕРІС‹С… Р·Р°РґР°С‡ РїРѕРёСЃРєР° РїСѓС‚Рё...");
+        Debug.Log("Запуск фоновых задач поиска пути...");
         
         Task.Run(() =>
         {
@@ -538,7 +1389,7 @@ public class UnityThreadingManager : MonoBehaviour
             UnityEngine.Random.Range(-10f, 10f)
         );
         
-        Debug.Log($"Р¤РѕРЅРѕРІР°СЏ Р·Р°РґР°С‡Р° Р·Р°РІРµСЂС€РµРЅР° РЅР° РїРѕС‚РѕРєРµ {System.Threading.Thread.CurrentThread.ManagedThreadId}");
+        Debug.Log($"Фоновая задача завершена на потоке {System.Threading.Thread.CurrentThread.ManagedThreadId}");
         return result;
     }
     
@@ -547,7 +1398,7 @@ public class UnityThreadingManager : MonoBehaviour
         if (objectsToMove.Length > 0 && objectsToMove[0] != null)
         {
             StartCoroutine(MoveObjectToPosition(objectsToMove[0], newPath));
-            Debug.Log($"РџСЂРёРјРµРЅРµРЅ СЂРµР·СѓР»СЊС‚Р°С‚ РїСѓС‚Рё: {newPath}");
+            Debug.Log($"Применен результат пути: {newPath}");
         }
         
         isProcessing = false;
@@ -572,7 +1423,7 @@ public class UnityThreadingManager : MonoBehaviour
     
     public void StartBackgroundCalculations()
     {
-        Debug.Log("Р—Р°РїСѓСЃРє С„РѕРЅРѕРІС‹С… РІС‹С‡РёСЃР»РµРЅРёР№...");
+        Debug.Log("Запуск фоновых вычислений...");
         
         Task.Run(async () =>
         {
@@ -584,29 +1435,29 @@ public class UnityThreadingManager : MonoBehaviour
                 
                 mainThreadActions.Enqueue(() =>
                 {
-                    Debug.Log($"РџСЂРѕРіСЂРµСЃСЃ: {progress}%");
+                    Debug.Log($"Прогресс: {progress}%");
                 });
             }
             
             mainThreadActions.Enqueue(() =>
             {
-                Debug.Log("Р¤РѕРЅРѕРІС‹Рµ РІС‹С‡РёСЃР»РµРЅРёСЏ Р·Р°РІРµСЂС€РµРЅС‹!");
+                Debug.Log("Фоновые вычисления завершены!");
             });
         });
     }
     
     public async void StartLongRunningTask()
     {
-        Debug.Log("Р—Р°РїСѓСЃРє РґРѕР»РіРѕСЃСЂРѕС‡РЅРѕР№ Р·Р°РґР°С‡Рё...");
+        Debug.Log("Запуск долгосрочной задачи...");
         
         try
         {
             var result = await PerformLongRunningOperation();
-            Debug.Log($"Р”РѕР»РіРѕСЃСЂРѕС‡РЅР°СЏ Р·Р°РґР°С‡Р° Р·Р°РІРµСЂС€РµРЅР°: {result}");
+            Debug.Log($"Долгосрочная задача завершена: {result}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"РћС€РёР±РєР° РІ РґРѕР»РіРѕСЃСЂРѕС‡РЅРѕР№ Р·Р°РґР°С‡Рµ: {e.Message}");
+            Debug.LogError($"Ошибка в долгосрочной задаче: {e.Message}");
         }
     }
     
@@ -615,7 +1466,7 @@ public class UnityThreadingManager : MonoBehaviour
         return await Task.Run(() =>
         {
             System.Threading.Thread.Sleep(3000);
-            return $"РћРїРµСЂР°С†РёСЏ Р·Р°РІРµСЂС€РµРЅР° РЅР° РїРѕС‚РѕРєРµ {System.Threading.Thread.CurrentThread.ManagedThreadId}";
+            return $"Операция завершена на потоке {System.Threading.Thread.CurrentThread.ManagedThreadId}";
         });
     }
     
@@ -630,8 +1481,8 @@ public class UnityThreadingManager : MonoBehaviour
 
             <div id="advanced-threading" class="tab-content">
                 <div class="example">
-                    <h3>РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ С‚РµС…РЅРёРєРё РјРЅРѕРіРѕРїРѕС‚РѕС‡РЅРѕСЃС‚Рё</h3>
-                    <p>РџСѓР»С‹ РїРѕС‚РѕРєРѕРІ, CancellationToken Рё РѕРїС‚РёРјРёР·Р°С†РёСЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё.</p>
+                    <h3>Продвинутые техники многопоточности</h3>
+                    <p>Пулы потоков, CancellationToken и оптимизация производительности.</p>
                     <div class="code-example">
                         <pre>using System;
 using System.Threading;
@@ -640,7 +1491,7 @@ using UnityEngine;
 
 public class AdvancedThreadingController : MonoBehaviour
 {
-    [Header("РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ РЅР°СЃС‚СЂРѕР№РєРё")]
+    [Header("Продвинутые настройки")]
     public int maxConcurrentTasks = 4;
     
     private SemaphoreSlim semaphore;
@@ -649,7 +1500,7 @@ public class AdvancedThreadingController : MonoBehaviour
     void Start()
     {
         InitializeAdvancedThreading();
-        Debug.Log("Advanced Threading Controller РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Advanced Threading Controller инициализирован");
     }
     
     void InitializeAdvancedThreading()
@@ -678,7 +1529,7 @@ public class AdvancedThreadingController : MonoBehaviour
     
     public async void StartTaskPool()
     {
-        Debug.Log("Р—Р°РїСѓСЃРє РїСѓР»Р° Р·Р°РґР°С‡...");
+        Debug.Log("Запуск пула задач...");
         
         var tasks = new Task[10];
         
@@ -691,11 +1542,11 @@ public class AdvancedThreadingController : MonoBehaviour
         try
         {
             await Task.WhenAll(tasks);
-            Debug.Log("Р’СЃРµ Р·Р°РґР°С‡Рё РІ РїСѓР»Рµ Р·Р°РІРµСЂС€РµРЅС‹");
+            Debug.Log("Все задачи в пуле завершены");
         }
         catch (OperationCanceledException)
         {
-            Debug.Log("Р—Р°РґР°С‡Рё Р±С‹Р»Рё РѕС‚РјРµРЅРµРЅС‹");
+            Debug.Log("Задачи были отменены");
         }
     }
     
@@ -705,11 +1556,11 @@ public class AdvancedThreadingController : MonoBehaviour
         
         try
         {
-            Debug.Log($"Р—Р°РґР°С‡Р° {taskId} РЅР°С‡Р°С‚Р°");
+            Debug.Log($"Задача {taskId} начата");
             
             await Task.Delay(UnityEngine.Random.Range(1000, 3000), cancellationToken);
             
-            Debug.Log($"Р—Р°РґР°С‡Р° {taskId} Р·Р°РІРµСЂС€РµРЅР°");
+            Debug.Log($"Задача {taskId} завершена");
         }
         finally
         {
@@ -720,7 +1571,7 @@ public class AdvancedThreadingController : MonoBehaviour
     public void CancelAllTasks()
     {
         cancellationTokenSource.Cancel();
-        Debug.Log("РћС‚РјРµРЅР° РІСЃРµС… Р·Р°РґР°С‡...");
+        Debug.Log("Отмена всех задач...");
         
         cancellationTokenSource = new CancellationTokenSource();
     }
@@ -730,16 +1581,16 @@ public class AdvancedThreadingController : MonoBehaviour
     
     public void StartReaderWriterExample()
     {
-        Debug.Log("Р—Р°РїСѓСЃРє РїСЂРёРјРµСЂР° ReaderWriterLock...");
+        Debug.Log("Запуск примера ReaderWriterLock...");
         
-        // Р—Р°РїСѓСЃРє С‡РёС‚Р°С‚РµР»РµР№
+        // Запуск читателей
         for (int i = 0; i < 3; i++)
         {
             int readerId = i;
             Task.Run(() => ReaderTask(readerId));
         }
         
-        // Р—Р°РїСѓСЃРє РїРёСЃР°С‚РµР»СЏ
+        // Запуск писателя
         Task.Run(() => WriterTask());
     }
     
@@ -750,7 +1601,7 @@ public class AdvancedThreadingController : MonoBehaviour
             readerWriterLock.EnterReadLock();
             try
             {
-                Debug.Log($"Р§РёС‚Р°С‚РµР»СЊ {readerId} РїСЂРѕС‡РёС‚Р°Р» Р·РЅР°С‡РµРЅРёРµ: {sharedResource}");
+                Debug.Log($"Читатель {readerId} прочитал значение: {sharedResource}");
                 Thread.Sleep(500);
             }
             finally
@@ -770,7 +1621,7 @@ public class AdvancedThreadingController : MonoBehaviour
             try
             {
                 sharedResource++;
-                Debug.Log($"РџРёСЃР°С‚РµР»СЊ РѕР±РЅРѕРІРёР» Р·РЅР°С‡РµРЅРёРµ РґРѕ: {sharedResource}");
+                Debug.Log($"Писатель обновил значение до: {sharedResource}");
                 Thread.Sleep(1000);
             }
             finally
@@ -800,15 +1651,15 @@ public class AdvancedThreadingController : MonoBehaviour
         <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-6/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 6</a>
-                <a href="../module-8/index.html" class="nav-btn next-btn">РњРѕРґСѓР»СЊ 8 в†’</a>
+                <a href="../module-6/index.html" class="nav-btn prev-btn">< Модуль 6</a>
+                <a href="../module-8/index.html" class="nav-btn next-btn">Модуль 8 ></a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 

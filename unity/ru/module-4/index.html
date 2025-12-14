@@ -1,28 +1,879 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 4: РђРЅРёРјР°С†РёСЏ Unity Рё Animator - РџСЂРёРјРµСЂС‹ РєРѕРґР° РґР»СЏ Unity СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ">
-    <meta name="keywords" content="unity, Р°РЅРёРјР°С†РёСЏ, animator, СЃРѕСЃС‚РѕСЏРЅРёСЏ, РїРµСЂРµС…РѕРґС‹, blend tree">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 4: РђРЅРёРјР°С†РёСЏ Unity Рё Animator - РџСЂРёРјРµСЂС‹ РєРѕРґР°</title>
+    <meta name="description" content="Модуль 4: Анимация Unity и Animator - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, анимация, animator, состояния, переходы, blend tree">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 4: Анимация Unity и Animator - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     
     
 
     
 
-    <link rel="stylesheet" href="../../css/style.css">
+    
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 4: РђРЅРёРјР°С†РёСЏ Unity Рё Animator</h1>
+            <h1>Модуль 4: Анимация Unity и Animator</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#examples">РџСЂРёРјРµСЂС‹</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,27 +883,27 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>РђРЅРёРјР°С†РёСЏ Unity Рё Animator</h1>
-            <p>РР·СѓС‡РёС‚Рµ СЃРёСЃС‚РµРјСѓ Р°РЅРёРјР°С†РёРё Unity Рё СЂР°Р±РѕС‚Сѓ СЃ Animator Controller</p>
+            <h1>Анимация Unity и Animator</h1>
+            <p>Изучите систему анимации Unity и работу с Animator Controller</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="examples" class="example-section">
-                <h2>РџСЂРёРјРµСЂС‹ РєРѕРґР°</h2>
+                <h2>Примеры кода</h2>
                 
                 <div class="tabs">
                     <button class="tab active" onclick="showTab('animator')">Animator</button>
-                    <button class="tab" onclick="showTab('states')">РЎРѕСЃС‚РѕСЏРЅРёСЏ</button>
+                    <button class="tab" onclick="showTab('states')">Состояния</button>
                     <button class="tab" onclick="showTab('blendtree')">Blend Tree</button>
-                    <button class="tab" onclick="showTab('events')">РЎРѕР±С‹С‚РёСЏ</button>
-                    <button class="tab" onclick="showTab('scripting')">РЎРєСЂРёРїС‚С‹</button>
+                    <button class="tab" onclick="showTab('events')">События</button>
+                    <button class="tab" onclick="showTab('scripting')">Скрипты</button>
                 </div>
 
                 <div id="animator" class="tab-content active">
-                    <h3>РџСЂРёРјРµСЂ 1: РћСЃРЅРѕРІС‹ Animator</h3>
-                    <p>Р Р°Р±РѕС‚Р° СЃ РєРѕРјРїРѕРЅРµРЅС‚РѕРј Animator Рё РµРіРѕ РїР°СЂР°РјРµС‚СЂР°РјРё:</p>
+                    <h3>Пример 1: Основы Animator</h3>
+                    <p>Работа с компонентом Animator и его параметрами:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -106,20 +957,20 @@ public class AnimatorExample : MonoBehaviour
     void SetWalking(bool walking)
     {
         animator.SetBool(walkParam, walking);
-        Debug.Log($"РҐРѕРґСЊР±Р°: {walking}");
+        Debug.Log($"Ходьба: {walking}");
     }
 
     void TriggerJump()
     {
         animator.SetTrigger(jumpTrigger);
-        Debug.Log("РџСЂС‹Р¶РѕРє!");
+        Debug.Log("Прыжок!");
     }
 
     void ShowAnimatorInfo()
     {
         Debug.Log($"Controller: {animator.runtimeAnimatorController?.name}");
-        Debug.Log($"РЎР»РѕРµРІ: {animator.layerCount}");
-        Debug.Log($"РџР°СЂР°РјРµС‚СЂРѕРІ: {animator.parameterCount}");
+        Debug.Log($"Слоев: {animator.layerCount}");
+        Debug.Log($"Параметров: {animator.parameterCount}");
     }
 
     bool IsAnimationFinished(string animName)
@@ -134,8 +985,8 @@ public class AnimatorExample : MonoBehaviour
                 </div>
 
                 <div id="states" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 2: РЈРїСЂР°РІР»РµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏРјРё</h3>
-                    <p>Р Р°Р±РѕС‚Р° СЃ СЃРѕСЃС‚РѕСЏРЅРёСЏРјРё Р°РЅРёРјР°С†РёРё:</p>
+                    <h3>Пример 2: Управление состояниями</h3>
+                    <p>Работа с состояниями анимации:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -181,7 +1032,7 @@ public class AnimationStates : MonoBehaviour
         stateTimer = 0f;
         OnStateEnter(newState);
         
-        Debug.Log($"РџРµСЂРµС…РѕРґ: {oldState} в†’ {newState}");
+        Debug.Log($"Переход: {oldState} > {newState}");
     }
 
     void OnStateEnter(string state)
@@ -208,7 +1059,7 @@ public class AnimationStates : MonoBehaviour
 
     void OnStateExit(string state)
     {
-        // РћС‡РёСЃС‚РєР° РїСЂРё РІС‹С…РѕРґРµ РёР· СЃРѕСЃС‚РѕСЏРЅРёСЏ
+        // Очистка при выходе из состояния
     }
 
     void UpdateTimer()
@@ -230,17 +1081,17 @@ public class AnimationStates : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Box(new Rect(10, 10, 200, 100), "РЎРѕСЃС‚РѕСЏРЅРёСЏ");
-        GUI.Label(new Rect(20, 30, 180, 20), $"РўРµРєСѓС‰РµРµ: {currentState}");
-        GUI.Label(new Rect(20, 50, 180, 20), $"Р’СЂРµРјСЏ: {stateTimer:F1}СЃ");
+        GUI.Box(new Rect(10, 10, 200, 100), "Состояния");
+        GUI.Label(new Rect(20, 30, 180, 20), $"Текущее: {currentState}");
+        GUI.Label(new Rect(20, 50, 180, 20), $"Время: {stateTimer:F1}с");
     }
 }</code></pre>
                     </div>
                 </div>
 
                 <div id="blendtree" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 3: Blend Tree</h3>
-                    <p>Р Р°Р±РѕС‚Р° СЃ Blend Tree РґР»СЏ РїР»Р°РІРЅС‹С… РїРµСЂРµС…РѕРґРѕРІ:</p>
+                    <h3>Пример 3: Blend Tree</h3>
+                    <p>Работа с Blend Tree для плавных переходов:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -272,21 +1123,21 @@ public class BlendTreeController : MonoBehaviour
         
         inputVector = new Vector2(horizontal, vertical);
         
-        // РЎРіР»Р°Р¶РёРІР°РЅРёРµ
+        // Сглаживание
         smoothInput = Vector2.Lerp(smoothInput, inputVector, Time.deltaTime * 5f);
     }
 
     void UpdateBlendTree()
     {
-        // 2D Blend Tree РїР°СЂР°РјРµС‚СЂС‹
+        // 2D Blend Tree параметры
         animator.SetFloat("Horizontal", smoothInput.x);
         animator.SetFloat("Vertical", smoothInput.y);
         
-        // РћР±С‰Р°СЏ СЃРєРѕСЂРѕСЃС‚СЊ
+        // Общая скорость
         float speed = smoothInput.magnitude;
         animator.SetFloat("Speed", speed);
         
-        // РќР°РїСЂР°РІР»РµРЅРёРµ
+        // Направление
         if (inputVector.magnitude > 0.1f)
         {
             float direction = Mathf.Atan2(inputVector.x, inputVector.y) * Mathf.Rad2Deg;
@@ -301,13 +1152,13 @@ public class BlendTreeController : MonoBehaviour
             Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
             transform.Translate(moveDir * moveSpeed * Time.deltaTime, Space.World);
             
-            // РџРѕРІРѕСЂРѕС‚
+            // Поворот
             Quaternion targetRotation = Quaternion.LookRotation(moveDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
     }
 
-    // 1D Blend Tree РїСЂРёРјРµСЂ
+    // 1D Blend Tree пример
     void Update1DBlendTree()
     {
         float speed = 0f;
@@ -331,8 +1182,8 @@ public class BlendTreeController : MonoBehaviour
                 </div>
 
                 <div id="events" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 4: РЎРѕР±С‹С‚РёСЏ Р°РЅРёРјР°С†РёРё</h3>
-                    <p>Р Р°Р±РѕС‚Р° СЃ Animation Events:</p>
+                    <h3>Пример 4: События анимации</h3>
+                    <p>Работа с Animation Events:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -352,10 +1203,10 @@ public class AnimationEvents : MonoBehaviour
         audioSource = GetComponent&lt;AudioSource&gt;();
     }
 
-    // Animation Event: РЁР°Рі
+    // Animation Event: Шаг
     public void OnFootstep()
     {
-        Debug.Log("РЁР°Рі!");
+        Debug.Log("Шаг!");
         
         if (audioSource && footstepSound)
         {
@@ -369,10 +1220,10 @@ public class AnimationEvents : MonoBehaviour
         }
     }
 
-    // Animation Event: РђС‚Р°РєР°
+    // Animation Event: Атака
     public void OnAttackHit()
     {
-        Debug.Log("РЈРґР°СЂ!");
+        Debug.Log("Удар!");
         
         if (audioSource && attackSound)
         {
@@ -382,10 +1233,10 @@ public class AnimationEvents : MonoBehaviour
         CheckAttackHit();
     }
 
-    // Animation Event: РџСЂРёР·РµРјР»РµРЅРёРµ
+    // Animation Event: Приземление
     public void OnLanding()
     {
-        Debug.Log("РџСЂРёР·РµРјР»РµРЅРёРµ!");
+        Debug.Log("Приземление!");
         
         if (dustEffect)
         {
@@ -397,15 +1248,15 @@ public class AnimationEvents : MonoBehaviour
         }
     }
 
-    // Animation Event СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
+    // Animation Event с параметрами
     public void OnEventWithParameter(string message)
     {
-        Debug.Log($"РЎРѕР±С‹С‚РёРµ: {message}");
+        Debug.Log($"Событие: {message}");
     }
 
     public void OnEventWithFloat(float value)
     {
-        Debug.Log($"Р—РЅР°С‡РµРЅРёРµ: {value}");
+        Debug.Log($"Значение: {value}");
     }
 
     void CheckAttackHit()
@@ -416,7 +1267,7 @@ public class AnimationEvents : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, attackDir, out hit, attackRange))
         {
-            Debug.Log($"РџРѕРїР°РґР°РЅРёРµ: {hit.collider.name}");
+            Debug.Log($"Попадание: {hit.collider.name}");
             
             Rigidbody rb = hit.collider.GetComponent&lt;Rigidbody&gt;();
             if (rb)
@@ -428,7 +1279,7 @@ public class AnimationEvents : MonoBehaviour
 
     void Update()
     {
-        // РўРµСЃС‚ СЃРѕР±С‹С‚РёР№
+        // Тест событий
         if (Input.GetKeyDown(KeyCode.T))
         {
             OnFootstep();
@@ -439,8 +1290,8 @@ public class AnimationEvents : MonoBehaviour
                 </div>
 
                 <div id="scripting" class="tab-content">
-                    <h3>РџСЂРёРјРµСЂ 5: РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ СЃРєСЂРёРїС‚С‹</h3>
-                    <p>РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ С‚РµС…РЅРёРєРё Р°РЅРёРјР°С†РёРё:</p>
+                    <h3>Пример 5: Продвинутые скрипты</h3>
+                    <p>Продвинутые техники анимации:</p>
                     <div class="code-example">
                         <pre><code>using UnityEngine;
 
@@ -468,14 +1319,14 @@ public class AdvancedAnimation : MonoBehaviour
 
     void HandleControls()
     {
-        // IK РїРµСЂРµРєР»СЋС‡РµРЅРёРµ
+        // IK переключение
         if (Input.GetKeyDown(KeyCode.I))
         {
             ikActive = !ikActive;
             Debug.Log($"IK: {ikActive}");
         }
 
-        // РЎРєРѕСЂРѕСЃС‚СЊ Р°РЅРёРјР°С†РёРё
+        // Скорость анимации
         if (Input.GetKey(KeyCode.Q))
         {
             animator.speed = 0.5f;
@@ -489,7 +1340,7 @@ public class AdvancedAnimation : MonoBehaviour
             animator.speed = 1f;
         }
 
-        // Р’РµСЃ СЃР»РѕСЏ
+        // Вес слоя
         if (Input.GetKeyDown(KeyCode.L))
         {
             float weight = animator.GetLayerWeight(1);
@@ -501,7 +1352,7 @@ public class AdvancedAnimation : MonoBehaviour
     {
         if (!ikActive) return;
 
-        // IK СЂСѓРє
+        // IK рук
         if (leftHandTarget)
         {
             animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
@@ -526,35 +1377,35 @@ public class AdvancedAnimation : MonoBehaviour
         }
     }
 
-    // РљСЂРѕСЃСЃС„РµР№Рґ РјРµР¶РґСѓ Р°РЅРёРјР°С†РёСЏРјРё
+    // Кроссфейд между анимациями
     void CrossfadeToAnimation(string animationName, float duration = 0.3f)
     {
         animator.CrossFade(animationName, duration);
-        Debug.Log($"РљСЂРѕСЃСЃС„РµР№Рґ Рє: {animationName}");
+        Debug.Log($"Кроссфейд к: {animationName}");
     }
 
-    // Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ Р°РЅРёРјР°С†РёРё РІ РѕРїСЂРµРґРµР»РµРЅРЅРѕРј СЃР»РѕРµ
+    // Воспроизведение анимации в определенном слое
     void PlayInLayer(string animationName, int layer)
     {
         animator.Play(animationName, layer);
     }
 
-    // РџРѕР»СѓС‡РµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё Рѕ СЃРѕСЃС‚РѕСЏРЅРёРё
+    // Получение информации о состоянии
     void GetStateInfo()
     {
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
-        Debug.Log($"РЎРѕСЃС‚РѕСЏРЅРёРµ: {state.shortNameHash}");
-        Debug.Log($"Р’СЂРµРјСЏ: {state.normalizedTime}");
-        Debug.Log($"Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ: {state.length}");
+        Debug.Log($"Состояние: {state.shortNameHash}");
+        Debug.Log($"Время: {state.normalizedTime}");
+        Debug.Log($"Длительность: {state.length}");
     }
 
     void OnGUI()
     {
-        GUI.Box(new Rect(10, 10, 200, 120), "РџСЂРѕРґРІРёРЅСѓС‚Р°СЏ Р°РЅРёРјР°С†РёСЏ");
+        GUI.Box(new Rect(10, 10, 200, 120), "Продвинутая анимация");
         GUI.Label(new Rect(20, 30, 180, 20), $"IK: {ikActive}");
-        GUI.Label(new Rect(20, 50, 180, 20), $"РЎРєРѕСЂРѕСЃС‚СЊ: {animator.speed:F1}");
-        GUI.Label(new Rect(20, 70, 180, 20), "I - IK, Q/E - СЃРєРѕСЂРѕСЃС‚СЊ");
-        GUI.Label(new Rect(20, 90, 180, 20), "L - РІРµСЃ СЃР»РѕСЏ");
+        GUI.Label(new Rect(20, 50, 180, 20), $"Скорость: {animator.speed:F1}");
+        GUI.Label(new Rect(20, 70, 180, 20), "I - IK, Q/E - скорость");
+        GUI.Label(new Rect(20, 90, 180, 20), "L - вес слоя");
     }
 }</code></pre>
                     </div>
@@ -566,15 +1417,15 @@ public class AdvancedAnimation : MonoBehaviour
         <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-3/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 3</a>
-                <a href="../module-5/index.html" class="nav-btn next-btn">РњРѕРґСѓР»СЊ 5 в†’</a>
+                <a href="../module-3/index.html" class="nav-btn prev-btn">< Модуль 3</a>
+                <a href="../module-5/index.html" class="nav-btn next-btn">Модуль 5 ></a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 

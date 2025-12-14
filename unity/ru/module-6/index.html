@@ -1,28 +1,879 @@
-п»ї<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="РњРѕРґСѓР»СЊ 6: Unity Audio Рё Р—РІСѓРєРѕРІР°СЏ РЎРёСЃС‚РµРјР° - РџСЂРёРјРµСЂС‹ РєРѕРґР° РґР»СЏ Unity СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРІ">
-    <meta name="keywords" content="unity, audio, Р·РІСѓРє, РјСѓР·С‹РєР°, Р°СѓРґРёРѕСЃРёСЃС‚РµРјР°, СЌС„С„РµРєС‚С‹">
-    <meta name="author" content="РќРёРєРёС‚Р° Р›РµРІР°РЅРґРѕРІРёС‡">
-    <title>РњРѕРґСѓР»СЊ 6: Unity Audio Рё Р—РІСѓРєРѕРІР°СЏ РЎРёСЃС‚РµРјР° - РџСЂРёРјРµСЂС‹ РєРѕРґР°</title>
+    <meta name="description" content="Модуль 6: Unity Audio и Звуковая Система - Примеры кода для Unity разработчиков">
+    <meta name="keywords" content="unity, audio, звук, музыка, аудиосистема, эффекты">
+    <meta name="author" content="Никита Левандович">
+    <title>Модуль 6: Unity Audio и Звуковая Система - Примеры кода</title>
     <link rel="icon" href="../../images/levandovici_logo.png" type="image/png">
     
     
 
     
 
-    <link rel="stylesheet" href="../../css/style.css">
+    
+<style>
+/* Theme Variables */
+:root {
+    /* Colors */
+    --bg-color: #ffffff;
+    --text-color: #1a202c;
+    --text-secondary: #4a5568;
+    --accent-color: #48bb78;
+    --accent-hover: #38a169;
+    --card-bg: #f7fafc;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-color: #e2e8f0;
+    --module-bg: #ffffff;
+    --module-border: #e2e8f0;
+    --module-hover: #f8fafc;
+    --header-bg: linear-gradient(135deg, #1a202c, #2d3748);
+    --footer-bg: #1a202c;
+    --footer-text: #f8f9fa;
+    --code-bg: #f1f5f9;
+    --code-color: #1e293b;
+    --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --tab-bg: #f1f5f9;
+    --tab-active-bg: #4f46e5;
+    --tab-text: #4a5568;
+    --tab-active-text: #ffffff;
+    --video-btn-bg: #9f7aea;
+    --video-btn-hover: #805ad5;
+    --code-btn-bg: #4299e1;
+    --code-btn-hover: #3182ce;
+    --study-btn-bg: #48bb78;
+    --study-btn-hover: #38a169;
+    --primary-color: #1a202c;
+    --secondary-color: #2d3748;
+    --light-text: #f8f9fa;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    --spacing-xl: 4rem;
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-code: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 8px 16px;
+    z-index: 100;
+    transition: var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Ensure focus is visible for keyboard users */
+[tabindex="-1"]:focus {
+    outline: none !important;
+}
+
+/* Header Styles */
+header {
+    background: var(--header-bg);
+    color: white;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    color: var(--accent-color);
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.social-icon, .flag {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+    border-radius: 3px;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover, .flag:hover {
+    transform: scale(1.2);
+}
+
+.header-spacer {
+    height: 80px;
+}
+
+/* Hero Section */
+#hero {
+    background: url('../images/hero-bg.jpg') no-repeat center/cover;
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+}
+
+#hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+#hero h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    animation: slideInUp 1s ease-out;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.free-lesson-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.btn {
+    background: #4299e1;
+    color: white;
+    padding: 14px 32px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    display: inline-block;
+    margin: 12px;
+}
+
+.btn:hover {
+    background: #3182ce;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.free-lesson-btn {
+    background: var(--study-btn-bg);
+    color: var(--primary-color);
+}
+
+.free-lesson-btn:hover {
+    background: var(--study-btn-hover);
+}
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: var(--primary-color);
+}
+
+.youtube-btn {
+    background: #ff0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 32px;
+}
+
+.youtube-btn:hover {
+    background: #cc0000;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtube-btn img {
+    width: 28px;
+    height: 20px;
+    object-fit: cover;
+}
+
+/* Course Section */
+#course {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#course h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#course > p {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.module {
+    background: var(--module-bg);
+    border: 1px solid var(--module-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.module:hover {
+    background: var(--module-hover);
+    transform: translateY(-5px);
+}
+
+.module h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+}
+
+.module p {
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.module ul {
+    list-style: disc;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.module-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.module-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: var(--transition);
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.module .video-btn {
+    background: var(--video-btn-bg);
+    color: white;
+}
+
+.module .video-btn:hover {
+    background: var(--video-btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module .code-btn {
+    background: var(--code-btn-bg);
+    color: white;
+}
+
+.module .code-btn:hover {
+    background: var(--code-btn-hover);
+    transform: translateY(-2px);
+}
+
+.module .study-btn {
+    background: var(--study-btn-bg);
+    color: white;
+}
+
+.module .study-btn:hover {
+    background: var(--study-btn-hover);
+    transform: translateY(-2px);
+}
+
+/* Anniversary Banner */
+#anniversary-banner {
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+#anniversary-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#anniversary-banner p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+#anniversary-banner .neon-text {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc, 0 0 15px #00ffcc;
+    }
+    to {
+        text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+}
+
+/* About Section */
+#about {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#about h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+.about-content {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+}
+
+.about-img {
+    width: 350px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.about-img:hover {
+    transform: scale(1.05);
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+}
+
+.about-text strong {
+    color: #4299e1;
+}
+
+.about-text ul {
+    list-style: disc;
+    padding-left: 24px;
+    font-size: 1.15rem;
+}
+
+/* Games Section */
+#games {
+    padding: 120px 20px;
+    background: var(--bg-color);
+}
+
+#games h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--text-color);
+}
+
+#games > p {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-bottom: 48px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+.game-card:nth-child(5) { animation-delay: 0.5s; }
+.game-card:nth-child(6) { animation-delay: 0.6s; }
+.game-card:nth-child(7) { animation-delay: 0.7s; }
+.game-card:nth-child(8) { animation-delay: 0.8s; }
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.game-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    transition: transform 0.4s ease;
+}
+
+.game-img:hover {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.game-info {
+    padding: var(--spacing-md);
+}
+
+.game-info span {
+    display: block;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.game-info strong {
+    color: var(--text-color);
+}
+
+.game-btn {
+    background: #4299e1;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.game-btn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+/* YouTube Videos Section */
+#youtube-videos {
+    padding: 60px 0;
+    background-color: var(--bg-color);
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-thumbnail {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.play-button:hover {
+    background: rgba(255, 0, 0, 0.9);
+}
+
+.video-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 16px 16px 8px;
+    text-align: left;
+}
+
+.video-description {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0 16px 16px;
+    text-align: left;
+}
+
+/* Contact Section */
+#contact {
+    padding: 120px 20px;
+    background: var(--header-bg);
+    color: white;
+    text-align: center;
+}
+
+#contact h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+#contact p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+
+.contact-info {
+    list-style: none;
+    margin: 0 auto 40px;
+    padding: 0;
+    text-align: center;
+    max-width: 600px;
+}
+
+.contact-info li {
+    font-size: 1.2rem;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.contact-info a:hover {
+    color: var(--accent-hover);
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    text-align: center;
+    padding: 32px 0;
+}
+
+footer p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #hero h2 {
+        font-size: 2.5rem;
+    }
+
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-img {
+        margin: 0 auto;
+    }
+
+    header h1 {
+        font-size: 1.75rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+        margin-top: 12px;
+    }
+
+    #hero {
+        padding: 100px 20px 60px;
+    }
+
+    #hero h2 {
+        font-size: 2rem;
+    }
+
+    .free-lesson-message {
+        font-size: 1.2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .video-card {
+        max-width: 100%;
+    }
+
+    .video-title {
+        font-size: 1.1rem;
+    }
+
+    .video-description {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .youtube-btn img {
+        width: 24px;
+        height: 17px;
+    }
+
+    .module-buttons {
+        flex-direction: column;
+    }
+
+    .module-buttons a {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    header, footer {
+        display: none;
+    }
+
+    .header-spacer {
+        height: 0;
+    }
+}
+</style>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>РњРѕРґСѓР»СЊ 6: Unity Audio Рё Р—РІСѓРєРѕРІР°СЏ РЎРёСЃС‚РµРјР°</h1>
+            <h1>Модуль 6: Unity Audio и Звуковая Система</h1>
             <nav>
                 <ul>
-                    <li><a href="../../index.html">Р“Р»Р°РІРЅР°СЏ</a></li>
-                    <li><a href="#examples">РџСЂРёРјРµСЂС‹</a></li>
+                    <li><a href="../../index.html">Главная</a></li>
+                    <li><a href="#examples">Примеры</a></li>
                 </ul>
             </nav>
         </div>
@@ -32,42 +883,42 @@
 
     <section class="hero-section">
         <div class="container">
-            <h1>Unity Audio Рё Р—РІСѓРєРѕРІР°СЏ РЎРёСЃС‚РµРјР°</h1>
-            <p>РР·СѓС‡РёС‚Рµ Р°СѓРґРёРѕ СЃРёСЃС‚РµРјСѓ Unity Рё СѓРїСЂР°РІР»РµРЅРёРµ Р·РІСѓРєРѕРј РІ РёРіСЂР°С…</p>
+            <h1>Unity Audio и Звуковая Система</h1>
+            <p>Изучите аудио систему Unity и управление звуком в играх</p>
         </div>
     </section>
 
     <main class="main-content">
         <div class="container">
             <section id="examples" class="example-section">
-                <h2>РџСЂРёРјРµСЂС‹ РєРѕРґР°</h2>
+                <h2>Примеры кода</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showTab('audio-basics')">РћСЃРЅРѕРІС‹ Audio</button>
+                    <button class="tab active" onclick="showTab('audio-basics')">Основы Audio</button>
                     <button class="tab" onclick="showTab('audio-source')">AudioSource</button>
                     <button class="tab" onclick="showTab('audio-mixer')">Audio Mixer</button>
-                    <button class="tab" onclick="showTab('spatial-audio')">3D Р—РІСѓРє</button>
-                    <button class="tab" onclick="showTab('advanced-audio')">РџСЂРѕРґРІРёРЅСѓС‚С‹Р№ Audio</button>
+                    <button class="tab" onclick="showTab('spatial-audio')">3D Звук</button>
+                    <button class="tab" onclick="showTab('advanced-audio')">Продвинутый Audio</button>
                 </div>
 
                 <div id="audio-basics" class="tab-content active">
-                    <h3>РџСЂРёРјРµСЂ 1: РћСЃРЅРѕРІС‹ Audio System</h3>
-                    <p>Р‘Р°Р·РѕРІРѕРµ СѓРїСЂР°РІР»РµРЅРёРµ Р°СѓРґРёРѕ Рё РЅР°СЃС‚СЂРѕР№РєР° Р·РІСѓРєРѕРІРѕР№ СЃРёСЃС‚РµРјС‹ Unity:</p>
+                    <h3>Пример 1: Основы Audio System</h3>
+                    <p>Базовое управление аудио и настройка звуковой системы Unity:</p>
                     <div class="code-example">
                         <pre>using UnityEngine;
 
 public class SpatialAudio : MonoBehaviour
 {
-    [Header("РђСѓРґРёРѕ РљР»РёРїС‹")]
+    [Header("Аудио Клипы")]
     public AudioClip backgroundMusic;
     public AudioClip buttonClickSound;
     public AudioClip explosionSound;
     
-    [Header("РђСѓРґРёРѕ РСЃС‚РѕС‡РЅРёРєРё")]
+    [Header("Аудио Источники")]
     public AudioSource musicSource;
     public AudioSource sfxSource;
     
-    [Header("РќР°СЃС‚СЂРѕР№РєРё Р“СЂРѕРјРєРѕСЃС‚Рё")]
+    [Header("Настройки Громкости")]
     [Range(0f, 1f)]
     public float masterVolume = 1f;
     [Range(0f, 1f)]
@@ -79,7 +930,7 @@ public class SpatialAudio : MonoBehaviour
     {
         SetupAudioSources();
         PlayBackgroundMusic();
-        Debug.Log("Audio Manager РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Audio Manager инициализирован");
     }
     
     void SetupAudioSources()
@@ -102,7 +953,7 @@ public class SpatialAudio : MonoBehaviour
         sfxSource.playOnAwake = false;
         sfxSource.volume = sfxVolume;
         
-        Debug.Log("РђСѓРґРёРѕ РёСЃС‚РѕС‡РЅРёРєРё РЅР°СЃС‚СЂРѕРµРЅС‹");
+        Debug.Log("Аудио источники настроены");
     }
     
     public void PlayBackgroundMusic()
@@ -111,7 +962,7 @@ public class SpatialAudio : MonoBehaviour
         {
             musicSource.clip = backgroundMusic;
             musicSource.Play();
-            Debug.Log("Р¤РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓС‰РµРЅР°");
+            Debug.Log("Фоновая музыка запущена");
         }
     }
     
@@ -120,7 +971,7 @@ public class SpatialAudio : MonoBehaviour
         if (clip != null && sfxSource != null)
         {
             sfxSource.PlayOneShot(clip);
-            Debug.Log("Р—РІСѓРєРѕРІРѕР№ СЌС„С„РµРєС‚ РІРѕСЃРїСЂРѕРёР·РІРµРґРµРЅ: " + clip.name);
+            Debug.Log("Звуковой эффект воспроизведен: " + clip.name);
         }
     }
     
@@ -128,7 +979,7 @@ public class SpatialAudio : MonoBehaviour
     {
         masterVolume = Mathf.Clamp01(volume);
         AudioListener.volume = masterVolume;
-        Debug.Log("РћР±С‰Р°СЏ РіСЂРѕРјРєРѕСЃС‚СЊ: " + masterVolume);
+        Debug.Log("Общая громкость: " + masterVolume);
     }
     
     public void SetMusicVolume(float volume)
@@ -138,7 +989,7 @@ public class SpatialAudio : MonoBehaviour
         {
             musicSource.volume = musicVolume;
         }
-        Debug.Log("Р“СЂРѕРјРєРѕСЃС‚СЊ РјСѓР·С‹РєРё: " + musicVolume);
+        Debug.Log("Громкость музыки: " + musicVolume);
     }
 }</pre>
                 </div>
@@ -146,20 +997,20 @@ public class SpatialAudio : MonoBehaviour
 
                 <div id="audio-source" class="tab-content">
                     <div class="example">
-                        <h3>РЈРїСЂР°РІР»РµРЅРёРµ AudioSource</h3>
-                        <p>Р”РµС‚Р°Р»СЊРЅР°СЏ СЂР°Р±РѕС‚Р° СЃ РєРѕРјРїРѕРЅРµРЅС‚РѕРј AudioSource Рё РµРіРѕ РїР°СЂР°РјРµС‚СЂР°РјРё.</p>
+                        <h3>Управление AudioSource</h3>
+                        <p>Детальная работа с компонентом AudioSource и его параметрами.</p>
                         <div class="code-example">
                             <pre>using UnityEngine;
 
 public class AudioSourceController : MonoBehaviour
 {
-    [Header("AudioSource РљРѕРјРїРѕРЅРµРЅС‚С‹")]
+    [Header("AudioSource Компоненты")]
     public AudioSource primarySource;
     
-    [Header("РђСѓРґРёРѕ РљР»РёРїС‹")]
+    [Header("Аудио Клипы")]
     public AudioClip[] musicTracks;
     
-    [Header("РџР°СЂР°РјРµС‚СЂС‹ Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёСЏ")]
+    [Header("Параметры Воспроизведения")]
     [Range(0f, 3f)]
     public float pitch = 1f;
     [Range(0f, 1f)]
@@ -175,7 +1026,7 @@ public class AudioSourceController : MonoBehaviour
         if (primarySource == null)
             primarySource = GetComponent&lt;AudioSource&gt;();
             
-        Debug.Log("AudioSource Controller РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("AudioSource Controller инициализирован");
     }
     
     void Update()
@@ -199,7 +1050,7 @@ public class AudioSourceController : MonoBehaviour
     {
         if (primarySource != null && isPlaying && !primarySource.isPlaying)
         {
-            Debug.Log("Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ");
+            Debug.Log("Воспроизведение завершено");
             isPlaying = false;
             
             if (musicTracks.Length > 0)
@@ -234,13 +1085,13 @@ public class AudioSourceController : MonoBehaviour
         if (primarySource.isPlaying)
         {
             primarySource.Pause();
-            Debug.Log("Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ РїСЂРёРѕСЃС‚Р°РЅРѕРІР»РµРЅРѕ");
+            Debug.Log("Воспроизведение приостановлено");
         }
         else
         {
             primarySource.UnPause();
             isPlaying = true;
-            Debug.Log("Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ РІРѕР·РѕР±РЅРѕРІР»РµРЅРѕ");
+            Debug.Log("Воспроизведение возобновлено");
         }
     }
     
@@ -250,7 +1101,7 @@ public class AudioSourceController : MonoBehaviour
         {
             currentTrackIndex = (currentTrackIndex + 1) % musicTracks.Length;
             PlayCurrentTrack();
-            Debug.Log($"РЎР»РµРґСѓСЋС‰РёР№ С‚СЂРµРє: {currentTrackIndex + 1}/{musicTracks.Length}");
+            Debug.Log($"Следующий трек: {currentTrackIndex + 1}/{musicTracks.Length}");
         }
     }
     
@@ -260,7 +1111,7 @@ public class AudioSourceController : MonoBehaviour
         {
             currentTrackIndex = (currentTrackIndex - 1 + musicTracks.Length) % musicTracks.Length;
             PlayCurrentTrack();
-            Debug.Log($"РџСЂРµРґС‹РґСѓС‰РёР№ С‚СЂРµРє: {currentTrackIndex + 1}/{musicTracks.Length}");
+            Debug.Log($"Предыдущий трек: {currentTrackIndex + 1}/{musicTracks.Length}");
         }
     }
     
@@ -272,7 +1123,7 @@ public class AudioSourceController : MonoBehaviour
             primarySource.clip = currentClip;
             primarySource.Play();
             isPlaying = true;
-            Debug.Log("Р’РѕСЃРїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ: " + currentClip.name);
+            Debug.Log("Воспроизводится: " + currentClip.name);
         }
     }
 }</div>
@@ -281,8 +1132,8 @@ public class AudioSourceController : MonoBehaviour
 
             <div id="audio-mixer" class="tab-content">
                 <div class="example">
-                    <h3>Audio Mixer Рё РіСЂСѓРїРїС‹</h3>
-                    <p>РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ Audio Mixer РґР»СЏ РїСЂРѕС„РµСЃСЃРёРѕРЅР°Р»СЊРЅРѕРіРѕ СѓРїСЂР°РІР»РµРЅРёСЏ Р·РІСѓРєРѕРј.</p>
+                    <h3>Audio Mixer и группы</h3>
+                    <p>Использование Audio Mixer для профессионального управления звуком.</p>
                     <div class="code-example">
                         <pre>using UnityEngine;
 using UnityEngine.Audio;
@@ -292,7 +1143,7 @@ public class AudioMixerController : MonoBehaviour
     [Header("Audio Mixer")]
     public AudioMixer mainMixer;
     
-    [Header("РџР°СЂР°РјРµС‚СЂС‹ Mixer")]
+    [Header("Параметры Mixer")]
     [Range(-80f, 20f)]
     public float masterVolume = 0f;
     [Range(-80f, 20f)]
@@ -303,7 +1154,7 @@ public class AudioMixerController : MonoBehaviour
     void Start()
     {
         SetupMixer();
-        Debug.Log("Audio Mixer Controller РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Audio Mixer Controller инициализирован");
     }
     
     void SetupMixer()
@@ -314,7 +1165,7 @@ public class AudioMixerController : MonoBehaviour
             SetMusicVolume(musicVolume);
             SetSFXVolume(sfxVolume);
             
-            Debug.Log("AudioSource РЅР°СЃС‚СЂРѕРµРЅ");
+            Debug.Log("AudioSource настроен");
         }
     }
     
@@ -374,7 +1225,7 @@ public class AudioMixerController : MonoBehaviour
             if (snapshot != null)
             {
                 snapshot.TransitionTo(1f);
-                Debug.Log("РџРµСЂРµС…РѕРґ Рє СЃРЅРёРјРєСѓ: " + snapshotName);
+                Debug.Log("Переход к снимку: " + snapshotName);
             }
         }
     }
@@ -402,8 +1253,8 @@ public class AudioMixerController : MonoBehaviour
 
             <div id="spatial-audio" class="tab-content">
                 <div class="example">
-                    <h3>3D РџСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµРЅРЅС‹Р№ Р·РІСѓРє</h3>
-                    <p>РќР°СЃС‚СЂРѕР№РєР° РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµРЅРЅРѕРіРѕ Р·РІСѓРєР° Рё 3D Р°СѓРґРёРѕ СЌС„С„РµРєС‚РѕРІ.</p>
+                    <h3>3D Пространственный звук</h3>
+                    <p>Настройка пространственного звука и 3D аудио эффектов.</p>
                     <div class="code-example">
                         <pre>using UnityEngine;
 
@@ -428,7 +1279,7 @@ public class SpatialAudioController : MonoBehaviour
     void Start()
     {
         SetupSpatialAudio();
-        Debug.Log("Spatial Audio Controller РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Spatial Audio Controller инициализирован");
     }
     
     void SetupSpatialAudio()
@@ -445,7 +1296,7 @@ public class SpatialAudioController : MonoBehaviour
             spatialSource.minDistance = minDistance;
             spatialSource.maxDistance = maxDistance;
             
-            Debug.Log("3D Р·РІСѓРє РЅР°СЃС‚СЂРѕРµРЅ");
+            Debug.Log("3D звук настроен");
         }
     }
     
@@ -489,25 +1340,25 @@ public class SpatialAudioController : MonoBehaviour
     public void IncreaseDistance()
     {
         maxDistance = Mathf.Min(maxDistance + 50f, 1000f);
-        Debug.Log("РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґРёСЃС‚Р°РЅС†РёСЏ: " + maxDistance);
+        Debug.Log("Максимальная дистанция: " + maxDistance);
     }
     
     public void DecreaseDistance()
     {
         maxDistance = Mathf.Max(maxDistance - 50f, minDistance + 1f);
-        Debug.Log("РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґРёСЃС‚Р°РЅС†РёСЏ: " + maxDistance);
+        Debug.Log("Максимальная дистанция: " + maxDistance);
     }
     
     public void ToggleDoppler()
     {
         dopplerLevel = dopplerLevel > 0 ? 0f : 1f;
-        Debug.Log("Р­С„С„РµРєС‚ Р”РѕРїР»РµСЂР°: " + (dopplerLevel > 0 ? "РІРєР»СЋС‡РµРЅ" : "РІС‹РєР»СЋС‡РµРЅ"));
+        Debug.Log("Эффект Доплера: " + (dopplerLevel > 0 ? "включен" : "выключен"));
     }
     
     public void SetSpatialBlend(float blend)
     {
         spatialBlend = Mathf.Clamp01(blend);
-        Debug.Log("РџСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµРЅРЅРѕРµ СЃРјРµС€РёРІР°РЅРёРµ: " + spatialBlend);
+        Debug.Log("Пространственное смешивание: " + spatialBlend);
     }
 }</div>
                 </div>
@@ -515,8 +1366,8 @@ public class SpatialAudioController : MonoBehaviour
 
             <div id="advanced-audio" class="tab-content">
                 <div class="example">
-                    <h3>РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ Р°СѓРґРёРѕ С‚РµС…РЅРёРєРё</h3>
-                    <p>РџСЂРѕРґРІРёРЅСѓС‚С‹Рµ РјРµС‚РѕРґС‹ СЂР°Р±РѕС‚С‹ СЃ Р°СѓРґРёРѕ Рё РґРёРЅР°РјРёС‡РµСЃРєРѕРµ СѓРїСЂР°РІР»РµРЅРёРµ Р·РІСѓРєРѕРј.</p>
+                    <h3>Продвинутые аудио техники</h3>
+                    <p>Продвинутые методы работы с аудио и динамическое управление звуком.</p>
                     <div class="code-example">
                         <pre>using UnityEngine;
 using System.Collections;
@@ -541,12 +1392,12 @@ public class AdvancedAudio : MonoBehaviour
     void Start()
     {
         SetupAdvancedAudio();
-        Debug.Log("Advanced Audio Controller РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ");
+        Debug.Log("Advanced Audio Controller инициализирован");
     }
     
     void SetupAdvancedAudio()
     {
-        // РќР°СЃС‚СЂРѕР№РєР° СЃР»РѕРµРІ РјСѓР·С‹РєРё
+        // Настройка слоев музыки
         for (int i = 0; i < musicLayers.Length; i++)
         {
             if (musicLayers[i] != null)
@@ -556,7 +1407,7 @@ public class AdvancedAudio : MonoBehaviour
             }
         }
         
-        // РќР°СЃС‚СЂРѕР№РєР° С„РёР»СЊС‚СЂРѕРІ
+        // Настройка фильтров
         if (lowPassFilter == null)
             lowPassFilter = gameObject.AddComponent&lt;AudioLowPassFilter&gt;();
             
@@ -604,7 +1455,7 @@ public class AdvancedAudio : MonoBehaviour
             musicLayers[targetLayer].volume = 1f;
         
         isCrossfading = false;
-        Debug.Log($"РџРµСЂРµРєР»СЋС‡РµРЅРёРµ РЅР° СЃР»РѕР№ {targetLayer} Р·Р°РІРµСЂС€РµРЅРѕ");
+        Debug.Log($"Переключение на слой {targetLayer} завершено");
     }
     
     public void ApplyLowPassFilter(float frequency)
@@ -650,7 +1501,7 @@ public class AdvancedAudio : MonoBehaviour
         yield return new WaitForSeconds(clip.length);
         Destroy(tempSource);
         
-        Debug.Log("РћС‚Р»РѕР¶РµРЅРЅС‹Р№ Р·РІСѓРє РІРѕСЃРїСЂРѕРёР·РІРµРґРµРЅ: " + clip.name);
+        Debug.Log("Отложенный звук воспроизведен: " + clip.name);
     }
     
     void Update()
@@ -696,15 +1547,15 @@ public class AdvancedAudio : MonoBehaviour
         <div class="module-navigation">
         <div class="container">
             <div class="nav-buttons">
-                <a href="../module-5/index.html" class="nav-btn prev-btn">в†ђ РњРѕРґСѓР»СЊ 5</a>
-                <a href="../module-7/index.html" class="nav-btn next-btn">РњРѕРґСѓР»СЊ 7 в†’</a>
+                <a href="../module-5/index.html" class="nav-btn prev-btn">< Модуль 5</a>
+                <a href="../module-7/index.html" class="nav-btn next-btn">Модуль 7 ></a>
             </div>
         </div>
     </div>
 
     <footer class="module-footer">
         <div class="container">
-            <p>&copy; 2025 Nichita Levandovici. Р’СЃРµ РїСЂР°РІР° Р·Р°С‰РёС‰РµРЅС‹.</p>
+            <p>&copy; 2025 Nichita Levandovici. Все права защищены.</p>
         </div>
     </footer>
 
