@@ -1,346 +1,182 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Michitai.SDK
+namespace michitai
 {
-    /// <summary>
-    /// Client for interacting with the Michitai Game Platform API
-    /// </summary>
-    public class MichitaiClient
+    public class GameSDK
     {
-        private readonly HttpClient _httpClient;
-        private const string API_BASE_URL = "https://api.michitai.com/v1/php";
-        private readonly string _apiKey;
-        private string _gamePlayerToken;
+        private readonly string _apiToken;
+        private readonly string _baseUrl;
+        private static readonly HttpClient _http = new HttpClient();
 
-        /// <summary>
-        /// Event raised when authentication is required
-        /// </summary>
-        public event Action OnAuthenticationRequired;
-
-        /// <summary>
-        /// Initialize a new instance of the MichitaiClient with API key authentication
-        /// </summary>
-        /// <param name="apiKey">Your Michitai API key</param>
-        /// <exception cref="ArgumentException">Thrown when API key is null or empty</exception>
-        public MichitaiClient(string apiKey)
+        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
         {
-            if (string.IsNullOrEmpty(apiKey))
-                throw new ArgumentException("API key is required", nameof(apiKey));
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
-            _apiKey = apiKey.Trim();
-            
-            // Configure HTTP client
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri(API_BASE_URL)
-            };
-            
-            // Set default headers
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+        public GameSDK(string apiToken, string baseUrl = "https://api.michitai.com/v1/php/")
+        {
+            _apiToken = apiToken;
+            _baseUrl = baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/";
         }
 
-        #region Game Data
-
-        /// <summary>
-        /// Get game data
-        /// </summary>
-        /// <returns>Game data response</returns>
-        public async Task<GameDataResponse> GetGameDataAsync()
+        private string Url(string endpoint, string extra = "")
         {
-            var query = $"?api_token={_apiKey}";
-            return await GetAsync<GameDataResponse>($"/game_data.php{query}");
+            return $"{_baseUrl}{endpoint}?api_token={_apiToken}{extra}";
         }
 
-        /// <summary>
-        /// Update game data
-        /// </summary>
-        /// <param name="data">Data to update</param>
-        /// <returns>Update response</returns>
-        public async Task<ApiResponse> UpdateGameDataAsync(Dictionary<string, object> data)
+        private async Task<T> Send<T>(HttpMethod method, string url, object body = null)
         {
-            var query = $"?api_token={_apiKey}";
-            return await PutAsync<ApiResponse>($"/game_data.php{query}", data);
-        }
+            var req = new HttpRequestMessage(method, url);
 
-        #endregion
-
-        #region Player Management
-
-        /// <summary>
-        /// Register a new player for the game
-        /// </summary>
-        /// <param name="playerName">Player's display name</param>
-        /// <param name="playerData">Optional initial player data</param>
-        /// <returns>Player registration response</returns>
-        public async Task<PlayerRegistrationResponse> RegisterPlayerAsync(string playerName, Dictionary<string, object> playerData = null)
-        {
-            var query = $"?api_token={_apiKey}";
-            var requestData = new Dictionary<string, object>
+            if (body != null)
             {
-                ["player_name"] = playerName
-            };
-
-            if (playerData != null)
-            {
-                requestData["player_data"] = playerData;
+                string json = JsonSerializer.Serialize(body, _jsonOptions);
+                req.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
-            var response = await PostAsync<PlayerRegistrationResponse>($"/game_players.php{query}", requestData);
-            
-            // Store the player token for future requests
-            if (response.Success && !string.IsNullOrEmpty(response.GamePlayerToken))
-            {
-                _gamePlayerToken = response.GamePlayerToken;
-            }
+            var res = await _http.SendAsync(req);
+            string str = await res.Content.ReadAsStringAsync();
 
-            return response;
+            return JsonSerializer.Deserialize<T>(str, _jsonOptions);
         }
 
-        /// <summary>
-        /// Authenticate a player with their game player token
-        /// </summary>
-        /// <param name="gamePlayerToken">The player's authentication token</param>
-        /// <returns>Player data</returns>
-        public async Task<PlayerDataResponse> AuthenticatePlayerAsync(string gamePlayerToken = null)
+        // ------------------------------------
+        // PLAYER API
+        // ------------------------------------
+
+        public Task<PlayerRegisterResponse> RegisterPlayer(string name, object playerData)
         {
-            _gamePlayerToken = gamePlayerToken ?? _gamePlayerToken;
-            
-            if (string.IsNullOrEmpty(_gamePlayerToken))
-            {
-                throw new InvalidOperationException("Game player token is required. Call RegisterPlayerAsync first or provide a token.");
-            }
-
-            var query = $"?api_token={_apiKey}&game_player_token={_gamePlayerToken}";
-            return await PutAsync<PlayerDataResponse>($"/game_players.php{query}", null);
+            return Send<PlayerRegisterResponse>(
+                HttpMethod.Post,
+                Url("game_players.php"),
+                new { player_name = name, player_data = playerData }
+            );
         }
 
-        /// <summary>
-        /// Get player data (requires authentication)
-        /// </summary>
-        /// <returns>Player data</returns>
-        public async Task<PlayerDataResponse> GetPlayerDataAsync()
+        public Task<PlayerAuthResponse> AuthenticatePlayer(string playerToken)
         {
-            if (string.IsNullOrEmpty(_gamePlayerToken))
-            {
-                throw new InvalidOperationException("Player is not authenticated. Call AuthenticatePlayerAsync first.");
-            }
-
-            var query = $"?api_token={_apiKey}&game_player_token={_gamePlayerToken}";
-            return await GetAsync<PlayerDataResponse>($"/game_data.php{query}");
+            return Send<PlayerAuthResponse>(
+                HttpMethod.Put,
+                Url("game_players.php", $"&game_player_token={playerToken}")
+            );
         }
 
-        /// <summary>
-        /// Update player data
-        /// </summary>
-        /// <param name="data">Data to update</param>
-        /// <returns>Update response</returns>
-        public async Task<ApiResponse> UpdatePlayerDataAsync(Dictionary<string, object> data)
+        public Task<PlayerListResponse> GetAllPlayers()
         {
-            if (string.IsNullOrEmpty(_gamePlayerToken))
-            {
-                throw new InvalidOperationException("Player is not authenticated. Call AuthenticatePlayerAsync first.");
-            }
-
-            var query = $"?api_token={_apiKey}&game_player_token={_gamePlayerToken}";
-            return await PutAsync<ApiResponse>($"/game_data.php{query}", data);
+            return Send<PlayerListResponse>(HttpMethod.Get, Url("game_players.php"));
         }
 
-        /// <summary>
-        /// List all players (admin only)
-        /// </summary>
-        /// <returns>List of players</returns>
-        public async Task<PlayerListResponse> ListPlayersAsync()
+        // ------------------------------------
+        // GAME DATA
+        // ------------------------------------
+
+        public Task<GameDataResponse> GetGameData()
         {
-            var query = $"?api_token={_apiKey}";
-            return await GetAsync<PlayerListResponse>($"/game_players.php{query}");
+            return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php"));
         }
 
-        #endregion
-
-        #region HTTP Helpers
-
-        private async Task<T> GetAsync<T>(string requestUri)
+        public Task<SuccessResponse> UpdateGameData(object data)
         {
-            var response = await _httpClient.GetAsync(requestUri);
-            return await HandleResponse<T>(response);
+            return Send<SuccessResponse>(HttpMethod.Put, Url("game_data.php"), data);
         }
 
-        private async Task<T> PostAsync<T>(string requestUri, object data)
+        // ------------------------------------
+        // PLAYER DATA
+        // ------------------------------------
+
+        public Task<PlayerDataResponse> GetPlayerData(string playerToken)
         {
-            var content = new StringContent(
-                JsonSerializer.Serialize(data),
-                Encoding.UTF8,
-                "application/json");
-                
-            var response = await _httpClient.PostAsync(requestUri, content);
-            return await HandleResponse<T>(response);
+            return Send<PlayerDataResponse>(
+                HttpMethod.Get,
+                Url("game_data.php", $"&game_player_token={playerToken}")
+            );
         }
 
-        private async Task<T> PutAsync<T>(string requestUri, object data)
+        public Task<SuccessResponse> UpdatePlayerData(string playerToken, object data)
         {
-            var content = data != null 
-                ? new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
-                : null;
-                
-            var response = await _httpClient.PutAsync(requestUri, content);
-            return await HandleResponse<T>(response);
+            return Send<SuccessResponse>(
+                HttpMethod.Put,
+                Url("game_data.php", $"&game_player_token={playerToken}"),
+                data
+            );
         }
-
-        private async Task<T> HandleResponse<T>(HttpResponseMessage response)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            
-            if (!response.IsSuccessStatusCode)
-            {
-                string errorMessage = $"API request failed with status code {response.StatusCode}";
-                
-                try
-                {
-                    var errorResponse = JsonSerializer.Deserialize<ApiResponse>(content);
-                    errorMessage = errorResponse?.Error ?? errorMessage;
-                }
-                catch
-                {
-                    // If we can't parse the error response, use the default message
-                }
-                
-                throw new MichitaiException(errorMessage, response.StatusCode, content);
-            }
-
-            try
-            {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                    AllowTrailingCommas = true,
-                    ReadCommentHandling = JsonCommentHandling.Skip
-                };
-                
-                return JsonSerializer.Deserialize<T>(content, options) ?? 
-                    throw new MichitaiException("Received null response from server");
-            }
-            catch (JsonException ex)
-            {
-                throw new MichitaiException("Failed to deserialize server response", ex);
-            }
-        }
-
-        #endregion
     }
 
-    #region Data Models
+    // ------------------------------------
+    // MODELS
+    // ------------------------------------
 
-    public class ApiResponse
+    public class PlayerRegisterResponse
     {
-        [JsonPropertyName("success")]
         public bool Success { get; set; }
-        
-        [JsonPropertyName("error")]
-        public string Error { get; set; }
-        
-        [JsonPropertyName("message")]
-        public string Message { get; set; }
+        public string Player_id { get; set; }
+        public string Private_key { get; set; }
+        public string Player_name { get; set; }
+        public int Game_id { get; set; }
     }
 
-    public class GameDataResponse : ApiResponse
+    public class PlayerAuthResponse
     {
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
-        
-        [JsonPropertyName("game_id")]
-        public int GameId { get; set; }
-        
-        [JsonPropertyName("data")]
-        public Dictionary<string, object> Data { get; set; } = new();
+        public bool Success { get; set; }
+        public PlayerInfo Player { get; set; }
     }
 
-    public class PlayerRegistrationResponse : ApiResponse
+    public class PlayerListResponse
     {
-        [JsonPropertyName("game_player_token")]
-        public string GamePlayerToken { get; set; }
-        
-        [JsonPropertyName("player_id")]
-        public int PlayerId { get; set; }
-        
-        [JsonPropertyName("player_name")]
-        public string PlayerName { get; set; }
-        
-        [JsonPropertyName("game_id")]
-        public int GameId { get; set; }
-    }
-
-    public class PlayerDataResponse : ApiResponse
-    {
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
-        
-        [JsonPropertyName("player_id")]
-        public int PlayerId { get; set; }
-        
-        [JsonPropertyName("player_name")]
-        public string PlayerName { get; set; }
-        
-        [JsonPropertyName("data")]
-        public Dictionary<string, object> Data { get; set; } = new();
-    }
-
-    public class PlayerListResponse : ApiResponse
-    {
-        [JsonPropertyName("count")]
+        public bool Success { get; set; }
         public int Count { get; set; }
-        
-        [JsonPropertyName("players")]
-        public List<PlayerInfo> Players { get; set; } = new();
+        public List<PlayerShort> Players { get; set; }
+    }
+
+    public class PlayerShort
+    {
+        public int Id { get; set; }
+        public string Player_name { get; set; }
+        public int Is_active { get; set; }
+        public string Last_login { get; set; }
+        public string Created_at { get; set; }
     }
 
     public class PlayerInfo
     {
-        [JsonPropertyName("id")]
         public int Id { get; set; }
-        
-        [JsonPropertyName("player_name")]
-        public string PlayerName { get; set; }
-        
-        [JsonPropertyName("is_active")]
-        public bool IsActive { get; set; }
-        
-        [JsonPropertyName("last_login")]
-        public DateTime? LastLogin { get; set; }
-        
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public int Game_id { get; set; }
+        public string Player_name { get; set; }
+        public Dictionary<string, object> Player_data { get; set; }
+        public int Is_active { get; set; }
+        public string Last_login { get; set; }
+        public string Created_at { get; set; }
+        public string Updated_at { get; set; }
     }
 
-    #endregion
-
-    #region Exceptions
-
-    public class MichitaiException : Exception
+    public class GameDataResponse
     {
-        public System.Net.HttpStatusCode StatusCode { get; }
-        public string ResponseContent { get; }
-
-        public MichitaiException(string message) : base(message) { }
-        
-        public MichitaiException(string message, Exception innerException) 
-            : base(message, innerException) { }
-            
-        public MichitaiException(string message, System.Net.HttpStatusCode statusCode, string responseContent) 
-            : base($"{message}. Status: {statusCode}, Response: {responseContent}")
-        {
-            StatusCode = statusCode;
-            ResponseContent = responseContent;
-        }
+        public bool Success { get; set; }
+        public string Type { get; set; }
+        public int Game_id { get; set; }
+        public Dictionary<string, object> Data { get; set; }
     }
 
-    #endregion
+    public class PlayerDataResponse
+    {
+        public bool Success { get; set; }
+        public string Type { get; set; }
+        public int Player_id { get; set; }
+        public string Player_name { get; set; }
+        public Dictionary<string, object> Data { get; set; }
+    }
+
+    public class SuccessResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string Updated_at { get; set; }
+    }
 }

@@ -1,144 +1,98 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Michitai.SDK;
+using System.Text.Json;
+using michitai;
 
-namespace Michitai.Example
+public class Game
 {
-    public class Game
+    private static GameSDK sdk;
+
+    public static async Task Main()
     {
-        private readonly MichitaiClient _client;
-        private string _playerToken;
+        Console.WriteLine("=== MichiTAI Game SDK Usage Example ===\n");
 
-        public Game(string apiKey)
+        // 1️⃣ Initialize SDK
+        sdk = new GameSDK("YOUR_API_TOKEN");
+        Console.WriteLine("[INIT] SDK initialized\n");
+
+        // 2️⃣ Register Player
+        Console.WriteLine("[PLAYER] Registering new player...");
+        var reg = await sdk.RegisterPlayer("TestPlayer", new
         {
-            _client = new MichitaiClient(apiKey);
-            _client.OnAuthenticationRequired += OnAuthenticationRequired;
+            level = 1,
+            score = 0,
+            inventory = new[] { "sword", "shield" }
+        });
+
+        string playerToken = reg.Private_key;
+        int playerId = int.Parse(reg.Player_id);
+
+        Console.WriteLine($"[PLAYER] Registered: ID={playerId}, Token={playerToken}\n");
+
+        // 3️⃣ Authenticate Player
+        Console.WriteLine("[PLAYER] Authenticating player...");
+        var auth = await sdk.AuthenticatePlayer(playerToken);
+
+        if (auth.Success)
+        {
+            var pdata = auth.Player.Player_data;
+            int level = pdata.ContainsKey("level") ? ((JsonElement)pdata["level"]).GetInt32() : 0;
+
+            Console.WriteLine($"[PLAYER] Authenticated: {auth.Player.Player_name} (Level={level})\n");
+        }
+        else
+        {
+            Console.WriteLine("[PLAYER] Authentication failed\n");
         }
 
-        public async Task RunExample()
+        // 4️⃣ List all players
+        Console.WriteLine("[ADMIN] Fetching all players...");
+        var allPlayers = await sdk.GetAllPlayers();
+        Console.WriteLine($"[ADMIN] Total players: {allPlayers.Count}");
+        foreach (var p in allPlayers.Players)
         {
-            try
-            {
-                Console.WriteLine("=== Michitai Game Example ===");
-                Console.WriteLine("1. Registering a new player...");
-                
-                // Register a new player
-                var registerResponse = await _client.RegisterPlayerAsync("TestPlayer", new Dictionary<string, object>
-                {
-                    ["level"] = 1,
-                    ["score"] = 0,
-                    ["inventory"] = new[] { "sword", "shield" }
-                });
-
-                if (!registerResponse.Success)
-                {
-                    Console.WriteLine($"Failed to register player: {registerResponse.Error}");
-                    return;
-                }
-
-                _playerToken = registerResponse.GamePlayerToken;
-                Console.WriteLine($"Player registered! ID: {registerResponse.PlayerId}, Token: {_playerToken}");
-
-                // Authenticate the player
-                Console.WriteLine("\n2. Authenticating player...");
-                var authResponse = await _client.AuthenticatePlayerAsync(_playerToken);
-                if (!authResponse.Success)
-                {
-                    Console.WriteLine($"Authentication failed: {authResponse.Error}");
-                    return;
-                }
-
-                Console.WriteLine($"Authenticated as {authResponse.PlayerName} (ID: {authResponse.PlayerId})");
-
-                // Get game data
-                Console.WriteLine("\n3. Getting game data...");
-                var gameData = await _client.GetGameDataAsync();
-                if (gameData.Success)
-                {
-                    Console.WriteLine($"Game data: {System.Text.Json.JsonSerializer.Serialize(gameData.Data)}");
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to get game data: {gameData.Error}");
-                }
-
-                // Get player data
-                Console.WriteLine("\n4. Getting player data...");
-                var playerData = await _client.GetPlayerDataAsync();
-                if (playerData.Success)
-                {
-                    Console.WriteLine($"Player data: {System.Text.Json.JsonSerializer.Serialize(playerData.Data)}");
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to get player data: {playerData.Error}");
-                }
-
-                // Update player data
-                Console.WriteLine("\n5. Updating player data...");
-                var updateResponse = await _client.UpdatePlayerDataAsync(new Dictionary<string, object>
-                {
-                    ["level"] = 2,
-                    ["score"] = 100,
-                    ["last_played"] = DateTime.UtcNow
-                });
-
-                if (updateResponse.Success)
-                {
-                    Console.WriteLine("Player data updated successfully!");
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to update player data: {updateResponse.Error}");
-                }
-
-                // List all players (admin only)
-                Console.WriteLine("\n6. Listing all players...");
-                var playersResponse = await _client.ListPlayersAsync();
-                if (playersResponse.Success)
-                {
-                    Console.WriteLine($"Found {playersResponse.Count} players:");
-                    foreach (var player in playersResponse.Players)
-                    {
-                        Console.WriteLine($"- {player.PlayerName} (ID: {player.Id}, Active: {player.IsActive})");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Failed to list players: {playersResponse.Error}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                }
-            }
+            Console.WriteLine($" - ID={p.Id}, Name={p.Player_name}, Active={p.Is_active}");
         }
+        Console.WriteLine();
 
-        private void OnAuthenticationRequired()
+        // 5️⃣ Get global game data
+        Console.WriteLine("[GAME] Loading game data...");
+        var gameData = await sdk.GetGameData();
+        Console.WriteLine($"[GAME] Game ID={gameData.Game_id}, Settings={gameData.Data["game_settings"]}\n");
+
+        // 6️⃣ Update global game data
+        Console.WriteLine("[GAME] Updating game settings...");
+        var updateGame = await sdk.UpdateGameData(new
         {
-            Console.WriteLine("\n=== AUTHENTICATION REQUIRED ===");
-            Console.WriteLine("Please provide valid API credentials.");
-            // In a real app, you would prompt the user for credentials here
-        }
+            game_settings = new { difficulty = "hard", max_players = 10 },
+            last_updated = DateTime.UtcNow.ToString("o")
+        });
+        Console.WriteLine($"[GAME] {updateGame.Message} at {updateGame.Updated_at}\n");
 
-        public static async Task Main(string[] args)
+        // 7️⃣ Get player-specific data
+        Console.WriteLine("[PLAYER] Loading player data...");
+        var playerData = await sdk.GetPlayerData(playerToken);
+
+        var pDataDict = playerData.Data;
+        int playerLevel = pDataDict.ContainsKey("level") ? ((JsonElement)pDataDict["level"]).GetInt32() : 0;
+        int playerScore = pDataDict.ContainsKey("score") ? ((JsonElement)pDataDict["score"]).GetInt32() : 0;
+        string[] inventory = pDataDict.ContainsKey("inventory")
+            ? JsonSerializer.Deserialize<string[]>(((JsonElement)pDataDict["inventory"]).GetRawText())
+            : new string[0];
+
+        Console.WriteLine($"[PLAYER] Level={playerLevel}, Score={playerScore}, Inventory=[{string.Join(", ", inventory)}]\n");
+
+        // 8️⃣ Update player data
+        Console.WriteLine("[PLAYER] Updating player progress...");
+        var updatedPlayer = await sdk.UpdatePlayerData(playerToken, new
         {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Please provide your API key as a command line argument.");
-                return;
-            }
+            level = 2,
+            score = 100,
+            inventory = new[] { "sword", "shield", "potion" },
+            last_played = DateTime.UtcNow.ToString("o")
+        });
+        Console.WriteLine($"[PLAYER] {updatedPlayer.Message} at {updatedPlayer.Updated_at}\n");
 
-            var game = new Game(args[0]);
-            await game.RunExample();
-            
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey();
-        }
+        Console.WriteLine("=== Demo Complete ===");
     }
 }
