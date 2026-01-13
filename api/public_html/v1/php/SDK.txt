@@ -1,0 +1,57 @@
+//Register a Player
+
+curl -X POST "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "player_name": "TestPlayer",
+    "player_data": {
+      "level": 1,
+      "score": 0,
+      "inventory": ["sword", "shield"]
+    }
+  }'
+
+curl -X POST "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API_TOKEN" -H "Content-Type: application/json" -d '{"player_name":"TestPlayer","player_data":{"level":1,"score":0,"inventory":["sword","shield"]}}'
+
+//Authenticate a Player
+
+curl -X PUT "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_TOKEN" -H "Content-Type: application/json"
+
+//List All Players
+
+curl -X GET "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API_TOKEN"
+
+//Get Game Data 
+
+curl -X GET "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN"
+
+//Update Game Data
+
+curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "game_settings": {
+      "difficulty": "hard",
+      "max_players": 10
+    },
+    "last_updated": "2025-01-13T12:00:00Z"
+  }'
+
+curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN" -H "Content-Type: application/json" -d '{"game_settings":{"difficulty":"hard","max_players":10},"last_updated":"2025-01-13T12:00:00Z"}'
+
+//Get Player Data
+
+curl -X GET "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_TOKEN"
+
+//Update Player Data
+
+curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "level": 2,
+    "score": 100,
+    "inventory": ["sword", "shield", "potion"],
+    "last_played": "2025-01-13T12:30:00Z"
+  }'
+
+curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_TOKEN" -H "Content-Type: application/json" -d '{"level":2,"score":100,"inventory":["sword","shield","potion"],"last_played":"2025-01-13T12:30:00Z"}'

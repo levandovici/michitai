@@ -1,105 +1,141 @@
-#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Michitai.SDK;
 
 namespace Michitai.Example
 {
-    /// <summary>
-    /// Example class demonstrating how to use the Michitai SDK
-    /// </summary>
     public class Game
     {
-        private readonly MichitaiClient _apiClient;
+        private readonly MichitaiClient _client;
+        private string _playerToken;
 
-        public Game(string apiKey, string projectName = "default")
+        public Game(string apiKey)
         {
-            if (string.IsNullOrEmpty(apiKey))
-                throw new ArgumentException("API key cannot be null or empty", nameof(apiKey));
-                
-            _apiClient = new MichitaiClient(apiKey, projectName);
-            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired!;
+            _client = new MichitaiClient(apiKey);
+            _client.OnAuthenticationRequired += OnAuthenticationRequired;
         }
 
-        /// <summary>
-        /// Example method to demonstrate game data operations
-        /// </summary>
-        public async Task RunGameExample()
+        public async Task RunExample()
         {
             try
             {
-                Console.WriteLine("Fetching game data...");
-                var gameData = await _apiClient.GetGameDataAsync();
-                Console.WriteLine($"Game: {gameData.Name}, Last Updated: {gameData.UpdatedAt}");
-
-                Console.WriteLine("\nFetching player data...");
-                var playerData = await _apiClient.GetPlayerDataAsync();
-                Console.WriteLine($"Player: {playerData.Username}, Level: {playerData.Level}");
-
-                // Example of updating player data
-                Console.WriteLine("\nUpdating player data...");
-                playerData.Level += 1;
-                playerData.LastLogin = DateTime.UtcNow;
+                Console.WriteLine("=== Michitai Game Example ===");
+                Console.WriteLine("1. Registering a new player...");
                 
-                var updatedPlayer = await _apiClient.UpdatePlayerDataAsync(playerData);
-                Console.WriteLine($"Player level updated to: {updatedPlayer.Level}");
+                // Register a new player
+                var registerResponse = await _client.RegisterPlayerAsync("TestPlayer", new Dictionary<string, object>
+                {
+                    ["level"] = 1,
+                    ["score"] = 0,
+                    ["inventory"] = new[] { "sword", "shield" }
+                });
 
-                // Example of listing all players (admin only)
-                Console.WriteLine("\nFetching all players...");
-                var players = await _apiClient.ListPlayersAsync();
-                foreach (var player in players)
+                if (!registerResponse.Success)
                 {
-                    Console.WriteLine($"- {player.Username} (Last login: {player.LastLogin})");
+                    Console.WriteLine($"Failed to register player: {registerResponse.Error}");
+                    return;
                 }
-            }
-            catch (MichitaiException ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                if (!string.IsNullOrEmpty(ex.ResponseContent))
+
+                _playerToken = registerResponse.GamePlayerToken;
+                Console.WriteLine($"Player registered! ID: {registerResponse.PlayerId}, Token: {_playerToken}");
+
+                // Authenticate the player
+                Console.WriteLine("\n2. Authenticating player...");
+                var authResponse = await _client.AuthenticatePlayerAsync(_playerToken);
+                if (!authResponse.Success)
                 {
-                    Console.WriteLine($"Details: {ex.ResponseContent}");
+                    Console.WriteLine($"Authentication failed: {authResponse.Error}");
+                    return;
+                }
+
+                Console.WriteLine($"Authenticated as {authResponse.PlayerName} (ID: {authResponse.PlayerId})");
+
+                // Get game data
+                Console.WriteLine("\n3. Getting game data...");
+                var gameData = await _client.GetGameDataAsync();
+                if (gameData.Success)
+                {
+                    Console.WriteLine($"Game data: {System.Text.Json.JsonSerializer.Serialize(gameData.Data)}");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to get game data: {gameData.Error}");
+                }
+
+                // Get player data
+                Console.WriteLine("\n4. Getting player data...");
+                var playerData = await _client.GetPlayerDataAsync();
+                if (playerData.Success)
+                {
+                    Console.WriteLine($"Player data: {System.Text.Json.JsonSerializer.Serialize(playerData.Data)}");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to get player data: {playerData.Error}");
+                }
+
+                // Update player data
+                Console.WriteLine("\n5. Updating player data...");
+                var updateResponse = await _client.UpdatePlayerDataAsync(new Dictionary<string, object>
+                {
+                    ["level"] = 2,
+                    ["score"] = 100,
+                    ["last_played"] = DateTime.UtcNow
+                });
+
+                if (updateResponse.Success)
+                {
+                    Console.WriteLine("Player data updated successfully!");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to update player data: {updateResponse.Error}");
+                }
+
+                // List all players (admin only)
+                Console.WriteLine("\n6. Listing all players...");
+                var playersResponse = await _client.ListPlayersAsync();
+                if (playersResponse.Success)
+                {
+                    Console.WriteLine($"Found {playersResponse.Count} players:");
+                    foreach (var player in playersResponse.Players)
+                    {
+                        Console.WriteLine($"- {player.PlayerName} (ID: {player.Id}, Active: {player.IsActive})");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to list players: {playersResponse.Error}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
             }
         }
 
         private void OnAuthenticationRequired()
         {
-            Console.WriteLine("Authentication required! Please provide valid API credentials.");
-            // Here you would typically show a login dialog or redirect to login page
-            
-            // You might want to handle retry logic or exit the application
-            // Environment.Exit(1); // Uncomment to exit on authentication failure
+            Console.WriteLine("\n=== AUTHENTICATION REQUIRED ===");
+            Console.WriteLine("Please provide valid API credentials.");
+            // In a real app, you would prompt the user for credentials here
         }
 
-        /// <summary>
-        /// Entry point for the example
-        /// </summary>
         public static async Task Main(string[] args)
         {
-            try
+            if (args.Length == 0)
             {
-                Console.WriteLine("Michitai Game Example");
-                Console.WriteLine("=====================\n");
+                Console.WriteLine("Please provide your API key as a command line argument.");
+                return;
+            }
 
-                // Get API key from command line arguments or use a default one
-                string apiKey = args.Length > 0 ? args[0] : "your-api-key-here";
-                
-                if (apiKey == "your-api-key-here")
-                {
-                    Console.WriteLine("Warning: Using default API key. Please provide your own API key as a command line argument.");
-                }
-                
-                var game = new Game(apiKey);
-                await game.RunGameExample();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            var game = new Game(args[0]);
+            await game.RunExample();
             
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
