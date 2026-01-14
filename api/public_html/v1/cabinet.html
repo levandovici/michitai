@@ -198,8 +198,10 @@
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Project</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">API Key</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">API Private Key</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Created</th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-white/70 uppercase tracking-wider">Actions</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-white/70 uppercase tracking-wider">Reset Private Key</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-white/70 uppercase tracking-wider">Remove API Key</th>
                                 </tr>
                             </thead>
                             <tbody id="api-keys" class="divide-y divide-white/5">
@@ -326,10 +328,16 @@
                     row.innerHTML = `
                         <td class="px-6 py-4">${key.project_name}</td>
                         <td class="px-6 py-4 font-mono">${key.api_key}</td>
-                        <td class="px-6 py-4">${new Date(key.created_at).toLocaleString()}</td>
+                        <td class="px-6 py-4 font-mono api-private-key">${key.api_private_key}</td>
+                        <td class="px-6 py-4 updated-at">${new Date(key.created_at).toLocaleString()}</td>
                         <td class="px-6 py-4 text-right">
-                            <button onclick="deleteApiKey('${key.id}')" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center">
-                                <i class="fas fa-trash-alt mr-2"></i> Delete
+                            <button onclick="resetApiKey('${key.id}')" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center">
+                                <i class="fas fa-key mr-2"></i> Reset
+                            </button>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="removeApiKey('${key.id}')" class="btn-secondary text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center">
+                                <i class="fas fa-trash-alt mr-2"></i> Remove
                             </button>
                         </td>
                     `;
@@ -340,9 +348,69 @@
                 console.error('Error loading user data:', error);
                 window.location.href = 'login.html?error=' + encodeURIComponent('Failed to load user data: ' + error.message);
             });
+        
 
+        // Function to reset Private Key
+        function resetApiKey(keyId) {
+            if (!confirm('Are you sure you want to reset this API key? This action cannot be undone.')) {
+                return;
+            }
+
+            console.log('Attempting to reset key ID:', keyId);
+            
+            fetch(`php/reset_key.php?id=${keyId}`, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    console.error('Response not OK, status:', response.status);
+                    return response.json().then(err => {
+                        console.error('Error response:', err);
+                        throw new Error(err.error || 'Failed to reset API key');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                const row = document.querySelector(`tr[data-key-id="${keyId}"]`);
+                console.log('Row to reset:', row);
+
+                if (row) {
+                    const privateCell = row.querySelector('.api-private-key');
+                    const updatedCell = row.querySelector('.updated-at');
+                    
+                    const newKey = String(data.new_private_key).trim();
+                    
+                    if (privateCell) {
+                        privateCell.innerText = "";            // wipe old key
+                        privateCell.textContent = newKey;      // set new key
+                    }
+
+                    if (updatedCell) {
+                        updatedCell.textContent = new Date().toLocaleString();
+                    }
+
+                    row.style.backgroundColor = "#243f2a";
+                    setTimeout(() => row.style.backgroundColor = "", 1200);
+
+                    console.log('Row updated in UI');
+                }
+
+                alert('API key reset successfully');
+            })
+            .catch(error => {
+                console.error('Error reset API key:', error);
+                alert('Error: ' + (error.message || 'An error occurred while resetting the API key'));
+            });
+        }
+        
         // Function to delete an API key
-        function deleteApiKey(keyId) {
+        function removeApiKey(keyId) {
             if (!confirm('Are you sure you want to delete this API key? This action cannot be undone.')) {
                 return;
             }
@@ -388,6 +456,5 @@
             });
         }
     </script>
-  </script>
 </body>
 </html>

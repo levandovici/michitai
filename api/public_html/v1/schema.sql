@@ -15,11 +15,13 @@ CREATE TABLE api_keys (
     user_id INT NOT NULL,
     project_name VARCHAR(100) NOT NULL,
     api_key VARCHAR(36) UNIQUE NOT NULL,
+    api_private_key VARCHAR(36) UNIQUE NOT NULL,
     game_data JSON DEFAULT (JSON_OBJECT()),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_api_key (api_key)
+    INDEX idx_api_key (api_key),
+    INDEX idx_api_private_key (api_private_key)
 );
 
 CREATE TABLE game_players (

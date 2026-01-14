@@ -30,14 +30,16 @@ if (empty($project_name)) {
 try {
     // Generate a new API key
     $api_key = bin2hex(random_bytes(32)); // More secure than UUID for API keys
+    $api_private_key = bin2hex(random_bytes(32));
     $created_at = date('Y-m-d H:i:s');
     
     // Insert into database
-    $stmt = $pdo->prepare("INSERT INTO api_keys (user_id, project_name, api_key, created_at) VALUES (:user_id, :project_name, :api_key, :created_at)");
+    $stmt = $pdo->prepare("INSERT INTO api_keys (user_id, project_name, api_key, api_private_key, created_at) VALUES (:user_id, :project_name, :api_key, :api_private_key, :created_at)");
     $result = $stmt->execute([
         'user_id' => $_SESSION['user_id'],
         'project_name' => $project_name,
         'api_key' => $api_key,
+        'api_private_key' => $api_private_key,
         'created_at' => $created_at
     ]);
     
@@ -46,6 +48,7 @@ try {
         echo json_encode([
             'success' => true,
             'api_key' => $api_key,
+            'api_private_key' => $api_private_key,
             'project_name' => $project_name,
             'created_at' => $created_at
         ]);
