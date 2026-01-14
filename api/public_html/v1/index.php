@@ -12,7 +12,10 @@ require_once 'php/config.php';
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-csharp.min.js"></script>
     
     <style>
         :root {
@@ -21,6 +24,15 @@ require_once 'php/config.php';
             --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
+            --code-bg: #1e1e2d;
+            --code-text: #ffffff;
+            --code-comment: #6c757d;
+            --code-keyword: #569cd6;
+            --code-string: #ce9178;
+            --code-number: #b5cea8;
+            --code-type: #4ec9b0;
+            --code-function: #dcdcaa;
+            --code-operator: #d4d4d4;
         }
         
         * {
@@ -31,6 +43,74 @@ require_once 'php/config.php';
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
+        }
+        
+        /* Code block styling */
+        pre {
+            background: var(--code-bg) !important;
+            color: var(--code-text) !important;
+            border-radius: 0.5rem !important;
+            padding: 1.5rem !important;
+            margin: 1rem 0 !important;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', monospace !important;
+            font-size: 0.9em !important;
+            line-height: 1.6 !important;
+            tab-size: 4 !important;
+            overflow-x: auto !important;
+            max-height: none !important;
+            height: auto !important;
+            min-height: 0 !important;
+        }
+        
+        pre code {
+            white-space: pre !important;
+            word-wrap: normal !important;
+            background: transparent !important;
+            padding: 0 !important;
+        }
+        
+        /* Syntax highlighting */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: var(--code-comment) !important;
+        }
+        
+        .token.keyword,
+        .token.operator,
+        .token.boolean,
+        .token.selector {
+            color: var(--code-keyword) !important;
+        }
+        
+        .token.string,
+        .token.attr-value,
+        .token.char,
+        .token.builtin {
+            color: var(--code-string) !important;
+        }
+        
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: var(--code-number) !important;
+        }
+        
+        .token.class-name,
+        .token.type-definition {
+            color: var(--code-type) !important;
+        }
+        
+        .token.function,
+        .token.maybe-class-name {
+            color: var(--code-function) !important;
+        }
+        
+        /* Remove gradient overlays */
+        .relative.before\:content-\[\'\'\]:before,
+        .relative.after\:content-\[\'\'\]:after {
+            content: none !important;
         }
         
         .btn-primary {
@@ -288,191 +368,8 @@ require_once 'php/config.php';
                             <i class="fas fa-code mr-2"></i> Download Example
                         </a>
                     </div>
-                    <div class="bg-black/50 p-4 rounded-lg mb-6 overflow-x-auto">
-                        <pre><code class="language-csharp">
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace michitai
-{
-    public class GameSDK
-    {
-        private readonly string _apiToken;
-        private readonly string _baseUrl;
-        private static readonly HttpClient _http = new HttpClient();
-
-        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
-
-        public GameSDK(string apiToken, string baseUrl = "https://api.michitai.com/v1/php/")
-        {
-            _apiToken = apiToken;
-            _baseUrl = baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/";
-        }
-
-        private string Url(string endpoint, string extra = "")
-        {
-            return $"{_baseUrl}{endpoint}?api_token={_apiToken}{extra}";
-        }
-
-        private async Task<T> Send<T>(HttpMethod method, string url, object body = null)
-        {
-            var req = new HttpRequestMessage(method, url);
-
-            if (body != null)
-            {
-                string json = JsonSerializer.Serialize(body, _jsonOptions);
-                req.Content = new StringContent(json, Encoding.UTF8, "application/json");
-            }
-
-            var res = await _http.SendAsync(req);
-            string str = await res.Content.ReadAsStringAsync();
-
-            return JsonSerializer.Deserialize<T>(str, _jsonOptions);
-        }
-
-        // ------------------------------------
-        // PLAYER API
-        // ------------------------------------
-
-        public Task<PlayerRegisterResponse> RegisterPlayer(string name, object playerData)
-        {
-            return Send<PlayerRegisterResponse>(
-                HttpMethod.Post,
-                Url("game_players.php"),
-                new { player_name = name, player_data = playerData }
-            );
-        }
-
-        public Task<PlayerAuthResponse> AuthenticatePlayer(string playerToken)
-        {
-            return Send<PlayerAuthResponse>(
-                HttpMethod.Put,
-                Url("game_players.php", $"&game_player_token={playerToken}")
-            );
-        }
-
-        public Task<PlayerListResponse> GetAllPlayers()
-        {
-            return Send<PlayerListResponse>(HttpMethod.Get, Url("game_players.php"));
-        }
-
-        // ------------------------------------
-        // GAME DATA
-        // ------------------------------------
-
-        public Task<GameDataResponse> GetGameData()
-        {
-            return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php"));
-        }
-
-        public Task<SuccessResponse> UpdateGameData(object data)
-        {
-            return Send<SuccessResponse>(HttpMethod.Put, Url("game_data.php"), data);
-        }
-
-        // ------------------------------------
-        // PLAYER DATA
-        // ------------------------------------
-
-        public Task<PlayerDataResponse> GetPlayerData(string playerToken)
-        {
-            return Send<PlayerDataResponse>(
-                HttpMethod.Get,
-                Url("game_data.php", $"&game_player_token={playerToken}")
-            );
-        }
-
-        public Task<SuccessResponse> UpdatePlayerData(string playerToken, object data)
-        {
-            return Send<SuccessResponse>(
-                HttpMethod.Put,
-                Url("game_data.php", $"&game_player_token={playerToken}"),
-                data
-            );
-        }
-    }
-
-    // ------------------------------------
-    // MODELS
-    // ------------------------------------
-
-    public class PlayerRegisterResponse
-    {
-        public bool Success { get; set; }
-        public string Player_id { get; set; }
-        public string Private_key { get; set; }
-        public string Player_name { get; set; }
-        public int Game_id { get; set; }
-    }
-
-    public class PlayerAuthResponse
-    {
-        public bool Success { get; set; }
-        public PlayerInfo Player { get; set; }
-    }
-
-    public class PlayerListResponse
-    {
-        public bool Success { get; set; }
-        public int Count { get; set; }
-        public List<PlayerShort> Players { get; set; }
-    }
-
-    public class PlayerShort
-    {
-        public int Id { get; set; }
-        public string Player_name { get; set; }
-        public int Is_active { get; set; }
-        public string Last_login { get; set; }
-        public string Created_at { get; set; }
-    }
-
-    public class PlayerInfo
-    {
-        public int Id { get; set; }
-        public int Game_id { get; set; }
-        public string Player_name { get; set; }
-        public Dictionary<string, object> Player_data { get; set; }
-        public int Is_active { get; set; }
-        public string Last_login { get; set; }
-        public string Created_at { get; set; }
-        public string Updated_at { get; set; }
-    }
-
-    public class GameDataResponse
-    {
-        public bool Success { get; set; }
-        public string Type { get; set; }
-        public int Game_id { get; set; }
-        public Dictionary<string, object> Data { get; set; }
-    }
-
-    public class PlayerDataResponse
-    {
-        public bool Success { get; set; }
-        public string Type { get; set; }
-        public int Player_id { get; set; }
-        public string Player_name { get; set; }
-        public Dictionary<string, object> Data { get; set; }
-    }
-
-    public class SuccessResponse
-    {
-        public bool Success { get; set; }
-        public string Message { get; set; }
-        public string Updated_at { get; set; }
-    }
-}
-</code></pre>
+                    <div class="relative">
+                        <pre><code class="language-csharp"><?php echo htmlspecialchars(file_get_contents('SDK.cs')); ?></code></pre>
                     </div>
                     <script>
                     document.getElementById('downloadSdk').addEventListener('click', () => {
@@ -509,106 +406,8 @@ namespace michitai
                         and handling authentication.
                     </p>
                     
-                    <div class="bg-black/50 p-4 rounded-lg mb-6 overflow-x-auto">
-                        <pre><code class="language-csharp">using System;
-using System.Threading.Tasks;
-using System.Text.Json;
-using michitai;
-
-public class Game
-{
-    private static GameSDK sdk;
-
-    public static async Task Main()
-    {
-        Console.WriteLine("=== MICHITAI Game SDK Usage Example ===\n");
-
-        // 1️⃣ Initialize SDK
-        sdk = new GameSDK("YOUR_API_TOKEN");
-        Console.WriteLine("[INIT] SDK initialized\n");
-
-        // 2️⃣ Register Player
-        Console.WriteLine("[PLAYER] Registering new player...");
-        var reg = await sdk.RegisterPlayer("TestPlayer", new
-        {
-            level = 1,
-            score = 0,
-            inventory = new[] { "sword", "shield" }
-        });
-
-        string playerToken = reg.Private_key;
-        int playerId = int.Parse(reg.Player_id);
-
-        Console.WriteLine($"[PLAYER] Registered: ID={playerId}, Token={playerToken}\n");
-
-        // 3️⃣ Authenticate Player
-        Console.WriteLine("[PLAYER] Authenticating player...");
-        var auth = await sdk.AuthenticatePlayer(playerToken);
-
-        if (auth.Success)
-        {
-            var pdata = auth.Player.Player_data;
-            int level = pdata.ContainsKey("level") ? ((JsonElement)pdata["level"]).GetInt32() : 0;
-
-            Console.WriteLine($"[PLAYER] Authenticated: {auth.Player.Player_name} (Level={level})\n");
-        }
-        else
-        {
-            Console.WriteLine("[PLAYER] Authentication failed\n");
-        }
-
-        // 4️⃣ List all players
-        Console.WriteLine("[ADMIN] Fetching all players...");
-        var allPlayers = await sdk.GetAllPlayers();
-        Console.WriteLine($"[ADMIN] Total players: {allPlayers.Count}");
-        foreach (var p in allPlayers.Players)
-        {
-            Console.WriteLine($" - ID={p.Id}, Name={p.Player_name}, Active={p.Is_active}");
-        }
-        Console.WriteLine();
-
-        // 5️⃣ Get global game data
-        Console.WriteLine("[GAME] Loading game data...");
-        var gameData = await sdk.GetGameData();
-        Console.WriteLine($"[GAME] Game ID={gameData.Game_id}, Settings={gameData.Data["game_settings"]}\n");
-
-        // 6️⃣ Update global game data
-        Console.WriteLine("[GAME] Updating game settings...");
-        var updateGame = await sdk.UpdateGameData(new
-        {
-            game_settings = new { difficulty = "hard", max_players = 10 },
-            last_updated = DateTime.UtcNow.ToString("o")
-        });
-        Console.WriteLine($"[GAME] {updateGame.Message} at {updateGame.Updated_at}\n");
-
-        // 7️⃣ Get player-specific data
-        Console.WriteLine("[PLAYER] Loading player data...");
-        var playerData = await sdk.GetPlayerData(playerToken);
-
-        var pDataDict = playerData.Data;
-        int playerLevel = pDataDict.ContainsKey("level") ? ((JsonElement)pDataDict["level"]).GetInt32() : 0;
-        int playerScore = pDataDict.ContainsKey("score") ? ((JsonElement)pDataDict["score"]).GetInt32() : 0;
-        string[] inventory = pDataDict.ContainsKey("inventory")
-            ? JsonSerializer.Deserialize<string[]>(((JsonElement)pDataDict["inventory"]).GetRawText())
-            : new string[0];
-
-        Console.WriteLine($"[PLAYER] Level={playerLevel}, Score={playerScore}, Inventory=[{string.Join(", ", inventory)}]\n");
-
-        // 8️⃣ Update player data
-        Console.WriteLine("[PLAYER] Updating player progress...");
-        var updatedPlayer = await sdk.UpdatePlayerData(playerToken, new
-        {
-            level = 2,
-            score = 100,
-            inventory = new[] { "sword", "shield", "potion" },
-            last_played = DateTime.UtcNow.ToString("o")
-        });
-        Console.WriteLine($"[PLAYER] {updatedPlayer.Message} at {updatedPlayer.Updated_at}\n");
-
-        Console.WriteLine("=== Demo Complete ===");
-    }
-}
-</code></pre>
+                    <div class="relative mt-8">
+                        <pre><code class="language-csharp"><?php echo htmlspecialchars(file_get_contents('Game.cs')); ?></code></pre>
                     </div>
                     
                     <div class="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-800/50">
@@ -650,15 +449,15 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Creates a new player in the game. Returns a <code>player_id</code> and <code>private_key</code> needed for future requests.
         </p>
-        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4"><code class="language-json">{
   "player_name": "TestPlayer",
   "player_data": {
     "level": 1,
     "score": 0,
     "inventory": ["sword","shield"]
   }
-}</pre>
+}</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
         <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
@@ -666,7 +465,7 @@ public class Game
   "private_key": "46702c9b906e3361c26dbcd605ee9183",
   "player_name": "TestPlayer",
   "game_id": 4
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 2. Update Player Info -->
@@ -678,8 +477,8 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Updates player info such as active status. This does not change player data like level or inventory (those are in <code>/game_data.php</code>).
         </p>
-        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{}</pre>
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4"><code class="language-json">{}</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
         <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
@@ -697,7 +496,7 @@ public class Game
     "created_at": "2026-01-13 14:21:16",
     "updated_at": "2026-01-13 14:21:16"
   }
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 3. List Players -->
@@ -709,15 +508,14 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves a list of all players in the game. Useful for admin dashboards or multiplayer matchmaking.
         </p>
-        <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
+        <pre class="text-sm"><code class="language-json">{
   "success": true,
   "count": 7,
   "players": [
     {"id":3,"player_name":"TestPlayer","is_active":1,"last_login":null,"created_at":"2026-01-13 12:30:47"},
     {"id":7,"player_name":"TestPlayer","is_active":1,"last_login":"2026-01-13 14:22:33","created_at":"2026-01-13 14:21:16"}
-  ]
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 4. Get Game Data -->
@@ -729,8 +527,8 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves the global game data, including text, settings, and last update timestamp. Used to sync clients with the server.
         </p>
-        <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
+        <pre class="text-sm"><code class="language-json">{
   "success": true,
   "type": "game",
   "game_id": 4,
@@ -742,7 +540,7 @@ public class Game
     },
     "last_updated": "2025-01-13T12:00:00Z"
   }
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 5. Update Game Data -->
@@ -754,20 +552,20 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Updates global game data. For example, changing settings or max players. Requires API key authentication.
         </p>
-        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4"><code class="language-json">{
   "game_settings": {
     "difficulty": "hard",
     "max_players": 10
   },
   "last_updated": "2025-01-13T12:00:00Z"
-}</pre>
+}</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
         <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
   "message": "Game data updated successfully",
   "updated_at": "2026-01-13 14:24:23"
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 6. Get Player Data -->
@@ -779,8 +577,8 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves a specific player's data using their <code>private_key</code>. Includes level, score, and inventory.
         </p>
-        <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
+        <pre class="text-sm"><code class="language-json">{
   "success": true,
   "type": "player",
   "player_id": 7,
@@ -790,7 +588,7 @@ public class Game
     "score": 0,
     "inventory": ["sword","shield"]
   }
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 7. Update Player Data -->
@@ -802,19 +600,19 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Updates a specific player's data like level, score, inventory, and last played timestamp.
         </p>
-        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4"><code class="language-json">{
   "level": 2,
   "score": 100,
   "inventory": ["sword","shield","potion"],
   "last_played": "2025-01-13T12:30:00Z"
-}</pre>
+}</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
         <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
   "message": "Player data updated successfully",
   "updated_at": "2026-01-13 14:27:10"
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 8. Get Server Time -->
@@ -826,13 +624,13 @@ public class Game
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves the current server time in multiple formats including UTC timestamp and human-readable format.
         </p>
-        <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
+        <pre class="text-sm"><code class="language-json">{
   "success": true,
   "utc": "2025-01-14T16:24:00+00:00",
   "timestamp": 1736864640,
   "readable": "2025-01-14 16:24:00 UTC"
-}</pre>
+}</code></pre>
     </div>
 
     <!-- 9. Error Response -->
@@ -847,7 +645,7 @@ public class Game
     "code": "unauthorized",
     "message": "Invalid or missing API key"
   }
-}</pre>
+}</code></pre>
     </div>
 
 </div>
