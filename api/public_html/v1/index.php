@@ -201,18 +201,18 @@ require_once 'php/config.php';
                     <div class="space-y-4">
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/games/players</div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_players.php</div>
                             <div class="col-span-6">Register new player for a game</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/games/players/login</div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_players.php</div>
                             <div class="col-span-6">Authenticate player with private key</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/games/players</div>
-                            <div class="col-span-6">List all players for a game (admin only)</div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_players.php</div>
+                            <div class="col-span-6">List all players for a game</div>
                         </div>
                     </div>
                 </div>
@@ -223,22 +223,22 @@ require_once 'php/config.php';
                     <div class="space-y-4">
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/games/data</div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
                             <div class="col-span-6">Get game data (requires API key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/games/data</div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
                             <div class="col-span-6">Update game data (requires API key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/games/players/data</div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
                             <div class="col-span-6">Get player data (requires private key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
-                            <div class="col-span-4 font-mono text-white/90">/api/games/players/data</div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
                             <div class="col-span-6">Update player data (requires private key)</div>
                         </div>
                     </div>
@@ -281,595 +281,205 @@ require_once 'php/config.php';
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Michitai.SDK
+namespace michitai
 {
-    /// <summary>
-    /// Client for interacting with the Michitai Game Platform API
-    /// </summary>
-    public class MichitaiClient
+    public class GameSDK
     {
-        private readonly HttpClient _httpClient;
-        private const string API_BASE_URL = "https://api.michitai.com/v1/php";
-        private readonly string _apiKey;
-        
-        /// <summary>
-        /// Event raised when authentication is required
-        /// </summary>
-        public event Action OnAuthenticationRequired;
+        private readonly string _apiToken;
+        private readonly string _baseUrl;
+        private static readonly HttpClient _http = new HttpClient();
 
-        /// <summary>
-        /// Initialize a new instance of the MichitaiClient with API key authentication
-        /// </summary>
-        /// <param name="apiKey">Your Michitai API key</param>
-        /// <exception cref="ArgumentException">Thrown when API key is null or empty</exception>
-        public MichitaiClient(string apiKey)
+        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
         {
-            if (string.IsNullOrEmpty(apiKey))
-                throw new ArgumentException("API key is required", nameof(apiKey));
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
-            _apiKey = apiKey;
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
-            _httpClient.DefaultRequestHeaders.Add("X-API-Key", _apiKey);
+        public GameSDK(string apiToken, string baseUrl = "https://api.michitai.com/v1/php/")
+        {
+            _apiToken = apiToken;
+            _baseUrl = baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/";
         }
 
-        #region Game Data
-
-        /// <summary>
-        /// Get game data
-        /// </summary>
-        /// <returns>Game data</returns>
-        public async Task<GameData> GetGameDataAsync()
+        private string Url(string endpoint, string extra = "")
         {
-            return await GetAsync<GameData>("/games/data");
+            return $"{_baseUrl}{endpoint}?api_token={_apiToken}{extra}";
         }
 
-        /// <summary>
-        /// Update game data (admin only)
-        /// </summary>
-        /// <param name="gameData">Updated game data</param>
-        /// <returns>Updated game data</returns>
-        public async Task<GameData> UpdateGameDataAsync(GameData gameData)
+        private async Task<T> Send<T>(HttpMethod method, string url, object body = null)
         {
-            return await PutAsync<GameData>("/games/data", gameData);
-        }
+            var req = new HttpRequestMessage(method, url);
 
-        #endregion
-
-        #region Player Data
-
-        /// <summary>
-        /// Get current player's data
-        /// </summary>
-        /// <returns>Player data</returns>
-        public async Task<PlayerData> GetPlayerDataAsync()
-        {
-            return await GetAsync<PlayerData>("/games/players/data");
-        }
-
-        /// <summary>
-        /// Update current player's data
-        /// </summary>
-        /// <param name="playerData">Updated player data</param>
-        /// <returns>Updated player data</returns>
-        public async Task<PlayerData> UpdatePlayerDataAsync(PlayerData playerData)
-        {
-            return await PutAsync<PlayerData>("/games/players/data", playerData);
-        }
-
-        /// <summary>
-        /// List all players (admin only)
-        /// </summary>
-        /// <returns>List of players</returns>
-        public async Task<List<PlayerInfo>> ListPlayersAsync()
-        {
-            return await GetAsync<List<PlayerInfo>>("/games/players");
-        }
-
-        #endregion
-
-        #region HTTP Methods
-
-        private async Task<T> GetAsync<T>(string endpoint)
-        {
-            try
+            if (body != null)
             {
-                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
-                var response = await _httpClient.GetAsync(url);
-                await HandleResponse(response);
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(content);
+                string json = JsonSerializer.Serialize(body, _jsonOptions);
+                req.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
-            catch (HttpRequestException ex)
-            {
-                throw new MichitaiException("Network error occurred", ex);
-            }
+
+            var res = await _http.SendAsync(req);
+            string str = await res.Content.ReadAsStringAsync();
+
+            return JsonSerializer.Deserialize<T>(str, _jsonOptions);
         }
 
-        private async Task<T> PostAsync<T>(string endpoint, object data)
+        // ------------------------------------
+        // PLAYER API
+        // ------------------------------------
+
+        public Task<PlayerRegisterResponse> RegisterPlayer(string name, object playerData)
         {
-            try
-            {
-                var content = new StringContent(
-                    JsonSerializer.Serialize(data),
-                    Encoding.UTF8,
-                    "application/json"
-                );
-
-                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
-                var response = await _httpClient.PostAsync(url, content);
-                await HandleResponse(response);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new MichitaiException("Network error occurred", ex);
-            }
+            return Send<PlayerRegisterResponse>(
+                HttpMethod.Post,
+                Url("game_players.php"),
+                new { player_name = name, player_data = playerData }
+            );
         }
 
-        private async Task<T> PutAsync<T>(string endpoint, object data)
+        public Task<PlayerAuthResponse> AuthenticatePlayer(string playerToken)
         {
-            try
-            {
-                var content = new StringContent(
-                    JsonSerializer.Serialize(data),
-                    Encoding.UTF8,
-                    "application/json"
-                );
-
-                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
-                var response = await _httpClient.PutAsync(url, content);
-                await HandleResponse(response);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new MichitaiException("Network error occurred", ex);
-            }
+            return Send<PlayerAuthResponse>(
+                HttpMethod.Put,
+                Url("game_players.php", $"&game_player_token={playerToken}")
+            );
         }
 
-        private async Task HandleResponse(HttpResponseMessage response)
+        public Task<PlayerListResponse> GetAllPlayers()
         {
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    OnAuthenticationRequired?.Invoke();
-                    throw new MichitaiException("Authentication required", response.StatusCode, errorContent);
-                }
-                
-                throw new MichitaiException("API request failed", response.StatusCode, errorContent);
-            }
+            return Send<PlayerListResponse>(HttpMethod.Get, Url("game_players.php"));
         }
 
-        #endregion
+        // ------------------------------------
+        // GAME DATA
+        // ------------------------------------
+
+        public Task<GameDataResponse> GetGameData()
+        {
+            return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php"));
+        }
+
+        public Task<SuccessResponse> UpdateGameData(object data)
+        {
+            return Send<SuccessResponse>(HttpMethod.Put, Url("game_data.php"), data);
+        }
+
+        // ------------------------------------
+        // PLAYER DATA
+        // ------------------------------------
+
+        public Task<PlayerDataResponse> GetPlayerData(string playerToken)
+        {
+            return Send<PlayerDataResponse>(
+                HttpMethod.Get,
+                Url("game_data.php", $"&game_player_token={playerToken}")
+            );
+        }
+
+        public Task<SuccessResponse> UpdatePlayerData(string playerToken, object data)
+        {
+            return Send<SuccessResponse>(
+                HttpMethod.Put,
+                Url("game_data.php", $"&game_player_token={playerToken}"),
+                data
+            );
+        }
     }
 
-    #region Data Models
+    // ------------------------------------
+    // MODELS
+    // ------------------------------------
 
-    public class GameData
+    public class PlayerRegisterResponse
+    {
+        public bool Success { get; set; }
+        public string Player_id { get; set; }
+        public string Private_key { get; set; }
+        public string Player_name { get; set; }
+        public int Game_id { get; set; }
+    }
+
+    public class PlayerAuthResponse
+    {
+        public bool Success { get; set; }
+        public PlayerInfo Player { get; set; }
+    }
+
+    public class PlayerListResponse
+    {
+        public bool Success { get; set; }
+        public int Count { get; set; }
+        public List<PlayerShort> Players { get; set; }
+    }
+
+    public class PlayerShort
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string JsonStructure { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-    }
-
-    public class PlayerData
-    {
-        public int Id { get; set; } = 0;
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string JsonData { get; set; } = string.Empty;
-        public int Level { get; set; } = 1;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? LastLogin { get; set; }
+        public string Player_name { get; set; }
+        public int Is_active { get; set; }
+        public string Last_login { get; set; }
+        public string Created_at { get; set; }
     }
 
     public class PlayerInfo
     {
-        public string PlayerId { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? LastLogin { get; set; }
+        public int Id { get; set; }
+        public int Game_id { get; set; }
+        public string Player_name { get; set; }
+        public Dictionary<string, object> Player_data { get; set; }
+        public int Is_active { get; set; }
+        public string Last_login { get; set; }
+        public string Created_at { get; set; }
+        public string Updated_at { get; set; }
     }
 
-    #endregion
-
-    #region Exceptions
-
-    public class MichitaiException : Exception
+    public class GameDataResponse
     {
-        public System.Net.HttpStatusCode StatusCode { get; }
-        public string ResponseContent { get; }
-
-        public MichitaiException(string message) : base(message) { }
-        
-        public MichitaiException(string message, Exception innerException) 
-            : base(message, innerException) { }
-            
-        public MichitaiException(string message, System.Net.HttpStatusCode statusCode, string responseContent) 
-            : base($"{message}. Status: {statusCode}, Response: {responseContent}")
-        {
-            StatusCode = statusCode;
-            ResponseContent = responseContent;
-        }
+        public bool Success { get; set; }
+        public string Type { get; set; }
+        public int Game_id { get; set; }
+        public Dictionary<string, object> Data { get; set; }
     }
 
-    #endregion
+    public class PlayerDataResponse
+    {
+        public bool Success { get; set; }
+        public string Type { get; set; }
+        public int Player_id { get; set; }
+        public string Player_name { get; set; }
+        public Dictionary<string, object> Data { get; set; }
+    }
+
+    public class SuccessResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string Updated_at { get; set; }
+    }
 }
 </code></pre>
                     </div>
                     <script>
-                    document.getElementById('downloadSdk').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const sdkCode = `using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace Michitai.SDK
-{
-    /// <summary>
-    /// Client for interacting with the Michitai Game Platform API
-    /// </summary>
-    public class MichitaiClient
-    {
-        private readonly HttpClient _httpClient;
-        private const string API_BASE_URL = "https://api.michitai.com/v1/php";
-        private readonly string _apiKey;
-
-        /// <summary>
-        /// Initialize a new instance of the MichitaiClient with API key authentication
-        /// </summary>
-        /// <param name="apiKey">Your Michitai API key</param>
-        /// <exception cref="ArgumentException">Thrown when API key is null or empty</exception>
-        public MichitaiClient(string apiKey)
-        {
-            if (string.IsNullOrEmpty(apiKey))
-                throw new ArgumentException("API key is required", nameof(apiKey));
-
-            _apiKey = apiKey;
-            _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
-            _httpClient.DefaultRequestHeaders.Add("X-API-Key", _apiKey);
-        }
-
-        #region Game Data
-
-        /// <summary>
-        /// Get game data
-        /// </summary>
-        /// <returns>Game data</returns>
-        public async Task<GameData> GetGameDataAsync()
-        {
-            return await GetAsync<GameData>("/games/data");
-        }
-
-        /// <summary>
-        /// Update game data (admin only)
-        /// </summary>
-        /// <param name="gameData">Updated game data</param>
-        /// <returns>Updated game data</returns>
-        public async Task<GameData> UpdateGameDataAsync(GameData gameData)
-        {
-            return await PutAsync<GameData>("/games/data", gameData);
-        }
-
-        #endregion
-
-        #region Player Data
-
-        /// <summary>
-        /// Get current player's data
-        /// </summary>
-        /// <returns>Player data</returns>
-        public async Task<PlayerData> GetPlayerDataAsync()
-        {
-            return await GetAsync<PlayerData>("/games/players/data");
-        }
-
-        /// <summary>
-        /// Update current player's data
-        /// </summary>
-        /// <param name="playerData">Updated player data</param>
-        /// <returns>Updated player data</returns>
-        public async Task<PlayerData> UpdatePlayerDataAsync(PlayerData playerData)
-        {
-            return await PutAsync<PlayerData>("/games/players/data", playerData);
-        }
-
-        /// <summary>
-        /// List all players (admin only)
-        /// </summary>
-        /// <returns>List of players</returns>
-        public async Task<List<PlayerInfo>> ListPlayersAsync()
-        {
-            return await GetAsync<List<PlayerInfo>>("/games/players");
-        }
-
-        #endregion
-
-        #region HTTP Methods
-
-        private async Task<T> GetAsync<T>(string endpoint)
-        {
-            try
-            {
-                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
-                var response = await _httpClient.GetAsync(url);
-                await HandleResponse(response);
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(content);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new MichitaiException("Network error occurred", ex);
-            }
-        }
-
-        private async Task<T> PostAsync<T>(string endpoint, object data)
-        {
-            try
-            {
-                var content = new StringContent(
-                    JsonSerializer.Serialize(data),
-                    Encoding.UTF8,
-                    "application/json"
-                );
-
-                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
-                var response = await _httpClient.PostAsync(url, content);
-                await HandleResponse(response);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new MichitaiException("Network error occurred", ex);
-            }
-        }
-
-        private async Task<T> PutAsync<T>(string endpoint, object data)
-        {
-            try
-            {
-                var content = new StringContent(
-                    JsonSerializer.Serialize(data),
-                    Encoding.UTF8,
-                    "application/json"
-                );
-
-                var url = endpoint.StartsWith("http") ? endpoint : $"{API_BASE_URL}/{endpoint.TrimStart('/')}";
-                var response = await _httpClient.PutAsync(url, content);
-                await HandleResponse(response);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<T>(responseContent);
-            }
-            catch (HttpRequestException ex)
-            {
-                throw new MichitaiException("Network error occurred", ex);
-            }
-        }
-
-        private async Task HandleResponse(HttpResponseMessage response)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
+                    document.getElementById('downloadSdk').addEventListener('click', () => {
+                    const link = document.createElement('a');
+                    link.href = 'SDK.cs';           // ← path relative to your HTML file
+                    link.download = 'SDK.cs';        // suggested filename
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
                 
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    OnAuthenticationRequired?.Invoke();
-                    throw new MichitaiException("Authentication required", response.StatusCode, errorContent);
-                }
-                
-                throw new MichitaiException("API request failed", response.StatusCode, errorContent);
-            }
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Event triggered when authentication is required
-        /// </summary>
-        public event Action OnAuthenticationRequired;
-    }
-
-    #region Data Models
-
-    public class GameData
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string JsonStructure { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-    }
-
-    public class PlayerData
-    {
-        public int Id { get; set; } = 0;
-        public string Username { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string JsonData { get; set; } = string.Empty;
-        public int Level { get; set; } = 1;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? LastLogin { get; set; }
-    }
-
-    public class PlayerInfo
-    {
-        public string PlayerId { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? LastLogin { get; set; }
-    }
-
-    #endregion
-
-    #region Exceptions
-
-    public class MichitaiException : Exception
-    {
-        public System.Net.HttpStatusCode StatusCode { get; }
-        public string ResponseContent { get; }
-
-        public MichitaiException(string message) : base(message) { }
-        
-        public MichitaiException(string message, Exception innerException) 
-            : base(message, innerException) { }
-            
-        public MichitaiException(string message, System.Net.HttpStatusCode statusCode, string responseContent) 
-            : base($"{message}. Status: {statusCode}, Response: {responseContent}")
-        {
-            StatusCode = statusCode;
-            ResponseContent = responseContent;
-        }
-    }
-
-    #endregion
-}`;
-
-                        const blob = new Blob([sdkCode], { type: 'text/plain' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'SDK.cs';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    });
-
-                    // Add event listener for downloading the example
-                    document.getElementById('downloadExample').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const exampleCode = `using System;
-using System.Threading.Tasks;
-
-namespace Michitai.Example
-{
-    /// <summary>
-    /// Example class demonstrating how to use the Michitai SDK
-    #region Example Usage
-    public class Game
-    {
-        private readonly Michitai.SDK.MichitaiClient _apiClient;
-
-        public Game(string apiKey)
-        {
-            if (string.IsNullOrEmpty(apiKey))
-                throw new ArgumentException("API key cannot be null or empty", nameof(apiKey));
-        public async Task RunGameExample()
-        {
-            try
-            {
-                Console.WriteLine("Fetching game data...");
-                var gameData = await _apiClient.GetGameDataAsync();
-                Console.WriteLine($"Game: {gameData.Name}, Last Updated: {gameData.UpdatedAt}");
-
-                Console.WriteLine("\nFetching player data...");
-                var playerData = await _apiClient.GetPlayerDataAsync();
-                Console.WriteLine($"Player: {playerData.Username}, Level: {playerData.Level}");
-
-                // Example of updating player data
-                Console.WriteLine("\nUpdating player data...");
-                playerData.Level += 1;
-                playerData.LastLogin = DateTime.UtcNow;
-                
-                var updatedPlayer = await _apiClient.UpdatePlayerDataAsync(playerData);
-                Console.WriteLine($"Player level updated to: {updatedPlayer.Level}");
-
-                // Example of listing all players (admin only)
-                Console.WriteLine("\nFetching all players...");
-                var players = await _apiClient.ListPlayersAsync();
-                foreach (var player in players)
-                {
-                    Console.WriteLine($"- {player.Username} (Last login: {player.LastLogin})");
-                }
-            }
-            catch (Michitai.SDK.MichitaiException ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                if (!string.IsNullOrEmpty(ex.ResponseContent))
-                {
-                    Console.WriteLine($"Details: {ex.ResponseContent}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
-        private void OnAuthenticationRequired()
-        {
-            Console.WriteLine("Authentication required! Please provide valid API credentials.");
-            // Here you would typically show a login dialog or redirect to login page
-        }
-
-        /// <summary>
-        /// Entry point for the example
-        /// </summary>
-        public static async Task Main(string[] args)
-        {
-            try
-            {
-                Console.WriteLine("Michitai Game Example");
-                Console.WriteLine("=====================\n");
-
-                // Get API key from command line arguments or use a default one
-                string apiKey = args.Length > 0 ? args[0] : "your-api-key-here";
-                
-                if (apiKey == "your-api-key-here")
-                {
-                    Console.WriteLine("Warning: Using default API key. Please provide your own API key as a command line argument.");
-                }
-                
-                var game = new Game(apiKey);
-                await game.RunGameExample();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey();
-        }
-    }
-}`;
-
-                        const blob = new Blob([exampleCode], { type: 'text/plain' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'Game.cs';
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    });
+                document.getElementById('downloadExample').addEventListener('click', () => {
+                    const link = document.createElement('a');
+                    link.href = 'Game.cs';          // ← path relative to your HTML file
+                    link.download = 'Game.cs';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
                     </script>
                 </div>
 
@@ -882,7 +492,7 @@ namespace Michitai.Example
                         <h4 class="text-xl font-bold text-white">Example Usage</h4>
                     </div>
                     <p class="text-white/80 mb-6">
-                        Here's a complete example of how to use the Michitai SDK in your C# application.
+                        Here's a complete example of how to use the michitai SDK in your C# application.
                         This example demonstrates common operations like fetching game data, updating player information,
                         and handling authentication.
                     </p>
@@ -890,110 +500,103 @@ namespace Michitai.Example
                     <div class="bg-black/50 p-4 rounded-lg mb-6 overflow-x-auto">
                         <pre><code class="language-csharp">using System;
 using System.Threading.Tasks;
+using System.Text.Json;
+using michitai;
 
-namespace Michitai.Example
+public class Game
 {
-    /// &lt;summary&gt;
-    /// Example class demonstrating how to use the Michitai SDK
-    /// &lt;/summary&gt;
-    public class Game
+    private static GameSDK sdk;
+
+    public static async Task Main()
     {
-        private readonly Michitai.SDK.MichitaiClient _apiClient;
+        Console.WriteLine("=== MICHITAI Game SDK Usage Example ===\n");
 
-        public Game(string apiKey)
+        // 1️⃣ Initialize SDK
+        sdk = new GameSDK("YOUR_API_TOKEN");
+        Console.WriteLine("[INIT] SDK initialized\n");
+
+        // 2️⃣ Register Player
+        Console.WriteLine("[PLAYER] Registering new player...");
+        var reg = await sdk.RegisterPlayer("TestPlayer", new
         {
-            if (string.IsNullOrEmpty(apiKey))
-                throw new ArgumentException("API key cannot be null or empty", nameof(apiKey));
-                
-            // Initialize the API client with your API key
-            _apiClient = new Michitai.SDK.MichitaiClient(apiKey);
-            
-            // Subscribe to authentication events
-            _apiClient.OnAuthenticationRequired += OnAuthenticationRequired!;
+            level = 1,
+            score = 0,
+            inventory = new[] { "sword", "shield" }
+        });
+
+        string playerToken = reg.Private_key;
+        int playerId = int.Parse(reg.Player_id);
+
+        Console.WriteLine($"[PLAYER] Registered: ID={playerId}, Token={playerToken}\n");
+
+        // 3️⃣ Authenticate Player
+        Console.WriteLine("[PLAYER] Authenticating player...");
+        var auth = await sdk.AuthenticatePlayer(playerToken);
+
+        if (auth.Success)
+        {
+            var pdata = auth.Player.Player_data;
+            int level = pdata.ContainsKey("level") ? ((JsonElement)pdata["level"]).GetInt32() : 0;
+
+            Console.WriteLine($"[PLAYER] Authenticated: {auth.Player.Player_name} (Level={level})\n");
+        }
+        else
+        {
+            Console.WriteLine("[PLAYER] Authentication failed\n");
         }
 
-        /// &lt;summary&gt;
-        /// Example method to demonstrate game data operations
-        /// &lt;/summary&gt;
-        public async Task RunGameExample()
+        // 4️⃣ List all players
+        Console.WriteLine("[ADMIN] Fetching all players...");
+        var allPlayers = await sdk.GetAllPlayers();
+        Console.WriteLine($"[ADMIN] Total players: {allPlayers.Count}");
+        foreach (var p in allPlayers.Players)
         {
-            try
-            {
-                Console.WriteLine("Fetching game data...");
-                var gameData = await _apiClient.GetGameDataAsync();
-                Console.WriteLine($"Game: {gameData.Name}, Last Updated: {gameData.UpdatedAt}");
-
-                Console.WriteLine("\nFetching player data...");
-                var playerData = await _apiClient.GetPlayerDataAsync();
-                Console.WriteLine($"Player: {playerData.Username}, Level: {playerData.Level}");
-
-                // Example of updating player data
-                Console.WriteLine("\nUpdating player data...");
-                playerData.Level += 1;
-                playerData.LastLogin = DateTime.UtcNow;
-                
-                var updatedPlayer = await _apiClient.UpdatePlayerDataAsync(playerData);
-                Console.WriteLine($"Player level updated to: {updatedPlayer.Level}");
-
-                // Example of listing all players (admin only)
-                Console.WriteLine("\nFetching all players...");
-                var players = await _apiClient.ListPlayersAsync();
-                foreach (var player in players)
-                {
-                    Console.WriteLine($"- {player.Username} (Last login: {player.LastLogin})");
-                }
-            }
-            catch (Michitai.SDK.MichitaiException ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                if (!string.IsNullOrEmpty(ex.ResponseContent))
-                {
-                    Console.WriteLine($"Details: {ex.ResponseContent}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            Console.WriteLine($" - ID={p.Id}, Name={p.Player_name}, Active={p.Is_active}");
         }
+        Console.WriteLine();
 
-        private void OnAuthenticationRequired()
+        // 5️⃣ Get global game data
+        Console.WriteLine("[GAME] Loading game data...");
+        var gameData = await sdk.GetGameData();
+        Console.WriteLine($"[GAME] Game ID={gameData.Game_id}, Settings={gameData.Data["game_settings"]}\n");
+
+        // 6️⃣ Update global game data
+        Console.WriteLine("[GAME] Updating game settings...");
+        var updateGame = await sdk.UpdateGameData(new
         {
-            Console.WriteLine("Authentication required! Please provide valid API credentials.");
-            // Here you would typically show a login dialog or redirect to login page
-        }
+            game_settings = new { difficulty = "hard", max_players = 10 },
+            last_updated = DateTime.UtcNow.ToString("o")
+        });
+        Console.WriteLine($"[GAME] {updateGame.Message} at {updateGame.Updated_at}\n");
 
-        /// &lt;summary&gt;
-        /// Entry point for the example
-        /// &lt;/summary&gt;
-        public static async Task Main(string[] args)
+        // 7️⃣ Get player-specific data
+        Console.WriteLine("[PLAYER] Loading player data...");
+        var playerData = await sdk.GetPlayerData(playerToken);
+
+        var pDataDict = playerData.Data;
+        int playerLevel = pDataDict.ContainsKey("level") ? ((JsonElement)pDataDict["level"]).GetInt32() : 0;
+        int playerScore = pDataDict.ContainsKey("score") ? ((JsonElement)pDataDict["score"]).GetInt32() : 0;
+        string[] inventory = pDataDict.ContainsKey("inventory")
+            ? JsonSerializer.Deserialize<string[]>(((JsonElement)pDataDict["inventory"]).GetRawText())
+            : new string[0];
+
+        Console.WriteLine($"[PLAYER] Level={playerLevel}, Score={playerScore}, Inventory=[{string.Join(", ", inventory)}]\n");
+
+        // 8️⃣ Update player data
+        Console.WriteLine("[PLAYER] Updating player progress...");
+        var updatedPlayer = await sdk.UpdatePlayerData(playerToken, new
         {
-            try
-            {
-                Console.WriteLine("Michitai Game Example");
-                Console.WriteLine("=====================\n");
+            level = 2,
+            score = 100,
+            inventory = new[] { "sword", "shield", "potion" },
+            last_played = DateTime.UtcNow.ToString("o")
+        });
+        Console.WriteLine($"[PLAYER] {updatedPlayer.Message} at {updatedPlayer.Updated_at}\n");
 
-                // Get API key from command line arguments or use a default one
-                string apiKey = args.Length > 0 ? args[0] : "your-api-key-here";
-                
-                if (apiKey == "your-api-key-here")
-                {
-                    Console.WriteLine("Warning: Using default API key. Please provide your own API key as a command line argument.");
-                }
-                
-                var game = new Game(apiKey);
-                await game.RunGameExample();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey();
-        }
+        Console.WriteLine("=== Demo Complete ===");
     }
-}</code></pre>
+}
+</code></pre>
                     </div>
                     
                     <div class="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-800/50">
@@ -1022,116 +625,204 @@ namespace Michitai.Example
                         Use our REST API directly from any platform or language. 
                         All endpoints return JSON responses with consistent error handling.
                     </p>
-                    <div class="space-y-4">
-                        <!-- Register Player -->
-                        <div class="bg-black/50 p-4 rounded-lg">
-                            <div class="flex items-center text-sm text-green-400 mb-2">
-                                <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
-                                <span class="font-mono">/api/games/players</span>
-                                <span class="ml-2 text-xs text-gray-400">(Requires API Key in header)</span>
-                            </div>
-                            <div class="text-xs text-gray-400 mb-2">Request:</div>
-                            <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
-  "player_name": "player123",
+
+
+<div class="space-y-4">
+
+    <!-- 1. Register Player -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-green-400 mb-2">
+            <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
+            <span class="font-mono">/v1/php/game_players.php?api_token=YOUR_API_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Creates a new player in the game. Returns a <code>player_id</code> and <code>private_key</code> needed for future requests.
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+  "player_name": "TestPlayer",
   "player_data": {
     "level": 1,
-    "class": "warrior"
+    "score": 0,
+    "inventory": ["sword","shield"]
   }
 }</pre>
-                            <div class="text-xs text-gray-400 mb-2">Response (201 Created):</div>
-                            <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
-  "data": {
-    "player_id": 42,
-    "private_key": "a1b2c3d4e5f6g7h8i9j0",
-    "player_name": "player123",
-    "game_id": 5
-  }
+  "player_id": "7",
+  "private_key": "46702c9b906e3361c26dbcd605ee9183",
+  "player_name": "TestPlayer",
+  "game_id": 4
 }</pre>
-                        </div>
+    </div>
 
-                        <!-- Player Login -->
-                        <div class="bg-black/50 p-4 rounded-lg">
-                            <div class="flex items-center text-sm text-green-400 mb-2">
-                                <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
-                                <span class="font-mono">/api/games/players/login</span>
-                            </div>
-                            <div class="text-xs text-gray-400 mb-2">Request (with X-Private-Key header):</div>
-                            <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{}</pre>
-                            <div class="text-xs text-gray-400 mb-2">Response (200 OK):</div>
-                            <pre class="text-xs text-gray-300 overflow-x-auto">{
+    <!-- 2. Update Player Info -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-purple-400 mb-2">
+            <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">PUT</span>
+            <span class="font-mono">/v1/php/game_players.php?api_token=YOUR_API_KEY&game_player_token=PLAYER_PRIVATE_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Updates player info such as active status. This does not change player data like level or inventory (those are in <code>/game_data.php</code>).
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{}</pre>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
-  "data": {
-    "player_id": 42,
-    "player_name": "player123",
-    "game_id": 5,
-    "is_active": true,
+  "player": {
+    "id": 7,
+    "game_id": 4,
+    "player_name": "TestPlayer",
     "player_data": {
       "level": 1,
-      "class": "warrior"
+      "score": 0,
+      "inventory": ["sword","shield"]
     },
-    "last_login": "2025-09-11 12:30:45"
+    "is_active": 1,
+    "last_login": null,
+    "created_at": "2026-01-13 14:21:16",
+    "updated_at": "2026-01-13 14:21:16"
   }
 }</pre>
-                        </div>
+    </div>
 
-                        <!-- Get Game Data -->
-                        <div class="bg-black/50 p-4 rounded-lg">
-                            <div class="flex items-center text-sm text-blue-400 mb-2">
-                                <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
-                                <span class="font-mono">/api/games/data</span>
-                                <span class="ml-2 text-xs text-gray-400">(Requires API Key in header)</span>
-                            </div>
-                            <div class="text-xs text-gray-400 mb-2">Response (200 OK):</div>
-                            <pre class="text-xs text-gray-300 overflow-x-auto">{
+    <!-- 3. List Players -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-blue-400 mb-2">
+            <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
+            <span class="font-mono">/v1/php/game_players.php?api_token=YOUR_API_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Retrieves a list of all players in the game. Useful for admin dashboards or multiplayer matchmaking.
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
-  "game_id": 5,
+  "count": 7,
+  "players": [
+    {"id":3,"player_name":"TestPlayer","is_active":1,"last_login":null,"created_at":"2026-01-13 12:30:47"},
+    {"id":7,"player_name":"TestPlayer","is_active":1,"last_login":"2026-01-13 14:22:33","created_at":"2026-01-13 14:21:16"}
+  ]
+}</pre>
+    </div>
+
+    <!-- 4. Get Game Data -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-blue-400 mb-2">
+            <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
+            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Retrieves the global game data, including text, settings, and last update timestamp. Used to sync clients with the server.
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
+  "success": true,
+  "type": "game",
+  "game_id": 4,
   "data": {
-    "name": "Epic Adventure",
-    "version": "1.0.0",
-    "max_players": 100,
-    "game_state": "lobby",
-    "settings": {
-      "difficulty": "normal",
-      "allow_pvp": true
-    }
+    "text": "hello world",
+    "game_settings": {
+      "difficulty": "hard",
+      "max_players": 10
+    },
+    "last_updated": "2025-01-13T12:00:00Z"
   }
 }</pre>
-                        </div>
+    </div>
 
-                        <!-- Update Player Data -->
-                        <div class="bg-black/50 p-4 rounded-lg">
-                            <div class="flex items-center text-sm text-purple-400 mb-2">
-                                <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">PUT</span>
-                                <span class="font-mono">/api/games/players/data</span>
-                                <span class="ml-2 text-xs text-gray-400">(Requires Private Key in header)</span>
-                            </div>
-                            <div class="text-xs text-gray-400 mb-2">Request:</div>
-                            <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
-  "level": 2,
-  "experience": 150,
-  "inventory": ["sword", "potion"],
-  "position": {"x": 100, "y": 200}
+    <!-- 5. Update Game Data -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-purple-400 mb-2">
+            <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">PUT</span>
+            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Updates global game data. For example, changing settings or max players. Requires API key authentication.
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+  "game_settings": {
+    "difficulty": "hard",
+    "max_players": 10
+  },
+  "last_updated": "2025-01-13T12:00:00Z"
 }</pre>
-                            <div class="text-xs text-gray-400 mb-2">Response (200 OK):</div>
-                            <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
   "success": true,
-  "message": "Player data updated successfully"
+  "message": "Game data updated successfully",
+  "updated_at": "2026-01-13 14:24:23"
 }</pre>
-                        </div>
+    </div>
 
-                        <!-- Error Response Example -->
-                        <div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
-                            <div class="text-sm text-red-400 mb-2">Error Response (401 Unauthorized):</div>
-                            <pre class="text-xs text-red-300 overflow-x-auto">{
+    <!-- 6. Get Player Data -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-blue-400 mb-2">
+            <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
+            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY&game_player_token=PLAYER_PRIVATE_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Retrieves a specific player's data using their <code>private_key</code>. Includes level, score, and inventory.
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
+  "success": true,
+  "type": "player",
+  "player_id": 7,
+  "player_name": "TestPlayer",
+  "data": {
+    "level": 1,
+    "score": 0,
+    "inventory": ["sword","shield"]
+  }
+}</pre>
+    </div>
+
+    <!-- 7. Update Player Data -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-purple-400 mb-2">
+            <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">PUT</span>
+            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY&game_player_token=PLAYER_PRIVATE_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Updates a specific player's data like level, score, inventory, and last played timestamp.
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Request Body:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto mb-3">{
+  "level": 2,
+  "score": 100,
+  "inventory": ["sword","shield","potion"],
+  "last_played": "2025-01-13T12:30:00Z"
+}</pre>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
+  "success": true,
+  "message": "Player data updated successfully",
+  "updated_at": "2026-01-13 14:27:10"
+}</pre>
+    </div>
+
+    <!-- 8. Error Response -->
+    <div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
+        <div class="text-sm text-red-400 mb-2">Error Response (401 Unauthorized):</div>
+        <p class="text-xs text-red-400 mb-2">
+            <strong>Description:</strong> Shows what happens when a request is sent with an invalid or missing API key.
+        </p>
+        <pre class="text-xs text-red-300 overflow-x-auto">{
   "success": false,
   "error": {
     "code": "unauthorized",
     "message": "Invalid or missing API key"
   }
 }</pre>
-                        </div>
-                    </div>
+    </div>
+
+</div>
+
+
                 </div>
             </div>
         </div>
@@ -1141,7 +832,7 @@ namespace Michitai.Example
     <footer class="glass-effect border-t border-white/10 mt-16">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8 text-center">
             <div class="text-white/60 text-sm">
-                &copy; 2025 Nichita Levandovici. All rights reserved.
+                &copy; 2026 Nichita Levandovici. All rights reserved.
             </div>
         </div>
     </footer>

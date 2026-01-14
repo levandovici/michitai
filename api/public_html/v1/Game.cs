@@ -9,7 +9,7 @@ public class Game
 
     public static async Task Main()
     {
-        Console.WriteLine("=== MichiTAI Game SDK Usage Example ===\n");
+        Console.WriteLine("=== MICHITAI Game SDK Usage Example ===\n");
 
         // 1️⃣ Initialize SDK
         sdk = new GameSDK("YOUR_API_TOKEN");
