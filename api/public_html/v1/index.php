@@ -243,6 +243,18 @@ require_once 'php/config.php';
                         </div>
                     </div>
                 </div>
+
+                <!-- Server Data -->
+                <div class="p-4 border-t border-white/10">
+                    <h4 class="text-white/60 text-sm font-semibold mb-3">Server Data</h4>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
+                            <div class="col-span-4 font-mono text-white/90">/php/time.php</div>
+                            <div class="col-span-6">Get server time</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

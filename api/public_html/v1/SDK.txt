@@ -55,3 +55,7 @@ curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TO
   }'
 
 curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_TOKEN" -H "Content-Type: application/json" -d '{"level":2,"score":100,"inventory":["sword","shield","potion"],"last_played":"2025-01-13T12:30:00Z"}'
+
+//Get Server Time
+
+curl -X GET "https://api.michitai.com/v1/php/time.php?api_key=YOUR_API_KEY"
