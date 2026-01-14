@@ -191,6 +191,7 @@ namespace michitai
     {
         public bool Success { get; set; }
         public string Message { get; set; }
+        public string Updated_at { get; set; }
     }
 
     public class ServerTimeResponse

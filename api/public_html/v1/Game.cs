@@ -58,7 +58,7 @@ public class Game
         // 5️⃣ Get global game data
         Console.WriteLine("[GAME] Loading game data...");
         var gameData = await sdk.GetGameData();
-        Console.WriteLine($"[GAME] Game ID={gameData.Game_id}, Settings={gameData.Data["game_settings"]}\n");
+        Console.WriteLine($"[GAME] Game ID={gameData.Game_id}, Settings={gameData.Data.Count}\n");
 
         // 6️⃣ Update global game data
         Console.WriteLine("[GAME] Updating game settings...");

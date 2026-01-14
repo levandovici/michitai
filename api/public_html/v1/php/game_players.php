@@ -43,7 +43,7 @@ function registerPlayer($gameId, $playerName, $playerData = []) {
     global $pdo;
     
     // Generate a secure private key for the player
-    $privateKey = bin2hex(random_bytes(16));
+    $privateKey = bin2hex(random_bytes(18));
     $playerDataJson = json_encode($playerData, JSON_UNESCAPED_UNICODE);
     
     $stmt = $pdo->prepare("INSERT INTO game_players (game_id, player_name, private_key, player_data) VALUES (?, ?, ?, ?)");
@@ -69,6 +69,8 @@ try {
     
     // Get API token from query string
     $apiToken = $_GET['api_token'] ?? '';
+
+    // Get API private token from query string
     $apiPrivateToken = $_GET['api_private_token'] ?? '';
     
     // Get game player token from query string

@@ -29,8 +29,8 @@ if (empty($project_name)) {
 
 try {
     // Generate a new API key
-    $api_key = bin2hex(random_bytes(32)); // More secure than UUID for API keys
-    $api_private_key = bin2hex(random_bytes(32));
+    $api_key = bin2hex(random_bytes(18));
+    $api_private_key = bin2hex(random_bytes(18));
     $created_at = date('Y-m-d H:i:s');
     
     // Insert into database
