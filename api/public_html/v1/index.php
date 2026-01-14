@@ -817,7 +817,25 @@ public class Game
 }</pre>
     </div>
 
-    <!-- 8. Error Response -->
+    <!-- 8. Get Server Time -->
+    <div class="bg-black/50 p-4 rounded-lg">
+        <div class="flex items-center text-sm text-green-400 mb-2">
+            <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">GET</span>
+            <span class="font-mono">/v1/php/time.php?api_key=YOUR_API_KEY</span>
+        </div>
+        <p class="text-xs text-gray-400 mb-2">
+            <strong>Description:</strong> Retrieves the current server time in multiple formats including UTC timestamp and human-readable format.
+        </p>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto">{
+  "success": true,
+  "utc": "2025-01-14T16:24:00+00:00",
+  "timestamp": 1736864640,
+  "readable": "2025-01-14 16:24:00 UTC"
+}</pre>
+    </div>
+
+    <!-- 9. Error Response -->
     <div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
         <div class="text-sm text-red-400 mb-2">Error Response (401 Unauthorized):</div>
         <p class="text-xs text-red-400 mb-2">
