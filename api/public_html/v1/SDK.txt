@@ -19,7 +19,7 @@ curl -X PUT "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API
 
 //List All Players
 
-curl -X GET "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API_TOKEN"
+curl -X GET "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API_TOKEN&api_private_token=YOUR_API_PRIVATE_TOKEN"
 
 //Get Game Data 
 

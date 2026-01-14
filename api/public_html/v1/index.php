@@ -282,17 +282,17 @@ require_once 'php/config.php';
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_players.php</div>
-                            <div class="col-span-6">Register new player for a game</div>
+                            <div class="col-span-6">Register new Player with API key, returns Player private key</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
-                            <div class="col-span-2"><span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span></div>
+                            <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_players.php</div>
-                            <div class="col-span-6">Authenticate player with private key</div>
+                            <div class="col-span-6">Authenticate Player with API key and Player private key</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_players.php</div>
-                            <div class="col-span-6">List all players for a game</div>
+                            <div class="col-span-6">List all Players with API key and API private key</div>
                         </div>
                     </div>
                 </div>
