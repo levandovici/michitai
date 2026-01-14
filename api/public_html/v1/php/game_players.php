@@ -116,10 +116,10 @@ try {
                 sendResponse(['success' => false, 'error' => 'API private token is required'], 401);
             }
             
-            // Validate API key
+            // Validate API keys
             $game = validateApiKeys($apiToken, $apiPrivateToken);
             if (!$game) {
-                sendResponse(['success' => false, 'error' => 'Invalid API token'], 401);
+                sendResponse(['success' => false, 'error' => 'Invalid API token or API private token'], 401);
             }
             
             // Get all players for this game

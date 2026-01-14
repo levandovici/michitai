@@ -12,7 +12,7 @@ public class Game
         Console.WriteLine("=== MICHITAI Game SDK Usage Example ===\n");
 
         // 1️⃣ Initialize SDK
-        sdk = new GameSDK("YOUR_API_TOKEN");
+        sdk = new GameSDK("YOUR_API_TOKEN", "YOUR_API_PRIVATE_TOKEN");
         Console.WriteLine("[INIT] SDK initialized\n");
 
         // 2️⃣ Register Player
@@ -92,6 +92,20 @@ public class Game
             last_played = DateTime.UtcNow.ToString("o")
         });
         Console.WriteLine($"[PLAYER] {updatedPlayer.Message} at {updatedPlayer.Updated_at}\n");
+
+        // 9️⃣ Get server time
+        Console.WriteLine("[SERVER] Getting server time...");
+        var serverTime = await sdk.GetServerTime();
+        if (serverTime.Success)
+        {
+            Console.WriteLine($"[SERVER] Server time (UTC): {serverTime.Utc}");
+            Console.WriteLine($"[SERVER] Timestamp: {serverTime.Timestamp}");
+            Console.WriteLine($"[SERVER] Readable: {serverTime.Readable}\n");
+        }
+        else
+        {
+            Console.WriteLine("[SERVER] Failed to get server time\n");
+        }
 
         Console.WriteLine("=== Demo Complete ===");
     }

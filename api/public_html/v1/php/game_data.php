@@ -36,6 +36,14 @@ try {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Helper function to validate API private key and return game data
+    function validateApiKeys($apiKey, $apiPrivateKey) {
+        global $pdo;
+        $stmt = $pdo->prepare("SELECT id, user_id, game_data FROM api_keys WHERE api_key = ? AND api_private_key = ?");
+        $stmt->execute([$apiKey, $apiPrivateKey]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // Helper function to validate private key and return player data
     function validatePrivateKey($privateKey) {
         global $pdo;
@@ -49,6 +57,9 @@ try {
 
     // Get API token from query string
     $apiToken = $_GET['api_token'] ?? '';
+
+    // Get API private key from query string
+    $apiPrivateKey = $_GET['api_private_key'] ?? '';
 
     // Get game player token from query string
     $gamePlayerToken = $_GET['game_player_token'] ?? '';
@@ -64,14 +75,15 @@ try {
                 sendResponse(['success' => false, 'error' => 'API token is required'], 401);
             }
 
-            // Validate API key
-            $game = validateApiKey($apiToken);
-            if (!$game) {
-                sendResponse(['success' => false, 'error' => 'Invalid API token'], 401);
-            }
-
             // If player token is provided, get player data
             if (!empty($gamePlayerToken)) {
+                // Validate API key
+                $game = validateApiKey($apiToken);
+                if (!$game) {
+                    sendResponse(['success' => false, 'error' => 'Invalid API token'], 401);
+                }
+
+                // Validate player token
                 $player = validatePrivateKey($gamePlayerToken);
                 if (!$player) {
                     sendResponse(['success' => false, 'error' => 'Invalid game player token'], 401);
@@ -94,6 +106,12 @@ try {
             } 
             // Otherwise, get game data
             else {
+                // Validate API keys
+                $game = validateApiKeys($apiToken, $apiPrivateKey);
+                if (!$game) {
+                    sendResponse(['success' => false, 'error' => 'Invalid API token or API private token'], 401);
+                }
+
                 $gameData = json_decode($game['game_data'] ?? '{}', true);
                 sendResponse([
                     'success' => true,
@@ -110,14 +128,15 @@ try {
                 sendResponse(['success' => false, 'error' => 'API token is required'], 401);
             }
 
-            // Validate API key
-            $game = validateApiKey($apiToken);
-            if (!$game) {
-                sendResponse(['success' => false, 'error' => 'Invalid API token'], 401);
-            }
-
             // If player token is provided, update player data
             if (!empty($gamePlayerToken)) {
+                // Validate API key
+                $game = validateApiKey($apiToken);
+                if (!$game) {
+                    sendResponse(['success' => false, 'error' => 'Invalid API token'], 401);
+                }
+
+                // Validate player token
                 $player = validatePrivateKey($gamePlayerToken);
                 if (!$player) {
                     sendResponse(['success' => false, 'error' => 'Invalid game player token'], 401);
@@ -148,6 +167,12 @@ try {
             } 
             // Otherwise, update game data
             else {
+                // Validate API keys
+                $game = validateApiKeys($apiToken, $apiPrivateKey);
+                if (!$game) {
+                    sendResponse(['success' => false, 'error' => 'Invalid API token or API private token'], 401);
+                }
+
                 // Update game data
                 $gameData = json_decode($game['game_data'] ?? '{}', true);
                 $updatedData = array_merge($gameData, $input);

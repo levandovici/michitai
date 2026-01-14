@@ -304,22 +304,22 @@ require_once 'php/config.php';
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Get game data (requires API key)</div>
+                            <div class="col-span-6">Get Game data (requires API key, requires API private key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Update game data (requires API key)</div>
+                            <div class="col-span-6">Update Game data (requires API key, requires API private key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Get player data (requires private key)</div>
+                            <div class="col-span-6">Get Player data (requires API key, requires Player private key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Update player data (requires private key)</div>
+                            <div class="col-span-6">Update Player data (requires API key, requires Player private key)</div>
                         </div>
                     </div>
                 </div>
@@ -503,7 +503,7 @@ require_once 'php/config.php';
     <div class="bg-black/50 p-4 rounded-lg">
         <div class="flex items-center text-sm text-blue-400 mb-2">
             <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
-            <span class="font-mono">/v1/php/game_players.php?api_token=YOUR_API_KEY</span>
+            <span class="font-mono">/v1/php/game_players.php?api_token=YOUR_API_KEY&api_private_token=YOUR_API_PRIVATE_TOKEN</span>
         </div>
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves a list of all players in the game. Useful for admin dashboards or multiplayer matchmaking.
@@ -522,7 +522,7 @@ require_once 'php/config.php';
     <div class="bg-black/50 p-4 rounded-lg">
         <div class="flex items-center text-sm text-blue-400 mb-2">
             <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
-            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY</span>
+            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY&api_private_token=YOUR_API_PRIVATE_TOKEN</span>
         </div>
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves the global game data, including text, settings, and last update timestamp. Used to sync clients with the server.
@@ -547,7 +547,7 @@ require_once 'php/config.php';
     <div class="bg-black/50 p-4 rounded-lg">
         <div class="flex items-center text-sm text-purple-400 mb-2">
             <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">PUT</span>
-            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY</span>
+            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY&api_private_token=YOUR_API_PRIVATE_TOKEN</span>
         </div>
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Updates global game data. For example, changing settings or max players. Requires API key authentication.

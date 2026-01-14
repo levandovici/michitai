@@ -11,6 +11,7 @@ namespace michitai
     public class GameSDK
     {
         private readonly string _apiToken;
+        private readonly string _apiPrivateToken;
         private readonly string _baseUrl;
         private static readonly HttpClient _http = new HttpClient();
 
@@ -20,9 +21,10 @@ namespace michitai
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        public GameSDK(string apiToken, string baseUrl = "https://api.michitai.com/v1/php/")
+        public GameSDK(string apiToken, string apiPrivateToken, string baseUrl = "https://api.michitai.com/v1/php/")
         {
             _apiToken = apiToken;
+            _apiPrivateToken = apiPrivateToken;
             _baseUrl = baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/";
         }
 
@@ -70,7 +72,7 @@ namespace michitai
 
         public Task<PlayerListResponse> GetAllPlayers()
         {
-            return Send<PlayerListResponse>(HttpMethod.Get, Url("game_players.php"));
+            return Send<PlayerListResponse>(HttpMethod.Get, Url("game_players.php", $"&api_private_token={_apiPrivateToken}"));
         }
 
         // ------------------------------------
@@ -79,12 +81,12 @@ namespace michitai
 
         public Task<GameDataResponse> GetGameData()
         {
-            return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php"));
+            return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php", $"&api_private_token={_apiPrivateToken}"));
         }
 
         public Task<SuccessResponse> UpdateGameData(object data)
         {
-            return Send<SuccessResponse>(HttpMethod.Put, Url("game_data.php"), data);
+            return Send<SuccessResponse>(HttpMethod.Put, Url("game_data.php", $"&api_private_token={_apiPrivateToken}"), data);
         }
 
         // ------------------------------------
@@ -105,6 +107,18 @@ namespace michitai
                 HttpMethod.Put,
                 Url("game_data.php", $"&game_player_token={playerToken}"),
                 data
+            );
+        }
+
+        // ------------------------------------
+        // SERVER TIME
+        // ------------------------------------
+
+        public Task<ServerTimeResponse> GetServerTime()
+        {
+            return Send<ServerTimeResponse>(
+                HttpMethod.Get,
+                $"{_baseUrl}time.php?api_key={_apiToken}"
             );
         }
     }
@@ -177,6 +191,13 @@ namespace michitai
     {
         public bool Success { get; set; }
         public string Message { get; set; }
-        public string Updated_at { get; set; }
+    }
+
+    public class ServerTimeResponse
+    {
+        public bool Success { get; set; }
+        public string Utc { get; set; }
+        public long Timestamp { get; set; }
+        public string Readable { get; set; }
     }
 }

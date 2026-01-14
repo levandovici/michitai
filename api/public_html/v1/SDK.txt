@@ -23,11 +23,11 @@ curl -X GET "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API
 
 //Get Game Data 
 
-curl -X GET "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN"
+curl -X GET "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&api_private_token=YOUR_API_PRIVATE_TOKEN"
 
 //Update Game Data
 
-curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN" \
+curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&api_private_token=YOUR_API_PRIVATE_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "game_settings": {
@@ -37,7 +37,7 @@ curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TO
     "last_updated": "2025-01-13T12:00:00Z"
   }'
 
-curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN" -H "Content-Type: application/json" -d '{"game_settings":{"difficulty":"hard","max_players":10},"last_updated":"2025-01-13T12:00:00Z"}'
+curl -X PUT "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&api_private_token=YOUR_API_PRIVATE_TOKEN" -H "Content-Type: application/json" -d '{"game_settings":{"difficulty":"hard","max_players":10},"last_updated":"2025-01-13T12:00:00Z"}'
 
 //Get Player Data
 
