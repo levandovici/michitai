@@ -304,22 +304,22 @@ require_once 'php/config.php';
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Get Game data (requires API key, requires API private key)</div>
+                            <div class="col-span-6">Get Game data (requires API key, API private key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Update Game data (requires API key, requires API private key)</div>
+                            <div class="col-span-6">Update Game data (requires API key, API private key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Get Player data (requires API key, requires Player private key)</div>
+                            <div class="col-span-6">Get Player data (requires API key, Player private key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Update Player data (requires API key, requires Player private key)</div>
+                            <div class="col-span-6">Update Player data (requires API key, Player private key)</div>
                         </div>
                     </div>
                 </div>
@@ -335,6 +335,98 @@ require_once 'php/config.php';
                         </div>
                     </div>
                 </div>
+                
+                <!-- Game Rooms -->
+                <div class="p-4">
+                    <h4 class="text-white/60 text-sm font-semibold mb-3">Game Rooms</h4>
+                    <div class="space-y-4">
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/rooms</div>
+                            <div class="col-span-6">Create a new game room (requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/rooms</div>
+                            <div class="col-span-6">List all available game rooms (requires API key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/rooms/{ID}/join</div>
+                            <div class="col-span-6">Join an existing room (requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/rooms/players</div>
+                            <div class="col-span-6">List all players in current room (requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/rooms/leave</div>
+                            <div class="col-span-6">Leave the current game room (requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/players/heartbeat</div>
+                            <div class="col-span-6">Send player activity heartbeat (requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/actions</div>
+                            <div class="col-span-6">Submit a new game action (requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/actions/poll</div>
+                            <div class="col-span-6">Get actions result (requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/actions/pending</div>
+                            <div class="col-span-6">View all pending actions (host only, requires API key, Player private key)</div>
+                        </div>
+                
+                        <div class="grid grid-cols-12 items-center">
+                            <div class="col-span-2">
+                                <span class="inline-block bg-green-500/20 text-green-400 text-xs px-2 py-1 rounded">POST</span>
+                            </div>
+                            <div class="col-span-4 font-mono text-white/90">/php/game_room.php/actions/{ID}/complete</div>
+                            <div class="col-span-6">Complete or reject action (host only, requires API key, Player private key)</div>
+                        </div>
+                
+                    </div>
+                </div>
+                
+                    </div>
+                </div>
+                
             </div>
         </div>
     </section>
