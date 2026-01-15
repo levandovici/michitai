@@ -2,13 +2,18 @@
 /**
  * cleanup_rooms.php
  * Cron job - cleans up inactive players and abandoned rooms
- * 
- * Recommended execution frequency: every 5–15 minutes
+ *
+ * Recommended execution frequency: every 5–10 minutes
+ *
+ * Rules (current 2026 version):
+ * • Player → offline if no heartbeat for > 5 minutes
+ * • Player → removed completely if no heartbeat for > 60 minutes
+ * • Room → marked inactive (soft delete) immediately when NO online players remain
+ * • Room → hard deleted (with all related data) if inactive for > 60 minutes
  */
 
-require_once __DIR__ . '/config.php';  // ← should contain $pdo
+require_once __DIR__ . '/config.php';
 
-// Make sure we have PDO connection from config
 if (!isset($pdo) || !($pdo instanceof PDO)) {
     error_log("cleanup_rooms.php: Database connection not available");
     exit(1);
@@ -19,110 +24,96 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 // ────────────────────────────────────────────────
 // Configuration
 // ────────────────────────────────────────────────
-
-// How long without heartbeat → consider player offline
-const OFFLINE_THRESHOLD_MINUTES = 3;
-
-// How long without ANY online player in room → consider room abandoned
-const ROOM_INACTIVE_THRESHOLD_MINUTES = 15;
-
-// For very old rooms with no activity at all (extra safety net)
-const ROOM_MAX_AGE_MINUTES = 30;
-
-$now = new DateTime();
-
+const HEARTBEAT_TIMEOUT_MIN       = 5;   // player considered offline
+const PLAYER_MAX_AGE_MINUTES      = 60;  // remove player completely
+const ROOM_INACTIVE_TIMEOUT_MIN   = 60;  // hard delete room after this time of being inactive
 // ────────────────────────────────────────────────
-// 1. Mark inactive/offline players
-// ────────────────────────────────────────────────
-$offlineThreshold = (clone $now)->modify('-' . OFFLINE_THRESHOLD_MINUTES . ' minutes');
+
+$now = new DateTimeImmutable();
+
+$heartbeatThreshold = $now->modify('-' . HEARTBEAT_TIMEOUT_MIN . ' minutes');
+$playerHardDeleteThreshold = $now->modify('-' . PLAYER_MAX_AGE_MINUTES . ' minutes');
+$roomHardDeleteThreshold = $now->modify('-' . ROOM_INACTIVE_TIMEOUT_MIN . ' minutes');
 
 try {
-    $stmt = $pdo->prepare("
-        UPDATE room_players 
-        SET is_online = FALSE 
-        WHERE last_heartbeat < :threshold
-          AND is_online = TRUE
-    ");
-    $stmt->execute([':threshold' => $offlineThreshold->format('Y-m-d H:i:s')]);
-
-    $updated = $stmt->rowCount();
-    if ($updated > 0) {
-        error_log("cleanup_rooms: Marked $updated players as offline");
-    }
-} catch (Exception $e) {
-    error_log("cleanup_rooms: Error marking offline players - " . $e->getMessage());
-}
-
-
-// ────────────────────────────────────────────────
-// 2. Find and deactivate abandoned rooms
-// ────────────────────────────────────────────────
-$inactiveThreshold = (clone $now)->modify('-' . ROOM_INACTIVE_THRESHOLD_MINUTES . ' minutes');
-$maxAgeThreshold   = (clone $now)->modify('-' . ROOM_MAX_AGE_MINUTES . ' minutes');
-
-try {
-    // Find rooms that should be cleaned up
-    $stmt = $pdo->prepare("
-        SELECT 
-            gr.room_id,
-            gr.created_at,
-            MAX(rp.last_heartbeat) as last_activity,
-            COUNT(rp.player_id) as player_count
-        FROM game_rooms gr
-        LEFT JOIN room_players rp ON gr.room_id = rp.room_id
-        WHERE gr.is_active = TRUE
-        GROUP BY gr.room_id
-        HAVING 
-            (MAX(rp.last_heartbeat) < :inactive_threshold OR MAX(rp.last_heartbeat) IS NULL)
-            OR gr.created_at < :max_age_threshold
-    ");
-
-    $stmt->execute([
-        ':inactive_threshold' => $inactiveThreshold->format('Y-m-d H:i:s'),
-        ':max_age_threshold'  => $maxAgeThreshold->format('Y-m-d H:i:s')
-    ]);
-
-    $roomsToClean = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if (empty($roomsToClean)) {
-        // Nothing to do - silent success
-        exit(0);
-    }
-
-    error_log("cleanup_rooms: Found " . count($roomsToClean) . " potentially inactive rooms");
-
     $pdo->beginTransaction();
 
-    foreach ($roomsToClean as $room) {
-        $roomId = $room['room_id'];
-        $reason = $room['last_activity'] 
-            ? "no activity since {$room['last_activity']}" 
-            : "no players ever";
+    // 1. Mark players as offline (cosmetic / status)
+    $stmt = $pdo->prepare("
+        UPDATE room_players
+        SET is_online = FALSE
+        WHERE is_online = TRUE
+          AND last_heartbeat < :threshold
+    ");
+    $stmt->execute([':threshold' => $heartbeatThreshold->format('Y-m-d H:i:s')]);
 
-        // 1. Clean action queue (optional - can rely on cascade)
-        $pdo->prepare("DELETE FROM action_queue WHERE room_id = ?")
-            ->execute([$roomId]);
+    $markedOffline = $stmt->rowCount();
+    if ($markedOffline > 0) {
+        error_log("cleanup: marked $markedOffline players as offline");
+    }
 
-        // 2. Mark room as inactive (soft delete)
-        $pdo->prepare("
-            UPDATE game_rooms 
-            SET is_active = FALSE,
-                updated_at = NOW()
-            WHERE room_id = ?
-        ")->execute([$roomId]);
+    // 2. Remove very old players (1h+ without heartbeat)
+    $stmt = $pdo->prepare("
+        DELETE FROM room_players
+        WHERE last_heartbeat < :hard_threshold
+    ");
+    $stmt->execute([':hard_threshold' => $playerHardDeleteThreshold->format('Y-m-d H:i:s')]);
 
-        error_log("cleanup_rooms: Deactivated room $roomId - $reason");
+    $deletedPlayers = $stmt->rowCount();
+    if ($deletedPlayers > 0) {
+        error_log("cleanup: deleted $deletedPlayers very old players");
+    }
+
+    // 3. Soft-delete rooms that have NO online players right now
+    $stmt = $pdo->prepare("
+        UPDATE game_rooms gr
+        SET is_active = FALSE,
+            updated_at = NOW()
+        WHERE gr.is_active = TRUE
+          AND NOT EXISTS (
+              SELECT 1
+              FROM room_players rp
+              WHERE rp.room_id = gr.room_id
+                AND rp.is_online = TRUE
+                AND rp.last_heartbeat >= :active_threshold
+          )
+    ");
+    $stmt->execute([':active_threshold' => $heartbeatThreshold->format('Y-m-d H:i:s')]);
+
+    $softDeletedRooms = $stmt->rowCount();
+    if ($softDeletedRooms > 0) {
+        error_log("cleanup: soft-deleted $softDeletedRooms rooms (no online players)");
+    }
+
+    // 4. Hard delete rooms that have been inactive for too long
+    //    (including all players and actions - CASCADE should help, but explicit is safer)
+    $stmt = $pdo->prepare("
+        DELETE gr, rp, aq
+        FROM game_rooms gr
+        LEFT JOIN room_players rp ON rp.room_id = gr.room_id
+        LEFT JOIN action_queue aq  ON aq.room_id  = gr.room_id
+        WHERE gr.is_active = FALSE
+          AND gr.updated_at < :hard_delete_threshold
+    ");
+    $stmt->execute([':hard_delete_threshold' => $roomHardDeleteThreshold->format('Y-m-d H:i:s')]);
+
+    $hardDeleted = $stmt->rowCount();
+    if ($hardDeleted > 0) {
+        error_log("cleanup: HARD deleted $hardDeleted very old inactive rooms (+ related rows)");
     }
 
     $pdo->commit();
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    error_log("cleanup_rooms: CRITICAL ERROR cleaning rooms - " . $e->getMessage());
+
+    error_log("cleanup_rooms.php CRITICAL ERROR: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
+
     exit(1);
 }
 
-error_log("cleanup_rooms: Completed successfully");
+error_log("cleanup_rooms.php completed successfully");
 exit(0);
