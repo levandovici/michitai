@@ -27,7 +27,7 @@ const OFFLINE_THRESHOLD_MINUTES = 3;
 const ROOM_INACTIVE_THRESHOLD_MINUTES = 15;
 
 // For very old rooms with no activity at all (extra safety net)
-const ROOM_MAX_AGE_HOURS = 24;
+const ROOM_MAX_AGE_MINUTES = 30;
 
 $now = new DateTime();
 
@@ -58,7 +58,7 @@ try {
 // 2. Find and deactivate abandoned rooms
 // ────────────────────────────────────────────────
 $inactiveThreshold = (clone $now)->modify('-' . ROOM_INACTIVE_THRESHOLD_MINUTES . ' minutes');
-$maxAgeThreshold   = (clone $now)->modify('-' . ROOM_MAX_AGE_HOURS . ' hours');
+$maxAgeThreshold   = (clone $now)->modify('-' . ROOM_MAX_AGE_MINUTES . ' minutes');
 
 try {
     // Find rooms that should be cleaned up
