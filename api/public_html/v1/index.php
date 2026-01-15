@@ -540,7 +540,7 @@ pre::-webkit-scrollbar-thumb:hover {
                         <ol class="text-blue-100/80 text-sm space-y-2 list-decimal list-inside">
                             <li>Create a new C# console application in Visual Studio or your preferred IDE</li>
                             <li>Add the downloaded <code class="bg-blue-900/50 px-1 py-0.5 rounded">SDK.cs</code> file to your project</li>
-                            <li>Copy this example code into your <code class="bg-blue-900/50 px-1 py-0.5 rounded">Program.cs</code> file</li>
+                            <li>Copy this example code into your <code class="bg-blue-900/50 px-1.5 py-0.5 rounded">Program.cs</code> file</li>
                             <li>Replace <code class="bg-blue-900/50 px-1.5 py-0.5 rounded">your-api-key-here</code> with your actual API key</li>
                             <li>Run the application to see the SDK in action</li>
                         </ol>
@@ -561,8 +561,9 @@ pre::-webkit-scrollbar-thumb:hover {
                     </p>
 
 
-<div class="space-y-4">
-
+<div class="space-y-4 max-h-[100vh] overflow-y-auto pr-4">
+    <!-- Scrollable container with fixed height -->
+    <div class="space-y-4">
     <!-- 1. Register Player -->
     <div class="bg-black/50 p-4 rounded-lg">
         <div class="flex items-center text-sm text-green-400 mb-2">
