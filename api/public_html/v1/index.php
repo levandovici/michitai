@@ -331,7 +331,7 @@ require_once 'php/config.php';
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/time.php</div>
-                            <div class="col-span-6">Get server time</div>
+                            <div class="col-span-6">Get server time (requires API key)</div>
                         </div>
                     </div>
                 </div>
