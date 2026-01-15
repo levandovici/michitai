@@ -533,25 +533,25 @@ try {
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $method = $_SERVER['REQUEST_METHOD'];
 
-    if ($method === 'POST' && preg_match('#^/rooms/?$#', $path)) {
+    if ($method === 'POST' && preg_match('#/rooms/?$#', $path)) {
         createRoom();
-    } elseif ($method === 'GET' && preg_match('#^/rooms/?$#', $path)) {
+    } elseif ($method === 'GET' && preg_match('#/rooms/?$#', $path)) {
         listRooms();
-    } elseif ($method === 'POST' && preg_match('#^/rooms/([a-f0-9-]{32,36})/join/?$#', $path, $m)) {
+    } elseif ($method === 'POST' && preg_match('#/rooms/([a-f0-9-]{32,36})/join/?$#', $path, $m)) {
         joinRoom($m[1]);
-    } elseif ($method === 'GET' && preg_match('#^/players/?$#', $path)) {
+    } elseif ($method === 'GET' && preg_match('#/players/?$#', $path)) {
         listRoomPlayers();
     } elseif ($method === 'POST' && preg_match('#/leave/?$#', $path)) {
         leaveRoom();
     } elseif ($method === 'POST' && preg_match('#/heartbeat/?$#', $path)) {
         updateHeartbeat();
-    } elseif ($method === 'POST' && preg_match('#^/actions/?$#', $path)) {
+    } elseif ($method === 'POST' && preg_match('#/actions/?$#', $path)) {
         submitAction();
-    } elseif ($method === 'GET' && preg_match('#^/actions/poll/?$#', $path)) {
+    } elseif ($method === 'GET' && preg_match('#/actions/poll/?$#', $path)) {
         pollActions();
-    } elseif ($method === 'GET' && preg_match('#^/actions/pending/?$#', $path)) {
+    } elseif ($method === 'GET' && preg_match('#/actions/pending/?$#', $path)) {
         getPendingActions();
-    } elseif ($method === 'POST' && preg_match('#^/actions/([a-f0-9-]{32,36})/complete/?$#', $path, $m)) {
+    } elseif ($method === 'POST' && preg_match('#/actions/([a-f0-9-]{32,36})/complete/?$#', $path, $m)) {
         completeAction($m[1]);
     } else {
         sendResponse(['success' => false, 'error' => 'Not found'], 404);

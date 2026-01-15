@@ -70,8 +70,6 @@ curl -X POST "https://api.michitai.com/v1/php/game_room.php/rooms?api_token=YOUR
     "max_players": 4
   }'
 
-  Here is the same request in **one single line**:
-
 curl -X POST "https://api.michitai.com/v1/php/game_room.php/rooms?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_TOKEN" -H "Content-Type: application/json" -d '{"room_name":"My Game Room","password":"secret123","max_players":4}'
 
 //List All Available Rooms
