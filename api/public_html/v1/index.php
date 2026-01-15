@@ -45,29 +45,60 @@ require_once 'php/config.php';
             border: 1px solid var(--glass-border);
         }
         
-        /* Code block styling */
-        pre {
-            background: var(--code-bg) !important;
-            color: var(--code-text) !important;
-            border-radius: 0.5rem !important;
-            padding: 1.5rem !important;
-            margin: 1rem 0 !important;
-            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', monospace !important;
-            font-size: 0.9em !important;
-            line-height: 1.6 !important;
-            tab-size: 4 !important;
-            overflow-x: auto !important;
-            max-height: none !important;
-            height: auto !important;
-            min-height: 0 !important;
-        }
-        
-        pre code {
-            white-space: pre !important;
-            word-wrap: normal !important;
-            background: transparent !important;
-            padding: 0 !important;
-        }
+/* Code block styling – Modern, Prism-friendly version */
+pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', monospace;
+    font-size: 0.92em;
+    line-height: 1.55;
+    tab-size: 4;
+    overflow-x: auto;
+    overflow-y: hidden;           /* prevents excessive vertical scroll */
+    max-height: none;
+    height: auto;/* reasonable limit – adjust if needed */
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Very important: let Prism do its job */
+pre code {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    white-space: pre;             /* most natural behavior for code */
+    word-break: normal;
+    word-wrap: normal;
+}
+
+/* Extra safety for JSON (prevents collapse on long lines) */
+pre code.language-json {
+    white-space: pre-wrap;        /* fallback if very long strings */
+    word-break: break-all;        /* emergency break for huge single tokens */
+}
+
+/* Make sure Prism classes are respected */
+.token {
+    background: none !important;  /* prevent unwanted overrides */
+}
+
+/* Optional: nicer scrollbar (modern browsers) */
+pre::-webkit-scrollbar {
+    height: 8px;
+}
+pre::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.03);
+}
+pre::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 4px;
+}
+pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
+}
         
         /* Syntax highlighting */
         .token.comment,
@@ -551,7 +582,7 @@ require_once 'php/config.php';
   }
 }</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "player_id": "7",
   "private_key": "46702c9b906e3361c26dbcd605ee9183",
@@ -572,7 +603,7 @@ require_once 'php/config.php';
         <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
         <pre class="text-sm mb-4"><code class="language-json">{}</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "player": {
     "id": 7,
@@ -600,8 +631,10 @@ require_once 'php/config.php';
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves a list of all players in the game. Useful for admin dashboards or multiplayer matchmaking.
         </p>
-        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
-        <pre class="text-sm"><code class="language-json">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "count": 7,
   "players": [
@@ -619,8 +652,10 @@ require_once 'php/config.php';
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves the global game data, including text, settings, and last update timestamp. Used to sync clients with the server.
         </p>
-        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
-        <pre class="text-sm"><code class="language-json">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "type": "game",
   "game_id": 4,
@@ -645,7 +680,7 @@ require_once 'php/config.php';
             <strong>Description:</strong> Updates global game data. For example, changing settings or max players. Requires API key authentication.
         </p>
         <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
-        <pre class="text-sm mb-4"><code class="language-json">{
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{
   "game_settings": {
     "difficulty": "hard",
     "max_players": 10
@@ -653,7 +688,7 @@ require_once 'php/config.php';
   "last_updated": "2025-01-13T12:00:00Z"
 }</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "message": "Game data updated successfully",
   "updated_at": "2026-01-13 14:24:23"
@@ -669,8 +704,10 @@ require_once 'php/config.php';
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves a specific player's data using their <code>private_key</code>. Includes level, score, and inventory.
         </p>
-        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
-        <pre class="text-sm"><code class="language-json">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "type": "player",
   "player_id": 7,
@@ -693,14 +730,14 @@ require_once 'php/config.php';
             <strong>Description:</strong> Updates a specific player's data like level, score, inventory, and last played timestamp.
         </p>
         <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
-        <pre class="text-sm mb-4"><code class="language-json">{
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{
   "level": 2,
   "score": 100,
   "inventory": ["sword","shield","potion"],
   "last_played": "2025-01-13T12:30:00Z"
 }</code></pre>
         <div class="text-xs text-gray-400 mb-2">Response:</div>
-        <pre class="text-xs text-gray-300 overflow-x-auto">{
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "message": "Player data updated successfully",
   "updated_at": "2026-01-13 14:27:10"
@@ -716,22 +753,259 @@ require_once 'php/config.php';
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves the current server time in multiple formats including UTC timestamp and human-readable format.
         </p>
-        <div class="text-xs text-gray-300 font-medium mb-2">Response:</div>
-        <pre class="text-sm"><code class="language-json">{
+        <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+        <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": true,
   "utc": "2025-01-14T16:24:00+00:00",
   "timestamp": 1736864640,
   "readable": "2025-01-14 16:24:00 UTC"
 }</code></pre>
     </div>
+    
+ <!-- 9. Create New Room -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-green-400 mb-2">
+        <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
+        <span class="font-mono">/v1/php/game_room.php/rooms?api_token=YOUR_API_TOKEN&game_player_token=YOUR_PLAYER_TOKEN</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Creates a new game room. The creating player automatically becomes the host.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{
+  "room_name": "My Game Room",
+  "password": "secret123",
+  "max_players": 4
+}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "room_id": "dc3723848639139113ca240958ba0bf8",
+  "room_name": "My Game Room",
+  "is_host": true
+}</code></pre>
+</div>
 
-    <!-- 9. Error Response -->
+<!-- 10. List Available Rooms -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-blue-400 mb-2">
+        <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
+        <span class="font-mono">/v1/php/game_room.php/rooms?api_token=YOUR_API_TOKEN</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Returns list of currently available game rooms (not full, public/visible).
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+        <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "rooms": [
+    {
+      "room_id": "dc3723848639139113ca240958ba0bf8",
+      "room_name": "My Game Room",
+      "max_players": 4,
+      "current_players": 1,
+      "has_password": true
+    }
+  ]
+}</code></pre>
+</div>
+
+<!-- 11. Join Room -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-green-400 mb-2">
+        <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
+        <span class="font-mono">/v1/php/game_room.php/rooms/{room_id}/join?api_token=YOUR_API_TOKEN&game_player_token=YOUR_PLAYER_TOKEN</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Join an existing room by ID. Password is required if the room is protected.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{
+  "password": "secret123"
+}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "room_id": "dc3723848639139113ca240958ba0bf8",
+  "message": "Successfully joined the room"
+}</code></pre>
+</div>
+
+<!-- 12. List Players in Current Room -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-blue-400 mb-2">
+        <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
+        <span class="font-mono">/v1/php/game_room.php/players?api_token=YOUR_API_TOKEN&game_player_token=YOUR_PLAYER_TOKEN</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Returns list of players currently in the same room as you.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "players": [
+    {
+      "player_id": "1",
+      "player_name": "TestPlayer",
+      "is_host": false,
+      "is_online": true
+    }
+  ],
+  "last_updated": "2026-01-15T16:06:42Z"
+}</code></pre>
+</div>
+
+<!-- 13. Leave Current Room -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-orange-400 mb-2">
+        <span class="font-mono bg-orange-900/50 px-2 py-1 rounded mr-2">POST</span>
+        <span class="font-mono">/v1/php/game_room.php/rooms/leave?api_token=YOUR_API_TOKEN&game_player_token=YOUR_PLAYER_TOKEN</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Leave the current room. If you were the host, a new host may be assigned automatically.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "message": "Successfully left the room"
+}</code></pre>
+</div>
+
+<!-- 14. Player Heartbeat -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-green-400 mb-2">
+        <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
+        <span class="font-mono">/v1/php/game_room.php/players/heartbeat?api_token=YOUR_API_TOKEN&game_player_token=YOUR_PLAYER_TOKEN</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Updates player's last activity timestamp (used to determine online status).
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "status": "ok"
+}</code></pre>
+</div>
+    
+<!-- 15. Submit Action -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-green-400 mb-2">
+        <span class="font-mono bg-green-900/50 px-2 py-1 rounded mr-2">POST</span>
+        <span class="font-mono">/v1/php/game_room.php/actions?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_PRIVATE_KEY</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Submits a new player action to the room's action queue (movement, attack, item use, etc.). The action is initially marked as pending and awaits server/host processing.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{
+  "action_type": "move",
+  "request_data": {
+    "x": 10,
+    "y": 20
+  }
+}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "action_id": "1c2bbd859e36dc7d7e5e9b4f263c88ce",
+  "status": "pending"
+}</code></pre>
+</div>
+
+<!-- 16. Poll Completed Actions -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-blue-400 mb-2">
+        <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
+        <span class="font-mono">/v1/php/game_room.php/actions/poll?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_PRIVATE_KEY</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Retrieves recently completed/processed actions from the room. Clients should poll this endpoint regularly to receive updates on action results.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "actions": [
+    {
+      "action_id": "1c2bbd859e36dc7d7e5e9b4f263c88ce",
+      "action_type": "move",
+      "response_data": "{\"success\":true,\"message\":\"Moved successfully\"}",
+      "status": "completed"
+    }
+  ]
+}</code></pre>
+</div>
+
+<!-- 17. Get Pending Actions (Admin/Host View) -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-purple-400 mb-2">
+        <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">GET</span>
+        <span class="font-mono">/v1/php/game_room.php/actions/pending?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_PRIVATE_KEY</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Returns list of currently pending actions in the room. Typically used by the host or server-side logic to process/approve actions.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "actions": [
+    {
+      "action_id": "1c2bbd859e36dc7d7e5e9b4f263c88ce",
+      "player_id": "1",
+      "action_type": "move",
+      "request_data": "{\"x\":10,\"y\":20}",
+      "created_at": "2026-01-15 16:10:43",
+      "player_name": "TestPlayer"
+    }
+  ]
+}</code></pre>
+</div>
+
+<!-- 18. Complete Action (Host/Server Only) -->
+<div class="bg-black/50 p-4 rounded-lg">
+    <div class="flex items-center text-sm text-purple-400 mb-2">
+        <span class="font-mono bg-purple-900/50 px-2 py-1 rounded mr-2">POST</span>
+        <span class="font-mono">/v1/php/game_room.php/actions/{action_id}/complete?api_token=YOUR_API_TOKEN&game_player_token=PLAYER_PRIVATE_KEY</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-2">
+        <strong>Description:</strong> Marks a pending action as completed and attaches the result/response data. Usually called by the room host or authoritative server.
+    </p>
+    <div class="text-xs text-gray-300 font-medium mb-2">Request Body:</div>
+    <pre class="text-sm mb-4 overflow-x-auto bg-gray-950/70 p-3 rounded"><code class="language-json">{
+  "status": "completed",
+  "response_data": {
+    "success": true,
+    "message": "Moved successfully"
+  }
+}</code></pre>
+    <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
+  "success": true,
+  "message": "Action completed"
+}</code></pre>
+</div>
+
+    <!-- 19. Error Response -->
     <div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg">
         <div class="text-sm text-red-400 mb-2">Error Response (401 Unauthorized):</div>
         <p class="text-xs text-red-400 mb-2">
             <strong>Description:</strong> Shows what happens when a request is sent with an invalid or missing API key.
         </p>
-        <pre class="text-xs text-red-300 overflow-x-auto">{
+        <div class="text-xs text-gray-400 mb-2">Response:</div>
+    <pre class="text-xs text-gray-300 overflow-x-auto"><code class="language-json">{
   "success": false,
   "error": {
     "code": "unauthorized",
