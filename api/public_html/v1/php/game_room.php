@@ -212,16 +212,21 @@ function joinRoom($roomId) {
         }
 
         $stmt = $pdo->prepare("
-            SELECT password, max_players,
+            SELECT password, max_players, is_active,
                    (SELECT COUNT(*) FROM room_players WHERE room_id = ?) as current_players
             FROM game_rooms 
-            WHERE room_id = ? AND is_active = TRUE
+            WHERE room_id = ?
         ");
         $stmt->execute([$roomId, $roomId]);
         $room = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$room) {
-            throw new Exception('Room not found or inactive');
+            throw new Exception('Room not found');
+        }
+
+        // If inactive, only allow if empty (no stale players)
+        if (!$room['is_active'] && $room['current_players'] > 0) {
+            throw new Exception('Room inactive');
         }
 
         if ($room['current_players'] >= $room['max_players']) {
@@ -235,6 +240,9 @@ function joinRoom($roomId) {
         }
 
         addPlayerToRoom($roomId, $player['id'], $player['player_name']);
+
+        // Check and reassign host if needed (will also reactivate if inactive)
+        checkAndReassignHost($roomId);
 
         $pdo->commit();
 
@@ -267,7 +275,7 @@ function listRoomPlayers() {
                 rp.player_name,
                 rp.is_host,
                 rp.is_online,
-                TIMESTAMPDIFF(SECOND, rp.last_heartbeat, NOW()) as seconds_since_heartbeat
+                TIMESTAMPDIFF(SECOND, rp.last_heartbeat, NOW())
             FROM room_players rp
             WHERE rp.room_id = ?
             ORDER BY 
@@ -277,11 +285,6 @@ function listRoomPlayers() {
         ");
         $stmt->execute([$roomId]);
         $players = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($players as &$p) {
-            $p['is_online'] = $p['is_online'] && ($p['seconds_since_heartbeat'] < 90);
-            unset($p['seconds_since_heartbeat']);
-        }
 
         sendResponse([
             'success' => true,
@@ -321,26 +324,37 @@ function leaveRoom() {
 
         $isHost = (bool)$playerData['is_host'];
 
+        // Remove leaving player first
+        $pdo->prepare("
+            DELETE FROM room_players 
+            WHERE player_id = ? AND room_id = ?
+        ")->execute([$player['id'], $roomId]);
+
         if ($isHost) {
             // Find next oldest online player to become host
             $stmt = $pdo->prepare("
                 SELECT player_id 
                 FROM room_players 
                 WHERE room_id = ? 
-                  AND player_id != ? 
                   AND is_online = TRUE
                 ORDER BY joined_at ASC
                 LIMIT 1
             ");
-            $stmt->execute([$roomId, $player['id']]);
+            $stmt->execute([$roomId]);
             $newHost = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($newHost) {
-                // Assign new host
+                // Assign new host (set all others to false for safety)
                 $pdo->prepare("
                     UPDATE room_players 
-                    SET is_host = (player_id = ?)
+                    SET is_host = FALSE
                     WHERE room_id = ?
+                ")->execute([$roomId]);
+
+                $pdo->prepare("
+                    UPDATE room_players 
+                    SET is_host = TRUE
+                    WHERE player_id = ? AND room_id = ?
                 ")->execute([$newHost['player_id'], $roomId]);
 
                 $pdo->prepare("
@@ -355,12 +369,6 @@ function leaveRoom() {
             }
         }
 
-        // Remove leaving player
-        $pdo->prepare("
-            DELETE FROM room_players 
-            WHERE player_id = ? AND room_id = ?
-        ")->execute([$player['id'], $roomId]);
-
         $pdo->commit();
 
         sendResponse([
@@ -374,20 +382,108 @@ function leaveRoom() {
     }
 }
 
+function checkAndReassignHost($roomId) {
+    global $pdo;
+    
+    // Check if current host is still online
+    $stmt = $pdo->prepare("
+        SELECT player_id, is_online, last_heartbeat,
+               TIMESTAMPDIFF(SECOND, last_heartbeat, NOW()) as seconds_since_heartbeat
+        FROM room_players
+        WHERE room_id = ? AND is_host = TRUE
+        LIMIT 1
+    ");
+    $stmt->execute([$roomId]);
+    $currentHost = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Host is offline if missing, marked offline, or timed out
+    $hostOffline = !$currentHost || 
+                   !$currentHost['is_online'];
+
+    if ($hostOffline) {
+        try {
+            if ($currentHost) {
+                // Remove host status from current host
+                $pdo->prepare("
+                    UPDATE room_players 
+                    SET is_host = FALSE 
+                    WHERE player_id = ? AND room_id = ?
+                ")->execute([$currentHost['player_id'], $roomId]);
+            }
+
+            // Find next available player to be host (oldest first)
+            $stmt = $pdo->prepare("
+                SELECT player_id 
+                FROM room_players 
+                WHERE room_id = ? 
+                  AND is_online = TRUE
+                ORDER BY joined_at ASC
+                LIMIT 1
+            ");
+            $stmt->execute([$roomId]);
+            $newHost = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($newHost) {
+                // Assign new host
+                $pdo->prepare("
+                    UPDATE room_players 
+                    SET is_host = TRUE
+                    WHERE player_id = ? AND room_id = ?
+                ")->execute([$newHost['player_id'], $roomId]);
+
+                $pdo->prepare("
+                    UPDATE game_rooms 
+                    SET host_player_id = ?,
+                        is_active = TRUE  -- Reactivate if was inactive
+                    WHERE room_id = ?
+                ")->execute([$newHost['player_id'], $roomId]);
+
+                return true;
+            } else {
+                // No players left in room → deactivate
+                $pdo->prepare("DELETE FROM action_queue WHERE room_id = ?")->execute([$roomId]);
+                $pdo->prepare("UPDATE game_rooms SET is_active = FALSE WHERE room_id = ?")->execute([$roomId]);
+                return false;
+            }
+        } catch (Exception $e) {
+            error_log("Failed to reassign host: " . $e->getMessage());
+            throw $e;  // Let outer transaction handle rollback
+        }
+    }
+    return false;
+}
+
 function updateHeartbeat() {
     $context = getAuthContext();
     $player = requirePlayer($context);
 
     global $pdo;
-    $stmt = $pdo->prepare("
-        UPDATE room_players 
-        SET last_heartbeat = CURRENT_TIMESTAMP,
-            is_online = TRUE
-        WHERE player_id = ?
-    ");
-    $stmt->execute([$player['id']]);
-
-    sendResponse(['success' => true, 'status' => 'ok']);
+    $pdo->beginTransaction();
+    
+    try {
+        // Update player's own heartbeat
+        $stmt = $pdo->prepare("
+            UPDATE room_players 
+            SET last_heartbeat = CURRENT_TIMESTAMP,
+                is_online = TRUE
+            WHERE player_id = ?
+        ");
+        $stmt->execute([$player['id']]);
+        
+        // Get current room ID
+        $roomId = getPlayerRoom($player['id']);
+        if ($roomId) {
+            // Check and reassign host if needed
+            checkAndReassignHost($roomId);
+        }
+        
+        $pdo->commit();
+        sendResponse(['success' => true, 'status' => 'ok']);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        error_log("Heartbeat update failed: " . $e->getMessage());
+        sendResponse(['success' => false, 'error' => 'Failed to update heartbeat'], 500);
+    }
 }
 
 function submitAction() {
