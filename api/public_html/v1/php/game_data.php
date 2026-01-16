@@ -112,7 +112,9 @@ try {
                     sendResponse(['success' => false, 'error' => 'Invalid API token or API private token'], 401);
                 }
 
-                $gameData = json_decode($game['game_data'] ?? '{}', true);
+                $gameData = (($game['game_data'] ?? '{}') === '{}')
+                    ? new stdClass()
+                    : json_decode($game['game_data'], true);
                 sendResponse([
                     'success' => true,
                     'type' => 'game',
