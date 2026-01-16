@@ -186,7 +186,7 @@ public class Game
                 actionId,
                 playerToken,
                 "completed",
-                new { success = true, message = "Moved successfully")
+                new { success = true, message = "Moved successfully" }
             );
             Console.WriteLine($"[ACTION] {completeAction.Message}\n");
         }
