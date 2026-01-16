@@ -121,6 +121,121 @@ namespace michitai
                 $"{_baseUrl}time.php?api_key={_apiToken}"
             );
         }
+
+        // ------------------------------------
+        // GAME ROOM
+        // ------------------------------------
+
+        public Task<RoomCreateResponse> CreateRoomAsync(
+            string gamePlayerToken,
+            string roomName,
+            string? password = null,
+            int maxPlayers = 4)
+        {
+            return Send<RoomCreateResponse>(
+                HttpMethod.Post,
+                Url("game_room.php/rooms", $"&game_player_token={gamePlayerToken}"),
+                new
+                {
+                    room_name = roomName,
+                    password = password,
+                    max_players = maxPlayers
+                }
+            );
+        }
+
+        public Task<RoomListResponse> GetRoomsAsync()
+        {
+            return Send<RoomListResponse>(
+                HttpMethod.Get,
+                Url("game_room.php/rooms")
+            );
+        }
+
+        public Task<RoomJoinResponse> JoinRoomAsync(
+            string gamePlayerToken,
+            string roomId,
+            string? password = null)
+        {
+            return Send<RoomJoinResponse>(
+                HttpMethod.Post,
+                Url($"game_room.php/rooms/{roomId}/join", $"&game_player_token={gamePlayerToken}"),
+                password != null ? new { password = password } : new { password = "" }
+            );
+        }
+
+        public Task<RoomLeaveResponse> LeaveRoomAsync(string gamePlayerToken)
+        {
+            return Send<RoomLeaveResponse>(
+                HttpMethod.Post,
+                Url("game_room.php/rooms/leave", $"&game_player_token={gamePlayerToken}")
+            );
+        }
+
+        public Task<RoomPlayersResponse> GetRoomPlayersAsync(string gamePlayerToken)
+        {
+            return Send<RoomPlayersResponse>(
+                HttpMethod.Get,
+                Url("game_room.php/players", $"&game_player_token={gamePlayerToken}")
+            );
+        }
+
+        public Task<HeartbeatResponse> SendHeartbeatAsync(string gamePlayerToken)
+        {
+            return Send<HeartbeatResponse>(
+                HttpMethod.Post,
+                Url("game_room.php/players/heartbeat", $"&game_player_token={gamePlayerToken}")
+            );
+        }
+
+        public Task<ActionSubmitResponse> SubmitActionAsync(
+            string gamePlayerToken,
+            string actionType,
+            object requestData)
+        {
+            return Send<ActionSubmitResponse>(
+                HttpMethod.Post,
+                Url("game_room.php/actions", $"&game_player_token={gamePlayerToken}"),
+                new
+                {
+                    action_type = actionType,
+                    request_data = requestData
+                }
+            );
+        }
+
+        public Task<ActionPollResponse> PollActionsAsync(string gamePlayerToken)
+        {
+            return Send<ActionPollResponse>(
+                HttpMethod.Get,
+                Url("game_room.php/actions/poll", $"&game_player_token={gamePlayerToken}")
+            );
+        }
+
+        public Task<ActionPendingResponse> GetPendingActionsAsync(string gamePlayerToken)
+        {
+            return Send<ActionPendingResponse>(
+                HttpMethod.Get,
+                Url("game_room.php/actions/pending", $"&game_player_token={gamePlayerToken}")
+            );
+        }
+
+        public Task<ActionCompleteResponse> CompleteActionAsync(
+            string actionId,
+            string gamePlayerToken,
+            string status,
+            object? responseData = null)
+        {
+            return Send<ActionCompleteResponse>(
+                HttpMethod.Post,
+                Url($"game_room.php/actions/{actionId}/complete", $"&game_player_token={gamePlayerToken}"),
+                new
+                {
+                    status = status,
+                    response_data = responseData
+                }
+            );
+        }
     }
 
     // ------------------------------------
@@ -200,5 +315,105 @@ namespace michitai
         public string Utc { get; set; }
         public long Timestamp { get; set; }
         public string Readable { get; set; }
+    }
+
+    public class RoomCreateResponse
+    {
+        public bool Success { get; set; }
+        public string Room_id { get; set; }
+        public string Room_name { get; set; }
+        public bool Is_host { get; set; }
+    }
+
+    public class RoomShort
+    {
+        public string Room_id { get; set; }
+        public string Room_name { get; set; }
+        public int Max_players { get; set; }
+        public int Current_players { get; set; }
+        public int Has_password { get; set; }
+    }
+
+    public class RoomListResponse
+    {
+        public bool Success { get; set; }
+        public List<RoomShort> Rooms { get; set; }
+    }
+
+    public class RoomJoinResponse
+    {
+        public bool Success { get; set; }
+        public string Room_id { get; set; }
+        public string Message { get; set; }
+    }
+
+    public class RoomPlayer
+    {
+        public string Player_id { get; set; }
+        public string Player_name { get; set; }
+        public int Is_host { get; set; }
+        public int Is_online { get; set; }
+    }
+
+    public class RoomPlayersResponse
+    {
+        public bool Success { get; set; }
+        public List<RoomPlayer> Players { get; set; }
+        public string Last_updated { get; set; }
+    }
+
+    public class RoomLeaveResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
+
+    public class HeartbeatResponse
+    {
+        public bool Success { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class ActionSubmitResponse
+    {
+        public bool Success { get; set; }
+        public string Action_id { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class ActionInfo
+    {
+        public string Action_id { get; set; }
+        public string Action_type { get; set; }
+        public string? Response_data { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class ActionPollResponse
+    {
+        public bool Success { get; set; }
+        public List<ActionInfo> Actions { get; set; }
+    }
+
+    public class PendingAction
+    {
+        public string Action_id { get; set; }
+        public string Player_id { get; set; }
+        public string Action_type { get; set; }
+        public string Request_data { get; set; }
+        public string Created_at { get; set; }
+        public string Player_name { get; set; }
+    }
+
+    public class ActionPendingResponse
+    {
+        public bool Success { get; set; }
+        public List<PendingAction> Actions { get; set; }
+    }
+
+    public class ActionCompleteResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
     }
 }
