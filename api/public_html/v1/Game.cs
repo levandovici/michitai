@@ -13,6 +13,8 @@ public class Game
 
         // 1️⃣ Initialize SDK
         sdk = new GameSDK("YOUR_API_TOKEN", "YOUR_API_PRIVATE_TOKEN");
+        //sdk = new GameSDK("YOUR_API_TOKEN", "YOUR_API_PRIVATE_TOKEN", logger:new ConsoleLogger()); // for console logging
+        //sdk = new GameSDK("YOUR_API_TOKEN", "YOUR_API_PRIVATE_TOKEN", logger:new UnityLogger()); // for unity logging
         Console.WriteLine("[INIT] SDK initialized\n");
 
         // 2️⃣ Register Player
