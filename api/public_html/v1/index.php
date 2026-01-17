@@ -6,7 +6,7 @@ require_once 'php/config.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>Multiplayer API – Core Cells</title>
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -50,18 +50,62 @@ pre {
     background: var(--code-bg);
     color: var(--code-text);
     border-radius: 0.5rem;
-    padding: 1.25rem;
-    margin: 1.25rem 0;
+    padding: 1rem;
+    margin: 1rem 0;
     font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', monospace;
-    font-size: 0.92em;
-    line-height: 1.55;
+    font-size: 0.85em;
+    line-height: 1.5;
     tab-size: 4;
     overflow-x: auto;
-    overflow-y: hidden;           /* prevents excessive vertical scroll */
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
     max-height: 100vh;
-    height: auto;/* reasonable limit – adjust if needed */
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Responsive tables for API endpoints */
+@media (max-width: 768px) {
+    .grid.grid-cols-12 {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .grid.grid-cols-12 > div {
+        grid-column: 1 / -1;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .grid.grid-cols-12 > div:last-child {
+        border-bottom: none;
+    }
+    
+    /* Adjust code blocks for mobile */
+    pre {
+        padding: 0.75rem;
+        font-size: 0.8em;
+        margin: 0.75rem -0.5rem;
+        border-radius: 0;
+    }
+    
+    /* Make sure long URLs and code don't break layout */
+    .font-mono, code, pre {
+        word-break: break-word;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    
+    /* Adjust spacing in API documentation */
+    .space-y-4 > div {
+        margin-bottom: 1rem;
+    }
+    
+    /* Make sure buttons are tap-friendly on mobile */
+    button, .btn-primary, .btn-secondary {
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+    }
 }
 
 /* Very important: let Prism do its job */
@@ -76,8 +120,10 @@ pre code {
 
 /* Extra safety for JSON (prevents collapse on long lines) */
 pre code.language-json {
-    white-space: pre-wrap;        /* fallback if very long strings */
-    word-break: break-all;        /* emergency break for huge single tokens */
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: block;
+    overflow-x: auto;
 }
 
 /* Make sure Prism classes are respected */
