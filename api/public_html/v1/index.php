@@ -516,7 +516,7 @@ pre::-webkit-scrollbar-thumb:hover {
                 <p class="text-xl text-white/70 max-w-3xl mx-auto">Integrate our API into your game with our easy-to-use SDKs</p>
             </div>
             
-            <div class="max-w-3xl mx-auto space-y-8">
+            <div class="max-w-7xl mx-auto space-y-8">
                 <!-- C# / Unity SDK -->
                 <div class="glass-effect p-8 rounded-2xl">
                     <div class="flex items-center mb-6">
