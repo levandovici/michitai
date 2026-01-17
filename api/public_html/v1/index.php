@@ -529,35 +529,65 @@ pre::-webkit-scrollbar-thumb:hover {
                         Seamlessly integrate the API into your Unity projects with our C# SDK. 
                         Handles authentication, HTTP requests, JSON parsing, and project key management.
                     </p>
-                    <div class="flex justify-end mb-4 space-x-4">
-                        <a href="#" id="downloadSdk" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center">
+                    <div class="flex flex-col sm:flex-row justify-end mb-4 gap-3 sm:gap-4">
+                        <button id="downloadSdk" class="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-3 sm:py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center">
                             <i class="fas fa-download mr-2"></i> Download C# SDK
-                        </a>
-                        <a href="#" id="downloadExample" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center">
+                        </button>
+                        <button id="downloadExample" class="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium py-3 sm:py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center justify-center">
                             <i class="fas fa-code mr-2"></i> Download Example
-                        </a>
+                        </button>
                     </div>
                     <div class="relative">
                         <pre><code class="language-csharp"><?php echo htmlspecialchars(file_get_contents('SDK.cs')); ?></code></pre>
                     </div>
                     <script>
-                    document.getElementById('downloadSdk').addEventListener('click', () => {
-                    const link = document.createElement('a');
-                    link.href = 'SDK.cs';           // ← path relative to your HTML file
-                    link.download = 'SDK.cs';        // suggested filename
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
-                
-                document.getElementById('downloadExample').addEventListener('click', () => {
-                    const link = document.createElement('a');
-                    link.href = 'Game.cs';          // ← path relative to your HTML file
-                    link.download = 'Game.cs';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
+                    function triggerDownload(url, filename) {
+                        // Show loading state
+                        const originalText = event.target.innerHTML;
+                        event.target.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Preparing...';
+                        event.target.disabled = true;
+                        
+                        // Create and trigger download
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = filename;
+                        
+                        // For mobile devices, we need to append to body and simulate click
+                        document.body.appendChild(link);
+                        const clickEvent = new MouseEvent('click', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: false
+                        });
+                        link.dispatchEvent(clickEvent);
+                        
+                        // Clean up and restore button state
+                        setTimeout(() => {
+                            document.body.removeChild(link);
+                            event.target.innerHTML = originalText;
+                            event.target.disabled = false;
+                            
+                            // Show success message
+                            const successMsg = document.createElement('div');
+                            successMsg.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center';
+                            successMsg.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Downloaded ${filename} successfully!`;
+                            document.body.appendChild(successMsg);
+                            
+                            // Remove success message after 3 seconds
+                            setTimeout(() => {
+                                successMsg.style.opacity = '0';
+                                setTimeout(() => successMsg.remove(), 300);
+                            }, 3000);
+                        }, 100);
+                    }
+                    
+                    document.getElementById('downloadSdk').addEventListener('click', (event) => {
+                        triggerDownload('SDK.cs', 'SDK.cs');
+                    });
+                    
+                    document.getElementById('downloadExample').addEventListener('click', (event) => {
+                        triggerDownload('Game.cs', 'Game.cs');
+                    });
                     </script>
                 </div>
 
