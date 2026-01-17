@@ -54,12 +54,12 @@ try {
     }
 
     // Get API token from query string
-    $apiToken = $_GET['api_key'] ?? '';
+    $apiToken = $_GET['api_token'] ?? '';
     if (empty($apiToken)) {
         sendResponse([
             'success' => false,
             'error' => 'API key is required',
-            'hint' => 'Add ?api_key=YOUR_API_KEY to your request'
+            'hint' => 'Add ?api_token=YOUR_API_KEY to your request'
         ], 401);
     }
 
