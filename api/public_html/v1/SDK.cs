@@ -223,16 +223,15 @@ namespace michitai
         public Task<ActionCompleteResponse> CompleteActionAsync(
             string actionId,
             string gamePlayerToken,
-            string status,
-            object? responseData = null)
+            ActionCompleteRequest request)
         {
             return Send<ActionCompleteResponse>(
                 HttpMethod.Post,
                 Url($"game_room.php/actions/{actionId}/complete", $"&game_player_token={gamePlayerToken}"),
                 new
                 {
-                    status = status,
-                    response_data = responseData
+                    status = request.Status,
+                    response_data = request.Response_data
                 }
             );
         }
@@ -411,9 +410,32 @@ namespace michitai
         public List<PendingAction> Actions { get; set; }
     }
 
+    public class ActionCompleteRequest
+    {
+        public ActionStatus Status { get; set; }
+        public object? Response_data { get; set; }
+
+
+
+        public ActionCompleteRequest(ActionStatus status, object? responseData = null)
+        {
+            Status = status;
+            Response_data = responseData;
+        }
+    }
+
     public class ActionCompleteResponse
     {
         public bool Success { get; set; }
         public string Message { get; set; }
+    }
+
+    public enum ActionStatus
+    {
+        Pending,
+        Processing,
+        Completed,
+        Failed,
+        Read
     }
 }

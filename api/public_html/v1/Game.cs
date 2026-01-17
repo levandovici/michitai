@@ -185,8 +185,8 @@ public class Game
             var completeAction = await sdk.CompleteActionAsync(
                 actionId,
                 playerToken,
-                "completed",
-                new { success = true, message = "Moved successfully" }
+                new ActionCompleteRequest(ActionStatus.Completed,
+                new { success = true, message = "Moved successfully" })
             );
             Console.WriteLine($"[ACTION] {completeAction.Message}\n");
         }
