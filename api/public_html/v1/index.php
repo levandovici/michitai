@@ -58,7 +58,7 @@ pre {
     tab-size: 4;
     overflow-x: auto;
     overflow-y: hidden;           /* prevents excessive vertical scroll */
-    max-height: none;
+    max-height: 100vh;
     height: auto;/* reasonable limit – adjust if needed */
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
@@ -335,7 +335,7 @@ pre::-webkit-scrollbar-thumb:hover {
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-blue-500/20 text-blue-400 text-xs px-2 py-1 rounded">GET</span></div>
                             <div class="col-span-4 font-mono text-white/90">/php/game_data.php</div>
-                            <div class="col-span-6">Get Game data (requires API key, API private key)</div>
+                            <div class="col-span-6">Get Game data (requires API key)</div>
                         </div>
                         <div class="grid grid-cols-12 items-center">
                             <div class="col-span-2"><span class="inline-block bg-purple-500/20 text-purple-400 text-xs px-2 py-1 rounded">PUT</span></div>
@@ -648,7 +648,7 @@ pre::-webkit-scrollbar-thumb:hover {
     <div class="bg-black/50 p-4 rounded-lg">
         <div class="flex items-center text-sm text-blue-400 mb-2">
             <span class="font-mono bg-blue-900/50 px-2 py-1 rounded mr-2">GET</span>
-            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY&api_private_token=YOUR_API_PRIVATE_TOKEN</span>
+            <span class="font-mono">/v1/php/game_data.php?api_token=YOUR_API_KEY</span>
         </div>
         <p class="text-xs text-gray-400 mb-2">
             <strong>Description:</strong> Retrieves the global game data, including text, settings, and last update timestamp. Used to sync clients with the server.

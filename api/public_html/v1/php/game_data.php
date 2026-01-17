@@ -107,7 +107,7 @@ try {
             // Otherwise, get game data
             else {
                 // Validate API keys
-                $game = validateApiKeys($apiToken, $apiPrivateKey);
+                $game = validateApiKey($apiToken);
                 if (!$game) {
                     sendResponse(['success' => false, 'error' => 'Invalid API token or API private token'], 401);
                 }

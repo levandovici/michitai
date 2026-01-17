@@ -81,7 +81,7 @@ namespace michitai
 
         public Task<GameDataResponse> GetGameData()
         {
-            return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php", $"&api_private_token={_apiPrivateToken}"));
+            return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php"));
         }
 
         public Task<SuccessResponse> UpdateGameData(object data)
@@ -118,7 +118,7 @@ namespace michitai
         {
             return Send<ServerTimeResponse>(
                 HttpMethod.Get,
-                $"{_baseUrl}time.php?api_key={_apiToken}"
+                Url("time.php")
             );
         }
 

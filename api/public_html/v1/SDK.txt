@@ -23,7 +23,7 @@ curl -X GET "https://api.michitai.com/v1/php/game_players.php?api_token=YOUR_API
 
 //Get Game Data 
 
-curl -X GET "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN&api_private_token=YOUR_API_PRIVATE_TOKEN"
+curl -X GET "https://api.michitai.com/v1/php/game_data.php?api_token=YOUR_API_TOKEN"
 
 //Update Game Data
 
