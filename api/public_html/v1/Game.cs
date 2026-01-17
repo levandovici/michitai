@@ -5,7 +5,7 @@ using michitai;
 
 public class Game
 {
-    private static GameSDK sdk;
+    private static GameSDK? sdk;
 
     public static async Task Main()
     {
@@ -79,7 +79,7 @@ public class Game
         int playerLevel = pDataDict.ContainsKey("level") ? ((JsonElement)pDataDict["level"]).GetInt32() : 0;
         int playerScore = pDataDict.ContainsKey("score") ? ((JsonElement)pDataDict["score"]).GetInt32() : 0;
         string[] inventory = pDataDict.ContainsKey("inventory")
-            ? JsonSerializer.Deserialize<string[]>(((JsonElement)pDataDict["inventory"]).GetRawText())
+            ? JsonSerializer.Deserialize<string[]>(((JsonElement)pDataDict["inventory"]).GetRawText())!
             : new string[0];
 
         Console.WriteLine($"[PLAYER] Level={playerLevel}, Score={playerScore}, Inventory=[{string.Join(", ", inventory)}]\n");
