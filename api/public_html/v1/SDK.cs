@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace michitai
 {
+    /// <summary>
+    /// Provides a client for interacting with the MICHITAI Game API.
+    /// Handles authentication, player management, game rooms, and actions.
+    /// </summary>
     public class GameSDK
     {
         private readonly string _apiToken;
@@ -21,6 +25,12 @@ namespace michitai
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
+        /// <summary>
+        /// Initializes a new instance of the GameSDK class.
+        /// </summary>
+        /// <param name="apiToken">The public API token for authentication.</param>
+        /// <param name="apiPrivateToken">The private API token for privileged operations.</param>
+        /// <param name="baseUrl">Base URL of the API (default: https://api.michitai.com/v1/php/).</param>
         public GameSDK(string apiToken, string apiPrivateToken, string baseUrl = "https://api.michitai.com/v1/php/")
         {
             _apiToken = apiToken;
@@ -28,11 +38,25 @@ namespace michitai
             _baseUrl = baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/";
         }
 
+        /// <summary>
+        /// Constructs a URL for API requests with the base URL, endpoint, and authentication token.
+        /// </summary>
+        /// <param name="endpoint">The API endpoint path.</param>
+        /// <param name="extra">Additional query string parameters (optional).</param>
+        /// <returns>Fully constructed URL string with authentication.</returns>
         private string Url(string endpoint, string extra = "")
         {
             return $"{_baseUrl}{endpoint}?api_token={_apiToken}{extra}";
         }
 
+        /// <summary>
+        /// Sends an HTTP request to the API and deserializes the JSON response.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the response into.</typeparam>
+        /// <param name="method">The HTTP method (GET, POST, PUT, etc.).</param>
+        /// <param name="url">The URL to send the request to.</param>
+        /// <param name="body">The request body (optional). Will be serialized to JSON if provided.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response.</returns>
         private async Task<T> Send<T>(HttpMethod method, string url, object body = null)
         {
             var req = new HttpRequestMessage(method, url);
@@ -49,10 +73,12 @@ namespace michitai
             return JsonSerializer.Deserialize<T>(str, _jsonOptions);
         }
 
-        // ------------------------------------
-        // PLAYER API
-        // ------------------------------------
-
+        /// <summary>
+        /// Registers a new player in the game.
+        /// </summary>
+        /// <param name="name">Display name for the player.</param>
+        /// <param name="playerData">Additional player data as an object (will be serialized to JSON).</param>
+        /// <returns>Task containing player registration response with player ID and private key.</returns>
         public Task<PlayerRegisterResponse> RegisterPlayer(string name, object playerData)
         {
             return Send<PlayerRegisterResponse>(
@@ -62,6 +88,11 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Authenticates a player using their player token.
+        /// </summary>
+        /// <param name="playerToken">The player's authentication token.</param>
+        /// <returns>Task containing player authentication response with player information.</returns>
         public Task<PlayerAuthResponse> AuthenticatePlayer(string playerToken)
         {
             return Send<PlayerAuthResponse>(
@@ -70,29 +101,39 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Retrieves a list of all players (requires private API token).
+        /// </summary>
+        /// <returns>Task containing list of players and total count.</returns>
         public Task<PlayerListResponse> GetAllPlayers()
         {
             return Send<PlayerListResponse>(HttpMethod.Get, Url("game_players.php", $"&api_private_token={_apiPrivateToken}"));
         }
 
-        // ------------------------------------
-        // GAME DATA
-        // ------------------------------------
-
+        /// <summary>
+        /// Retrieves game data for the current game.
+        /// </summary>
+        /// <returns>Task containing the game data response.</returns>
         public Task<GameDataResponse> GetGameData()
         {
             return Send<GameDataResponse>(HttpMethod.Get, Url("game_data.php"));
         }
 
+        /// <summary>
+        /// Updates the game data (requires private API token).
+        /// </summary>
+        /// <param name="data">The game data to update.</param>
+        /// <returns>Task indicating success or failure of the update.</returns>
         public Task<SuccessResponse> UpdateGameData(object data)
         {
             return Send<SuccessResponse>(HttpMethod.Put, Url("game_data.php", $"&api_private_token={_apiPrivateToken}"), data);
         }
 
-        // ------------------------------------
-        // PLAYER DATA
-        // ------------------------------------
-
+        /// <summary>
+        /// Retrieves data for a specific player.
+        /// </summary>
+        /// <param name="playerToken">The player's authentication token.</param>
+        /// <returns>Task containing the player's data.</returns>
         public Task<PlayerDataResponse> GetPlayerData(string playerToken)
         {
             return Send<PlayerDataResponse>(
@@ -101,6 +142,12 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Updates data for a specific player.
+        /// </summary>
+        /// <param name="playerToken">The player's authentication token.</param>
+        /// <param name="data">The data to update for the player.</param>
+        /// <returns>Task indicating success or failure of the update.</returns>
         public Task<SuccessResponse> UpdatePlayerData(string playerToken, object data)
         {
             return Send<SuccessResponse>(
@@ -110,10 +157,10 @@ namespace michitai
             );
         }
 
-        // ------------------------------------
-        // SERVER TIME
-        // ------------------------------------
-
+        /// <summary>
+        /// Retrieves the current server time.
+        /// </summary>
+        /// <returns>Task containing the server time in various formats.</returns>
         public Task<ServerTimeResponse> GetServerTime()
         {
             return Send<ServerTimeResponse>(
@@ -122,10 +169,14 @@ namespace michitai
             );
         }
 
-        // ------------------------------------
-        // GAME ROOM
-        // ------------------------------------
-
+        /// <summary>
+        /// Creates a new game room.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <param name="roomName">Name for the new room.</param>
+        /// <param name="password">Optional password for the room.</param>
+        /// <param name="maxPlayers">Maximum number of players allowed in the room (default: 4).</param>
+        /// <returns>Task containing the room creation response.</returns>
         public Task<RoomCreateResponse> CreateRoomAsync(
             string gamePlayerToken,
             string roomName,
@@ -144,6 +195,10 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Retrieves a list of all available game rooms.
+        /// </summary>
+        /// <returns>Task containing the list of rooms.</returns>
         public Task<RoomListResponse> GetRoomsAsync()
         {
             return Send<RoomListResponse>(
@@ -152,6 +207,13 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Joins an existing game room.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <param name="roomId">ID of the room to join.</param>
+        /// <param name="password">Room password if required.</param>
+        /// <returns>Task containing the join room response.</returns>
         public Task<RoomJoinResponse> JoinRoomAsync(
             string gamePlayerToken,
             string roomId,
@@ -164,6 +226,11 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Leaves the current room.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <returns>Task indicating success or failure of leaving the room.</returns>
         public Task<RoomLeaveResponse> LeaveRoomAsync(string gamePlayerToken)
         {
             return Send<RoomLeaveResponse>(
@@ -172,6 +239,11 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Retrieves a list of players in the current room.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <returns>Task containing the list of players in the room.</returns>
         public Task<RoomPlayersResponse> GetRoomPlayersAsync(string gamePlayerToken)
         {
             return Send<RoomPlayersResponse>(
@@ -180,6 +252,11 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Sends a heartbeat to keep the player's session alive.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <returns>Task containing the heartbeat response.</returns>
         public Task<HeartbeatResponse> SendHeartbeatAsync(string gamePlayerToken)
         {
             return Send<HeartbeatResponse>(
@@ -188,6 +265,13 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Submits a new game action.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <param name="actionType">Type of the action being submitted.</param>
+        /// <param name="requestData">Data associated with the action.</param>
+        /// <returns>Task containing the action submission response.</returns>
         public Task<ActionSubmitResponse> SubmitActionAsync(
             string gamePlayerToken,
             string actionType,
@@ -204,6 +288,11 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Polls for new actions that need to be processed.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <returns>Task containing any pending actions.</returns>
         public Task<ActionPollResponse> PollActionsAsync(string gamePlayerToken)
         {
             return Send<ActionPollResponse>(
@@ -212,6 +301,11 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Retrieves a list of pending actions for the player.
+        /// </summary>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <returns>Task containing the list of pending actions.</returns>
         public Task<ActionPendingResponse> GetPendingActionsAsync(string gamePlayerToken)
         {
             return Send<ActionPendingResponse>(
@@ -220,6 +314,13 @@ namespace michitai
             );
         }
 
+        /// <summary>
+        /// Marks an action as completed.
+        /// </summary>
+        /// <param name="actionId">ID of the action to complete.</param>
+        /// <param name="gamePlayerToken">The player's authentication token.</param>
+        /// <param name="request">The completion request details.</param>
+        /// <returns>Task indicating success or failure of the completion.</returns>
         public Task<ActionCompleteResponse> CompleteActionAsync(
             string actionId,
             string gamePlayerToken,
