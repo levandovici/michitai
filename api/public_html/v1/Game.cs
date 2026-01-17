@@ -214,4 +214,44 @@ public class Game
 
         Console.WriteLine("=== Demo Complete ===");
     }
+
+
+
+    public class ConsoleLogger : ILogger
+    {
+        public virtual void Error(string message)
+        {
+            Console.WriteLine($"[Error] {message}");
+        }
+
+        public virtual void Log(string message)
+        {
+            Console.WriteLine($"[Log] {message}");
+        }
+
+        public virtual void Warn(string message)
+        {
+            Console.WriteLine($"[Warning] {message}");
+        }
+    }
+
+#if UNITY_EDITOR
+    public class UnityLogger : ILogger
+    {
+        public virtual void Error(string message)
+        {
+            Debug.Log($"[Error] {message}");
+        }
+
+        public virtual void Log(string message)
+        {
+            Debug.LogWarning($"[Log] {message}");
+        }
+
+        public virtual void Warn(string message)
+        {
+            Debug.LogError($"[Warning] {message}");
+        }
+    }
+#endif
 }
