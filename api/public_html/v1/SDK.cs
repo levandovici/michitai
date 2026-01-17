@@ -18,6 +18,7 @@ namespace michitai
         private readonly string _apiPrivateToken;
         private readonly string _baseUrl;
         private static readonly HttpClient _http = new HttpClient();
+        private ILogger? _logger;
 
         private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
         {
@@ -31,11 +32,12 @@ namespace michitai
         /// <param name="apiToken">The public API token for authentication.</param>
         /// <param name="apiPrivateToken">The private API token for privileged operations.</param>
         /// <param name="baseUrl">Base URL of the API (default: https://api.michitai.com/v1/php/).</param>
-        public GameSDK(string apiToken, string apiPrivateToken, string baseUrl = "https://api.michitai.com/v1/php/")
+        public GameSDK(string apiToken, string apiPrivateToken, string baseUrl = "https://api.michitai.com/v1/php/", ILogger? logger = null)
         {
             _apiToken = apiToken;
             _apiPrivateToken = apiPrivateToken;
             _baseUrl = baseUrl.EndsWith("/") ? baseUrl : baseUrl + "/";
+            _logger = logger;
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace michitai
         /// <param name="url">The URL to send the request to.</param>
         /// <param name="body">The request body (optional). Will be serialized to JSON if provided.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response.</returns>
-        private async Task<T> Send<T>(HttpMethod method, string url, object body = null)
+        private async Task<T> Send<T>(HttpMethod method, string url, object? body = null) where T : class
         {
             var req = new HttpRequestMessage(method, url);
 
@@ -70,7 +72,20 @@ namespace michitai
             var res = await _http.SendAsync(req);
             string str = await res.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<T>(str, _jsonOptions);
+            T response;
+
+            try
+            {
+                response = JsonSerializer.Deserialize<T>(str, _jsonOptions)!;
+            }
+            catch(JsonException)
+            {
+                _logger?.Warn(str);
+
+                throw;
+            }
+
+            return response;
         }
 
         /// <summary>
@@ -338,97 +353,104 @@ namespace michitai
         }
     }
 
-    // ------------------------------------
-    // MODELS
-    // ------------------------------------
+
+
+    public interface ILogger
+    {
+        void Log(string message);
+        void Warn(string message);
+        void Error(string message);
+    }
+
+
 
     public class PlayerRegisterResponse
     {
         public bool Success { get; set; }
-        public string Player_id { get; set; }
-        public string Private_key { get; set; }
-        public string Player_name { get; set; }
+        public required string Player_id { get; set; }
+        public required string Private_key { get; set; }
+        public required string Player_name { get; set; }
         public int Game_id { get; set; }
     }
 
     public class PlayerAuthResponse
     {
         public bool Success { get; set; }
-        public PlayerInfo Player { get; set; }
+        public required PlayerInfo Player { get; set; }
     }
 
     public class PlayerListResponse
     {
         public bool Success { get; set; }
         public int Count { get; set; }
-        public List<PlayerShort> Players { get; set; }
+        public required List<PlayerShort> Players { get; set; }
     }
 
     public class PlayerShort
     {
         public int Id { get; set; }
-        public string Player_name { get; set; }
+        public required string Player_name { get; set; }
         public int Is_active { get; set; }
-        public string Last_login { get; set; }
-        public string Created_at { get; set; }
+        public required string Last_login { get; set; }
+        public required string Created_at { get; set; }
     }
 
     public class PlayerInfo
     {
         public int Id { get; set; }
         public int Game_id { get; set; }
-        public string Player_name { get; set; }
-        public Dictionary<string, object> Player_data { get; set; }
+        public required string Player_name { get; set; }
+        public required Dictionary<string, object> Player_data { get; set; }
         public int Is_active { get; set; }
-        public string Last_login { get; set; }
-        public string Created_at { get; set; }
-        public string Updated_at { get; set; }
+        public required string Last_login { get; set; }
+        public required string Created_at { get; set; }
+        public required string Updated_at { get; set; }
     }
 
     public class GameDataResponse
     {
         public bool Success { get; set; }
-        public string Type { get; set; }
+        public required string Type { get; set; }
         public int Game_id { get; set; }
-        public Dictionary<string, object> Data { get; set; }
+        public required Dictionary<string, object> Data { get; set; }
     }
 
     public class PlayerDataResponse
     {
         public bool Success { get; set; }
-        public string Type { get; set; }
+        public required string Type { get; set; }
         public int Player_id { get; set; }
-        public string Player_name { get; set; }
-        public Dictionary<string, object> Data { get; set; }
+        public required string Player_name { get; set; }
+        public required Dictionary<string, object> Data { get; set; }
     }
 
     public class SuccessResponse
     {
         public bool Success { get; set; }
-        public string Message { get; set; }
-        public string Updated_at { get; set; }
+        public required string Message { get; set; }
+        public required string Updated_at { get; set; }
     }
 
     public class ServerTimeResponse
     {
         public bool Success { get; set; }
-        public string Utc { get; set; }
+        public required string Utc { get; set; }
         public long Timestamp { get; set; }
-        public string Readable { get; set; }
+        public required string Readable { get; set; }
     }
 
     public class RoomCreateResponse
     {
         public bool Success { get; set; }
-        public string Room_id { get; set; }
-        public string Room_name { get; set; }
+        public required string Room_id { get; set; }
+        public required string Room_name { get; set; }
         public bool Is_host { get; set; }
     }
 
     public class RoomShort
     {
-        public string Room_id { get; set; }
-        public string Room_name { get; set; }
+        public required string Room_id { get; set; }
+        public required string Room_name { get; set; }
         public int Max_players { get; set; }
         public int Current_players { get; set; }
         public int Has_password { get; set; }
@@ -437,20 +459,20 @@ namespace michitai
     public class RoomListResponse
     {
         public bool Success { get; set; }
-        public List<RoomShort> Rooms { get; set; }
+        public required List<RoomShort> Rooms { get; set; }
     }
 
     public class RoomJoinResponse
     {
         public bool Success { get; set; }
-        public string Room_id { get; set; }
-        public string Message { get; set; }
+        public required string Room_id { get; set; }
+        public required string Message { get; set; }
     }
 
     public class RoomPlayer
     {
-        public string Player_id { get; set; }
-        public string Player_name { get; set; }
+        public required string Player_id { get; set; }
+        public required string Player_name { get; set; }
         public int Is_host { get; set; }
         public int Is_online { get; set; }
     }
@@ -458,57 +480,57 @@ namespace michitai
     public class RoomPlayersResponse
     {
         public bool Success { get; set; }
-        public List<RoomPlayer> Players { get; set; }
-        public string Last_updated { get; set; }
+        public required List<RoomPlayer> Players { get; set; }
+        public required string Last_updated { get; set; }
     }
 
     public class RoomLeaveResponse
     {
         public bool Success { get; set; }
-        public string Message { get; set; }
+        public required string Message { get; set; }
     }
 
     public class HeartbeatResponse
     {
         public bool Success { get; set; }
-        public string Status { get; set; }
+        public required string Status { get; set; }
     }
 
     public class ActionSubmitResponse
     {
         public bool Success { get; set; }
-        public string Action_id { get; set; }
-        public string Status { get; set; }
+        public required string Action_id { get; set; }
+        public required string Status { get; set; }
     }
 
     public class ActionInfo
     {
-        public string Action_id { get; set; }
-        public string Action_type { get; set; }
+        public required string Action_id { get; set; }
+        public required string Action_type { get; set; }
         public string? Response_data { get; set; }
-        public string Status { get; set; }
+        public required string Status { get; set; }
     }
 
     public class ActionPollResponse
     {
         public bool Success { get; set; }
-        public List<ActionInfo> Actions { get; set; }
+        public required List<ActionInfo> Actions { get; set; }
     }
 
     public class PendingAction
     {
-        public string Action_id { get; set; }
-        public string Player_id { get; set; }
-        public string Action_type { get; set; }
-        public string Request_data { get; set; }
-        public string Created_at { get; set; }
-        public string Player_name { get; set; }
+        public required string Action_id { get; set; }
+        public required string Player_id { get; set; }
+        public required string Action_type { get; set; }
+        public required string Request_data { get; set; }
+        public required string Created_at { get; set; }
+        public required string Player_name { get; set; }
     }
 
     public class ActionPendingResponse
     {
         public bool Success { get; set; }
-        public List<PendingAction> Actions { get; set; }
+        public required List<PendingAction> Actions { get; set; }
     }
 
     public class ActionCompleteRequest
@@ -528,7 +550,7 @@ namespace michitai
     public class ActionCompleteResponse
     {
         public bool Success { get; set; }
-        public string Message { get; set; }
+        public required string Message { get; set; }
     }
 
     public enum ActionStatus
