@@ -621,6 +621,154 @@ function completeAction($actionId) {
     sendResponse(['success' => true, 'message' => 'Action completed']);
 }
 
+function sendUpdates() {
+    $context = getAuthContext();
+    $player = requirePlayer($context);
+
+    // Only host can send updates
+    if (!isHost($player['id'])) {
+        sendResponse(['success' => false, 'error' => 'Only host can send updates'], 403);
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true) ?: [];
+
+    // Validate required fields
+    if (empty($data['roomId']) || empty($data['type']) || !isset($data['dataJson'])) {
+        sendResponse(['success' => false, 'error' => 'Missing required fields: roomId, type, dataJson'], 400);
+    }
+
+    $roomId = $data['roomId'];
+    $updateType = trim($data['type']);
+    $dataJson = is_string($data['dataJson']) ? $data['dataJson'] : json_encode($data['dataJson'], JSON_UNESCAPED_UNICODE);
+
+    // Validate JSON
+    json_decode($dataJson);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        sendResponse(['success' => false, 'error' => 'Invalid JSON in dataJson field'], 400);
+    }
+
+    // Verify host is in this room
+    $hostRoomId = getPlayerRoom($player['id']);
+    if ($hostRoomId !== $roomId) {
+        sendResponse(['success' => false, 'error' => 'You are not the host of this room'], 403);
+    }
+
+    // Get target players
+    $targetPlayerIds = $data['targetPlayerIds'] ?? 'all';
+    $targets = [];
+
+    global $pdo;
+    if ($targetPlayerIds === 'all') {
+        // Get all players in room except the host
+        $stmt = $pdo->prepare("
+            SELECT player_id 
+            FROM room_players 
+            WHERE room_id = ? AND player_id != ? AND is_online = TRUE
+        ");
+        $stmt->execute([$roomId, $player['id']]);
+        $targets = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    } elseif (is_array($targetPlayerIds)) {
+        // Validate specific players are in the room and online
+        $placeholders = implode(',', array_fill(0, count($targetPlayerIds), '?'));
+        $stmt = $pdo->prepare("
+            SELECT player_id 
+            FROM room_players 
+            WHERE room_id = ? AND player_id IN ($placeholders) AND is_online = TRUE
+        ");
+        $stmt->execute([$roomId, ...$targetPlayerIds]);
+        $targets = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    } else {
+        sendResponse(['success' => false, 'error' => 'targetPlayerIds must be "all" or an array'], 400);
+    }
+
+    if (empty($targets)) {
+        sendResponse(['success' => false, 'error' => 'No valid target players found'], 400);
+    }
+
+    // Create updates for each target player
+    $updateIds = [];
+    $pdo->beginTransaction();
+    
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO player_updates 
+            (update_id, room_id, from_player_id, target_player_id, type, data_json)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+
+        foreach ($targets as $targetPlayerId) {
+            $updateId = bin2hex(random_bytes(16));
+            $stmt->execute([$updateId, $roomId, $player['id'], $targetPlayerId, $updateType, $dataJson]);
+            $updateIds[] = $updateId;
+        }
+
+        $pdo->commit();
+
+        sendResponse([
+            'success' => true,
+            'updates_sent' => count($updateIds),
+            'update_ids' => $updateIds,
+            'target_players' => $targets
+        ]);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        error_log("Send updates failed: " . $e->getMessage());
+        sendResponse(['success' => false, 'error' => 'Failed to send updates'], 500);
+    }
+}
+
+function pollUpdates() {
+    $context = getAuthContext();
+    $player = requirePlayer($context);
+
+    $roomId = getPlayerRoom($player['id']);
+    if (!$roomId) {
+        sendResponse(['success' => false, 'error' => 'Player is not in any room'], 400);
+    }
+
+    $lastUpdateId = $_GET['lastUpdateId'] ?? null;
+
+    global $pdo;
+    
+    // Build query based on lastUpdateId
+    $whereClause = "WHERE target_player_id = ? AND room_id = ?";
+    $params = [$player['id'], $roomId];
+    
+    if ($lastUpdateId) {
+        $whereClause .= " AND update_id > ?";
+        $params[] = $lastUpdateId;
+    }
+
+    $stmt = $pdo->prepare("
+        SELECT update_id, from_player_id, type, data_json, created_at
+        FROM player_updates 
+        {$whereClause}
+        ORDER BY created_at ASC
+        LIMIT 50
+    ");
+    $stmt->execute($params);
+    $updates = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Mark updates as delivered
+    if (!empty($updates)) {
+        $updateIds = array_column($updates, 'update_id');
+        $placeholders = implode(',', array_fill(0, count($updateIds), '?'));
+        
+        $updateStmt = $pdo->prepare("
+            UPDATE player_updates 
+            SET status = 'delivered', delivered_at = CURRENT_TIMESTAMP
+            WHERE update_id IN ($placeholders) AND status = 'pending'
+        ");
+        $updateStmt->execute($updateIds);
+    }
+
+    sendResponse([
+        'success' => true,
+        'updates' => $updates,
+        'last_update_id' => !empty($updates) ? end($updates)['update_id'] : $lastUpdateId
+    ]);
+}
+
 
 // ────────────────────────────────────────────────
 //      Routing
@@ -649,6 +797,10 @@ try {
         getPendingActions();
     } elseif ($method === 'POST' && preg_match('#/actions/([a-f0-9-]{32,36})/complete/?$#', $path, $m)) {
         completeAction($m[1]);
+    } elseif ($method === 'POST' && preg_match('#/updates/?$#', $path)) {
+        sendUpdates();
+    } elseif ($method === 'GET' && preg_match('#/updates/poll/?$#', $path)) {
+        pollUpdates();
     } else {
         sendResponse(['success' => false, 'error' => 'Not found'], 404);
     }

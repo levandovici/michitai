@@ -51,3 +51,36 @@
 
 18) $ curl -X POST "https://api.michitai.com/v1/php/game_room.php/actions/1c2bbd859e36dc7d7e5e9b4f263c88ce/complete?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"status":"completed","response_data":{"success":true,"message":"Moved successfully"}}'
 {"success":true,"message":"Action completed"}
+
+19) $ curl -X POST "https://api.michitai.com/v1/php/game_room.php/updates?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"roomId":"dc3723848639139113ca240958ba0bf8","targetPlayerIds":"all","type":"play_animation","dataJson":"{\"animation\":\"victory\",\"duration\":2.0}}'
+{"success":true,"updates_sent":1,"update_ids":["abc123def456"],"target_players":["player2"]}
+
+20) $ curl "https://api.michitai.com/v1/php/game_room.php/updates/poll?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b&lastUpdateId=xyz789"
+{"success":true,"updates":[{"update_id":"abc123def456","from_player_id":"1","type":"play_animation","data_json":"{\"animation\":\"victory\",\"duration\":2.0}","created_at":"2026-01-15 16:15:00"}],"last_update_id":"abc123def456"}
+
+21) $ curl "https://api.michitai.com/v1/php/matchmaking.php/list?api_token=7e2bf5846eae184afd1f100ca9e901f34e59"
+{"success":true,"lobbies":[{"matchmaking_id":"lobby123","host_player_id":"1","max_players":4,"strict_full":false,"extra_json_string":null,"created_at":"2026-01-15 16:00:00","last_heartbeat":"2026-01-15 16:10:00","current_players":2,"host_name":"TestPlayer"}]}
+
+22) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/create?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"maxPlayers":4,"strictFull":true,"extraJsonString":{"minLevel":10,"rank":"gold"}}'
+{"success":true,"matchmaking_id":"lobby456","max_players":4,"strict_full":true,"is_host":true}
+
+23) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/request?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"matchmakingId":"lobby123"}'
+{"success":true,"request_id":"req789","message":"Join request sent to host"}
+
+24) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/join?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"matchmakingId":"lobby123"}'
+{"success":true,"matchmaking_id":"lobby123","message":"Successfully joined matchmaking lobby"}
+
+25) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/leave?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b"
+{"success":true,"message":"Successfully left matchmaking lobby"}
+
+26) $ curl "https://api.michitai.com/v1/php/matchmaking.php/players?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b"
+{"success":true,"players":[{"player_id":"1","player_name":"TestPlayer","joined_at":"2026-01-15 16:00:00","last_heartbeat":"2026-01-15 16:10:00","status":"active","seconds_since_heartbeat":300,"is_host":true}],"last_updated":"2026-01-15T16:15:00+00:00"}
+
+27) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/heartbeat?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b"
+{"success":true,"status":"ok"}
+
+28) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/remove?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"matchmakingId":"lobby123"}'
+{"success":true,"message":"Matchmaking lobby removed successfully"}
+
+29) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/start?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"matchmakingId":"lobby123"}'
+{"success":true,"room_id":"game789","room_name":"Game from Matchmaking lobby1","players_transferred":4,"message":"Game started successfully"}
