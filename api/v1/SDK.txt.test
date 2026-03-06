@@ -97,5 +97,5 @@
 33) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/remove?api_token=111e15f332a500e6671b737b0d3412834785&game_player_token=445bafa185803e678b06eae94682ba1bfccb" -H "Content-Type: application/json" -d '{"matchmakingId":"636b3ffc9b30dc9c918d8a49661df078"}'
 {"success":true,"message":"Matchmaking lobby removed successfully"}
 
-34) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/start?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"matchmakingId":"lobby123"}'
-{"success":true,"room_id":"game789","room_name":"Game from Matchmaking lobby1","players_transferred":4,"message":"Game started successfully"}
+34) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/start?api_token=111e15f332a500e6671b737b0d3412834785&game_player_token=445bafa185803e678b06eae94682ba1bfccb" -H "Content-Type: application/json" -d '{"matchmakingId":"636b3ffc9b30dc9c918d8a49661df078"}'
+{"success":true,"room_id":"05f157893b1237f7699e548d045904ab","room_name":"Game from Matchmaking 636b3f","players_transferred":2,"message":"Game started successfully"}

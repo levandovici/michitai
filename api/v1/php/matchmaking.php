@@ -815,15 +815,15 @@ function startMatchmaking() {
             throw new Exception('Lobby must be full to start (strict_full enabled)');
         }
 
-        // Create game room
+        // Create game room without host first (will set after players are added)
         $roomId = bin2hex(random_bytes(16));
         $roomName = 'Game from Matchmaking ' . substr($matchmakingId, 0, 6);
 
         $stmt = $pdo->prepare("
-            INSERT INTO game_rooms (room_id, room_name, max_players, host_player_id)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO game_rooms (room_id, room_name, max_players)
+            VALUES (?, ?, ?)
         ");
-        $stmt->execute([$roomId, $roomName, $matchmaking['max_players'], $player['id']]);
+        $stmt->execute([$roomId, $roomName, $matchmaking['max_players']]);
 
         // Move all players to game room
         $stmt = $pdo->prepare("
@@ -834,6 +834,25 @@ function startMatchmaking() {
             WHERE mp.matchmaking_id = ? AND mp.status = 'active'
         ");
         $stmt->execute([$roomId, $player['id'], $matchmakingId]);
+
+        // Get the host's room_player_id to set as host_player_id
+        $stmt = $pdo->prepare("
+            SELECT player_id 
+            FROM room_players 
+            WHERE room_id = ? AND player_id = ?
+        ");
+        $stmt->execute([$roomId, $player['id']]);
+        $hostRoomPlayerId = $stmt->fetchColumn();
+
+        // Update game room with host reference
+        if ($hostRoomPlayerId) {
+            $stmt = $pdo->prepare("
+                UPDATE game_rooms 
+                SET host_player_id = ?
+                WHERE room_id = ?
+            ");
+            $stmt->execute([$hostRoomPlayerId, $roomId]);
+        }
 
         // Mark matchmaking as started
         $stmt = $pdo->prepare("
