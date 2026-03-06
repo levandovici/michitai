@@ -82,7 +82,7 @@
 28) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/join?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"matchmakingId":"lobby123"}'
 {"success":true,"matchmaking_id":"636b3ffc9b30dc9c918d8a49661df078","message":"Successfully joined matchmaking lobby"}
 
-29) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/leave?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b"
+29) $ curl -X POST "https://api.michitai.com/v1/php/matchmaking.php/leave?api_token=111e15f332a500e6671b737b0d3412834785&game_player_token=12d1b70eb189b52aed11732313079158597a"
 {"success":true,"message":"Successfully left matchmaking lobby"}
 
 30) $ curl "https://api.michitai.com/v1/php/matchmaking.php/players?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b"
