@@ -717,6 +717,107 @@ function sendUpdates() {
     }
 }
 
+function getCurrentGameRoomStatus() {
+    $context = getAuthContext();
+    $player = requirePlayer($context);
+
+    global $pdo;
+    try {
+        // Check if player is in any game room
+        $stmt = $pdo->prepare("
+            SELECT 
+                rp.room_id,
+                rp.player_id,
+                rp.player_name,
+                rp.is_host,
+                rp.is_online,
+                rp.last_heartbeat,
+                rp.joined_at,
+                gr.room_name,
+                gr.max_players,
+                gr.password IS NOT NULL as has_password,
+                gr.is_active,
+                gr.created_at as room_created_at,
+                gr.updated_at,
+                gr.last_activity as room_last_activity,
+                COUNT(rp2.player_id) as current_players
+            FROM room_players rp
+            JOIN game_rooms gr ON rp.room_id = gr.room_id
+            LEFT JOIN room_players rp2 ON gr.room_id = rp2.room_id
+            WHERE rp.player_id = ? AND gr.is_active = TRUE
+            GROUP BY gr.room_id
+            LIMIT 1
+        ");
+        $stmt->execute([$player['id']]);
+        $room = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$room) {
+            sendResponse([
+                'success' => true,
+                'in_room' => false,
+                'message' => 'Player is not in any game room'
+            ]);
+        }
+
+        // Get pending actions for this player if any
+        $stmt = $pdo->prepare("
+            SELECT 
+                action_id,
+                action_type,
+                status,
+                created_at,
+                processed_at
+            FROM action_queue 
+            WHERE player_id = ? AND status IN ('pending', 'processing')
+            ORDER BY created_at DESC
+            LIMIT 5
+        ");
+        $stmt->execute([$player['id']]);
+        $pendingActions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Get pending updates for this player if any
+        $stmt = $pdo->prepare("
+            SELECT 
+                update_id,
+                from_player_id,
+                type,
+                created_at,
+                status
+            FROM player_updates 
+            WHERE target_player_id = ? AND status = 'pending'
+            ORDER BY created_at DESC
+            LIMIT 5
+        ");
+        $stmt->execute([$player['id']]);
+        $pendingUpdates = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        sendResponse([
+            'success' => true,
+            'in_room' => true,
+            'room' => [
+                'room_id' => $room['room_id'],
+                'room_name' => $room['room_name'],
+                'is_host' => (bool)$room['is_host'],
+                'is_online' => (bool)$room['is_online'],
+                'max_players' => (int)$room['max_players'],
+                'current_players' => (int)$room['current_players'],
+                'has_password' => (bool)$room['has_password'],
+                'is_active' => (bool)$room['is_active'],
+                'player_name' => $room['player_name'],
+                'joined_at' => $room['joined_at'],
+                'last_heartbeat' => $room['last_heartbeat'],
+                'room_created_at' => $room['room_created_at'],
+                'room_last_activity' => $room['room_last_activity']
+            ],
+            'pending_actions' => $pendingActions,
+            'pending_updates' => $pendingUpdates
+        ]);
+    } catch (Exception $e) {
+        error_log("Get current game room status failed: " . $e->getMessage());
+        sendResponse(['success' => false, 'error' => 'Failed to get game room status'], 500);
+    }
+}
+
 function pollUpdates() {
     $context = getAuthContext();
     $player = requirePlayer($context);
@@ -809,6 +910,8 @@ try {
         sendUpdates();
     } elseif ($method === 'GET' && preg_match('#/updates/poll/?$#', $path)) {
         pollUpdates();
+    } elseif ($method === 'GET' && preg_match('#/current/?$#', $path)) {
+        getCurrentGameRoomStatus();
     } else {
         sendResponse(['success' => false, 'error' => 'Not found'], 404);
     }
