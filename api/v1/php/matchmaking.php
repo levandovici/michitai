@@ -529,6 +529,105 @@ function removeMatchmaking() {
     }
 }
 
+function respondToRequest() {
+    $context = getAuthContext();
+    $player = requirePlayer($context);
+
+    $data = json_decode(file_get_contents('php://input'), true) ?: [];
+
+    if (empty($data['requestId']) || empty($data['action'])) {
+        sendResponse(['success' => false, 'error' => 'Missing required fields: requestId, action'], 400);
+    }
+
+    $requestId = $data['requestId'];
+    $action = $data['action']; // 'approve' or 'reject'
+
+    if (!in_array($action, ['approve', 'reject'])) {
+        sendResponse(['success' => false, 'error' => 'Action must be "approve" or "reject"'], 400);
+    }
+
+    global $pdo;
+    $pdo->beginTransaction();
+
+    try {
+        // Get the request details
+        $stmt = $pdo->prepare("
+            SELECT mr.*, m.host_player_id, m.matchmaking_id
+            FROM matchmaking_requests mr
+            JOIN matchmaking m ON mr.matchmaking_id = m.matchmaking_id
+            WHERE mr.request_id = ? AND mr.status = 'pending'
+        ");
+        $stmt->execute([$requestId]);
+        $request = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$request) {
+            throw new Exception('Request not found or already processed');
+        }
+
+        // Verify the player is the host of this matchmaking
+        if ($request['host_player_id'] !== $player['id']) {
+            throw new Exception('Only the host can respond to join requests');
+        }
+
+        // Check if matchmaking is still active
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) as current_players, max_players
+            FROM matchmaking m
+            LEFT JOIN matchmaking_players mp ON m.matchmaking_id = mp.matchmaking_id AND mp.status = 'active'
+            WHERE m.matchmaking_id = ? AND m.is_started = FALSE
+            GROUP BY m.matchmaking_id
+        ");
+        $stmt->execute([$request['matchmaking_id']]);
+        $lobbyStatus = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$lobbyStatus) {
+            throw new Exception('Matchmaking lobby not found or already started');
+        }
+
+        // Update the request status
+        $status = ($action === 'approve') ? 'approved' : 'rejected';
+        $stmt = $pdo->prepare("
+            UPDATE matchmaking_requests 
+            SET status = ?, responded_at = CURRENT_TIMESTAMP, responded_by = ?
+            WHERE request_id = ?
+        ");
+        $stmt->execute([$status, $player['id'], $requestId]);
+
+        // If approved, add the player to the matchmaking
+        if ($action === 'approve') {
+            // Check if lobby is full
+            if ($lobbyStatus['current_players'] >= $lobbyStatus['max_players']) {
+                throw new Exception('Matchmaking lobby is full');
+            }
+
+            // Add player to matchmaking
+            $stmt = $pdo->prepare("
+                INSERT INTO matchmaking_players 
+                (matchmaking_id, player_id)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE
+                    status = 'active',
+                    joined_at = CURRENT_TIMESTAMP,
+                    last_heartbeat = CURRENT_TIMESTAMP
+            ");
+            $stmt->execute([$request['matchmaking_id'], $request['player_id']]);
+        }
+
+        $pdo->commit();
+
+        sendResponse([
+            'success' => true,
+            'message' => "Join request {$status} successfully",
+            'request_id' => $requestId,
+            'action' => $action
+        ]);
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        error_log("Respond to request failed: " . $e->getMessage());
+        sendResponse(['success' => false, 'error' => $e->getMessage()], 400);
+    }
+}
+
 function startMatchmaking() {
     $context = getAuthContext();
     $player = requirePlayer($context);
@@ -626,6 +725,8 @@ try {
         createMatchmaking();
     } elseif ($method === 'POST' && preg_match('#/request/?$#', $path)) {
         requestJoin();
+    } elseif ($method === 'POST' && preg_match('#/response/?$#', $path)) {
+        respondToRequest();
     } elseif ($method === 'POST' && preg_match('#/join/?$#', $path)) {
         joinMatchmaking();
     } elseif ($method === 'POST' && preg_match('#/leave/?$#', $path)) {
