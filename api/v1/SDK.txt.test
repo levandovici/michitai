@@ -4,7 +4,7 @@
 2) $ curl -X PUT "https://api.michitai.com/v1/php/game_players.php?api_token=dc8049bdeb600eb3d00945e530faebd2911c&game_player_token=46702c9b906e3361c26dbcd605ee9183" -H "Content-Type: application/json"
 {"success":true,"player":{"id":7,"game_id":4,"player_name":"TestPlayer","player_data":{"level":1,"score":0,"inventory":["sword","shield"]},"is_active":1,"last_login":null,"created_at":"2026-01-13 14:21:16","updated_at":"2026-01-13 14:21:16"}}
 
-3) $ curl -X GET "https://api.michitai.com/v1/php/game_players.php?api_token=dc8049bdeb600eb3d00945e530faebd2911c"
+3) $ curl -X GET "https://api.michitai.com/v1/php/game_players.php?api_token=dc8049bdeb600eb3d00945e530faebd2911c&api_private_token=dc8049bdeb600eb3d00945e530faebd2911c"
 {"success":true,"count":7,"players":[{"id":3,"player_name":"TestPlayer","is_active":1,"last_login":null,"created_at":"2026-01-13 12:30:47"},{"id":7,"player_name":"TestPlayer","is_active":1,"last_login":"2026-01-13 14:22:33","created_at":"2026-01-13 14:21:16"},{"id":1,"player_name":"TestPlayer","is_active":1,"last_login":"2026-01-13 14:03:44","created_at":"2026-01-13 12:28:03"},{"id":6,"player_name":"TestPlayer","is_active":1,"last_login":null,"created_at":"2026-01-13 14:16:54"},{"id":4,"player_name":"TestPlayer","is_active":1,"last_login":null,"created_at":"2026-01-13 14:05:46"},{"id":5,"player_name":"TestPlayer","is_active":1,"last_login":null,"created_at":"2026-01-13 14:13:12"},{"id":2,"player_name":"TestPlayer","is_active":1,"last_login":null,"created_at":"2026-01-13 12:29:32"}]}
 
 4) $ curl -X GET "https://api.michitai.com/v1/php/game_data.php?api_token=dc8049bdeb600eb3d00945e530faebd2911c"
@@ -52,11 +52,11 @@
 18) $ curl -X POST "https://api.michitai.com/v1/php/game_room.php/actions/1c2bbd859e36dc7d7e5e9b4f263c88ce/complete?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"status":"completed","response_data":{"success":true,"message":"Moved successfully"}}'
 {"success":true,"message":"Action completed"}
 
-19) $ curl -X POST "https://api.michitai.com/v1/php/game_room.php/updates?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b" -H "Content-Type: application/json" -d '{"roomId":"dc3723848639139113ca240958ba0bf8","targetPlayerIds":"all","type":"play_animation","dataJson":"{\"animation\":\"victory\",\"duration\":2.0}}'
-{"success":true,"updates_sent":1,"update_ids":["abc123def456"],"target_players":["player2"]}
+19) $ curl -X POST "https://api.michitai.com/v1/php/game_room.php/updates?api_token=9384bafb17a0cb699320bdac8ae2cb392a6b&game_player_token=556aa887ae3fa1136327245c3192e316fd17" -H "Content-Type: application/json" -d '{"roomId":"29336d3d70b53a51ae33254244be8c36","targetPlayerIds":"all","type":"play_animation","dataJson":{"animation":"victory","duration":2.0}}'
+{"success":true,"updates_sent":1,"update_ids":["14135a1fe5998b4accc7d56218710aa6"],"target_players":["44"]}
 
-20) $ curl "https://api.michitai.com/v1/php/game_room.php/updates/poll?api_token=7e2bf5846eae184afd1f100ca9e901f34e59&game_player_token=bed66b98ca159cc7df80d4a25f3914ce724b&lastUpdateId=xyz789"
-{"success":true,"updates":[{"update_id":"abc123def456","from_player_id":"1","type":"play_animation","data_json":"{\"animation\":\"victory\",\"duration\":2.0}","created_at":"2026-01-15 16:15:00"}],"last_update_id":"abc123def456"}
+20) $ curl "https://api.michitai.com/v1/php/game_room.php/updates/poll?api_token=9384bafb17a0cb699320bdac8ae2cb392a6b&game_player_token=49966083a589a82bdf04aeac8db087825915&lastUpdateId=14135a1fe5998b4accc7d56218710aa6"
+{"success":true,"updates":[{"update_id":"f8dc4c0cbf906bcfd0632bea7e4b5ef9","from_player_id":"45","type":"play_animation","data_json":{"animation":"victory","duration":2},"created_at":"2026-03-06 10:29:01"}],"last_update_id":"f8dc4c0cbf906bcfd0632bea7e4b5ef9"}
 
 21) $ curl "https://api.michitai.com/v1/php/matchmaking.php/list?api_token=7e2bf5846eae184afd1f100ca9e901f34e59"
 {"success":true,"lobbies":[{"matchmaking_id":"lobby123","host_player_id":"1","max_players":4,"strict_full":false,"extra_json_string":null,"created_at":"2026-01-15 16:00:00","last_heartbeat":"2026-01-15 16:10:00","current_players":2,"host_name":"TestPlayer"}]}

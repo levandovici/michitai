@@ -749,6 +749,14 @@ function pollUpdates() {
     $stmt->execute($params);
     $updates = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Decode data_json back to object for each update
+    foreach ($updates as &$update) {
+        $decoded = json_decode($update['data_json'], true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $update['data_json'] = $decoded;
+        }
+    }
+
     // Mark updates as delivered
     if (!empty($updates)) {
         $updateIds = array_column($updates, 'update_id');
