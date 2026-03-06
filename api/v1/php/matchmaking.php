@@ -536,6 +536,91 @@ function removeMatchmaking() {
     }
 }
 
+function getCurrentMatchmakingStatus() {
+    $context = getAuthContext();
+    $player = requirePlayer($context);
+
+    global $pdo;
+    try {
+        // Check if player is in any matchmaking lobby
+        $stmt = $pdo->prepare("
+            SELECT 
+                mp.matchmaking_id,
+                mp.player_id,
+                mp.joined_at,
+                mp.last_heartbeat,
+                mp.status as player_status,
+                m.host_player_id,
+                m.max_players,
+                m.strict_full,
+                m.join_by_requests,
+                m.extra_json_string,
+                m.created_at,
+                m.last_heartbeat as lobby_heartbeat,
+                m.is_started,
+                m.started_at,
+                (mp.player_id = m.host_player_id) as is_host,
+                COUNT(CASE WHEN mp2.status = 'active' THEN 1 END) as current_players
+            FROM matchmaking_players mp
+            JOIN matchmaking m ON mp.matchmaking_id = m.matchmaking_id
+            LEFT JOIN matchmaking_players mp2 ON m.matchmaking_id = mp2.matchmaking_id
+            WHERE mp.player_id = ? AND m.is_started = FALSE
+            GROUP BY m.matchmaking_id
+            LIMIT 1
+        ");
+        $stmt->execute([$player['id']]);
+        $matchmaking = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$matchmaking) {
+            sendResponse([
+                'success' => true,
+                'in_matchmaking' => false,
+                'message' => 'Player is not in any matchmaking lobby'
+            ]);
+        }
+
+        // Get pending requests for this player if any
+        $stmt = $pdo->prepare("
+            SELECT 
+                request_id,
+                matchmaking_id,
+                status,
+                requested_at,
+                responded_at
+            FROM matchmaking_requests 
+            WHERE player_id = ? AND status = 'pending'
+            ORDER BY requested_at DESC
+            LIMIT 5
+        ");
+        $stmt->execute([$player['id']]);
+        $pendingRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        sendResponse([
+            'success' => true,
+            'in_matchmaking' => true,
+            'matchmaking' => [
+                'matchmaking_id' => $matchmaking['matchmaking_id'],
+                'is_host' => (bool)$matchmaking['is_host'],
+                'max_players' => (int)$matchmaking['max_players'],
+                'current_players' => (int)$matchmaking['current_players'],
+                'strict_full' => (bool)$matchmaking['strict_full'],
+                'join_by_requests' => (bool)$matchmaking['join_by_requests'],
+                'extra_json_string' => json_decode($matchmaking['extra_json_string'] ?: '{}'),
+                'joined_at' => $matchmaking['joined_at'],
+                'player_status' => $matchmaking['player_status'],
+                'last_heartbeat' => $matchmaking['last_heartbeat'],
+                'lobby_heartbeat' => $matchmaking['lobby_heartbeat'],
+                'is_started' => (bool)$matchmaking['is_started'],
+                'started_at' => $matchmaking['started_at']
+            ],
+            'pending_requests' => $pendingRequests
+        ]);
+    } catch (Exception $e) {
+        error_log("Get current matchmaking status failed: " . $e->getMessage());
+        sendResponse(['success' => false, 'error' => 'Failed to get matchmaking status'], 500);
+    }
+}
+
 function checkRequestStatus() {
     $context = getAuthContext();
     $player = requirePlayer($context);
@@ -791,6 +876,8 @@ try {
         respondToRequest();
     } elseif ($method === 'GET' && preg_match('#/status/?$#', $path)) {
         checkRequestStatus();
+    } elseif ($method === 'GET' && preg_match('#/current/?$#', $path)) {
+        getCurrentMatchmakingStatus();
     } elseif ($method === 'POST' && preg_match('#/join/?$#', $path)) {
         joinMatchmaking();
     } elseif ($method === 'POST' && preg_match('#/leave/?$#', $path)) {
