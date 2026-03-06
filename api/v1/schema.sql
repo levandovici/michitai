@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS matchmaking (
     host_player_id INT NOT NULL,
     max_players INT NOT NULL DEFAULT 4 CHECK (max_players BETWEEN 2 AND 16),
     strict_full BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'Game can start only when full',
+    join_by_requests BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'Players can only join via host approval',
     extra_json_string JSON NULL COMMENT 'Host-defined criteria (rank, level, etc.)',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_heartbeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

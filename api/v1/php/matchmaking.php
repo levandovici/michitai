@@ -158,6 +158,7 @@ function createMatchmaking() {
 
     $maxPlayers = max(2, min(16, (int)$data['maxPlayers']));
     $strictFull = !empty($data['strictFull']);
+    $joinByRequests = !empty($data['joinByRequests']);
     $extraJsonString = isset($data['extraJsonString']) ? json_encode($data['extraJsonString'], JSON_UNESCAPED_UNICODE) : null;
 
     $matchmakingId = bin2hex(random_bytes(16));
@@ -169,10 +170,10 @@ function createMatchmaking() {
         // Create matchmaking lobby
         $stmt = $pdo->prepare("
             INSERT INTO matchmaking 
-            (matchmaking_id, host_player_id, max_players, strict_full, extra_json_string)
-            VALUES (?, ?, ?, ?, ?)
+            (matchmaking_id, host_player_id, max_players, strict_full, join_by_requests, extra_json_string)
+            VALUES (?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$matchmakingId, $player['id'], $maxPlayers, $strictFull, $extraJsonString]);
+        $stmt->execute([$matchmakingId, $player['id'], $maxPlayers, $strictFull, $joinByRequests, $extraJsonString]);
 
         // Add host as first player
         $stmt = $pdo->prepare("
@@ -189,6 +190,7 @@ function createMatchmaking() {
             'matchmaking_id' => $matchmakingId,
             'max_players' => $maxPlayers,
             'strict_full' => $strictFull,
+            'join_by_requests' => $joinByRequests,
             'is_host' => true
         ]);
     } catch (Exception $e) {
@@ -297,6 +299,11 @@ function joinMatchmaking() {
 
         if (!$matchmaking) {
             throw new Exception('Matchmaking lobby not found or already started');
+        }
+
+        // Check if matchmaking requires approval via requests
+        if ($matchmaking['join_by_requests']) {
+            throw new Exception('This matchmaking lobby requires host approval. Use /request endpoint instead.');
         }
 
         if ($matchmaking['current_players'] >= $matchmaking['max_players']) {
@@ -529,6 +536,61 @@ function removeMatchmaking() {
     }
 }
 
+function checkRequestStatus() {
+    $context = getAuthContext();
+    $player = requirePlayer($context);
+
+    $requestId = $_GET['requestId'] ?? null;
+
+    if (!$requestId) {
+        sendResponse(['success' => false, 'error' => 'Missing required parameter: requestId'], 400);
+    }
+
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                mr.request_id,
+                mr.matchmaking_id,
+                mr.player_id,
+                mr.status,
+                mr.requested_at,
+                mr.responded_at,
+                mr.responded_by,
+                gp.player_name as responder_name,
+                m.host_player_id,
+                m.join_by_requests
+            FROM matchmaking_requests mr
+            LEFT JOIN game_players gp ON mr.responded_by = gp.id
+            LEFT JOIN matchmaking m ON mr.matchmaking_id = m.matchmaking_id
+            WHERE mr.request_id = ? AND mr.player_id = ?
+        ");
+        $stmt->execute([$requestId, $player['id']]);
+        $request = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$request) {
+            sendResponse(['success' => false, 'error' => 'Request not found or you are not the requester'], 404);
+        }
+
+        sendResponse([
+            'success' => true,
+            'request' => [
+                'request_id' => $request['request_id'],
+                'matchmaking_id' => $request['matchmaking_id'],
+                'status' => $request['status'],
+                'requested_at' => $request['requested_at'],
+                'responded_at' => $request['responded_at'],
+                'responded_by' => $request['responded_by'],
+                'responder_name' => $request['responder_name'],
+                'join_by_requests' => (bool)$request['join_by_requests']
+            ]
+        ]);
+    } catch (Exception $e) {
+        error_log("Check request status failed: " . $e->getMessage());
+        sendResponse(['success' => false, 'error' => 'Failed to check request status'], 500);
+    }
+}
+
 function respondToRequest() {
     $context = getAuthContext();
     $player = requirePlayer($context);
@@ -727,6 +789,8 @@ try {
         requestJoin();
     } elseif ($method === 'POST' && preg_match('#/response/?$#', $path)) {
         respondToRequest();
+    } elseif ($method === 'GET' && preg_match('#/status/?$#', $path)) {
+        checkRequestStatus();
     } elseif ($method === 'POST' && preg_match('#/join/?$#', $path)) {
         joinMatchmaking();
     } elseif ($method === 'POST' && preg_match('#/leave/?$#', $path)) {
