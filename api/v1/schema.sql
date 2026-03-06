@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS player_updates (
 -- Table for matchmaking lobbies
 CREATE TABLE IF NOT EXISTS matchmaking (
     matchmaking_id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    host_player_id VARCHAR(36) NOT NULL,
+    host_player_id INT NOT NULL,
     max_players INT NOT NULL DEFAULT 4 CHECK (max_players BETWEEN 2 AND 16),
     strict_full BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'Game can start only when full',
     extra_json_string JSON NULL COMMENT 'Host-defined criteria (rank, level, etc.)',
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS matchmaking (
 -- Table for matchmaking players (junction table)
 CREATE TABLE IF NOT EXISTS matchmaking_players (
     matchmaking_id VARCHAR(36) NOT NULL,
-    player_id VARCHAR(36) NOT NULL,
+    player_id INT NOT NULL,
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_heartbeat TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status ENUM('active', 'disconnected') DEFAULT 'active',
@@ -151,25 +151,25 @@ CREATE TABLE IF NOT EXISTS matchmaking_players (
     INDEX idx_lobby_players (matchmaking_id, status),
     
     FOREIGN KEY (matchmaking_id) REFERENCES matchmaking(matchmaking_id) ON DELETE CASCADE,
-    FOREIGN KEY (player_id) REFERENCES room_players(player_id) ON DELETE CASCADE
+    FOREIGN KEY (player_id) REFERENCES game_players(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Table for matchmaking join requests (optional - for host approval system)
 CREATE TABLE IF NOT EXISTS matchmaking_requests (
     request_id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     matchmaking_id VARCHAR(36) NOT NULL,
-    player_id VARCHAR(36) NOT NULL,
+    player_id INT NOT NULL,
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     responded_at TIMESTAMP NULL,
-    responded_by VARCHAR(36) NULL COMMENT 'Host player who approved/rejected',
+    responded_by INT NULL COMMENT 'Host player who approved/rejected',
     
     INDEX idx_lobby_requests (matchmaking_id, status),
     INDEX idx_player_requests (player_id, status),
     
     FOREIGN KEY (matchmaking_id) REFERENCES matchmaking(matchmaking_id) ON DELETE CASCADE,
-    FOREIGN KEY (player_id) REFERENCES room_players(player_id) ON DELETE CASCADE,
-    FOREIGN KEY (responded_by) REFERENCES room_players(player_id) ON DELETE SET NULL
+    FOREIGN KEY (player_id) REFERENCES game_players(id) ON DELETE CASCADE,
+    FOREIGN KEY (responded_by) REFERENCES game_players(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Add indexes for better performance if they don't exist
