@@ -1,6 +1,7 @@
 <?php
 // Set PHP timezone to Europe/Bucharest (EEST)
 date_default_timezone_set('Europe/Bucharest');
+
 try {
     // Load environment variables (if .env exists)
     if (file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -8,6 +9,7 @@ try {
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
         $dotenv->load();
     }
+
     // Database connection
     $pdo = new PDO(
         'mysql:host=' . ($_ENV['DB_HOST'] ?? 'localhost') . ';dbname=' . ($_ENV['DB_NAME'] ?? 'portfolio_db') . ';charset=utf8mb4',
@@ -20,9 +22,11 @@ try {
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
         ]
     );
+
     // Set session settings
     $pdo->exec("SET SESSION collation_connection = 'utf8mb4_unicode_ci'");
     $pdo->exec("SET time_zone = '+03:00'"); // EEST
+
     // Create table if not exists
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS page_visits (
@@ -31,17 +35,18 @@ try {
             visit_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
     ");
+
     // Record visit
     $ip = $_SERVER['REMOTE_ADDR'];
     $stmt = $pdo->prepare("INSERT INTO page_visits (ip_address) VALUES (?)");
     $stmt->execute([$ip]);
 } catch (Exception $e) {
     error_log('Error in index.php: ' . $e->getMessage());
-    echo '<p class="text-red-600 text-center font-medium">An error occurred while fetching statistics.</p>';
+    // We'll show a friendly message later in HTML if needed
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,159 +55,249 @@ try {
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .light-bg { background: linear-gradient(to bottom, #f3f4f6, #e5e7eb); }
-    .dark-bg  { background: #111827; color: #e5e7eb; }
-
-    .header-gradient {
-      background: linear-gradient(135deg, #1e40af, #3b82f6);
-      animation: gradientShift 8s ease infinite;
-      background-size: 200% 200%;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .dark-header {
-      background: #1f2937 !important;
-      animation: none !important;
+    :root {
+      --water-deep: #001f3f;
+      --water-mid: #0c4a6e;
+      --cyan: #22d3ee;
+      --teal: #06b6d4;
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
     }
 
-    .project-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100%;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      color: #e0f2fe;
+      background: linear-gradient(to bottom, var(--water-mid), var(--water-deep));
+      overflow-x: hidden;
+      position: relative;
     }
-    .project-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+
+    /* Subtle water caustics/light play */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(34, 211, 238, 0.07) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+      animation: causticDrift 30s ease-in-out infinite;
+      z-index: -2;
     }
-    .project-logo {
-      width: 180px;
-      height: 180px;
-      object-fit: contain;
-      border-radius: 12px;
-      border: 2px solid #e5e7eb;
-      transition: border-color 0.3s ease;
+
+    @keyframes causticDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50%      { transform: translate(5%, 8%) scale(1.03); }
     }
-    .project-card:hover .project-logo {
-      border-color: #60a5fa;
+
+    header {
+      background: linear-gradient(to bottom, rgba(6, 182, 212, 0.35), rgba(2, 132, 199, 0.2));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.25);
+      position: relative;
+      overflow: hidden;
     }
+
+    .bubbles-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      background: rgba(255,255,255,0.35);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(34,211,238,0.6);
+      animation: rise linear infinite;
+      will-change: transform, opacity;
+    }
+
+    @keyframes rise {
+      0%   { transform: translateY(120vh); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.7; }
+      100% { transform: translateY(-20vh); opacity: 0; }
+    }
+
     .section-title {
       font-size: 2.5rem;
       font-weight: 700;
       text-align: center;
       margin: 3rem 0 2rem;
-      color: #1e40af;
-    }
-    .dark .section-title { color: #60a5fa; }
-
-    .fade-in { animation: fadeIn 1s ease-out; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      color: var(--cyan);
+      text-shadow: 0 2px 12px rgba(34,211,238,0.5);
     }
 
-    #extra-sections { display: none; }
-
-    .dark #extra-sections { display: block; }
-
-    .stream-container {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      background: #000;
-    }
-    .stream-container iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+    .project-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      color: #e0f2fe;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
     }
 
-    footer { cursor: pointer; user-select: none; }
-    footer:hover p { text-decoration: underline; }
+    .project-card:hover {
+      transform: translateY(-14px) scale(1.04);
+      box-shadow: 0 24px 48px rgba(6, 182, 212, 0.3);
+      border-color: var(--cyan);
+    }
+
+    .project-logo {
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 16px;
+      border: 2px solid rgba(34, 211, 238, 0.5);
+      background: rgba(0,0,0,0.25);
+      transition: border-color 0.4s ease;
+    }
+
+    .project-card:hover .project-logo {
+      border-color: var(--cyan);
+    }
+
+    .twitch-btn {
+      background: #9146ff;
+      color: white;
+    }
+
+    .twitch-btn:hover {
+      background: #772ce8;
+    }
+
+    footer {
+      background: rgba(0, 31, 63, 0.7);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--glass-border);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    footer:hover p {
+      text-decoration: underline;
+    }
+
+    /* Dark mode overrides (deeper ocean feel) */
+    .dark body {
+      background: linear-gradient(to bottom, #000d1a, #000814);
+    }
+
+    .dark header {
+      background: linear-gradient(to bottom, rgba(2, 132, 199, 0.25), rgba(6, 182, 212, 0.12));
+    }
+
+    .dark .project-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(34, 211, 238, 0.08);
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col light-bg" id="theme-body">
+<body class="flex flex-col" id="theme-body">
 
-  <header class="w-full text-white text-center py-12 header-gradient" id="theme-header">
+  <!-- Floating bubbles -->
+  <div class="bubbles-bg" id="bubbles"></div>
+
+  <header class="w-full text-white text-center py-12" id="theme-header">
     <h1 class="text-4xl sm:text-5xl font-bold tracking-tight fade-in">Nichita Levandovici</h1>
-    <p class="mt-4 text-lg sm:text-xl text-blue-100 fade-in">Explore my portfolio of innovative and creative works</p>
+    <p class="mt-4 text-lg sm:text-xl text-cyan-100 fade-in">Creative developer • Unity • Games • Multiplayer</p>
+
+    <!-- Twitch Button -->
+    <div class="mt-6 flex justify-center fade-in">
+      <a href="https://www.twitch.tv/nichitai" 
+         target="_blank" rel="noopener noreferrer"
+         class="twitch-btn inline-flex items-center gap-2 font-medium py-3 px-8 rounded-xl transition shadow-lg hover:shadow-xl hover:scale-105">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.64 5.93H13.07V14.29H11.64M15.57 5.93H17V14.29H15.57M7 2L3.43 5.57v12.86h4V22l3.57-3.57h3L20.57 12V2m-1.43 9.29-3.57 3.57h-3l-2.71 2.71v-2.71H5.57V3.43h13.57Z"/>
+        </svg>
+        Watch on Twitch
+      </a>
+    </div>
   </header>
 
   <main class="flex-grow max-w-7xl mx-auto px-6 py-8">
-
-    <!-- Main Projects Section – always visible -->
     <h2 class="section-title fade-in">Main Projects</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-
       <!-- Unity Lesson -->
-      <div class="bg-white rounded-xl shadow-md p-8 text-center project-card fade-in">
-        <h3 class="text-2xl sm:text-3xl font-semibold text-blue-700 mb-4">Unity Lesson</h3>
-        <img src="logo.png" alt="Logo" class="project-logo mx-auto">
-        <p class="mt-4 text-gray-600">Online Unity courses</p>
-        <a href="https://unity.michitai.com" target="_blank" class="mt-6 inline-block bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition font-medium">Visit Unity Lesson</a>
+      <div class="project-card p-8 text-center fade-in">
+        <h3 class="text-2xl sm:text-3xl font-semibold mb-4">Unity Lesson</h3>
+        <img src="logo.png" alt="Unity Lesson" class="project-logo mx-auto mb-4">
+        <p class="text-cyan-100 mb-6">Online Unity courses & tutorials</p>
+        <a href="https://unity.michitai.com" target="_blank" 
+           class="inline-block bg-cyan-600 text-white py-3 px-8 rounded-lg hover:bg-cyan-700 transition font-medium">
+          Visit Unity Lesson
+        </a>
       </div>
 
       <!-- Games -->
-      <div class="bg-white rounded-xl shadow-md p-8 text-center project-card fade-in">
-        <h3 class="text-2xl sm:text-3xl font-semibold text-blue-700 mb-4">Games</h3>
-        <img src="warland.png" alt="Logo" class="project-logo mx-auto">
-        <p class="mt-4 text-gray-600">Exciting indie games</p>
-        <a href="https://games.michitai.com" target="_blank" class="mt-6 inline-block bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition font-medium">Visit Games</a>
+      <div class="project-card p-8 text-center fade-in">
+        <h3 class="text-2xl sm:text-3xl font-semibold mb-4">Games</h3>
+        <img src="warland.png" alt="Games" class="project-logo mx-auto mb-4">
+        <p class="text-cyan-100 mb-6">Exciting indie game projects</p>
+        <a href="https://games.michitai.com" target="_blank" 
+           class="inline-block bg-cyan-600 text-white py-3 px-8 rounded-lg hover:bg-cyan-700 transition font-medium">
+          Visit Games
+        </a>
       </div>
 
       <!-- API -->
-      <div class="bg-white rounded-xl shadow-md p-8 text-center project-card fade-in">
-        <h3 class="text-2xl sm:text-3xl font-semibold text-blue-700 mb-4">API</h3>
-        <img src="levandovici_logo.png" alt="Logo" class="project-logo mx-auto">
-        <p class="mt-4 text-gray-600">Multiplayer API</p>
-        <a href="https://api.michitai.com/v1" target="_blank" class="mt-6 inline-block bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 transition font-medium">Visit API</a>
+      <div class="project-card p-8 text-center fade-in">
+        <h3 class="text-2xl sm:text-3xl font-semibold mb-4">API</h3>
+        <img src="levandovici_logo.png" alt="API" class="project-logo mx-auto mb-4">
+        <p class="text-cyan-100 mb-6">Multiplayer backend API</p>
+        <a href="https://api.michitai.com" target="_blank" 
+           class="inline-block bg-cyan-600 text-white py-3 px-8 rounded-lg hover:bg-cyan-700 transition font-medium">
+          Visit API
+        </a>
       </div>
     </div>
 
-    <!-- ─────────────────────────────────────────────── -->
-    <!-- Everything below is hidden by default (dark mode) -->
-    <div id="extra-sections">
-
-      <!-- Live Stream Section -->
-      <div id="live-stream-wrapper" class="live-stream">
-        <h2 class="section-title fade-in">📺 Live Stream</h2>
-        <div class="stream-container mx-auto max-w-5xl px-4">
-          <iframe
-            src="https://player.twitch.tv/?channel=micfitai&parent=michitai.com"
-            allowfullscreen
-            title="Live Stream"
-            allow="autoplay; fullscreen; picture-in-picture"
-            scrolling="no"
-            frameborder="0">
-          </iframe>
-        </div>
-      </div>
-
+    <!-- Hidden extra sections in light mode, visible in dark -->
+    <div id="extra-sections" class="hidden dark:block">
+      <!-- You can add more content here later if needed -->
     </div>
-
-    </div>
-    <!-- end of extra-sections -->
-
   </main>
 
-  <!-- Footer – clickable toggle -->
-  <footer class="w-full bg-gray-900 text-white text-center py-10" id="secret-toggle">
+  <footer class="w-full text-white text-center py-10" id="secret-toggle">
     <p class="text-sm font-medium" id="footer-text">© 2026 Nichita Levandovici. All rights reserved.</p>
   </footer>
 
-  <!-- JavaScript toggle logic -->
+  <!-- JavaScript -->
   <script>
+    // Bubble generator
+    function createBubbles() {
+      const bubblesContainer = document.getElementById('bubbles');
+      for (let i = 0; i < 18; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = Math.random() * 14 + 6;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}%`;
+        bubble.style.animationDuration = `${Math.random() * 20 + 15}s`;
+        bubble.style.animationDelay = `${Math.random() * 15}s`;
+        bubblesContainer.appendChild(bubble);
+      }
+    }
+    createBubbles();
+
+    // Dark mode toggle
     let isDarkMode = false;
     const body = document.getElementById('theme-body');
+    const htmlRoot = document.getElementById('html-root');
     const header = document.getElementById('theme-header');
     const extra = document.getElementById('extra-sections');
     const footerText = document.getElementById('footer-text');
@@ -210,32 +305,20 @@ try {
 
     toggle.addEventListener('click', () => {
       isDarkMode = !isDarkMode;
-
       if (isDarkMode) {
-        body.classList.remove('light-bg');
-        body.classList.add('dark-bg', 'dark');
-        header.classList.remove('header-gradient');
-        header.classList.add('dark-header');
+        body.classList.add('dark');
+        htmlRoot.classList.add('dark');
+        header.classList.add('dark-header'); // optional extra class if needed
+        extra.classList.remove('hidden');
         footerText.textContent = "© 2026 Nichita Levandovici. All rights reserved.";
       } else {
-        body.classList.remove('dark-bg', 'dark');
-        body.classList.add('light-bg');
+        body.classList.remove('dark');
+        htmlRoot.classList.remove('dark');
         header.classList.remove('dark-header');
-        header.classList.add('header-gradient');
+        extra.classList.add('hidden');
         footerText.textContent = "© 2026 Nichita Levandovici. All rights reserved.";
       }
     });
-
-    // Keep twitch live check (unchanged)
-    fetch('/twitch-status.php?' + Date.now())
-      .then(r => r.text())
-      .then(text => {
-        if (text.trim() === 'live') {
-          document.getElementById('live-stream-wrapper').style.display = 'block';
-        }
-      })
-      .catch(() => {});
   </script>
-
 </body>
 </html>
